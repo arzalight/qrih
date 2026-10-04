@@ -30,4 +30,6 @@ Ejecutar `node scripts/git-secrets-check.mjs` **después de preparar el índice 
 3. Staging: conectar sólo `develop` al proyecto existente `qrih-staging`; desactivar previews/otras ramas para no divulgar credenciales ni generar despliegues innecesarios.
 4. Producción: **no conectada**. `main` reservado para después del GO explícito. Crear Git no modifica el dictamen **NO-GO** del Soft Launch.
 
+Actualización de acceso: el usuario completó el inicio de sesión de GitHub CLI. La identidad `arzalight` figura en su configuración, sin token en archivo; desde el entorno del agente, el llavero no entrega una credencial (`no oauth token found`) y las consultas devuelven 401 incluso tras permitir lectura del llavero. No se confirma que el token del usuario esté revocado. No repetir login ni copiarlo a un archivo para sortear esta limitación: completar la subida desde la terminal del usuario usando el helper oficial de GitHub CLI. No se ha subido código ni conectado Netlify a Git todavía.
+
 El código de prueba autenticada sigue opt-in de una sola ejecución; no activar sus flags en los despliegues Git normales.
