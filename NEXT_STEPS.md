@@ -4,7 +4,7 @@
 
 No agregar funcionalidades. Estado: **NO-GO externo**; las correcciones locales no equivalen a cierre en Supabase/Netlify.
 
-Control de entrega: finalizar Git local → `arzalight/qrih` privado → `main`/`develop` → staging ligado sólo a `develop`. Revisión: `docs/PRE_GITHUB_REVIEW.md`; escanear índice antes de publicar. Producción no se conecta a `main` hasta GO explícito. Sin migraciones automáticas desde deploy ni flags de pruebas mutantes persistentes.
+Control de entrega **completado**: Git local → `arzalight/qrih` privado → `main`/`develop` → staging sólo `develop`, deployment Git READY `6ac2be07ce110e3b94a50a2c`, sin previews/otras ramas, logs privados. Acción documental restante: subir desde terminal el commit de esta evidencia preparado en `develop`. Escanear índice antes de cada subida. Producción no se conecta a `main` hasta GO explícito; sin migraciones automáticas ni flags de pruebas mutantes persistentes.
 
 1. Completar los casos restantes de staging Free: **24 comprobaciones autenticadas y 15 sin sesión ya pasan**, incluidos siete WebP, aislamiento, estados/suspensión y PDF real. Pendientes correo/callback, contactos/demanda/notificaciones, avatar, TTL y cold-start/concurrencia/UI. No conectar previews al Supabase actual ni dejar pruebas mutantes activadas en futuros despliegues.
 2. Conservar la reconciliación/evidencia en `supabase/staging/`: baseline de 13 tablas, 044–049 y cierre SQL de AUD-019 ya comprobados en staging. Comprobar respaldos y restauración de BD **y archivos Storage** por separado; el baseline de estructura no es un backup de datos.

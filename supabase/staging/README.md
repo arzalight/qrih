@@ -1,5 +1,7 @@
 # Staging gratuito QRIH
 
+**Entrega Git vigente (2026-10-04):** `arzalight/qrih` privado con `main`/`develop`. Netlify `qrih-staging` sigue sólo `develop`, sin previews/otras ramas y con logs privados. Deployment Git `6ac2be07ce110e3b94a50a2c` READY/publicado, commit `ee4d465`; 15 HTTP sin sesión repetidos. Las 24 pruebas autenticadas inferiores son evidencia de la versión funcional compatible anterior, no una nueva ejecución. Ver `git-deployment-verification-2026-10-04.md`. Producción sigue desconectada y NO-GO. Esta actualización documental local requiere subir su commit.
+
 Fuente consultada: dmtvnwsuhehxfftddsap (QRIH). Destino aislado: mcyxunymhuxyiwklyfpy (QRIH Staging), Free, us-west-1. Costo confirmado por proveedor $0/mes. Nunca reutilizar claves, cookies ni datos reales en staging.
 
 `baseline-catalog-2026-10-03.json` y `catalog-query.sql` contienen metadatos de estructura. `baseline-2026-10-03.sql` reconstruye el esquema activo sobre public vacío. Captura enums, columnas/defaults/identidades, secuencia sin copiar su contador, constraints/FKs, índices, funciones, triggers, RLS y grants. No incluye filas, archivos, usuarios Auth, contraseñas ni configuración Auth. No reemplaza pg_dump/backup completo ni su ensayo de restauración. No modificar ni ejecutar sobre el proyecto fuente.

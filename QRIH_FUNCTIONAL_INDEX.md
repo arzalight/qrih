@@ -28,7 +28,7 @@
 
 ## Controles y referencias comunes
 
-OPS-002/003 — Control pre-GitHub: `.gitignore`, `scripts/git-secrets-check.mjs`, `docs/PRE_GITHUB_REVIEW.md`. Git local verificado (`55b7737`), `main`/`develop`; GitHub `arzalight/qrih` creado y confirmado privado, todavía vacío. Subida/conexión pendientes; staging sólo `develop`, producción no conectada.
+OPS-002/003 — GitHub `arzalight/qrih` privado, `main`/`develop` subidos. Staging enlazado sólo a `develop`; otras ramas/previews desactivados y logs privados. READY/publicado `6ac2be07ce110e3b94a50a2c`, commit `ee4d465`; 15 HTTP sin sesión repetidos y nueve chunks inspeccionados. Producción no conectada. Trazabilidad: `.gitignore`, `scripts/git-secrets-check.mjs`, `docs/PRE_GITHUB_REVIEW.md`, `supabase/staging/git-deployment-verification-2026-10-04.md`. Este nuevo corte documental local requiere subir su commit.
 
 Último deployment normal READY: `6ac2b00f96ae02e0c1a8b626`; sin prueba mutante automática. Se suman **24 comprobaciones HTTP/RPC autenticadas** en staging a los 15 casos sin sesión y 14 SQL remotos: JWT/cookies, siete WebP, aislamiento, estados/suspensión, galería y PDF real. Limpieza independiente: cero cuentas/propiedades/procedencias/objetos. Referencias IMG-001/002 y PDF-001 pasan a **VALIDADO PARCIAL EN STAGING**, nunca a resuelto en el proyecto actual. Evidencia: `tests/staging-live.test.mjs` y `supabase/staging/deployment-verification-2026-10-04.md`. Correo, contactos completos, TTL real, UI integral y recuperación siguen pendientes.
 
