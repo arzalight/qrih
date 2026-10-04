@@ -36,6 +36,8 @@ test('baseline real sin datos + 044–049: flujos SQL y rollback de staging',asy
       '048_atomic_property_writes.sql','20261004052754_049_lockdown_function_privileges.sql']) {
       await db.exec(sql('migrations/'+file))
     }
+    // Regresión: un alias SELECT no puede utilizarse dentro de un cast ORDER BY.
+    await db.exec(sql('checks/soft_launch_preflight.sql'))
     const reports=await db.exec(sql('checks/staging_security_smoke.sql'))
     const results=reports.find(report=>report.rows[0]?.results)?.rows[0].results
     assert.ok(Array.isArray(results) && results.length>=14)

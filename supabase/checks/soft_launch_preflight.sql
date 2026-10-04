@@ -15,7 +15,7 @@ select schemaname,tablename,policyname,permissive,roles,cmd,qual,with_check from
 where schemaname in ('public','storage') order by schemaname,tablename,policyname;
 select p.oid::regprocedure as signature,p.prosecdef,p.proconfig,p.proacl
 from pg_proc p join pg_namespace n on n.oid=p.pronamespace
-where n.nspname='public' order by signature::text;
+where n.nspname='public' order by p.oid::regprocedure::text;
 select event_object_table,trigger_name,action_timing,event_manipulation,action_statement
 from information_schema.triggers where trigger_schema='public' order by event_object_table,trigger_name;
 select conrelid::regclass as table_name,conname,pg_get_constraintdef(oid) as definition

@@ -34,4 +34,4 @@
 
 **NO-GO** para Soft Launch: correo/confirmación, contactos completos, TTL real, UI integral, concurrencia/cold-start y recuperación siguen pendientes. Producción no conectada a `main`.
 
-Esta evidencia se escribió después del deployment. Se prepara su commit documental en `develop` **local**, pendiente de una nueva subida desde la terminal del usuario; el deployment comprobado no incluye todavía esta actualización. Mantener secretos en el llavero/proveedor, no copiarlos para sortear limitaciones del agente.
+Esta evidencia se subió después como commit `4efa7cbbc7d19d2ed596c2e8f2855c77489d818b`: usuario confirmó push y panel verificó publicación automática `6ac2c0c2f1aeb800083fcdc6`. Después del ensayo ampliado se restauró Git normal `6ac2c7192fc6c22b218dadef`, mismo commit. Ver `flows-verification-2026-10-04.md`: 42 PASS con límites explícitos y upload nuevo bloqueado; NO-GO sin cambio. El informe ampliado/pruebas/preflight de esta sesión están locales hasta siguiente subida. Mantener secretos en el llavero/proveedor, no copiarlos para sortear limitaciones del agente.
