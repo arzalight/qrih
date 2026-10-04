@@ -25,8 +25,8 @@ Ejecutar `node scripts/git-secrets-check.mjs` **después de preparar el índice 
 
 ## Flujo aprobado / estado
 
-1. Git local: inicializado; índice revisado de 159 archivos, cero hallazgos por patrones. Commit inicial y ramas `main`/`develop` se verifican al terminar; identidad local pública de GitHub (noreply), sin modificar preferencias globales.
-2. GitHub: creación privada pendiente de sesión/acceso de publicación. No usar repositorio público como alternativa.
+1. Git local: **verificado**; commit inicial `55b7737`, ramas `main`/`develop`, trabajando en `develop`. Índice revisado de 159 archivos, cero hallazgos por patrones. Lint, tipos y 14 tests pasan. Identidad sólo local de GitHub (noreply), sin modificar preferencias globales.
+2. GitHub: **creado privado** https://github.com/arzalight/qrih; privacidad confirmada en Settings. Repositorio aún vacío: subida pendiente de autorización GitHub CLI. El conector existente no accede al nuevo repo y no hay credencial Git local; no convertir a público ni copiar tokens en documentos para sortearlo.
 3. Staging: conectar sólo `develop` al proyecto existente `qrih-staging`; desactivar previews/otras ramas para no divulgar credenciales ni generar despliegues innecesarios.
 4. Producción: **no conectada**. `main` reservado para después del GO explícito. Crear Git no modifica el dictamen **NO-GO** del Soft Launch.
 

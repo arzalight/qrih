@@ -2,7 +2,7 @@
 
 ## Corte vigente — correcciones y staging autorizados, actualizado 2026-10-04
 
-**Control pre-GitHub:** `docs/PRE_GITHUB_REVIEW.md`: escaneo inicial sin patrones de secreto detectados; `.env`, builds/dependencias, temporales Supabase y respaldos excluidos. Se verificará también el índice preparado antes de subir. 49 migraciones activas conservadas; ninguna ejecutada en esta revisión. GitHub privado `arzalight/qrih` autorizado, pendiente de creación/conexión. Este control no cierra AUD-002 ni cambia el NO-GO. Producción permanece desconectada.
+**Control pre-GitHub:** `docs/PRE_GITHUB_REVIEW.md`: índice de 159 archivos sin patrones de secreto detectados; `.env`, builds/dependencias, temporales Supabase y respaldos excluidos. 49 migraciones activas conservadas; ninguna ejecutada en esta revisión. Git local verificado, commit inicial `55b7737`, `main`/`develop`; lint/tipos/14 tests pasan. GitHub `arzalight/qrih` creado privado, vacío; subida/conexión pendiente de autorización Git local. Este control no cierra AUD-002 ni cambia el NO-GO. Producción permanece desconectada.
 
 **Dictamen: NO-GO para abrir a usuarios reales.** Supabase staging Free recibió baseline + 044–049; `property-images` es privado. **Staging publicado en Netlify Free**: https://qrih-staging.netlify.app, deployment `6ac2a97f4287162e063306eb`. Credencial de staging protegida como secreto en Netlify, sin copia local; variables públicas del mismo staging. Auth Site URL y callback exacto configurados, sin wildcard. Pasan 15 pruebas HTTP sin sesión y la inspección de nueve chunks públicos. Faltan matriz autenticada completa, email/confirmación, restauración y corte del proyecto actual, cuyo esquema y Storage público siguen intactos.
 
