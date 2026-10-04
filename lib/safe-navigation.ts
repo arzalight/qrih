@@ -1,0 +1,9 @@
+export function safeInternalPath(value: string | null | undefined, fallback = '/publicar') {
+  if (!value || !value.startsWith('/') || value.startsWith('//') || /[\\\s\u0000-\u001f]/.test(value)) return fallback
+  try {
+    const decoded = decodeURIComponent(value)
+    if (decoded.startsWith('//') || /[\\\u0000-\u001f]/.test(decoded)) return fallback
+    const url = new URL(value, 'https://qrih.invalid')
+    return url.origin === 'https://qrih.invalid' ? value : fallback
+  } catch { return fallback }
+}

@@ -1,0 +1,9 @@
+# Staging gratuito QRIH
+
+Fuente consultada: dmtvnwsuhehxfftddsap (QRIH). Destino aislado: mcyxunymhuxyiwklyfpy (QRIH Staging), Free, us-west-1. Costo confirmado por proveedor $0/mes. Nunca reutilizar claves, cookies ni datos reales en staging.
+
+`baseline-catalog-2026-10-03.json` y `catalog-query.sql` contienen metadatos de estructura. `baseline-2026-10-03.sql` reconstruye el esquema activo sobre public vacío. Captura enums, columnas/defaults/identidades, secuencia sin copiar su contador, constraints/FKs, índices, funciones, triggers, RLS y grants. No incluye filas, archivos, usuarios Auth, contraseñas ni configuración Auth. No reemplaza pg_dump/backup completo ni su ensayo de restauración. No modificar ni ejecutar sobre el proyecto fuente.
+
+El baseline se aplicó en staging como `qrih_staging_verified_schema_baseline`, seguido por 044–049 usando el origen de staging en 044. Las versiones remotas son timestamps asignados por el proveedor; los nombres identifican los archivos locales. No ejecutar 001–043 encima del baseline. Algunos de esos cambios ya existían en el catálogo aunque el historial remoto sólo registra hasta 036.
+
+El proyecto fuente no recibió cambios. ACL de AUD-019 corregida con 049. Buckets: property-images privado/WebP/20 MiB y profile-images público/WebP/5 MiB. Pasan 14 comprobaciones SQL remotas con rollback, 15 HTTP sin sesión y 24 autenticadas (cuentas/fotos sintéticas). Staging publicado en qrih-staging.netlify.app Free; variables protegidas sólo en Netlify y callback exacto. Deployment normal final 6ac2b00f96ae02e0c1a8b626 READY, sin orden temporal de pruebas. Limpieza independiente: cero cuentas/propiedades/procedencias/objetos; quedan bitácora sintética y marcas privadas de repetición. Ver deployment-verification-2026-10-04.md para evidencia y límites. Correo, contactos completos, TTL vencido, UI integral y recuperación pendientes: NO-GO de Soft Launch.

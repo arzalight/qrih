@@ -1,0 +1,38 @@
+node_modules/
+.next/
+.netlify/
+.env
+.env.*
+!.env.example
+*.tsbuildinfo
+*.log
+.DS_Store
+work/
+
+# Estado local del proveedor, respaldos y resultados generados (no borrar del disco).
+supabase/.temp/
+supabase/.branches/
+supabase/migration-backup/
+outputs/
+coverage/
+test-results/
+playwright-report/
+*.bak
+*.bak-*
+*.backup
+*~
+*.tmp
+*.swp
+*.swo
+*.zip
+*.tar
+*.tgz
+*.dump
+
+# Tipos generados por Next; no contienen código fuente del proyecto.
+next-env.d.ts
+
+# Credenciales/llaves locales; los ejemplos de configuración sí se versionan.
+*.pem
+*.key
+.netlify-staging-session.json
