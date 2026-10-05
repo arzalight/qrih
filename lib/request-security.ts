@@ -3,7 +3,18 @@ export function validUuid(value: unknown): value is string {
 }
 export function assertSameOrigin(request: Request) {
   const origin = request.headers.get('origin')
-  if (origin && origin !== new URL(request.url).origin) throw new Error('Origen inválido.')
+  let expectedOrigin = new URL(request.url).origin
+  // Netlify puede representar el request con una URL interna del deployment.
+  // SITE_ID/URL son variables del proveedor: no confiar en Host ni forwarded headers.
+  // Sólo aceptar el origen canónico del sitio, no aliases/previews ni comodines.
+  if (process.env.SITE_ID) {
+    const site = new URL(process.env.URL || '')
+    if (site.protocol !== 'https:' || site.username || site.password || site.pathname !== '/' || site.search || site.hash) {
+      throw new Error('Origen del sitio inválido.')
+    }
+    expectedOrigin = site.origin
+  }
+  if (origin && origin !== expectedOrigin) throw new Error('Origen inválido.')
 }
 export async function limitedBody(request: Pick<Request, 'headers' | 'body'>, maxBytes: number) {
   if (Number(request.headers.get('content-length')) > maxBytes) throw new Error('Solicitud demasiado grande.')

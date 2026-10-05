@@ -29,8 +29,34 @@ test('JSON/form corruptos, arrays, cuerpos enormes y UUID adulterado',async()=>{
   assert.equal(validUuid('11111111-1111-4111-8111-111111111111 OR 1=1'),false)
 })
 test('origen cruzado bloqueado y mismo origen permitido',()=>{
-  assert.throws(()=>assertSameOrigin(new Request('https://qrih.test/api',{headers:{Origin:'https://evil.test'}})))
-  assert.doesNotThrow(()=>assertSameOrigin(new Request('https://qrih.test/api',{headers:{Origin:'https://qrih.test'}})))
+  const previousId=process.env.SITE_ID
+  delete process.env.SITE_ID
+  try {
+    assert.throws(()=>assertSameOrigin(new Request('https://qrih.test/api',{headers:{Origin:'https://evil.test'}})))
+    assert.doesNotThrow(()=>assertSameOrigin(new Request('https://qrih.test/api',{headers:{Origin:'https://qrih.test'}})))
+  } finally {
+    if(previousId!==undefined)process.env.SITE_ID=previousId
+  }
+})
+test('Netlify valida origen canónico del servidor, no URL interna ni headers manipulables',()=>{
+  const previousId=process.env.SITE_ID,previousUrl=process.env.URL
+  process.env.SITE_ID='synthetic-site-id'
+  process.env.URL='https://qrih-staging.netlify.app'
+  const request=origin=>new Request('https://develop--qrih-staging.netlify.app/api/imagenes',{headers:{Origin:origin,Host:'evil.test','X-Forwarded-Host':'evil.test','X-Forwarded-Proto':'https'}})
+  try {
+    assert.doesNotThrow(()=>assertSameOrigin(request('https://qrih-staging.netlify.app')))
+    for(const origin of ['https://evil.test','null','https://develop--qrih-staging.netlify.app','http://qrih-staging.netlify.app','https://qrih-staging.netlify.app.evil.test'])
+      assert.throws(()=>assertSameOrigin(request(origin)))
+    const credentialUrl=new URL('https://qrih-staging.netlify.app')
+    credentialUrl.username='synthetic';credentialUrl.password='synthetic'
+    for(const invalid of ['', 'http://qrih-staging.netlify.app',credentialUrl.href,'https://qrih-staging.netlify.app/path','https://qrih-staging.netlify.app?x=1']) {
+      process.env.URL=invalid
+      assert.throws(()=>assertSameOrigin(request('https://qrih-staging.netlify.app')))
+    }
+  } finally {
+    if(previousId===undefined)delete process.env.SITE_ID;else process.env.SITE_ID=previousId
+    if(previousUrl===undefined)delete process.env.URL;else process.env.URL=previousUrl
+  }
 })
 test('WebP real decodificado; MIME falso/corrupción/SVG/tamaño no pasan',async()=>{
   const valid=await sharp({create:{width:16,height:16,channels:3,background:'#fff'}}).webp().toBuffer()
@@ -48,6 +74,15 @@ test('avatar PNG legítimo se convierte a WebP y SVG se rechaza',async()=>{
   const encoded=await validateAndEncodeImage(new File([png],'avatar.png',{type:'image/png'}),true)
   assert.equal((await sharp(encoded).metadata()).format,'webp')
   await assert.rejects(validateAndEncodeImage(new File(['<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"></svg>'],'avatar.svg',{type:'image/svg+xml'}),true))
+})
+test('diagnóstico de imágenes sólo reporta etapas constantes sin detalles de archivo',async()=>{
+  const bytes=await sharp({create:{width:80,height:60,channels:3,background:'#336699'}}).webp().toBuffer()
+  const stages=[]
+  await validateAndEncodeImage(new File([bytes],'private-name.webp',{type:'image/webp'}),false,stage=>stages.push(stage))
+  assert.deepEqual(stages,['size','metadata','format','encode'])
+  const badStages=[]
+  await assert.rejects(validateAndEncodeImage(new File([bytes],'private-name.webp',{type:'image/png'}),false,stage=>badStages.push(stage)))
+  assert.deepEqual(badStages,['size','metadata','format'])
 })
 test('PDF: siete WebP sintéticos convertidos y fotos JPEG realmente incrustadas',async()=>{
   const webp=await sharp({create:{width:16,height:16,channels:3,background:'#fff'}}).webp().toBuffer()
