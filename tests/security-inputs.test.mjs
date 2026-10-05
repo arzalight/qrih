@@ -15,6 +15,7 @@ registerHooks({ resolve(specifier, context, nextResolve) {
 const {safeInternalPath}=await import('../lib/safe-navigation.ts')
 const {readJson,readForm,assertSameOrigin,validUuid}=await import('../lib/request-security.ts')
 const {validateAndEncodeImage}=await import('../lib/verified-media-server.ts')
+const {optimizeImage,MAX_PROPERTY_IMAGES}=await import('../lib/image-optimizer.ts')
 const {encodePdfImage,preparePdfImages}=await import('../lib/pdf-images-server.ts')
 
 test('guard staging exige vacío por defecto y preserva cuenta/perfil con opt-in explícito',async()=>{
@@ -93,6 +94,68 @@ test('avatar PNG legítimo se convierte a WebP y SVG se rechaza',async()=>{
   const encoded=await validateAndEncodeImage(new File([png],'avatar.png',{type:'image/png'}),true)
   assert.equal((await sharp(encoded).metadata()).format,'webp')
   await assert.rejects(validateAndEncodeImage(new File(['<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"></svg>'],'avatar.svg',{type:'image/svg+xml'}),true))
+})
+test('propiedad JPEG/PNG auténticos se convierten a WebP; MIME adulterado sigue rechazado',async()=>{
+  const image=sharp({create:{width:32,height:24,channels:3,background:'#336699'}})
+  for(const [format,mime] of [['jpeg','image/jpeg'],['png','image/png']]) {
+    const bytes=await image.clone().toFormat(format).toBuffer()
+    const encoded=await validateAndEncodeImage(new File([bytes],`synthetic.${format}`,{type:mime}))
+    assert.equal((await sharp(encoded).metadata()).format,'webp')
+    await assert.rejects(validateAndEncodeImage(new File([bytes],'synthetic.webp',{type:'image/webp'})),/Formato/)
+  }
+  const gif=await image.clone().gif().toBuffer()
+  await assert.rejects(validateAndEncodeImage(new File([gif],'synthetic.gif',{type:'image/gif'})),/Formato/)
+})
+
+// Simula sólo APIs de Canvas. La utilidad cliente y la validación Sharp son reales.
+async function withCanvas(results, run) {
+  const previousImage=globalThis.Image,previousDocument=globalThis.document
+  const requests=[]
+  const canvas={getContext:()=>({drawImage(){}}),toBlob(callback,type,quality){
+    requests.push({type,quality,width:canvas.width,height:canvas.height})
+    callback(results.shift()??null)
+  }}
+  globalThis.Image=class {
+    naturalWidth=4000;naturalHeight=3000
+    set src(_value){queueMicrotask(()=>this.onload())}
+  }
+  globalThis.document={createElement:tag=>{assert.equal(tag,'canvas');return canvas}}
+  try {await run(requests)} finally {
+    if(previousImage===undefined)delete globalThis.Image;else globalThis.Image=previousImage
+    if(previousDocument===undefined)delete globalThis.document;else globalThis.document=previousDocument
+  }
+}
+test('Canvas WebP y fallback Safari PNG→JPEG mantienen MIME real, resize y WebP final',async()=>{
+  const image=sharp({create:{width:32,height:24,channels:3,background:'#336699'}})
+  const png=await image.clone().png().toBuffer(),webp=await image.clone().webp().toBuffer(),jpeg=await image.clone().jpeg().toBuffer()
+  for(const fallback of [false,true]) {
+    const results=fallback?[new Blob([png],{type:'image/png'}),new Blob([jpeg],{type:'image/jpeg'})]:[new Blob([webp],{type:'image/webp'})]
+    await withCanvas(results,async requests=>{
+      const result=await optimizeImage(new File([png],'synthetic.png',{type:'image/png'}))
+      try {
+        assert.equal(result.file.type,fallback?'image/jpeg':'image/webp')
+        assert.equal(result.file.name,fallback?'synthetic.jpg':'synthetic.webp')
+        assert.deepEqual(requests.map(r=>r.type),fallback?['image/webp','image/jpeg']:['image/webp'])
+        for(const r of requests){assert.equal(r.width,1920);assert.equal(r.height,1440);assert.equal(r.quality,0.8)}
+        const encoded=await validateAndEncodeImage(result.file)
+        assert.equal((await sharp(encoded).metadata()).format,'webp')
+        assert.equal(result.originalSize,png.length)
+        assert.equal(result.optimizedSize,fallback?jpeg.length:webp.length)
+        assert.equal(MAX_PROPERTY_IMAGES,7)
+      } finally {URL.revokeObjectURL(result.previewUrl)}
+    })
+  }
+})
+test('Canvas no falsea formatos ni supera límites originales/transporte',async()=>{
+  for(const results of [[null],[new Blob(['png'],{type:'image/png'}),null],[new Blob(['png'],{type:'image/png'}),new Blob(['png'],{type:'image/png'})],
+    [new Blob([new Uint8Array(3*1024*1024+1)],{type:'image/webp'})],
+    [new Blob(['png'],{type:'image/png'}),new Blob([new Uint8Array(3*1024*1024+1)],{type:'image/jpeg'})]]) {
+    await withCanvas(results,async()=>{
+      await assert.rejects(optimizeImage(new File(['synthetic'],'synthetic.png',{type:'image/png'})))
+    })
+  }
+  await assert.rejects(optimizeImage(new File([new Uint8Array(20*1024*1024+1)],'large.png',{type:'image/png'})),/20 MB/)
+  await assert.rejects(optimizeImage(new File(['synthetic'],'synthetic.heic',{type:'image/heic'})),/HEIC/)
 })
 test('diagnóstico de imágenes sólo reporta etapas constantes sin detalles de archivo',async()=>{
   const bytes=await sharp({create:{width:80,height:60,channels:3,background:'#336699'}}).webp().toBuffer()

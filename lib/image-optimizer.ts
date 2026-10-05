@@ -71,12 +71,22 @@ export async function optimizeImage(file: File): Promise<OptimizedImage> {
   context.imageSmoothingQuality = 'high'
   context.drawImage(image, 0, 0, width, height)
 
-  const blob = await new Promise<Blob | null>((resolve) => {
+  let blob = await new Promise<Blob | null>((resolve) => {
     canvas.toBlob(resolve, 'image/webp', 0.8)
   })
 
   if (!blob) {
     throw new Error('No fue posible convertir la imagen a WebP.')
+  }
+  // Safari puede devolver PNG al solicitar WebP. Nunca falsear el MIME:
+  // transportar JPEG optimizado y dejar la conversión final WebP al servidor.
+  if (blob.type !== 'image/webp') {
+    blob = await new Promise<Blob | null>((resolve) => {
+      canvas.toBlob(resolve, 'image/jpeg', 0.8)
+    })
+    if (!blob || blob.type !== 'image/jpeg') {
+      throw new Error('Tu navegador no pudo preparar un formato de imagen compatible.')
+    }
   }
   // Originales de hasta 20 MB siguen permitidos; el transporte servidor/Netlify
   // requiere una imagen optimizada menor. No acumular las siete en un request.
@@ -88,8 +98,9 @@ export async function optimizeImage(file: File): Promise<OptimizedImage> {
     .replace(/-+/g, '-')
     .replace(/^-|-$/g, '') || 'propiedad'
 
-  const optimizedFile = new File([blob], `${safeBaseName}.webp`, {
-    type: 'image/webp',
+  const extension = blob.type === 'image/webp' ? 'webp' : 'jpg'
+  const optimizedFile = new File([blob], `${safeBaseName}.${extension}`, {
+    type: blob.type,
     lastModified: Date.now(),
   })
 

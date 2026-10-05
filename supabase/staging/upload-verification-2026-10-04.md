@@ -1,4 +1,16 @@
-# AUD-022 — diagnóstico y corrección de origen, 2026-10-04
+# AUD-022 / AUD-025 — diagnóstico y correcciones de ingesta, 2026-10-04
+
+## Último incidente AUD-025 — formato Safari
+
+**ALTO / CORREGIDO LOCAL — PENDIENTE GIT/DEPLOY/UI REAL.** Usuario informa fallo de fotografía 1 al guardar borrador y confirma Safari. Staging publicado sigue `5fad2925a39034a12aa15b779be5f23d408337b0` / `6ac31d76c0cc5c000829ea5b`, READY, develop. Tres logs privados `QRIH_IMAGE_INGEST_FAILURE` muestran exclusivamente `stage: format`, `kind: property` en ventana posterior a 2026-10-05 04:20 UTC (2026-10-04 local); sin bytes/MIME/identidad de usuario. Edge agregados no muestran peticiones Storage en 04:20–04:36:20 UTC. Consulta independiente: 0 propiedades/galería/procedencias/objetos property-images. No datos eliminados ni cargas por el agente; no confundir este fallo con origen AUD-022.
+
+Repro sintética ejecuta el optimizer anterior con Canvas que devuelve PNG al pedir WebP: File MIME `image/webp`, formato Sharp `png`, validación real rechaza. [MDN confirma el fallback PNG de Canvas](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob). Defecto de código confirmado; Safari reportado es compatible, pero no se capturó la petición privada para acreditar su contenido exacto.
+
+Corrección local: `lib/image-optimizer.ts` mantiene WebP nativo o solicita JPEG si el primer blob no es WebP; comprueba blob/MIME, asigna extensión real, conserva resize 1920 px/original 20 MiB/payload 3 MiB/máximo 7. `lib/verified-media-server.ts` comprueba formato real JPEG/PNG/WebP y MIME correspondiente, sólo una página, decodifica completamente y re-encode WebP sin metadatos. La salida de Storage permanece exclusivamente WebP, bucket privado/UUID/ruta propia/procedencia/hash/cuota/server-only sin cambios. Avatar no amplía permisos. Ninguna migración/RLS/env/Supabase config/dependencia/producción cambiada.
+
+Verificación **local**: 29 unit + 30 SQL aisladas, lint/tipos/build PASS con variables públicas de staging y compilador sin clave privilegiada. Tests reales optimizer/Sharp con Canvas simulado: camino WebP y fallback PNG→JPEG→WebP, JPG/PNG entrada, resize/límites; MIME falsificado/GIF/corrupción/SVG siguen rechazados. No es Safari UI ni HTTP autenticado remoto; 4/24/42 previos permanecen históricos, no reejecutados. Guard de suites remotas previas no admite las 3 Auth actuales: no expandido ni ejecutado.
+
+Después del despliegue: usuario conserva formulario, recarga sólo cuando READY esté confirmado, selecciona nuevamente dos fotos y guarda un único borrador; comprobar portada/galería/Editar/recarga y WebP/paths/procedencia/privacidad en modo lectura. Reprobar Chrome nativo y séptima/octava/formatos adversarios con ensayo acotado. **NO-GO**: AUD-025 externo pendiente, AUD-002 sigue no cerrado en actual y correo/TTL/backup/UI/corte restantes pendientes. Los apartados AUD-022 siguientes conservan evidencia anterior y no prueban Safari Canvas.
 
 ## Alcance y dictamen
 
@@ -15,6 +27,7 @@ Sólo QRIH staging Free (`mcyxunymhuxyiwklyfpy`, `qrih-staging`). Usuario autori
 | `6ac2fcc25d734b1b9b6ddf4d` / `6ac2fcc25d734b1b9b6ddf4f` | Ensayo detenido por guard de staging vacío: había una cuenta previa. No ejecutó altas/upload ni las suites siguientes. Cleanup de esta ejecución PASS (sin fixtures creados); **no significa cero cuentas en staging**. No se publicó sobre el deployment normal. |
 | `6ac302592726cfff62a322e4` / `6ac302592726cfff62a322e6` | READY: **4/4 uploads + 24 controles de imágenes + 42 de flujos PASS**. Tres comprobaciones de baseline Auth/perfil intacto y tres cleanups PASS. Sin `QRIH_LIVE_FIXTURE_MEDIA`; todas las fotos iniciales de propiedad subidas por HTTP. |
 | `6ac3045028604f2725058d06` / `6ac3045028604f2725058d08` | **READY y publicado**, restauración normal ZIP con misma corrección, sin comando opt-in; **15 HTTP sin sesión PASS** después. Free, recargas/overages off, develop-only/previews off/logs privados verificados por API. GitHub pendiente de subida del usuario. |
+| Git automático / `6ac307ade99ce9000825a574` | **READY/publicado**, commit exacto `478fda1260cd04de1569171da10cd628d8d4b5ed` de develop, publicado 2026-10-05 02:13:37 UTC (2026-10-04 local). **15 HTTP sin sesión PASS sobre este deployment**. Free, recargas/overages off, develop-only/previews off/logs privados comprobados de nuevo. No reejecuta suites mutantes. Sustituye el ZIP normal anterior. |
 
 ## Causa confirmada y límite de inferencia
 
@@ -56,10 +69,10 @@ Usuario autorizó repetir con cuentas sintéticas nuevas **preservando y comprob
 
 Las tres suites informan **Auth/perfil previo sin cambios**. Consulta independiente final: **1 cuenta Auth previa, 0 perfiles, propiedades, galerías, demandas, contactos, autorizaciones, notificaciones, intereses, oportunidades, procedencias y objetos de ambos buckets**. Se retiraron sólo cuentas/filas/fotos sintéticas identificadas de estas suites; no son cuentas operativas recuperables. Bitácoras sintéticas y marcas privadas preservadas. La consulta de conteos inicial usó un nombre de tabla inexistente y no mutó nada; nombres verificados en catálogo y consulta final correcta. No se infiere fallo de perfil/callback de la cuenta anterior sin conocer su origen. No se probó aquí restauración integral ni contenido de sesiones preexistentes.
 
-La corrección funcional sigue siendo la del commit local `648da29`; este nuevo corte añade tests/guard/documentación, no código funcional. Último GitHub develop verificado: `4efa7cb`; pendiente subir los commits locales y verificar deployment Git exacto.
+La corrección funcional sigue siendo la del commit `648da29`; el corte `478fda1` añade tests/guard/documentación, no código funcional. Usuario subió los tres commits pendientes: develop local/remoto sincronizados. Netlify confirma commit completo `478fda1260cd04de1569171da10cd628d8d4b5ed` READY/publicado en `6ac307ade99ce9000825a574`; humo 15/15 PASS. Las suites autenticadas 4/24/42 corresponden al ensayo ZIP anterior, no se reejecutaron sobre Git. Sólo este registro posterior de evidencia queda local, no afecta el código publicado.
 
 ## Pendiente de cierre
 
-1. Subir corrección/pruebas/documentos a develop y verificar deployment Git exacto; no restaurar la versión antigua sobre la corrección. Producción/main no conectados hasta GO explícito.
+1. Entrega Git exacta y humo verificados. Conservar la trazabilidad de evidencia y no restaurar la versión antigua sobre la corrección. Producción/main no conectados hasta GO explícito.
 2. Probar publicación/edición desde UI autenticada completa con cuenta de prueba preparada por flujo normal, no creada con auto-confirmación administrativa; incluye registro/correo/callback/perfil/sesión.
 3. Mantener abiertos SMTP/remitente gratuito, TTL 600/900 s+renovación, recuperación integral, red/cold-start, dispositivos reales y corte seguro del proyecto actual. No volver a diagnosticar RLS/bucket para el 400 de origen ya resuelto.

@@ -13,10 +13,13 @@ export async function validateAndEncodeImage(file: File, avatar = false, onStage
   onStage('metadata')
   const image = sharp(bytes, { limitInputPixels: 40_000_000, failOn: 'warning', animated: false })
   const metadata = await image.metadata()
-  const allowed = avatar ? ['jpeg', 'png', 'webp'] : ['webp']
+  // El transporte puede ser JPEG/PNG si Canvas no codifica WebP (Safari).
+  // No confiar en extensión/MIME declarado; Storage sólo recibe WebP re-encoded.
+  const allowed = ['jpeg', 'png', 'webp']
+  const expectedMime = metadata.format === 'jpeg' ? 'image/jpeg' : `image/${metadata.format}`
   onStage('format')
   if (!metadata.format || !allowed.includes(metadata.format)
-    || (metadata.pages || 1) > 1 || (!avatar && file.type !== 'image/webp')) {
+    || (metadata.pages || 1) > 1 || (!avatar && file.type !== expectedMime)) {
     throw new Error('Formato real de imagen no permitido.')
   }
   // Decodificar completamente, retirar metadatos y guardar siempre WebP auténtico.
