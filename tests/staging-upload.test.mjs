@@ -3,8 +3,10 @@ import {randomUUID} from 'node:crypto'
 import {createClient} from '@supabase/supabase-js'
 import {createServerClient} from '@supabase/ssr'
 import sharp from 'sharp'
+import {captureAuthBaseline,verifyAuthBaseline} from './staging-fixture-guard.mjs'
 
-// Opt-in de una sola ejecución, exclusivamente en staging vacío y Netlify.
+// Opt-in de una sola ejecución, exclusivamente en staging aislado y Netlify.
+// Auth vacío por defecto; cuenta previa sólo con preservación explícita y baseline.
 // Nunca copiar claves, JWT, imágenes reales ni información personal a los logs.
 if(process.env.QRIH_LIVE_STAGING_TEST !== '1') {
   console.log('Upload staging: skipped (explicit opt-in required).')
@@ -15,7 +17,7 @@ assert.equal(process.env.NEXT_PUBLIC_SUPABASE_URL,url)
 assert.ok(process.env.NETLIFY && process.env.QRIH_LIVE_RUN_ID)
 const svc=createClient(url,process.env.SUPABASE_SERVICE_ROLE_KEY,{auth:{persistSession:false,autoRefreshToken:false}})
 const actors=[],properties=[],objects=[]
-let step='preflight',failed=false,passed=0
+let step='preflight',failed=false,passed=0,baseline
 async function checked(promise,label) {
   step=label
   const result=await promise
@@ -23,8 +25,7 @@ async function checked(promise,label) {
   return result.data
 }
 try {
-  const initial=await checked(svc.auth.admin.listUsers({page:1,perPage:1}),'Empty Auth')
-  assert.equal(initial.users.length,0)
+  baseline=await captureAuthBaseline(svc)
   const before=await svc.from('properties').select('id',{count:'exact',head:true})
   assert.ok(!before.error && before.count===0)
   await checked(svc.from('qrih_rate_windows').insert({subject:`one-shot:${process.env.QRIH_LIVE_RUN_ID}`,action:'upload-test',window_start:'2099-01-01T00:00:00Z',hits:1}),'Single use')
@@ -78,6 +79,10 @@ try {
     const rates=await svc.from('qrih_rate_windows').delete().eq('subject',actor.id);clean&&=!rates.error
     const audits=await svc.from('audit_logs').update({actor_id:null}).eq('actor_id',actor.id);clean&&=!audits.error
     const removed=await svc.auth.admin.deleteUser(actor.id);clean&&=!removed.error
+  }
+  if(baseline) {
+    try {await verifyAuthBaseline(svc,baseline);console.log('UPLOAD BASELINE: prior Auth/profile unchanged')}
+    catch {clean=false;console.error('UPLOAD BASELINE: FAIL; no personal details logged')}
   }
   console.log(`UPLOAD CLEANUP: ${clean?'PASS':'FAIL'} (only this run synthetic IDs)`)
   console.log(`UPLOAD SUMMARY: ${passed}/4 uploads passed; no email delivery tested.`)

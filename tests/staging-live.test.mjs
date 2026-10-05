@@ -3,8 +3,10 @@ import { randomUUID } from 'node:crypto'
 import { createClient } from '@supabase/supabase-js'
 import { createServerClient } from '@supabase/ssr'
 import sharp from 'sharp'
+import {captureAuthBaseline,verifyAuthBaseline} from './staging-fixture-guard.mjs'
 
-// Opt-in exclusivo del staging vacío. Credenciales, passwords y JWT sólo en memoria.
+// Opt-in exclusivo del staging aislado. Auth vacío por defecto; una cuenta previa
+// sólo con preservación explícita/baseline. Claves, passwords y JWT sólo en memoria.
 if (process.env.QRIH_LIVE_STAGING_TEST !== '1') {
   console.log('Staging HTTP autenticado: omitido (requiere opt-in explícito).')
   process.exit(0)
@@ -18,15 +20,14 @@ const pub=process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 const svc=createClient(url,process.env.SUPABASE_SERVICE_ROLE_KEY,{auth:{persistSession:false,autoRefreshToken:false}})
 const anon=createClient(url,pub,{auth:{persistSession:false,autoRefreshToken:false}})
 const actors=[], paths=[], results=[]
-let propertyId, step='preflight'
+let propertyId, baseline, step='preflight'
 const runId=randomUUID()
 const slug=`aud002-${runId}`
 const ok=(value,label)=>{assert.ok(value,label);results.push(label);console.log(`STAGING PASS: ${label}`)}
 const checked=async(promise,label)=>{step=label;const result=await promise;if(result.error)console.error(`STAGING ERROR CODE: ${result.error.code||result.error.status||'unknown'}`);assert.ok(!result.error,label);return result.data}
 const request=(path,actor,init={})=>fetch(origin+path,{...init,redirect:'manual',headers:{Origin:origin,...(actor?{Cookie:actor.cookies.map(c=>`${c.name}=${c.value}`).join('; ')}:{}),...init.headers}})
 try {
-  const users=await checked(svc.auth.admin.listUsers({page:1,perPage:1}),'Read staging users')
-  assert.equal(users.users.length,0,'Se requiere staging sin cuentas previas')
+  baseline=await captureAuthBaseline(svc)
   const existing=await svc.from('properties').select('id',{count:'exact',head:true})
   assert.ok(!existing.error && existing.count===0,'Se requiere staging sin propiedades previas')
   // Marca privada no personal: el mismo paquete nunca ejecuta sus mutaciones dos veces.
@@ -120,6 +121,10 @@ try {
     // Conservar bitácora sintética sin bloquear la retirada de estas cuentas de prueba.
     const audit=await svc.from('audit_logs').update({actor_id:null}).eq('actor_id',actor.id);clean&&=!audit.error
     const deleted=await svc.auth.admin.deleteUser(actor.id);clean&&=!deleted.error
+  }
+  if(baseline) {
+    try {await verifyAuthBaseline(svc,baseline);console.log('STAGING BASELINE: prior Auth/profile unchanged')}
+    catch {clean=false;console.error('STAGING BASELINE: FAIL; no personal details logged')}
   }
   console.log(`STAGING CLEANUP: ${clean?'PASS':'FAIL'} (only this run accounts/property/objects)`)
   if(!clean)process.exitCode=1

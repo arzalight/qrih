@@ -4,9 +4,11 @@ import {setTimeout as delay} from 'node:timers/promises'
 import {createClient} from '@supabase/supabase-js'
 import {createServerClient} from '@supabase/ssr'
 import sharp from 'sharp'
+import {captureAuthBaseline,verifyAuthBaseline} from './staging-fixture-guard.mjs'
 
 // No es una prueba automática de deploy: requiere autorización, staging vacío
 // y ejecución única dentro del build privado de Netlify. Nunca registrar secretos.
+// Una cuenta Auth previa sólo con opt-in de preservación y baseline comprobado.
 if(process.env.QRIH_LIVE_STAGING_TEST !== '1') {
   console.log('Extended staging flows: skipped (explicit opt-in required).')
   process.exit(0)
@@ -20,7 +22,7 @@ const svc=createClient(url,process.env.SUPABASE_SERVICE_ROLE_KEY,options)
 const anon=createClient(url,process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,options)
 const actors=[], properties=[], demands=[], objects=[], results=[]
 const run=randomUUID()
-let step='preflight'
+let step='preflight',baseline
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex')
 const pass=label=>{results.push(label);console.log(`FLOWS PASS: ${label}`)}
 const check=(value,label)=>{step=label;assert.ok(value,label);pass(label)}
@@ -81,8 +83,7 @@ async function attach(actor,property,images,status='draft',changes={}) {
   await data(actor.client.rpc('qrih_update_property_with_images',{p_property_id:property.id,p_expected_updated_at:version.updated_at,p_images:images,p_changes:{...changes,status}}),'Save atomic gallery')
 }
 try {
-  const initial=await data(svc.auth.admin.listUsers({page:1,perPage:1}),'Check empty Auth')
-  assert.equal(initial.users.length,0,'Empty staging required')
+  baseline=await captureAuthBaseline(svc)
   const before=await svc.from('properties').select('id',{count:'exact',head:true})
   assert.ok(!before.error && before.count===0,'Empty staging properties required')
   await data(svc.from('qrih_rate_windows').insert({subject:`one-shot:${process.env.QRIH_LIVE_RUN_ID}`,action:'staging-flows',window_start:'2099-01-01T00:00:00Z',hits:1}),'Claim unique execution')
@@ -253,6 +254,10 @@ try {
     const rates=await svc.from('qrih_rate_windows').delete().eq('subject',actor.id);clean&&=!rates.error
     const audit=await svc.from('audit_logs').update({actor_id:null}).eq('actor_id',actor.id);clean&&=!audit.error
     const removed=await svc.auth.admin.deleteUser(actor.id);clean&&=!removed.error
+  }
+  if(baseline) {
+    try {await verifyAuthBaseline(svc,baseline);console.log('FLOWS BASELINE: prior Auth/profile unchanged')}
+    catch {clean=false;console.error('FLOWS BASELINE: FAIL; no personal details logged')}
   }
   console.log(`FLOWS CLEANUP: ${clean?'PASS':'FAIL'} (only this run synthetic IDs)`)
   if(!clean)process.exitCode=1

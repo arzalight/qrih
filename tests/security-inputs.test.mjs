@@ -4,6 +4,7 @@ import { registerHooks } from 'node:module'
 import sharp from 'sharp'
 import React from 'react'
 import {Document,Page,Image,renderToBuffer} from '@react-pdf/renderer'
+import {captureAuthBaseline,verifyAuthBaseline} from './staging-fixture-guard.mjs'
 
 registerHooks({ resolve(specifier, context, nextResolve) {
   if (specifier==='server-only') return {url:'data:text/javascript,export{}',shortCircuit:true}
@@ -15,6 +16,24 @@ const {safeInternalPath}=await import('../lib/safe-navigation.ts')
 const {readJson,readForm,assertSameOrigin,validUuid}=await import('../lib/request-security.ts')
 const {validateAndEncodeImage}=await import('../lib/verified-media-server.ts')
 const {encodePdfImage,preparePdfImages}=await import('../lib/pdf-images-server.ts')
+
+test('guard staging exige vacío por defecto y preserva cuenta/perfil con opt-in explícito',async()=>{
+  let users=[{id:'synthetic-prior',updated_at:'initial',user_metadata:{name:'synthetic'}}]
+  let profiles=[{id:'synthetic-prior',role:'publisher'}]
+  const svc={auth:{admin:{listUsers:async()=>({data:{users},error:null})}},from:()=>({select:()=>({in:async()=>({data:profiles,error:null})})})}
+  await assert.rejects(captureAuthBaseline(svc,false))
+  const baseline=await captureAuthBaseline(svc,true)
+  await verifyAuthBaseline(svc,baseline)
+  users=[{...users[0],updated_at:'changed'}]
+  await assert.rejects(verifyAuthBaseline(svc,baseline))
+  users=[{id:'synthetic-prior',updated_at:'initial',user_metadata:{name:'synthetic'}}]
+  profiles=[{id:'synthetic-prior',role:'admin'}]
+  await assert.rejects(verifyAuthBaseline(svc,baseline))
+  profiles=[];users=[{id:'one'},{id:'two'}]
+  await assert.rejects(captureAuthBaseline(svc,true))
+  users=[]
+  await assert.doesNotReject(captureAuthBaseline(svc,false))
+})
 
 test('next externo/codificado/protocol-relative rechazado; ruta local preservada',()=>{
   for(const input of ['https://evil.test','//evil.test','/%2Fevil.test','/\\evil.test','javascript:alert(1)','/%5cevil.test','/\nevil.test'])
