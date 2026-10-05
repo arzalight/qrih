@@ -20,7 +20,8 @@ function LoginForm() {
     ? 'La confirmación no pudo completar el acceso. Si tu correo ya está confirmado, inicia sesión aquí.'
     : searchParams.get('error') === 'profile'
       ? 'No fue posible preparar tu perfil. Inicia sesión para reintentarlo.'
-      : searchParams.get('error') === 'config' ? 'El servicio de acceso no está disponible.' : ''
+      : searchParams.get('error') === 'config' ? 'El servicio de acceso no está disponible.'
+        : searchParams.get('password') === 'updated' ? 'Contraseña actualizada. Inicia sesión con tu nueva contraseña.' : ''
 
   async function signIn(e: React.FormEvent) {
     e.preventDefault()
@@ -91,6 +92,8 @@ function LoginForm() {
             </p>
           )}
         </form>
+
+        <p><Link href="/recuperar-contrasena" prefetch={false}>Olvidé mi contraseña</Link></p>
 
         <p
           style={{

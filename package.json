@@ -7,7 +7,7 @@
     "start": "next start",
     "lint": "eslint app components lib tests --max-warnings 0",
     "typecheck": "tsc --noEmit",
-    "test": "node --test tests/aud002-images.test.mjs tests/security-inputs.test.mjs tests/auth-profile.test.mjs",
+    "test": "node --test tests/aud002-images.test.mjs tests/security-inputs.test.mjs tests/auth-profile.test.mjs tests/password-recovery.test.mjs",
     "test:rls": "node --test tests/aud002-rls.test.mjs tests/staging-baseline.test.mjs",
     "test:http": "node --test tests/http-smoke.test.mjs",
     "preflight": "node scripts/deployment-preflight.mjs"

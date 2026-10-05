@@ -9,6 +9,8 @@ registerHooks({ resolve(specifier, context, nextResolve) {
   }
   if (specifier === '@/lib/auth-profile') return nextResolve(new URL('../lib/auth-profile.ts', import.meta.url).href, context)
   if (specifier === '@/lib/request-security') return nextResolve(new URL('../lib/request-security.ts', import.meta.url).href, context)
+  if (specifier === '@/lib/password-recovery-server') return nextResolve(new URL('../lib/password-recovery-server.ts', import.meta.url).href, context)
+  if (specifier === 'server-only') return { url: 'data:text/javascript,export {}', shortCircuit: true }
   if (specifier === 'next/server') return nextResolve(new URL('../node_modules/next/server.js', import.meta.url).href, context)
   return nextResolve(specifier, context)
 }})
@@ -30,6 +32,7 @@ function fixture(options = {}) {
   } : options.user
   const client = {
     auth: {
+      onAuthStateChange: () => ({ data: { subscription: { unsubscribe() {} } } }),
       getUser: async () => {
         if (options.throwSession) throw new Error('sensitive synthetic error')
         return { data: { user }, error: options.sessionError ?? null }
@@ -156,12 +159,13 @@ test('callback ejecuta la ruta real: origen canónico, cache privada y fallos se
       [{}, 'test-code', '/publicar'],
     ]) {
       const f = fixture(options); globalThis.__qrihAuthTestClient = f.client
-      const response = await GET(new Request(`https://internal.test/auth/callback?code=${code}&next=https://evil.test`, {
+      const response = await GET(new Request(`https://internal.test/auth/callback?code=${code}&type=recovery&next=https://evil.test`, {
         headers: { Host: 'evil.test', 'X-Forwarded-Host': 'evil.test' },
       }))
       assert.equal(response.status, 307)
       assert.equal(response.headers.get('location'), `https://qrih-staging.netlify.app${target}`)
       assert.equal(response.headers.get('cache-control'), 'private, no-store')
+      assert.ok(!response.headers.get('set-cookie')?.includes('qrih-recovery'))
       if (!code || options.exchangeError) assert.equal(f.writes.length, 0)
     }
     globalThis.__qrihAuthTestClient = null
