@@ -1,75 +1,44 @@
 import { NextResponse } from 'next/server'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
+import { ensureOwnProfile } from '@/lib/auth-profile'
+import { canonicalRequestOrigin } from '@/lib/request-security'
 
 export async function GET(request: Request) {
-  const requestUrl = new URL(request.url)
-  const code = requestUrl.searchParams.get('code')
+  let stage = 'origin'
+  try {
+    // Reutiliza origen canónico de AUD-022 sin confiar en Host/forwarded headers.
+    const origin = canonicalRequestOrigin(request)
+    const redirect = (path: string) => {
+      const response = NextResponse.redirect(new URL(path, origin))
+      response.headers.set('Cache-Control', 'private, no-store')
+      return response
+    }
+    const fail = (error: 'confirmation' | 'config' | 'profile') => {
+      console.warn('QRIH_AUTH_CALLBACK_FAILURE', JSON.stringify({ stage }))
+      return redirect(`/login?error=${error}`)
+    }
+    stage = 'code'
+    const code = new URL(request.url).searchParams.get('code')
+    if (!code) return fail('confirmation')
 
-  if (!code) {
-    return NextResponse.redirect(
-      new URL('/login?error=confirmation', requestUrl.origin)
-    )
+    stage = 'config'
+    const supabase = await createServerSupabaseClient()
+    if (!supabase) return fail('config')
+
+    stage = 'exchange'
+    const { error } = await supabase.auth.exchangeCodeForSession(code)
+    if (error) return fail('confirmation')
+
+    const result = await ensureOwnProfile(supabase)
+    if (!result.ok) {
+      stage = `profile_${result.stage}`
+      return fail('profile')
+    }
+    return redirect('/publicar')
+  } catch {
+    // Sólo etapa constante; nunca código, cookies, JWT, email ni errores arbitrarios.
+    console.warn('QRIH_AUTH_CALLBACK_FAILURE', JSON.stringify({ stage }))
+    return NextResponse.json({ error: 'No fue posible completar la confirmación. Inicia sesión de nuevo.' },
+      { status: 503, headers: { 'Cache-Control': 'private, no-store' } })
   }
-
-  const supabase = await createServerSupabaseClient()
-
-  if (!supabase) {
-    return NextResponse.redirect(
-      new URL('/login?error=config', requestUrl.origin)
-    )
-  }
-
-  const { error } =
-    await supabase.auth.exchangeCodeForSession(code)
-
-  if (error) {
-    return NextResponse.redirect(
-      new URL('/login?error=confirmation', requestUrl.origin)
-    )
-  }
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    return NextResponse.redirect(
-      new URL('/login?error=confirmation', requestUrl.origin)
-    )
-  }
-
-  const metadata = user.user_metadata || {}
-
-  // Un callback repetido no debe sobrescribir rol, plan ni identidad existentes.
-  const { data: existingProfile, error: lookupError } = await supabase
-    .from('profiles').select('id').eq('id', user.id).maybeSingle()
-  if (lookupError) return NextResponse.redirect(new URL('/login?error=profile', requestUrl.origin))
-  if (existingProfile) return NextResponse.redirect(new URL('/publicar', requestUrl.origin))
-
-  const { error: profileError } =
-    await supabase
-      .from('profiles')
-      .insert(
-        {
-          id: user.id,
-          full_name: String(metadata.full_name || '').trim().slice(0, 120),
-          phone: typeof metadata.phone === 'string' ? metadata.phone.slice(0, 30) : null,
-          company_name:
-            typeof metadata.company_name === 'string' ? metadata.company_name.slice(0, 160) : null,
-          user_type: ['advisor', 'owner'].includes(metadata.user_type) ? metadata.user_type : null,
-        }
-      )
-
-  if (profileError) {
-    return NextResponse.redirect(
-      new URL(
-        '/login?error=profile',
-        requestUrl.origin
-      )
-    )
-  }
-
-  return NextResponse.redirect(
-    new URL('/publicar', requestUrl.origin)
-  )
 }

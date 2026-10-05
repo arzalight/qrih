@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import { safeInternalPath } from '@/lib/safe-navigation'
+import { ensureOwnProfile } from '@/lib/auth-profile'
 
 export default function RegistroPage() {
   const router = useRouter()
@@ -114,19 +115,8 @@ export default function RegistroPage() {
       }
 
       if (data.session && data.user) {
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .insert(
-            {
-              id: data.user.id,
-              full_name: form.name.trim(),
-              phone: form.phone.trim(),
-              company_name: form.company.trim() || null,
-              user_type: form.userType,
-            },
-          )
-
-        if (profileError && profileError.code !== '23505') {
+        const profileResult = await ensureOwnProfile(supabase)
+        if (!profileResult.ok) {
           setMsg(
             'La cuenta fue creada, pero no se pudo crear el perfil. Vuelve a iniciar sesión para reintentarlo.'
           )

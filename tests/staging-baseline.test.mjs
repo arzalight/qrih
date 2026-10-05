@@ -6,7 +6,7 @@ import {pathToFileURL} from 'node:url'
 const {PGlite}=await import(pathToFileURL(process.env.QRIH_PGLITE_MODULE).href)
 const sql=(path)=>readFileSync(new URL('../supabase/'+path,import.meta.url),'utf8')
 
-test('baseline real sin datos + 044–049: flujos SQL y rollback de staging',async()=>{
+test('baseline real sin datos + 044–049: flujos SQL y rollback de staging',async(t)=>{
   const db=new PGlite()
   try {
     await db.exec(`
@@ -38,6 +38,28 @@ test('baseline real sin datos + 044–049: flujos SQL y rollback de staging',asy
     }
     // Regresión: un alias SELECT no puede utilizarse dentro de un cast ORDER BY.
     await db.exec(sql('checks/soft_launch_preflight.sql'))
+    await t.test('AUD-024: INSERT propio con defaults seguros; duplicado/ajeno/privilegios denegados', async () => {
+      const a='11111111-1111-4111-8111-111111111111', b='22222222-2222-4222-8222-222222222222'
+      await db.exec(`begin; insert into auth.users(id) values('${a}'),('${b}');
+        select set_config('request.jwt.claim.sub','${a}',true);
+        select set_config('request.jwt.claims','{"sub":"${a}","role":"authenticated"}',true);
+        set local role authenticated;
+        insert into public.profiles(id,full_name,phone,company_name,user_type)
+          values('${a}','Synthetic profile','0000000000',null,'advisor');`)
+      const profile=(await db.query('select id,role,plan,account_status,is_verified,publications_enabled from public.profiles')).rows
+      assert.deepEqual(profile,[{id:a,role:'publisher',plan:'trial',account_status:'active',is_verified:false,publications_enabled:true}])
+      for(const attempt of [
+        `insert into public.profiles(id,full_name) values('${a}','Duplicate')`,
+        `insert into public.profiles(id,full_name) values('${b}','Foreign')`,
+        `update public.profiles set role='admin' where id='${a}'`,
+      ]) {
+        await db.exec('savepoint denied_write')
+        await assert.rejects(db.exec(attempt))
+        await db.exec('rollback to savepoint denied_write')
+      }
+      assert.equal((await db.query('select role from public.profiles')).rows[0].role,'publisher')
+      await db.exec('rollback')
+    })
     const reports=await db.exec(sql('checks/staging_security_smoke.sql'))
     const results=reports.find(report=>report.rows[0]?.results)?.rows[0].results
     assert.ok(Array.isArray(results) && results.length>=14)

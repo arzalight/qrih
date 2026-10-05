@@ -6,51 +6,51 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Header } from '@/components/Header'
 import { safeInternalPath } from '@/lib/safe-navigation'
+import { ensureOwnProfile } from '@/lib/auth-profile'
 
 function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState('')
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
   const searchParams = useSearchParams()
   const next = safeInternalPath(searchParams.get('next'))
+  const callbackMessage = searchParams.get('error') === 'confirmation'
+    ? 'La confirmación no pudo completar el acceso. Si tu correo ya está confirmado, inicia sesión aquí.'
+    : searchParams.get('error') === 'profile'
+      ? 'No fue posible preparar tu perfil. Inicia sesión para reintentarlo.'
+      : searchParams.get('error') === 'config' ? 'El servicio de acceso no está disponible.' : ''
 
   async function signIn(e: React.FormEvent) {
     e.preventDefault()
+    if (loading) return
+    setLoading(true)
+    setMessage('')
+    try {
+      const supabase = createClient()
+      if (!supabase) {
+        return setMessage('El servicio de acceso no está disponible.')
+      }
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+      if (error) return setMessage(error.message)
+      if (!data.user) return setMessage('No fue posible iniciar sesión.')
 
-    const supabase = createClient()
-
-    if (!supabase) {
-      return setMessage(
-        'Agrega tus credenciales de Supabase en .env.local para activar el acceso.'
+      const result = await ensureOwnProfile(supabase)
+      if (!result.ok) {
+        return setMessage('Tu sesión está iniciada, pero no se pudo preparar tu perfil. No puedes publicar todavía. Intenta iniciar sesión de nuevo o contacta a soporte.')
+      }
+      router.replace(
+        result.profile.role === 'admin' && result.profile.account_status === 'active'
+          ? '/admin'
+          : next
       )
+      router.refresh()
+    } catch {
+      setMessage('No fue posible completar el acceso. Intenta nuevamente.')
+    } finally {
+      setLoading(false)
     }
-
-    const { data, error } =
-      await supabase.auth.signInWithPassword({
-        email,
-        password,
-      })
-
-    if (error) return setMessage(error.message)
-
-    if (!data.user) {
-      return setMessage(
-        'No fue posible iniciar sesión.'
-      )
-    }
-
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', data.user.id)
-      .single()
-
-    router.replace(
-      profile?.role === 'admin'
-        ? '/admin'
-        : next
-    )
   }
 
   return (
@@ -81,13 +81,13 @@ function LoginForm() {
             }
           />
 
-          <button>
-            INICIAR SESIÓN →
+          <button disabled={loading}>
+            {loading ? 'INICIANDO SESIÓN…' : 'INICIAR SESIÓN →'}
           </button>
 
-          {message && (
+          {(message || callbackMessage) && (
             <p className="notice">
-              {message}
+              {message || callbackMessage}
             </p>
           )}
         </form>

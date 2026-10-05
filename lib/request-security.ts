@@ -1,8 +1,7 @@
 export function validUuid(value: unknown): value is string {
   return typeof value === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value)
 }
-export function assertSameOrigin(request: Request) {
-  const origin = request.headers.get('origin')
+export function canonicalRequestOrigin(request: Request) {
   let expectedOrigin = new URL(request.url).origin
   // Netlify puede representar el request con una URL interna del deployment.
   // SITE_ID/URL son variables del proveedor: no confiar en Host ni forwarded headers.
@@ -14,6 +13,11 @@ export function assertSameOrigin(request: Request) {
     }
     expectedOrigin = site.origin
   }
+  return expectedOrigin
+}
+export function assertSameOrigin(request: Request) {
+  const origin = request.headers.get('origin')
+  const expectedOrigin = canonicalRequestOrigin(request)
   if (origin && origin !== expectedOrigin) throw new Error('Origen inválido.')
 }
 export async function limitedBody(request: Pick<Request, 'headers' | 'body'>, maxBytes: number) {

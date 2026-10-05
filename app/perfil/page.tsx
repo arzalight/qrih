@@ -37,8 +37,11 @@ export default async function PerfilPage() {
     .eq('id', user.id)
     .single()
 
-  if (error) {
+  if (error || !profile) {
     console.warn('QRIH_APP_PERFIL_PAGE_41_FAILED')
+    return <><Header /><main style={{ padding: 40 }}><h1>Mi perfil</h1>
+      <p role="alert">No fue posible cargar tu perfil. Inicia sesión de nuevo para recuperarlo.</p>
+      <Link href="/login?error=profile">Iniciar sesión</Link></main></>
   }
 
   return (

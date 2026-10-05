@@ -6,6 +6,7 @@ import { Header } from '@/components/Header'
 import { ImageUploader, SelectedImage } from '@/components/ImageUploader'
 import { createClient } from '@/lib/supabase'
 import { AccountSuspensionNotice } from '@/components/AccountSuspensionNotice'
+import Link from 'next/link'
 
 import {
   ZONAS_GENERALES,
@@ -39,6 +40,7 @@ export default function Publish() {
   const router = useRouter()
 
   const [ready, setReady] = useState(false)
+  const [accessError, setAccessError] = useState('')
   const [msg, setMsg] = useState('')
   const [loading, setLoading] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
@@ -50,19 +52,24 @@ export default function Publish() {
     const supabase = createClient()
 
     if (!supabase) {
-      setReady(true)
+      setAccessError('El servicio no está disponible. No puedes publicar todavía.')
       return
     }
 
-    supabase.auth.getUser().then(async ({ data }) => {
-      if (!data.user) {
+    supabase.auth.getUser().then(async ({ data, error }) => {
+      if (error || !data.user) {
         router.replace('/login')
       } else {
-        const { data: profile } = await supabase
+        const { data: profile, error: profileError } = await supabase
           .from('profiles')
           .select('account_status')
           .eq('id', data.user.id)
           .single()
+
+        if (profileError || !profile || !['active', 'suspended'].includes(profile.account_status)) {
+          setAccessError('No fue posible cargar tu perfil. Inicia sesión de nuevo para recuperarlo; no puedes publicar todavía.')
+          return
+        }
 
         if (profile?.account_status === 'suspended') {
           setAccountStatus('suspended')
@@ -70,7 +77,7 @@ export default function Publish() {
 
         setReady(true)
       }
-    })
+    }).catch(() => setAccessError('No fue posible verificar tu cuenta. Inicia sesión de nuevo.'))
   }, [router])
 
   useEffect(() => {
@@ -320,6 +327,11 @@ export default function Publish() {
     } finally { setLoading(false) }
   }
 
+  if (accessError) {
+    return <><Header /><main className="form"><h1>No puedes publicar todavía</h1>
+      <p className="notice" role="alert">{accessError}</p>
+      <Link href="/login?error=profile">Iniciar sesión</Link></main></>
+  }
   if (!ready) {
     return null
   }
