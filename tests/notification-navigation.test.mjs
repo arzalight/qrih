@@ -57,6 +57,30 @@ test('moderación navega al panel existente, no a ficha pública ni URL externa'
   }
 })
 
+test('panel real: Mis notificaciones enlaza al historial existente fuera de las vistas condicionales', () => {
+  const panelSource = readFileSync(new URL('../app/mis-propiedades/page.tsx', import.meta.url), 'utf8')
+  const panelAst = babel.parseSync(panelSource, { filename: 'page.tsx', configFile: false, babelrc: false,
+    plugins: [['@babel/plugin-syntax-typescript', { isTSX: true }]] })
+  const links = []
+  let toggleStart
+  babel.traverse(panelAst, { JSXElement(path) {
+    const opening = path.node.openingElement
+    if (opening.name.type !== 'JSXIdentifier') return
+    if (opening.name.name === 'AutoApproveContactsToggle') toggleStart = path.node.start
+    if (opening.name.name !== 'Link') return
+    const href = opening.attributes.find(attribute => attribute.type === 'JSXAttribute' && attribute.name.name === 'href')
+    if (href?.value?.type !== 'StringLiteral' || href.value.value !== '/notificaciones') return
+    links.push(path.node)
+    assert.equal(path.node.children.filter(child => child.type === 'JSXText').map(child => child.value).join('').trim(),
+      'Mis notificaciones')
+    assert.equal(path.findParent(parent => parent.isConditionalExpression() || parent.isLogicalExpression()), null,
+      'El acceso debe estar presente en Propiedades, Requerimientos y Oportunidades, incluso sin publicaciones')
+    assert.ok(path.findParent(parent => parent.isReturnStatement()), 'Debe formar parte del panel renderizado')
+  } })
+  assert.equal(links.length, 1, 'Debe haber un único acceso directo al historial')
+  assert.ok(links[0].start < toggleStart, 'El acceso debe aparecer en la cabecera del panel')
+})
+
 test('tipos ajenos a moderación no alteran sus destinos ni aceptan URL como tipo', () => {
   for (const type of ['opportunity_property_registered', 'property_contact_request',
     'property_contact_authorized', 'unknown', '', 'https://evil.test', '//evil.test']) {

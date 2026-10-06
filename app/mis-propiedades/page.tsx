@@ -384,6 +384,25 @@ return (
           Aquí puedes consultar y administrar lo que has publicado en QRO INDUSTRIAL HUB.
         </p>
 
+        <div style={{ marginTop: 16, marginBottom: 24 }}>
+          <Link
+            href="/notificaciones"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              padding: '12px 20px',
+              border: '1px solid #111827',
+              borderRadius: 8,
+              background: '#111827',
+              color: '#ffffff',
+              fontWeight: 600,
+              textDecoration: 'none',
+            }}
+          >
+            Mis notificaciones
+          </Link>
+        </div>
+
         {profile?.account_status === 'suspended' && <AccountSuspensionNotice />}
 
         <AutoApproveContactsToggle
