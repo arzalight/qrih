@@ -319,6 +319,7 @@ export default async function PropertyPage({ params }: PageProps) {
               <h2>Solicitar información</h2>
 
               <PropertyContactForm
+  key={property.id}
   propertyId={property.id}
 />
             </section>

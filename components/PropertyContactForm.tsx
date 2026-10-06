@@ -1,18 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
+import { loadOwnPropertyContact, type OwnerContact } from '@/lib/property-contact-state'
 
 type PropertyContactFormProps = {
   propertyId: string
-}
-
-type OwnerContact = {
-  name: string | null
-  phone: string | null
-  company: string | null
-  email: string | null
 }
 
 export function PropertyContactForm({
@@ -26,6 +20,9 @@ export function PropertyContactForm({
   const [owner, setOwner] = useState<OwnerContact | null>(null)
   const [authorizationId, setAuthorizationId] = useState<string | null>(null)
   const [authorizationStatus, setAuthorizationStatus] = useState<string | null>(null)
+  const [restoring, setRestoring] = useState(true)
+  const [authVersion, setAuthVersion] = useState(0)
+  const contactEpoch = useRef(0)
 
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
@@ -33,46 +30,101 @@ export function PropertyContactForm({
   const [company, setCompany] = useState('')
 
   useEffect(() => {
+    if (!supabase) return
+    let actorId: string | null | undefined
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      const nextActor = session?.user.id ?? null
+      if (actorId === nextActor) return
+      actorId = nextActor
+      contactEpoch.current += 1
+      setOwner(null)
+      setAuthorizationId(null)
+      setAuthorizationStatus(null)
+      setMessage('')
+      setLoading(false)
+      setName('')
+      setPhone('')
+      setEmail('')
+      setCompany('')
+      setRestoring(true)
+      // Callback síncrono: las lecturas se realizan en el efecto posterior.
+      setAuthVersion((version) => version + 1)
+    })
+    return () => subscription.unsubscribe()
+  }, [supabase])
+
+  useEffect(() => {
+    let active = true
+    const epoch = contactEpoch.current
+    const isCurrent = () => active && epoch === contactEpoch.current
+
+    async function restoreContact() {
+      setRestoring(true)
+      setOwner(null)
+      setAuthorizationId(null)
+      setAuthorizationStatus(null)
+      setMessage('')
+      const state = supabase ? await loadOwnPropertyContact(supabase, propertyId) : null
+      if (!isCurrent()) return
+      if (state) {
+        setAuthorizationId(state.authorizationId)
+        setAuthorizationStatus(state.status)
+        setOwner(state.owner)
+        if (state.status === 'pending') setMessage('La solicitud está pendiente de autorización.')
+      }
+      setRestoring(false)
+    }
+
+    void restoreContact()
+    return () => { active = false }
+  }, [supabase, propertyId, authVersion])
+
+  useEffect(() => {
     if (!authorizationId || authorizationStatus !== 'pending') {
       return
     }
 
+    let active = true
+    const epoch = contactEpoch.current
+    const isCurrent = () => active && epoch === contactEpoch.current
     const interval = window.setInterval(async () => {
-      if (!supabase) return
+      if (!supabase || !isCurrent()) return
 
-      const { data: authorization } = await supabase
-        .from('property_contact_authorizations')
-        .select('status')
-        .eq('id', authorizationId)
-        .single()
+      try {
+        const { data: authorization, error } = await supabase
+          .from('property_contact_authorizations')
+          .select('status')
+          .eq('id', authorizationId)
+          .single()
 
-      if (!authorization) return
+        if (error || !authorization || !isCurrent()) return
 
-      if (authorization.status !== 'pending') {
-        setAuthorizationStatus(authorization.status)
-
-        if (authorization.status === 'authorized') {
-          const { data: ownerData } = await supabase.rpc(
-            'get_property_publisher_contact',
-            {
-              p_property_id: propertyId,
+        if (authorization.status !== 'pending') {
+          if (authorization.status === 'authorized') {
+            const { data: ownerData, error: ownerError } = await supabase.rpc(
+              'get_property_publisher_contact', { p_property_id: propertyId },
+            )
+            if (!isCurrent()) return
+            if (!ownerError && ownerData && ownerData.length > 0) {
+              setOwner(ownerData[0])
+              setMessage('El propietario autorizó el contacto.')
             }
-          )
-
-          if (ownerData && ownerData.length > 0) {
-            setOwner(ownerData[0])
-            setMessage('El propietario autorizó el contacto.')
           }
+          // Después del RPC: cambiar status desmonta este efecto de polling.
+          setAuthorizationStatus(authorization.status)
+          window.clearInterval(interval)
         }
-
-        window.clearInterval(interval)
+      } catch {
+        // Mantener contacto oculto ante fallo de red, sin errores privados.
       }
     }, 10000)
 
-    return () => window.clearInterval(interval)
-  }, [authorizationId, authorizationStatus, router, supabase])
+    return () => { active = false; window.clearInterval(interval) }
+  }, [authorizationId, authorizationStatus, propertyId, supabase, authVersion])
 
   useEffect(() => {
+    let active = true
+    const epoch = contactEpoch.current
     async function loadProfile() {
       if (!supabase) return
 
@@ -80,7 +132,7 @@ export function PropertyContactForm({
         data: { user },
       } = await supabase.auth.getUser()
 
-      if (!user) return
+      if (!user || !active || epoch !== contactEpoch.current) return
 
       const { data: profile } = await supabase
         .from('profiles')
@@ -88,6 +140,7 @@ export function PropertyContactForm({
         .eq('id', user.id)
         .single()
 
+      if (!active || epoch !== contactEpoch.current) return
       setName(profile?.full_name || user.user_metadata?.full_name || '')
       setPhone(profile?.phone || user.user_metadata?.phone || '')
       setCompany(
@@ -98,13 +151,17 @@ export function PropertyContactForm({
       setEmail(user.email || '')
     }
 
-    loadProfile()
-  }, [supabase])
+    void loadProfile().catch(() => {})
+    return () => { active = false }
+  }, [supabase, authVersion])
 
   async function handleSubmit(
     event: React.FormEvent<HTMLFormElement>
   ) {
     event.preventDefault()
+    if (loading || restoring || authorizationStatus === 'pending') return
+
+    const epoch = contactEpoch.current
 
     setLoading(true)
     setMessage('')
@@ -126,6 +183,7 @@ export function PropertyContactForm({
       )
 
       const data = await response.json()
+      if (epoch !== contactEpoch.current) return
 
       if (response.status === 401) {
         const next = `${window.location.pathname}${window.location.search}`
@@ -150,14 +208,21 @@ export function PropertyContactForm({
 
       form.reset()
     } catch (error) {
+      if (epoch !== contactEpoch.current) return
       setMessage(
         error instanceof Error
           ? error.message
           : 'Ocurrió un error.'
       )
     } finally {
-      setLoading(false)
+      if (epoch === contactEpoch.current) setLoading(false)
     }
+  }
+
+  if (restoring) return <p role="status">Comprobando tu solicitud de contacto…</p>
+
+  if (authorizationStatus === 'authorized' && !owner) {
+    return <p role="status">El contacto autorizado no está disponible. Revisa Notificaciones o vuelve a cargar la página.</p>
   }
 
   if (authorizationStatus === 'declined') {
@@ -317,7 +382,7 @@ export function PropertyContactForm({
 
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || authorizationStatus === 'pending'}
           style={{
             padding: '12px 16px',
             borderRadius: 8,
@@ -330,7 +395,7 @@ export function PropertyContactForm({
         >
           {loading
             ? 'Enviando...'
-            : 'Solicitar contacto'}
+            : authorizationStatus === 'pending' ? 'Solicitud pendiente' : 'Solicitar contacto'}
         </button>
 
         <p
