@@ -2,6 +2,8 @@
 
 ## Estado maestro vigente — correcciones pre-Soft-Launch, actualizado 2026-10-06
 
+**Entrega AUD-028:** corrección en develop `629f469`, 178 archivos/0 hallazgos. Push desde agente no completado por credencial GitHub no disponible; usuario sube develop desde Terminal autenticada. Deploy exacto/UI real pendientes, sin main/producción cambiados.
+
 **Vigente AUD-028 — BAJO / CORREGIDO LOCAL; despliegue y UI autenticada pendientes:** registro correcto sin sesión→login automático con tarjeta visual «Cuenta creada: confirma tu correo», aviso de Spam y uso del mismo navegador. Login/callback normal→panel existente `/mis-propiedades`, no prototipo `/panel`; next interno explícito en login/registro, admin activo `/admin` y recuperación preservados. Bandera visual no concede acceso ni contiene email/tokens. **48 unit/30 SQL aisladas/21 HTTP locales/lint/tipos/build PASS**, tarjeta local revisada visualmente y ausente en login normal. Sin correos/altas reales por agente, cambios Supabase/RLS/Storage/SMTP/dependencias/main/producción. Falta entrega exacta y login con cuenta existente en staging; no nuevo registro sólo por esta prueba.
 
 **AUD-023 actualizado:** usuario encuentra correo en Spam y activa cuenta; lectura SQL agregada/rollback corrobora **4 Auth/3 perfiles**, objetivo confirmada/no anónima/perfil publisher activo/no admin/0 propiedades propias. CONT-001 tiene actor separado disponible, pero baseline/configuración/solicitud siguen pendientes. No fallo SMTP confirmado; fiabilidad general pendiente, ALTO/EN REVISIÓN. Guías Supabase/PostgreSQL influyeron en comprobación agregada y preservación de confirmación/PKCE, sin cambio de seguridad por UX. **NO-GO general/AUD-002 en actual sin cierre**. Evidencias inferiores conservadas como histórico.
