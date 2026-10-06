@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
+import { moderationNotificationPath } from '@/lib/safe-navigation'
 
 type Notification = {
   id: string
@@ -126,6 +127,12 @@ export function Header() {
           )
         )
       }
+    }
+
+    const moderationPath = moderationNotificationPath(notification.type)
+    if (moderationPath) {
+      window.location.href = moderationPath
+      return
     }
 
     if (notification.type === 'opportunity_property_registered') {

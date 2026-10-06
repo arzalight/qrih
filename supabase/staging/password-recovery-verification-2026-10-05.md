@@ -2,7 +2,22 @@
 
 ## Dictamen y alcance
 
-**ALTO / CORREGIDO LOCAL — DEPLOY Y CORREO REAL PENDIENTES. NO-GO general.** Usuario autorizó implementar en develop sólo para staging. No feature de panel de seguridad, magic-link login, autenticación alternativa ni cambio de arquitectura: se completan solicitud/reset de acceso y un Route Handler del propio usuario. Código/diagnóstico anteriores en QRIH_AUDIT.md. No petición de correo ni cambio de contraseña remoto ejecutados por agente; sin lectura de enlaces/credenciales/cookies/usuarios reales.
+**ALTO / CORREGIDO Y DESPLEGADO STAGING — FLUJO NORMAL VALIDADO POR USUARIO; COBERTURA PARCIAL. NO-GO general.** Usuario autorizó implementar en develop sólo para staging. No feature de panel de seguridad, magic-link login, autenticación alternativa ni cambio de arquitectura: se completan solicitud/reset de acceso y un Route Handler del propio usuario. Código/diagnóstico anteriores en QRIH_AUDIT.md. No petición de correo ni cambio de contraseña remoto ejecutados por agente; sin lectura de enlaces/credenciales/cookies/usuarios reales.
+
+## Login y conservación visibles confirmados — 2026-10-05 18:31 local
+
+Tras la comprobación solicitada, usuario confirma login con contraseña nueva y que se conserva todo: perfil, mismo borrador, portada y siete fotos. Completa por reporte la cadena normal solicitud→correo→cambio→login→datos visibles conservados; no inspección independiente ni comparación íntegra BD/roles. Rechazo de contraseña anterior, logout/sesiones y negativos reales de enlaces/otra cuenta/TTL permanecen pendientes. No repetir recovery/login/fotos; puede retomarse envío del mismo borrador a revisión. No transición pending confirmada todavía. Sólo documentación por agente, sin nuevas verificaciones remotas ni código/configuración/datos/producción modificados; NO-GO general y AUD-002 en actual sin cierre. El reporte de las 18:26 que sigue es el corte anterior.
+
+## Ensayo funcional reportado — 2026-10-05 18:26 local
+
+El usuario informa que completó el proceso de recuperación, recibió el correo y pudo cambiar la contraseña de su cuenta. Llegada y cambio registrados como **confirmados por usuario**, no como inspección independiente de Auth/SMTP/plantilla/cookies. Sin enlaces ni contraseñas recibidos. No inferir login nuevo, rechazo de anterior, logout/sesiones, integridad de perfil/roles/draft/portada/siete fotos ni casos negativos a partir de este reporte. Próximo: login nuevo y revisión de datos sin editar ni enviar a revisión; no repetir solicitud/cambio. AUD-026 permanece parcialmente validado; AUD-002 en actual y NO-GO general sin cambio. Sólo documentación modificada por agente. Verificaciones anteriores conservadas abajo con su corte temporal.
+
+## Entrega y comprobaciones remotas — 2026-10-05 18:13 local
+
+- HEAD y origin/develop: `e3adb3942146b8298ef5d7d970dbfcca15aebc90`, árbol limpio antes de esta actualización documental.
+- API oficial Netlify: commit exacto publicado en qrih-staging, `6ac43bec9300d800080306b9`, READY, develop, 2026-10-06 00:08:40.379 UTC. Cuenta Free, recargas y overages desactivados; no contratación/configuración modificada.
+- `QRIH_SMOKE_ORIGIN=https://qrih-staging.netlify.app npm run test:http`: **20 PASS/0 fallos**, incluidos GET de las dos rutas nuevas y POST recovery sin Origin/sin autorización/origen cruzado (403/401/403). Sin identidad/cookie de usuario ni llamada autorizada de actualización.
+- Sólo verificación read-only y solicitudes HTTP denegadas, sin correo enviado ni cambio de contraseña por agente. Sin pruebas mutantes, migraciones, nuevos usuarios, datos o producción modificados. La llegada del correo, callback recovery remoto, UI de cuenta correcta, cambio/login y conservación de datos todavía no comprobados. No cerrar AUD-026 ni AUD-002 en actual.
 
 ## Flujo y trazabilidad
 
@@ -36,15 +51,15 @@ Prueba inicial del SDK sintético falló por no contemplar code_challenge/code_c
 
 ## Límites y matriz pendiente después del despliegue
 
-No valida aún plantilla/allowlist recovery efectivas ni SMTP de la cuenta real; SDK simulado no acredita Supabase remoto. Un correo Dashboard previo no tiene necesariamente el verifier de una solicitud iniciada por QRIH: solicitar uno nuevo desde la app después de READY y abrirlo en el mismo navegador/perfil. No pedir enlaces/códigos/contraseña en chat; el usuario realiza entrada/confirmación/envío de su nueva contraseña.
+Correo y cambio real confirmados por usuario en el ensayo superior: no repetirlos. Esto acredita entrega/recuperación funcional para esa solicitud, no inspección de plantilla/allowlist/configuración ni fiabilidad/cuotas/spam general de SMTP. SDK simulado por sí solo no acredita Supabase remoto. Un correo Dashboard previo no tiene necesariamente el verifier de una solicitud iniciada por QRIH; no usarlo para las pruebas del flujo nuevo. No pedir enlaces/códigos/contraseña en chat.
 
 | Caso real pendiente | Resultado esperado |
 |---|---|
-| develop exacto publicado | Enlace Login/solicitud/new routes visibles, 20 HTTP sin sesión PASS sobre deployment exacto. |
-| Solicitud válida/desconocida | Mensaje no enumerador; correo llega si corresponde, sin bucles ni bypass de cuotas. |
-| Email→callback→reset | Formulario de cuenta correcta; sin inicio/Publicar omitiendo el cambio. |
-| Cambio y logout | Nueva contraseña funciona; anterior rechazada. Verificar cierre de sesiones sin asumir invalidación instantánea de JWT. |
-| Perfil/roles/propiedad | Mismos usuarios/roles/perfiles, propietario/draft/portada/siete fotos y datos conservados. |
+| develop exacto publicado — COMPROBADO PARCIAL | e3adb39 READY y 20 HTTP sin sesión PASS; enlace/UI autenticada y flujo recovery de correo reales pendientes. |
+| Solicitud válida — CONFIRMADA POR USUARIO; desconocida pendiente | Correo recibido para su recuperación; no enumera cuentas desconocidas ni bucles/bypass de cuotas: pendiente real. |
+| Email→reset — CONFIRMADO POR USUARIO | Reporta proceso completado y cambio; no inspección independiente de callback/cookies/identidad mostrada. |
+| Cambio/login nuevo — CONFIRMADOS POR USUARIO; anterior/logout pendientes | Usuario puede entrar con nueva contraseña. Rechazo de anterior y cierre de sesiones aún pendientes; no asumir invalidación instantánea de JWT. |
+| Perfil/borrador/portada/siete fotos visibles — CONFIRMADOS POR USUARIO | Conservación visible reportada; comparación íntegra BD/roles/propietario pendiente, sin inferirla del render. |
 | Vencido/usado/alterado/otro navegador | Rechazo seguro/mensaje y solicitud nueva; no bypass por verifier ausente. |
 | Sesión anterior de otra cuenta | No cambia inadvertidamente esa cuenta, UI muestra cuenta validada. |
 | Ventana 600 s/token refrescado | Marca vencida/otro token no permite handler; solicitud nueva disponible. |

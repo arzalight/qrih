@@ -7,3 +7,10 @@ export function safeInternalPath(value: string | null | undefined, fallback = '/
     return url.origin === 'https://qrih.invalid' ? value : fallback
   } catch { return fallback }
 }
+
+// La ficha pública no sirve para avisos de rechazo ni para propiedades retiradas.
+export function moderationNotificationPath(type: string) {
+  return type === 'property_published' || type === 'property_rejected'
+    ? '/mis-propiedades'
+    : null
+}
