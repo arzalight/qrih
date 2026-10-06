@@ -1,8 +1,25 @@
 # NEXT STEPS — QRO INDUSTRIAL HUB / QRIH
 
-## Posterior a auditoría — corte 2026-10-06 (validación ampliada)
+## Próximos pasos vigentes — cierre consolidado 2026-10-06
+
+**NO-GO externo / producción.** Matriz única QRIH_AUDIT.md. AUD-032 implementado en código/BD staging: 67 unit/43 SQL/lint/tipos/build PASS; entrega develop/Netlify y humo exactos pendientes en este turno. Guard Free previo comprobado; snapshot remoto preservado por conteos. Tercera cuenta real omitida/no validada: no pedirla ni sustituirla. No otra ronda de tarjetas ni funciones nuevas.
+
+1. **AUD-031, corrección técnica mínima:** actualizar source-map-js 1.2.1 al parche compatible 1.2.2 en lock, comprobar árbol/audit/tests/lint/tipos/build y entrega exacta staging. ALTO identificado; no corregido en AUD-032, dependencias/lock intactos. No audit fix --force ni upgrade general. Un advisory raíz refleja 3 high, explotabilidad remota no demostrada.
+2. **AUD-018, recuperación:** backup externo gratuito y seguro de filas/esquema/Auth más archivos Storage por separado; ensayar recuperación en aislamiento y verificar grafo/integridad. Baseline de esquema no basta. No exportar PII/contraseñas/claves a Git ni restaurar encima de servicios activos. Si hace falta acceso adicional, pedir sólo el necesario mediante mecanismo seguro.
+3. **Corte del entorno elegido para el piloto:** original público/8 URLs main_image legado/sin main_image_path/RPC/cuota. Preparar snapshot/preflight/excepciones/secuencia 044–050/configuración/despliegue compatible y ventana; ejecutar sólo con autorización específica. Staging como piloto también requiere decisión explícita; no conectar main/producción por la autorización AUD-032.
+4. **AUD-032, finalizar entrega ya autorizada:** subir develop normal con guard Free, verificar READY SHA exacto y ejecutar humo remoto sin sesión. Código y migración 050 staging ya PASS, sin repetir prueba por pantalla ni requerir otra cuenta. No postular/modificar el requerimiento real de staging para hacer pasar una prueba; flujo cruzado/aviso/duplicado se ensayó con fixtures locales aislados. Negociación/contacto posterior y demandas anónimas sin destinatario quedan sin regla nueva.
+
+Antes de GO, registrar aceptación/rechazo explícitos de riesgos residuales: volumen y contingencia de Gmail/Spam/cuotas ($0), tercera cuenta omitida, TTL 600/900/dispositivos/red no exhaustivos, excepciones definer revisadas. No comprar planes/domino/complementos ni convertir limitaciones Free en nuevas features. Trámites legales/soporte/operación antes de usuarios externos; no afirmar cumplimiento por auditoría técnica.
+
+Durante el piloto autorizado: grupo pequeño, responsable de soporte/moderación, revisión de errores/consumo/correo sin PII/secrets, copias recuperables; corregir incidentes bloqueantes, congelar funcionalidades. Después: limpiar deuda baja/cosmética sin borrar archivos/objetos no identificados ni reabrir Storage público como rollback.
+
+Las acciones automáticas restantes se agrupan; intervención humana sólo para alcance/autorización/acceso inevitable. Actualizar evidencia exacta después del despliegue sin disparar otro build sólo por documentación. Guías Supabase/PostgreSQL orientan permisos mínimos, transacciones y diferencia de prueba aislada/sesión real. AUD-032 no autoriza AUD-031/respaldo/corte original ni equivale a GO.
+
+## Archivo histórico — pasos anteriores supersedidos, NO ejecutar como lista actual
 
 No agregar funcionalidades. Estado: **NO-GO externo**; las correcciones locales no equivalen a cierre en Supabase/Netlify.
+
+**Paso inmediato vigente — DEM-001 / ACLARAR SESIÓN ANTES DE CONTINUAR:** 2026-10-06, usuario confirma una tarjeta/datos correctos tras ensayo panel/recarga. SQL read-only/rollback: 1 demanda new de cuenta administradora confirmada/activa, no anónima/no owner, **0 del solicitante normal preparado**; rangos/operación/zonas/contacto presentes por agregados, empresa sin marcador solicitado. API deriva user_id del usuario getUser servidor, no email formulario. Preguntar si envío fue con cuenta administradora en vez de solicitante normal; no concluir fallo, reasignar/corregir/borrar ni pedir reenvío por esta divergencia. No pulsar interés/registrar oportunidad todavía. 0 intereses/registros/avisos de demanda; 4 Auth/3 perfiles/1 published/contacto/authorized/4 avisos/24 auditorías/7 galerías-objetos conservados por conteos. Después de aclaración acordar prueba mínima del actor normal/compatibilidad preservando registro existente; baseline 0 demandas inferior anterior al envío. CONT-001 tercera cuenta omitida/no validada por usuario, no pedirla otra vez. Supabase/PostgreSQL separan identidad/reporte/lectura; sólo docs/lecturas por agente, sin código/datos/servicios/main/producción/commit/build nuevos, NO-GO/AUD-002 actual sin cierre.
 
 **Controles AUD-030 completados:** 61 unit/21 HTTP locales/lint/tipos/build PASS; 28 JS cliente/0 indicadores privados, guard Free/develop/recargas y overages off comprobado. Próximo sólo entrega/humo remoto/clic real del acceso. No repetir controles ya aprobados ni SQL/suites mutantes por un enlace de navegación; controles pendientes inferiores históricos.
 

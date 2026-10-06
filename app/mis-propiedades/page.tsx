@@ -1,10 +1,21 @@
 import Link from 'next/link'
 import { Header } from '@/components/Header'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
-import { rankPropertiesForDemand } from '@/lib/matching'
+import { rankPropertiesForDemand, type MatchingDemand } from '@/lib/matching'
 import { AutoApproveContactsToggle } from '@/components/AutoApproveContactsToggle'
 import { DeletePropertyButton } from '@/components/DeletePropertyButton'
 import { AccountSuspensionNotice } from '@/components/AccountSuspensionNotice'
+import { RegisterOpportunityButton } from '@/components/RegisterOpportunityButton'
+type Opportunity = MatchingDemand & { id: string; status: string; created_at: string }
+type OpportunityRegistration = {
+  demand_request_id: string
+  property_id: string
+  status: string
+  property: {
+    id: string; slug: string | null; title: string; operation: string | null
+    zone: string | null; total_area: number | null; price_display: string | null
+  } | null
+}
 function getStatusLabel(status: string) {
   switch (status) {
     case 'pending':
@@ -164,18 +175,9 @@ let topPropertyContacts = 0
     ).slice(0, 3),
   }))
 
-  const fortyFiveDaysAgo = new Date()
-  fortyFiveDaysAgo.setDate(fortyFiveDaysAgo.getDate() - 45)
-
   const { data: activeOpportunities, error: opportunitiesError } =
     await supabase
-      .from('demand_requests')
-      .select(
-        'id, name, company, operation, zone_general, zone, area_min, area_max, budget_min, budget_max, status, created_at'
-      )
-      .eq('status', 'new')
-      .gte('created_at', fortyFiveDaysAgo.toISOString())
-      .order('created_at', { ascending: false })
+      .rpc('qrih_opportunity_feed')
 
   if (opportunitiesError) {
     console.warn('QRIH_APP_MIS_PROPIEDADES_PAGE_187_FAILED')
@@ -183,41 +185,21 @@ let topPropertyContacts = 0
 
   const { data: opportunityRegistrations, error: registrationsError } =
     await supabase
-      .from('opportunity_property_registrations')
-      .select(
-        `
-          demand_request_id,
-          property_id,
-          status,
-          property:properties (
-            id,
-            slug,
-            title,
-            operation,
-            zone_general,
-            zone,
-            total_area,
-            price_value,
-            price_unit,
-            price_display
-          )
-        `
-      )
-      .in(
-        'demand_request_id',
-        (demandRequests || []).map((request) => request.id)
-      )
+      .rpc('qrih_opportunity_registrations')
 
   if (registrationsError) {
     console.warn('QRIH_APP_MIS_PROPIEDADES_PAGE_221_FAILED')
   }
 
-  const safeOpportunityRegistrations = opportunityRegistrations || []
+  const safeOpportunityRegistrations: OpportunityRegistration[] =
+    Array.isArray(opportunityRegistrations) ? opportunityRegistrations : []
+  const safeActiveOpportunities: Opportunity[] =
+    Array.isArray(activeOpportunities) ? activeOpportunities : []
 
   const userPublishedProperties = (properties || [])
     .filter((property) => property.status === 'published')
 
-  const opportunityMatches = (activeOpportunities || [])
+  const opportunityMatches = safeActiveOpportunities
     .map((opportunity) => ({
       opportunity,
       matches: rankPropertiesForDemand(
@@ -1105,7 +1087,7 @@ width: '180px',
                     >
                       {matches.map(({ property, result }) => {
                         const isRegistered =
-                          opportunityRegistrations?.some(
+                          safeOpportunityRegistrations.some(
                             (registration) =>
                               registration.demand_request_id === opportunity.id &&
                               registration.property_id === property.id
@@ -1170,37 +1152,10 @@ width: '180px',
                                   Propiedad registrada ✓
                                 </div>
                               ) : (
-                                <form
-                                  action="/api/registrar-oportunidad"
-                                  method="POST"
-                                >
-                                  <input
-                                    type="hidden"
-                                    name="demand_request_id"
-                                    value={opportunity.id}
-                                  />
-                                  <input
-                                    type="hidden"
-                                    name="property_id"
-                                    value={property.id}
-                                  />
-
-                                  <button
-                                    type="submit"
-                                    style={{
-                                      padding: '9px 14px',
-                                      border: '1px solid #111827',
-                                      borderRadius: 8,
-                                      background: '#111827',
-                                      color: '#ffffff',
-                                      fontWeight: 600,
-                                      cursor: 'pointer',
-                                      fontSize: 13,
-                                    }}
-                                  >
-                                    Registrar mi propiedad
-                                  </button>
-                                </form>
+                                <RegisterOpportunityButton
+                                  demandRequestId={opportunity.id}
+                                  propertyId={property.id}
+                                />
                               )}
                             </div>
                           </div>
