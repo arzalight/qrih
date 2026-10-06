@@ -63,7 +63,7 @@ export async function GET(request: Request) {
       stage = `profile_${result.stage}`
       return fail('profile')
     }
-    return redirect('/publicar')
+    return redirect('/mis-propiedades')
   } catch {
     // Sólo etapa constante; nunca código, cookies, JWT, email ni errores arbitrarios.
     console.warn('QRIH_AUTH_CALLBACK_FAILURE', JSON.stringify({ stage }))

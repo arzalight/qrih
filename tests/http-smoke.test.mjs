@@ -33,3 +33,13 @@ for (const [requestOrigin, status] of [[null, 403], [origin.origin, 401], ['http
     assert.match(response.headers.get('cache-control'), /private.*no-store/)
   })
 }
+
+// Login se hidrata en cliente: la tarjeta visual se comprueba en navegador, no HTML estático.
+test('bandera visual de registro no entrega sesión ni abre el panel privado', async () => {
+  const response = await fetch(base + '/login?registro=pendiente', { redirect: 'manual' })
+  assert.equal(response.status, 200)
+  assert.ok(!response.headers.get('set-cookie')?.includes('auth-token'))
+  const panel = await fetch(base + '/mis-propiedades?registro=pendiente', { redirect: 'manual' })
+  assert.equal(panel.status, 200)
+  assert.match(await panel.text(), /Necesitas iniciar sesión/)
+})

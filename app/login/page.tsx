@@ -16,6 +16,7 @@ function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const next = safeInternalPath(searchParams.get('next'))
+  const pendingConfirmation = searchParams.get('registro') === 'pendiente'
   const callbackMessage = searchParams.get('error') === 'confirmation'
     ? 'La confirmación no pudo completar el acceso. Si tu correo ya está confirmado, inicia sesión aquí.'
     : searchParams.get('error') === 'profile'
@@ -59,9 +60,23 @@ function LoginForm() {
       <Header />
 
       <main className="form">
-        <small>ACCESO PARA PUBLICAR</small>
+        <small>ACCESO A TU PANEL</small>
 
         <h1>Inicia sesión</h1>
+
+        {pendingConfirmation && (
+          <section className="email-confirmation-notice" role="status" aria-labelledby="email-confirmation-title">
+            <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
+              <rect x="3" y="5" width="18" height="14" rx="2" />
+              <path d="m3 6 9 7 9-7" />
+            </svg>
+            <div>
+              <h2 id="email-confirmation-title">Cuenta creada: confirma tu correo</h2>
+              <p>Revisa tu correo para confirmar tu cuenta antes de iniciar sesión.</p>
+              <p>Si no aparece en tu bandeja de entrada, revisa Spam o Correo no deseado. Abre el enlace más reciente en el mismo navegador donde te registraste.</p>
+            </div>
+          </section>
+        )}
 
         <form onSubmit={signIn}>
           <input

@@ -38,7 +38,7 @@ test('guard staging exige vacío por defecto y preserva cuenta/perfil con opt-in
 
 test('next externo/codificado/protocol-relative rechazado; ruta local preservada',()=>{
   for(const input of ['https://evil.test','//evil.test','/%2Fevil.test','/\\evil.test','javascript:alert(1)','/%5cevil.test','/\nevil.test'])
-    assert.equal(safeInternalPath(input),'/publicar')
+    assert.equal(safeInternalPath(input),'/mis-propiedades')
   assert.equal(safeInternalPath('/inventario?q=a'),'/inventario?q=a')
 })
 test('JSON/form corruptos, arrays, cuerpos enormes y UUID adulterado',async()=>{

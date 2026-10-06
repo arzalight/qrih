@@ -156,7 +156,7 @@ test('callback ejecuta la ruta real: origen canónico, cache privada y fallos se
       [{ exchangeError: { message: 'sensitive synthetic error' } }, 'used-code', '/login?error=confirmation'],
       [{ user: null }, 'test-code', '/login?error=profile'],
       [{ insertError: '42501' }, 'test-code', '/login?error=profile'],
-      [{}, 'test-code', '/publicar'],
+      [{}, 'test-code', '/mis-propiedades'],
     ]) {
       const f = fixture(options); globalThis.__qrihAuthTestClient = f.client
       const response = await GET(new Request(`https://internal.test/auth/callback?code=${code}&type=recovery&next=https://evil.test`, {

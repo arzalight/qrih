@@ -978,6 +978,34 @@ main {
   background: #1b3a49;
 }
 
+.email-confirmation-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin: 20px 0 24px;
+  padding: 20px;
+  border: 1px solid #9cc9b8;
+  border-radius: 12px;
+  background: #eef8f3;
+  color: #174c38;
+}
+
+.email-confirmation-notice svg {
+  flex-shrink: 0;
+}
+
+.email-confirmation-notice h2 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  line-height: 1.35;
+}
+
+.email-confirmation-notice p {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;

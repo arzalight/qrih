@@ -4,7 +4,7 @@ import { FormEvent, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
-import { safeInternalPath } from '@/lib/safe-navigation'
+import { pendingConfirmationLoginPath, safeInternalPath } from '@/lib/safe-navigation'
 import { ensureOwnProfile } from '@/lib/auth-profile'
 
 export default function RegistroPage() {
@@ -128,9 +128,7 @@ export default function RegistroPage() {
         return
       }
 
-      setMsg(
-        'Cuenta creada. Revisa tu correo para confirmar tu cuenta antes de iniciar sesión.'
-      )
+      router.replace(pendingConfirmationLoginPath(next))
     } catch (error) {
       setMsg(
         error instanceof Error
