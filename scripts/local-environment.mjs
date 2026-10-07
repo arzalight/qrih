@@ -50,11 +50,13 @@ export function loadLocalStaging(root, { dev = true, requirePrivate = true } = {
 }
 
 // Claves modernas son opacas: comprobar pertenencia en el host fijo de staging.
-// REST raíz sólo devuelve catálogo, no filas. No leer/imprimir cuerpo ni headers.
+// La raíz REST (OpenAPI) puede estar reservada aunque la clave sea válida.
+// Consultar la proyección pública con limit=0: no devuelve filas ni requiere
+// abrir catálogo/tablas privadas. No leer/imprimir cuerpo ni headers.
 export async function verifyStagingCredentials(env, fetcher = fetch) {
   for (const name of ['NEXT_PUBLIC_SUPABASE_ANON_KEY', 'SUPABASE_SERVICE_ROLE_KEY']) {
     try {
-      const response = await fetcher(`${STAGING_ORIGIN}/rest/v1/`, {
+      const response = await fetcher(`${STAGING_ORIGIN}/rest/v1/properties_public?select=id&limit=0`, {
         headers: { apikey: env[name] }, cache: 'no-store', redirect: 'error',
         signal: AbortSignal.timeout(8000),
       })

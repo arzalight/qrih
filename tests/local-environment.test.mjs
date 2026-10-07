@@ -69,7 +69,10 @@ test('AUD-034: claves opacas verificadas sólo host staging, sin respuesta/logs/
     return new Response('',{status:200})
   })
   assert.equal(calls.length,2)
-  assert.ok(calls.every(c=>c.url===`${STAGING_ORIGIN}/rest/v1/` && c.opts.redirect==='error'))
+  assert.ok(calls.every(c=>c.url===`${STAGING_ORIGIN}/rest/v1/properties_public?select=id&limit=0`
+    && c.opts.redirect==='error' && c.opts.cache==='no-store'))
+  assert.deepEqual(calls.map(c=>c.opts.headers.apikey),
+    [env().NEXT_PUBLIC_SUPABASE_ANON_KEY, env().SUPABASE_SERVICE_ROLE_KEY])
   for (const fetcher of [async()=>new Response('',{status:401}),async()=>{throw new Error('PRIVATE HEADER VALUE')}]) {
     await assert.rejects(verifyStagingCredentials(env(),fetcher),error=>{
       assert.ok(!error.message.includes('PRIVATE'));return /No se pudo verificar/.test(error.message)
