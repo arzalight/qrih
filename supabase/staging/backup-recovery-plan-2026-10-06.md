@@ -2,6 +2,64 @@
 
 Actualización: 2026-10-07, America/Mexico_City; plan iniciado2026-10-06. **ALTO de operación / EN REVISIÓN — NO CORREGIDO.** Herramientas/servicios vacíos y transferencia ficticia preparados; ningún dump, descarga de archivos Storage o restore real realizado.
 
+## Diseño vigente — bloqueo de gateway/otras redes, NO APLICADO
+
+Usuario autorizó continuar con **diseño**, no aplicar reglas ni exportar. Lecturas sólo locales: listener22 de VM pertenece a sshd.pam (IPv4/IPv6), sin acceder a configuración/autenticación/claves SSH. `inspect-bridge-guard-design.mjs` fuera del checkout confirma redID01ed69b976c417a85de5100569b42f60eabdbbae0115aa1b517df6024cde0141/puente br-01ed69b976c4 real en kernel/gateway172.18.0.1, seis contenedores exclusivos internos/red anterior vacía/puertos host0/sin bind mounts ni privilegios extra. Namespaces de los seis distintos entre sí y del host. Sin consulta SQL nueva: conteos vacíos conservan la evidencia previa, no nuevos datos inspeccionados.
+
+Herramientas instaladas: nftables1.1.6, iptables1.8.13(nf_tables), kernel6.18.37-0-virt. Hay cinco tablas existentes; la propuesta inet qrih_aud018_bridge_guard **no existe**. No migrar backend Docker a nftables: sería otro cambio de arquitectura y no es necesario para añadir una tabla separada al mecanismo ya disponible. Mantener Docker/iptables/NAT/DNS existentes. El changelog Supabase consultado distingue gateway Envoy de self-hosted Compose del stack CLI actual; no actualizar Kong/CLI/PG ni ejecutar detecciones/reindex remotos por este diseño.
+
+### Opción mínima recomendada y alcance exacto
+
+Crear **una tabla de filtrado independiente en el namespace de red de la VM**, con dos reglas que sólo coincidan con el puente dedicado. Es una modificación del firewall de la VM, aunque su alcance sea únicamente esta red; requiere aprobación expresa. No editar sshd ni el firewall del Mac, no cambiar política por defecto de tablas existentes, tablas Docker, FORWARD global, sysctl, puertos, membresía, imágenes, volúmenes o servicios ajenos.
+
+```nft
+table inet qrih_aud018_bridge_guard {
+  chain deny_restore_to_vm {
+    type filter hook input priority -10; policy accept;
+    iifname "br-01ed69b976c4" counter drop comment "AUD018 restore bridge to VM denied"
+  }
+  chain deny_restore_other_networks {
+    type filter hook forward priority -10; policy accept;
+    iifname "br-01ed69b976c4" oifname != "br-01ed69b976c4" counter drop comment "AUD018 restore bridge egress denied"
+  }
+}
+```
+
+INPUT aborda tráfico destinado a servicios del host (incluido22/cualquier IP local de VM); una regla sólo en DOCKER-USER/FORWARD no cubre ese camino. La segunda regla añade bloqueo hacia interfaces ajenas, no sólo puertos conocidos. Familia inet cubre IPv4/IPv6; prioridad-10 precede al filtro habitual0 y no permite excepciones ESTABLISHED que conserven un acceso al gateway. Policy accept en estas cadenas significa no imponer nuevas denegaciones al resto; no anula un DROP existente. No ampliar a br-* ni dar permiso global para resolver errores. Estos son efectos **diseñados**, sujetos a pruebas después de aplicar. [Hooks Netfilter](https://wiki.nftables.org/wiki-nftables/index.php/Netfilter_hooks), [prioridad/veredictos](https://wiki.nftables.org/wiki-nftables/index.php/Configuring_chains), [Docker/iptables](https://docs.docker.com/engine/network/firewall-iptables/).
+
+Alternativas descartadas para esta corrección mínima: desactivar SSH/moverlo globalmente (afecta administración), cambiar backend/recrear VM-red/instalar firewall (más alcance), sólo bloquear22 (otros listeners seguirían alcanzables), sólo OUTPUT dentro de seis contenedores (seis puntos de mantenimiento y cobertura limitada ante tráfico raw). Tabla propia limitada a puente evita modificar reglas administradas por Docker; no afirmar que impide todas las capacidades de un administrador VM/Mac, ataques de kernel o ARP entre pares controlados. [No editar reglas Docker](https://docs.docker.com/engine/network/packet-filtering-firewalls/), [límites de packet sockets](https://man7.org/linux/man-pages/man7/packet.7.html).
+
+### Comprobación de diseño realizada — no implementación
+
+Archivo fuera de Git `bridge-guard-20261007.proposed.nft`; SHA256 c1c28d66c3ac4f8a8f1330c09d0725a15f4833f0ab8f33db75c4223697427233. `node --check` de ambos helpers PASS. `check-bridge-guard-proposal.mjs` sólo permite **nft --check --file /dev/stdin**, sin modo apply/rollback: whitelist exacta del texto/bridge, comparación antes/después. Resultado PASS; tabla propuesta continúa ausente, ruleset normalizado sin cambios (digest bfe6193b4992f47bc4f87e5397bd76ca839bea795e8759a049dec41b964861e0) y membresía igual. Recibo privado600 `bridge-guard-design-check-20261007.json` en carpeta de herramientas. No repetirlo ni sobreescribir recibo por actualizar documentos. --check comprueba validez sin aplicar, no demuestra bloqueo ni compatibilidad real. [Carga atómica nft](https://wiki.nftables.org/wiki-nftables/index.php/Atomic_rule_replacement).
+
+### Secuencia posterior propuesta — requiere autorización de aplicación
+
+1. Preflight local: mismo socket/redID/bridge/interfaces y seis IDs/alias/volúmenes, interna exclusiva/puertos host0, sin bind mounts/privilegios extra; tabla propia ausente y nuevas consultas SQL READ ONLY/ROLLBACK confirman vacío. Guard rechaza desviaciones, sin corregirlas automáticamente.
+2. Guardar fuera de Git snapshot privado de metadata/ruleset normalizado/control administrativo, sin Env/keys/logs SSH/filas. Revisar archivo exacto y --check antes de aplicar. No usar flush ruleset ni importar una copia global como rollback.
+3. Aplicar únicamente tabla propia en un lote atómico. La transacción es atómica para estas reglas, no convierte el backup/Storage en un snapshot atómico ni cierra recuperación. No persistir en boot/servicios ni programar reaplicación.
+4. Ejecutar lote inferior. Si falla, detener ensayo/revertir sólo tabla propia creada tras verificar propiedad/contenido exacto; no borrar tablas preexistentes, reiniciar VM ni reconectar red externa como atajo. Capturar fallo sin secretos y volver a documentar, sin datos reales.
+5. Si pasa, cerrar sólo esta frontera de red en alcance probado. Revalidar después de restart/acción CLI y antes de importación, pues bridge/red/reglas pueden cambiar o desaparecer. Acceso administrativo Docker exec sigue necesario; no es aislamiento frente a administrador host.
+
+La reversión propuesta retira exclusivamente inet qrih_aud018_bridge_guard, creada por este lote y verificada contra snapshot; preserva las cinco tablas anteriores y membresía interna. Volvería a permitir el gateway, no Internet por una reconexión. Autorización debe cubrir aplicación y esta reversión por fallo; no supone permiso de exportación/restauración. Sin tabla aplicada ahora, **no hay rollback que ejecutar**.
+
+### Matriz posterior a aplicación — todos pendientes
+
+| Caso | Resultado esperado / evidencia |
+|---|---|
+| Tabla y alcance | Sólo tabla propia con dos cadenas/dos reglas; cinco anteriores iguales salvo contadores, bridge exacto, sin defaults/backend/servicios modificados. |
+| Seis → gateway22 | TCP sin login falla desde los seis; contador de regla INPUT aumenta. No basta un timeout sin contador/prueba válida. |
+| Seis → otros servicios VM | Probes fijos gateway53/80/443/2375/3128/8080 y demás IP locales necesarias no accesibles; sin scan masivo, login ni payload de datos. |
+| IPv4/IPv6/DNS externos | Sin default/rutas públicas; DNS externo vía Docker/directo/gateway y TCP443 fijos fallan, igual que verificación previa; no simular una ruta nueva para forzar pruebas. |
+| Comunicación interna | DNS db positivo desde los seis, healthchecks esperados y Auth/REST/Storage/Mailpit200; Kong→Auth/REST/Storage y servicios→BD no bloqueados según checks acotados sin credenciales impresas. |
+| Administración desde Mac | Nueva llamada rdctl y Docker exec funcionan; listener SSH conservado, sin cambiar configuración/autenticarse desde contenedor. |
+| Sin impacto en otras redes | Metadata/ruleset previo y conexiones de administración conservados; reglas sólo iifname exacto. No abrir ni operar UniFi/DaVinci para probarlos. |
+| Volúmenes/datos/puertos | Mismos IDs/imágenes/volúmenes/alias, interna exclusiva/anterior vacía, hostports0; SQL local READ ONLY vacío, ningún remoteSQL/import/SMTP/deploy. |
+| Falla/reversión | Sólo tabla propia retirada cuando el contenido coincide; administración/red/volúmenes preservados, ensayo detenido. No inducir corte ni rollback destructivo sólo para demostrarlo. |
+| Reinicio/acceso a app recuperada | No reiniciar por este permiso ni asumir persistencia. Antes de restore revalidar; acceso browser/Next al destino interno aún requiere diseño separado de transporte local acotado, sin abrir salida ni reutilizar STAGING/secretos productivos. |
+
+**AUD-018 permanece ALTO / EN REVISIÓN — NO CORREGIDO; NO-GO externo intacto.** Esta matriz de red no sustituye los15casos de restauración real. Guía Supabase orientó separar comandos válidos/preparación de recuperación completa/Auth/Storage/configuración; ningún schema/RLS/migración/app/dato/SMTP modificado. Siguiente decisión: autorizar únicamente la tabla descrita y reversión por fallo, no exportar. Captura cifrada sólo STAGING/conexión/ventana/cuota y restore necesitan permisos separados.
+
 ## Gate vigente — red interna verificada / frontera gateway pendiente
 
 El usuario autorizó explícitamente reconectar sólo los seis contenedores vacíos a la red interna existente, conservar red anterior/volúmenes/alias y verificar el resultado. **Ejecutado, sin exportación ni importación.** No se recrearon/reiniciaron contenedores ni eliminaron redes/volúmenes. Socket exclusivo Rancher unix:///Users/fabianlira/.rd/docker.sock; ningún runtime ajeno, UniFi/DaVinci, producción, Netlify o Supabase remoto modificado.
@@ -29,7 +87,7 @@ Verificador `verify-isolated-empty.mjs`: diagnósticos con Docker exec y rdctl/n
 
 Snapshot `network-move-MZ4n6t/snapshot.json`600/directorio700 en la carpeta de herramientas: sólo metadata filtrada (IDs, alias, redes/IP previas, volúmenes/bindings), sin Env/credenciales/datos QRIH. Helper admite `--rollback` con esa ruta exacta, verifica whitelist/vacío y reconecta alias/IP anteriores antes de desconectar la interna; no borra/recrea/reinicia. Rollback automático estaba previsto para fallo durante cambio; no fue necesario ni se probó revertir un cambio exitoso. **No ejecutar reversión sin decisión explícita:** restituiría la red anterior con DNS externo disponible; es recuperación operativa, no corrección de privacidad. Con datos importados el guard de vacío lo rechazaría: no forzarlo.
 
-Próximo paso: revisar/diseñar restricción acotada de gateway y acceso necesario al ensayo sin tocar SSH/firewall global ni exponer puertos por inferencia; obtener autorización separada si requiere mutación. Después cuota contra tamaño/conexión SQL privada/destino/ventana y permiso específico de captura cifrada sólo STAGING. **AUD-018 ALTO/EN REVISIÓN—NO CORREGIDO y NO-GO intactos;15casos reales pendientes.** Las guías Supabase/PostgreSQL orientaron mínimo alcance y consulta local sólo lectura; no se cambiaron grants/RLS/configuración ni imágenes/CLI por novedades del changelog.
+Próximo paso: aplicar/verificar la propuesta superior sólo después de autorización exacta de tabla/reversión; diseño de acceso necesario al ensayo sin exponer puertos por inferencia. Después cuota contra tamaño/conexión SQL privada/destino/ventana y permiso específico de captura cifrada sólo STAGING. **AUD-018 ALTO/EN REVISIÓN—NO CORREGIDO y NO-GO intactos;15casos reales pendientes.** Las guías Supabase/PostgreSQL orientaron mínimo alcance y consulta local sólo lectura; no se cambiaron grants/RLS/configuración ni imágenes/CLI por novedades del changelog.
 
 Control de entrega documental: SDK oficial Netlify sólo GET revalida stop_builds=true, sitio/cuenta/repo/develop/allowed_branches/private_logs esperados, Free/recargas-overages off y publicado f67fa46 intacto. Sin deploy solicitado ni mutación de Netlify. Versionar sólo cinco documentos en docs/aud-018-recovery-preparation; no incluir herramientas/snapshot/receipt/credenciales ni integrar main/develop por esta entrega.
 
