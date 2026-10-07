@@ -1,5 +1,7 @@
 # AUD-034 — Aislamiento del desarrollo local
 
+Actualización posterior: AUD-036 corrige persistencia SSR privada y autoriza/configura callbacks localhost3000/3107 únicamente staging. Rama actual fix/aud-036-ssr-session; ver AUD036_SSR_SESSION.md para pruebas/cobertura pendiente. AUD-034 conserva aquí su evidencia de aislamiento, no prueba de sesión real prolongada ni instrucciones de reconfigurar el secreto.
+
 2026-10-06. **ALTO operativo / CORREGIDO — AISLAMIENTO Y RUNTIME LOCAL VERIFICADOS.** Cierre limitado al desarrollo localhost contra STAGING; no acredita sesiones autenticadas E2E, callbacks locales, recuperación integral ni GO externo.
 
 ## Cambios mínimos, sin arquitectura funcional nueva

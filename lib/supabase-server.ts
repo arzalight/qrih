@@ -21,7 +21,8 @@ export async function createServerSupabaseClient() {
             cookieStore.set(name, value, options)
           })
         } catch {
-          // Server Components can read session cookies but cannot always write them.
+          // RSC sólo lectura: proxy.ts persiste renovación en páginas privadas.
+          // Route Handlers/Server Actions sí escriben aquí; recovery sin proxy.
         }
       },
     },
