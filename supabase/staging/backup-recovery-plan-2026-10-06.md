@@ -1,10 +1,46 @@
 # AUD-018 — Plan de respaldo y recuperación a $0
 
-Fecha: 2026-10-06, America/Mexico_City. **ALTO de operación / EN REVISIÓN — NO CORREGIDO.** Documento de diseño; ningún dump, descarga de archivos o restore realizado en este corte.
+Fecha: 2026-10-06, America/Mexico_City. **ALTO de operación / EN REVISIÓN — NO CORREGIDO.** Diseño y preparación parcial de herramientas; ningún dump, descarga de archivos Storage o restore realizado en este corte.
+
+## Preparación comprobada posterior a AUD-036
+
+Rama docs/aud-018-recovery-preparation sobre ac26f64; sin integrar develop/main ni deploy. AUD-034/036 y callbacks locales conservan evidencia previa; no reejecutar flujos manuales por esta preparación. El usuario autorizó expresamente instalar Rancher Desktop/age y preparar un entorno local vacío, **no exportar datos**. Ningún dump/descarga Storage/restore/SQL remoto.
+
+| Prerrequisito | Verificación actual / decisión |
+|---|---|
+| Equipo | Proceso x86_64, macOS13.7.8, 199GiB disponibles en volumen examinado; memoria≥8GiB/virtualización VMX corroboradas fuera del sandbox. Checks de hardware dentro del sandbox no disponibles: no interpretar como hardware insuficiente. Espacio disponible no mide tamaño futuro del stack/backup. |
+| CLI oficial existente | Wrapper npm Supabase2.119.0 responde --help, db dump --help y start --help al pasar SUPABASE_TELEMETRY_DISABLED=1 y DO_NOT_TRACK=1 sólo en esos procesos. No modificación de preferencias personales ni actualización instalada. Bloqueo previo de ayuda resuelto; ayuda no es dump ni prueba de conectividad SQL. Aviso2.120 no autoriza actualizar por sí mismo. |
+| Flags dump comprobados | --dry-run, --data-only, --use-copy, --role-only, --file, --db-url, --linked, --local, --project-ref, --password, --schema, --exclude. No usar --linked en la raíz unlinked, --debug ni imprimir dry-run con secretos. Contraseña no se introducirá en argumentos/chat. Mecanismo exacto privado de conexión aún pendiente, sin reset de BD. |
+| Runtime local | Rancher Desktop1.24.0 x86_64 instalado en /Applications/Rancher Desktop.app, sin sobrescribir aplicación previa. Checksum oficial coincidente, codesign deep/strict y Gatekeeper notarizado aceptados antes de instalar; copia instalada revalidada. rdctl/Docker --help comprobados. Motor/socket aún no disponible tras solicitud de arranque: causa no identificada, primer arranque personal pendiente; no declarar VM/Supabase operativo. DaVinci/UniFi no reutilizados ni modificados; pg_dump134 histórico sin operación de datos. |
+| Native Supabase | Docs actuales: runtime native experimental sólo Linux y macOS Apple silicon14+, no macOS Intel. Equipo observado no cumple plataforma/OS; no activar experimental ni forzar descargas como atajo. CLI start instalada expone contenedores, sin nuevos flags inventados. |
+| Configuración solicitada de Rancher | rdctl start autorizado: Moby, Kubernetes/admin-access/auto-start/telemetría/updater=false, PATH manual, RAM4GiB/CPU2. La solicitud de lanzamiento devolvió0; no demuestra que esos settings se hayan aplicado ni que la VM arrancó. No aceptar términos/contraseña por el usuario, omitir diálogos de seguridad, instalar helpers privilegiados ni forzar permisos amplios. |
+| Cifrado preparado | age1.3.2 darwin-amd64 portátil oficial (BSD-3-Clause), SHA256 de release coincidente. --version/ayudas y roundtrip ficticio PASS; dos copias alterada/truncada rechazadas, identidad ficticia600. Ningún dato real ni clave de backup creada. Checksum no equivale a firma independiente: Sigsum no verificado. Sin cifrado casero/OpenSSLenc. Custodia de clave real pendiente. |
+| Destino vacío preparado | work/aud018-tools-20261006.KqHlHu/recovery-empty en workspace del chat, fuera del checkout QRIH. init oficial2.119.0, project_id=qrih-aud018-empty-20261006; carpeta700/config600. PG major17; API55421/BD55422/correo local55424, seed/migrations automáticos deshabilitados, sin app SQL, link remoto ni .env copiados. Auto-expose=false, sólo public; Studio/analytics/Realtime/Edge/S3/vector deshabilitados. Auth sólo localhost3107; ningún SMTP/OAuth/S3 secreto heredado en config. Status con entorno filtrado/socket Rancher fijo: configuración sin error detectado, Docker no disponible; no salud/compatibilidad operativa acreditadas. |
+| Custodia | Carpeta privada700 fuera de Git + ficheros600; destino propuesto /Users/fabianlira/Documents/QRIH_Backups, no creado ni aprobado aún. No subir datos a cloud por inferencia. Segunda copia independiente existente a$0: pendiente de respuesta del usuario; dos carpetas del mismo disco no bastan. |
+
+La guía Supabase permitió desbloquear ayuda con opt-out documentado y descartó native incompatible antes de instalar. [CLI/telemetría](https://supabase.com/docs/guides/local-development/cli/getting-started), [runtimes](https://supabase.com/docs/guides/local-development/docker-and-native-runtimes), [config local](https://supabase.com/docs/guides/local-development/cli/config), [Rancher requisitos](https://docs.rancherdesktop.io/getting-started/installation/), [Rancher licencia](https://github.com/rancher-sandbox/rancher-desktop/blob/main/LICENSE), [age oficial](https://github.com/FiloSottile/age).
+
+### Herramientas verificadas y siguiente gate local
+
+Release Rancher v1.24.0 ZIP x86_64: 687024335 bytes / SHA256 5c8ab7faa2fff2fb473a8e973d464c84b496d63d4339522102503b58de42a4a9. age v1.3.2 darwin-amd64: 19376787 bytes / SHA256 1d1e4bc66e1427edad7739ae7616157de0e79db8b6d2a1497d7d9925fb06a539. Fuentes oficiales [Rancher release](https://github.com/rancher-sandbox/rancher-desktop/releases/tag/v1.24.0) y [age release](https://github.com/FiloSottile/age/releases/tag/v1.3.2). Binarios/descargas/fixtures quedan fuera del checkout, sin paquetes/lockfile nuevos. La identidad synthetic-only NO es una clave de respaldo y no debe reutilizarse.
+
+El motor aún no responde; se solicitó al usuario abrir la aplicación y reportar el aviso, sin inferir que haya aceptado términos ni diagnosticar una causa sin evidencia. No ejecutar otro runtime de UniFi ni repetir lanzamientos/reset como atajo.
+
+Una vez operativo, leer settings filtrados y verificar Moby/no Kubernetes/no admin/autostart/PATH manual. Docker siempre con socket Rancher explícito; no confiar en el contexto global ni importar credenciales de registries. Crear sólo una red dedicada qrih-aud018-empty-20261006 con --internal y com.docker.network.bridge.host_binding_ipv4=127.0.0.1 (ayuda instalada comprobada), sin modificar redes preexistentes; después usar --network-id y --workdir exactos de la CLI. Start/status capturados sin imprimir claves locales, sin --debug, ambiente sin secretos heredados. No red creada ni contenedor arrancado todavía.
+
+La CLI2.119.0 publica puertos sin IP explícita en su implementación; el hostname de API no garantiza loopback. La red dedicada propone controlar binding/egress, pero debe comprobarse mediante inspect filtrado y sockets reales antes de importar cualquier dato; no declarar aislamiento sólo por config. [Fuente CLI fijada](https://github.com/supabase/cli/blob/v2.119.0/apps/cli/src/command-internal/db-bootstrap/docker-create-args.ts), [red bridge/binding oficiales](https://docs.docker.com/engine/network/drivers/bridge/). Rancher monta por defecto el home en su VM: no importar credenciales reales ni conceder a contenedores bind mounts del home; revisar montajes efectivos antes de datos reales. El objetivo es ensayo local, no nueva arquitectura productiva.
+
+## Autorizaciones separadas antes de ejecutar
+
+1. **Autorizado por el usuario / preparación parcial ejecutada:** herramientas gratuitas y entorno local **vacío**, fuera del checkout. Rancher/age instalados y config preparada; motor/PG17/Auth/Storage/loopback/egress todavía no validados. Sin exportación, restore, credenciales reales, SMTP/webhook ni servicios ajenos. Si hay aceptación de términos o contraseña del sistema, la completa personalmente, no el agente como atajo.
+2. Definir custodia/clave recuperable y segunda copia; después solicitar exportación exclusivamente mcyxunymhuxyiwklyfpy (BD/Auth/identidades/archivos/configuración necesaria) a paquete cifrado fuera de Git. Credencial SQL sólo en archivo privado/almacén autorizado; nunca chat. Service_role del app no es contraseña SQL ni respaldo íntegro de Auth. No extraer keys/contraseñas de otro proveedor ni cambiar credenciales para facilitar el dump.
+3. Mostrar destino exacto local/vacío y plan de importación antes de restaurar. Verificar schemas/privilegios/roles administrados/versiones/egress bloqueado, no reiniciar ni restaurar staging/original. Validar quince casos pendientes; una exportación cifrada sin restore no cierra AUD-018.
+
+Ventana coherente, custodia y autorización de exportación todavía no acordadas. No GO por ayuda de CLI/hardware/documentación. No new cloud project/Netlify plan/deploy/SQL/migración/Storage/Auth ni gasto.
 
 ## Alcance y evidencia comprobada
 
-El usuario autorizó revisar el respaldo y diseñar recuperación aislada mientras Netlify recupera cuota. No autoriza aún exportar datos sensibles, instalar herramientas, crear proyectos, restaurar servicios activos ni modificar original/main/producción. Primero ensayar con staging; posteriormente se necesitará un respaldo independiente del entorno elegido para el piloto. Un respaldo de staging no protege el original.
+El usuario autorizó revisar el respaldo y diseñar recuperación aislada mientras Netlify recupera cuota; posteriormente autorizó Rancher Desktop/age y un entorno local vacío. No autoriza aún exportar datos sensibles, crear proyectos cloud, restaurar servicios activos ni modificar original/main/producción. Primero ensayar con staging; posteriormente se necesitará un respaldo independiente del entorno elegido para el piloto. Un respaldo de staging no protege el original.
 
 Lectura agregada de staging `mcyxunymhuxyiwklyfpy`, mediante transacción READ ONLY y ROLLBACK:
 
@@ -72,7 +108,7 @@ Todos los casos siguientes están **PENDIENTES DE EJECUCIÓN**. Las pruebas de s
 | Aislamiento / $0 | Origen sin escrituras, no correo real ni webhook, no acceso remoto desde restore, sin gasto/deploy/cambio de plan. |
 | RTO/RPO y repetibilidad | Tiempo medido; responsable/frecuencia/retención/custodia acordados; segundo intento aislado reproducible sin usar servicios activos. |
 
-## Prerrequisitos pendientes
+## Prerrequisitos pendientes — diagnóstico inicial (supersedido por preparación superior)
 
 - `pg_dump`, `psql` y `docker` no están en PATH; Docker.app no se encontró en /Applications. No demuestra ausencia en otras ubicaciones. No se instaló ni arrancó software.
 - CLI instalada: wrapper de `--version`/ayudas falló intentando escribir telemetría fuera de permisos. El binario Go subyacente devuelve 2.119.0, pero su ayuda de db sólo lista diff; no valida el flujo completo db dump del wrapper. Se detuvieron esos intentos; ninguna exportación. Preparar CLI/estado local seguro o cliente PG nativo antes de capturar; no conceder acceso amplio a la carpeta personal como atajo.
