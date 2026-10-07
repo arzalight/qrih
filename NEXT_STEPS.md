@@ -2,6 +2,8 @@
 
 ## Próximos pasos vigentes — cierre consolidado 2026-10-06
 
+**Custodia AUD-018:** carpeta Drive privada creada y transferencia/rescate único fixture .age253bytes/bytes-hash-descifrado PASS; no repetir instalación/conexión/carpeta/upload ficticio ni borrar fixture. Antes de datos reales acordar clave recuperable separada/cuota disponible $0/aislamiento restore, pedir autorización específica para captura staging/subida cifrada; después15casos reales. Conservar enlaces del plan, sin sharing/compra/exportación/restore real por este permiso. NO-GO/AUD-018 abiertos, evidencia anterior preservada.
+
 **Paso inmediato AUD-018:** entorno vacío local operativo; Rancher/Moby sin Kubernetes/admin/autostart, PG/pg_dump17.11/seis servicios/SQL0/status4HTTP200/loopback reales comprobados. **No repetir apertura/instalación/arranque/altas; no exportar todavía.** Primer red interna falló; alternativa dedicada localhost/sin NAT arrancó, pero salida universal/DNS/gateway/montajes VM no acreditados. Completar ese gate antes de importar datos reales/hooks. Definir custodia/clave recuperable/segunda copia independiente y pedir permiso específico para captura sólo staging; después restore15casos. Rama docs/aud-018-recovery-preparation, sin merge/deploy. ALTO/EN REVISIÓN—NO CORREGIDO; NO-GO intacto.
 
 **NUEVO FLUJO PRIORITARIO — LOCALHOST + SUPABASE STAGING + GITHUB.** Netlify sólo valida RC con autorización explícita; no deploy de desarrollo ni automático al renovar créditos. [Reconstrucción comprobada](docs/RC_STATE_2026-10-06.md) reemplaza la espera de cuota como bloqueo de todo el trabajo. Antes de cambiar código:
