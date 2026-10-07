@@ -1,6 +1,8 @@
 # NEXT STEPS — QRO INDUSTRIAL HUB / QRIH
 
-## Próximos pasos vigentes — cierre consolidado 2026-10-06
+## Próximos pasos vigentes — cierre consolidado 2026-10-07
+
+**Paso inmediato AUD-018:** usuario guarda personalmente contenido completo de staging-20261007.agekey en nota segura Bitwarden «QRIH — STAGING — Clave de respaldos 2026-10-07» y confirma sólo «clave guardada». Clave nueva local privada/fuera de Git/Drive/VM compartida, roundtrip ficticio PASS; no repetir generación, no subir identidad ni pegarla aquí. Después verificar recuperación de esa copia sin acceder a bóveda/mostrar secretos; no borrar identidad local ni exportar staging por este reporte. Cuota/egress restore/conexión SQL privada/permiso de captura real/15casos pendientes. NO-GO/AUD-018 abiertos; evidencia previa preservada.
 
 **Custodia AUD-018:** carpeta Drive privada creada y transferencia/rescate único fixture .age253bytes/bytes-hash-descifrado PASS; no repetir instalación/conexión/carpeta/upload ficticio ni borrar fixture. Antes de datos reales acordar clave recuperable separada/cuota disponible $0/aislamiento restore, pedir autorización específica para captura staging/subida cifrada; después15casos reales. Conservar enlaces del plan, sin sharing/compra/exportación/restore real por este permiso. NO-GO/AUD-018 abiertos, evidencia anterior preservada.
 

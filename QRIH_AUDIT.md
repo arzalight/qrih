@@ -1,6 +1,8 @@
 # QRIH — Auditoría técnica pre-Soft-Launch
 
-## Dictamen consolidado vigente — 2026-10-06
+## Dictamen consolidado vigente — 2026-10-07
+
+**AUD-018 / custodia — CLAVE NUEVA PREPARADA, NO RESPALDO REAL:** Bitwarden disponible por reporte, sin acceder a bóveda/contraseña/códigos. Nueva identidad age sólo staging, carpeta700/archivo600/propietario/sin ACL adicional, fuera de Git/Drive y montajes Rancher consultados; recipient distinto de fixture antiguo/roundtrip ficticio PASS. Sin secretos en salidas, exportación/SQL/upload real/código/deploy. Guardado personal en nota segura y recuperación de esa copia aún pendientes; no verificarlos por disponibilidad del gestor. Plan describe target/guards. ALTO/EN REVISIÓN—NO CORREGIDO/NO-GO conservados,15casos reales pendientes.
 
 **AUD-018 / segunda copia — PRUEBA FICTICIA PASS:** creación carpeta QRIH Backups/upload único AUD018_TEST_ONLY.age autorizados. Readback folder/file shared=false/único owner/parent esperado/octet-stream253bytes. Archivo recuperado vía referencia autenticada, igualdad exacta/SHA256/descifrado age PASS; identidad ficticia no subida, no clave de backup real. Sin exportación/descarga Storage/SQL remoto/datos reales/cambios de sharing/deploy. Guía Drive orientó grounding/metadata/raw download/readback; detalle/enlaces en plan. No cuota/fiabilidad/backup real/15casos acreditados: ALTO/EN REVISIÓN—NO CORREGIDO/NO-GO conservados; fixture/carpeta se conservan.
 

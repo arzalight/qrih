@@ -1,6 +1,8 @@
 ## PROJECT STATUS — QRO INDUSTRIAL HUB / QRIH
 
-## Estado maestro consolidado — 2026-10-06
+## Estado maestro consolidado — 2026-10-07
+
+**AUD-018 / clave preparada, custodia pendiente:** Bitwarden listo por reporte del usuario, sin acceso/verificación de bóveda/2FA por agente. Identidad age nueva sólo staging creada fuera de Git/Drive/home compartido Rancher, carpeta700/archivo600/sin ACL adicional; distinta del fixture anterior/cifrado-descifrado ficticio PASS. Usuario debe guardar personalmente nota segura y después verificar recuperación, no compartir contenido. Sin exportación/upload real/SQL/código/deploy nuevos; ALTO/EN REVISIÓN—NO CORREGIDO/NO-GO intactos. Detalle en plan AUD-018 actualizado; pruebas/env vacío previos no repetidos.
 
 **AUD-018 / segunda copia preparada:** usuario autorizó carpeta/prueba ficticia: QRIH Backups creada y único AUD018_TEST_ONLY.age subido/253bytes. Carpeta/archivo shared=false/único owner reportado, parent/MIME comprobados; descarga byte-a-byte/SHA256/descifrado PASS, clave ficticia sólo local. Sin datos reales/exportación SQL/Storage/clave real ni sharing/deploy. Cuota/custodia/aislamiento restore/permiso de captura real/15casos siguen pendientes: ALTO/EN REVISIÓN—NO CORREGIDO/NO-GO intactos. Evidencia y enlaces en plan AUD-018; fixture conservado, no eliminado.
 

@@ -1,6 +1,8 @@
 # QRIH FUNCTIONAL INDEX — Índice maestro tipo SIGMA
 
-## Control vigente consolidado — 2026-10-06
+## Control vigente consolidado — 2026-10-07
+
+**OPS-003 / AUD-018 — preparación de clave:** reporte Bitwarden listo → montajes Lima metadata/siete/no target → permiso FS específico → prepare-staging-key.mjs fuera de checkout → identidad nueva /Users/Shared/QRIH_Backup_Keys/staging-20261007.agekey700-600 + recipient público → distinto de fixture/roundtrip ficticio PASS → guardado personal Bitwarden/recuperación pendientes. Sin valores secretos/Git/Drive/bóveda accedida/exportación/SQL/deploy/ID funcional nuevo. Plan auditable, ALTO/EN REVISIÓN—NO CORREGIDO/NO-GO intactos.
 
 **OPS-003 / AUD-018 — SEGUNDA COPIA/FIXTURE PASS:** permiso usuario → search exacto0 → create_folder QRIH Backups → metadata owner-only/sharedfalse → upload único AUD018_TEST_ONLY.age/octet-stream253bytes/parent exacto → metadata → fetch raw sin base64 → verify-drive-download.mjs fuera del checkout → igualdad bytes/SHA256/descifrado PASS. Plan contiene enlaces observados; clave ficticia sólo local/no backup real/exportación/función-ID nuevos. Cuota/custodia/aislamiento/captura staging/15casos pendientes; ALTO/EN REVISIÓN—NO CORREGIDO/NO-GO conservados.
 

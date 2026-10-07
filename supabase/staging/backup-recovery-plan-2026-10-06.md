@@ -1,6 +1,18 @@
 # AUD-018 — Plan de respaldo y recuperación a $0
 
-Fecha: 2026-10-06, America/Mexico_City. **ALTO de operación / EN REVISIÓN — NO CORREGIDO.** Herramientas y servicios locales vacíos operativos; ningún dump, descarga de archivos Storage o restore realizado.
+Actualización: 2026-10-07, America/Mexico_City; plan iniciado2026-10-06. **ALTO de operación / EN REVISIÓN — NO CORREGIDO.** Herramientas/servicios vacíos y transferencia ficticia preparados; ningún dump, descarga de archivos Storage o restore real realizado.
+
+## Custodia vigente — clave nueva preparada / guardado en Bitwarden pendiente
+
+Usuario respondió «listo» después de preparar Bitwarden Free: disponibilidad por reporte, no verificación de su cuenta/2FA/recuperación ni acceso a bóveda por el agente. Se preparó una clave age nueva **exclusivamente para respaldos de STAGING**, sin exportación ni permiso de captura/upload real. No reutilizar identidad del fixture Drive ni extender el alcance a original/producción.
+
+Destino clave: /Users/Shared/QRIH_Backup_Keys/staging-20261007.agekey, directorio700/archivo600/propietario actual/sin ACL adicional reportada por ls. Directorio nuevo, sin symlink/reutilización/sobrescritura; valores de clave nunca impresos. Está fuera de Git, Documents/Drive y, según siete montajes efectivos consultados de Rancher, fuera de las carpetas expuestas a esa VM. No afirmar aislamiento permanente si cambian los montajes ni acceso imposible para administradores del Mac.
+
+age1.3.2/ayuda comprobada: keygen -o privado; -y produce staging-20261007.recipient.txt sólo público; distinto del recipient ficticio anterior. Cifrado con recipient nuevo/descifrado con identidad nueva de contenido fijo ficticio PASS. Helper prepare-staging-key.mjs/fixture fuera del checkout; no ejecutar otra vez ni regenerar esta identidad como atajo. Clave/recipient no subidos a Drive/Bitwarden por el agente, sin cuenta/suscripción/credenciales remotas/correo/SQL/exportación/restore nuevos.
+
+**Paso personal pendiente:** el usuario copia localmente el archivo privado sin mostrarlo y guarda su contenido completo en una nota segura Bitwarden «QRIH — STAGING — Clave de respaldos 2026-10-07». Nunca pegar en chat, Git, captura o carpeta Drive. Después confirmar sólo «clave guardada»; no afirmar custodia verificada por ese reporte: probar recuperación de esa copia mediante derivación del recipient y descifrado ficticio, sin leer su bóveda ni mostrar secretos. Clave maestra/código de recuperación del gestor custodiados separadamente según preparación indicada, no auditados por agente. No borrar el original local antes de recuperar/verificar la copia ni cambiar permisos existentes para facilitarlo.
+
+Guía Supabase mantuvo separación de preparación de claves/custodia/exportación sensible y verificación sin datos reales. Sigue pendiente acreditar aislamiento de salida del restore/cuota Drive/conexión SQL privada/autorización específica de captura staging/15casos reales. **NO-GO y AUD-018 abiertos**; los párrafos inferiores sin clave generada describen el corte anterior, no el estado actual de esta preparación.
 
 ## Segunda copia preparada — Google Drive / prueba ficticia PASS
 
