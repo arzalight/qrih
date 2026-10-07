@@ -2,7 +2,7 @@
 
 Actualización: 2026-10-07, America/Mexico_City; plan iniciado2026-10-06. **ALTO de operación / EN REVISIÓN — NO CORREGIDO.** Herramientas/servicios vacíos y transferencia ficticia preparados; ningún dump, descarga de archivos Storage o restore real realizado.
 
-## Custodia vigente — clave nueva preparada / guardado en Bitwarden pendiente
+## Custodia vigente — guardado y recuperación ficticia PASS reportados
 
 Usuario respondió «listo» después de preparar Bitwarden Free: disponibilidad por reporte, no verificación de su cuenta/2FA/recuperación ni acceso a bóveda por el agente. Se preparó una clave age nueva **exclusivamente para respaldos de STAGING**, sin exportación ni permiso de captura/upload real. No reutilizar identidad del fixture Drive ni extender el alcance a original/producción.
 
@@ -10,7 +10,11 @@ Destino clave: /Users/Shared/QRIH_Backup_Keys/staging-20261007.agekey, directori
 
 age1.3.2/ayuda comprobada: keygen -o privado; -y produce staging-20261007.recipient.txt sólo público; distinto del recipient ficticio anterior. Cifrado con recipient nuevo/descifrado con identidad nueva de contenido fijo ficticio PASS. Helper prepare-staging-key.mjs/fixture fuera del checkout; no ejecutar otra vez ni regenerar esta identidad como atajo. Clave/recipient no subidos a Drive/Bitwarden por el agente, sin cuenta/suscripción/credenciales remotas/correo/SQL/exportación/restore nuevos.
 
-**Paso personal pendiente:** el usuario copia localmente el archivo privado sin mostrarlo y guarda su contenido completo en una nota segura Bitwarden «QRIH — STAGING — Clave de respaldos 2026-10-07». Nunca pegar en chat, Git, captura o carpeta Drive. Después confirmar sólo «clave guardada»; no afirmar custodia verificada por ese reporte: probar recuperación de esa copia mediante derivación del recipient y descifrado ficticio, sin leer su bóveda ni mostrar secretos. Clave maestra/código de recuperación del gestor custodiados separadamente según preparación indicada, no auditados por agente. No borrar el original local antes de recuperar/verificar la copia ni cambiar permisos existentes para facilitarlo.
+**Resultado personal reportado — 2026-10-07:** el usuario confirmó «clave guardada» en la nota segura «QRIH — STAGING — Clave de respaldos 2026-10-07» y luego «PASS» tras la prueba con copia recuperada desde Bitwarden. No mostró clave, contraseña, código ni captura. El agente no accedió a bóveda/portapapeles real ni observó esa ejecución; guardar como evidencia reportada, no auditoría del gestor/2FA/clave maestra/código de recuperación. No borrar la identidad original ni regenerarla, ni subirla a Drive/Git/chat.
+
+Verificador local fuera del checkout: work/aud018-tools-20261006.KqHlHu/verify-recovered-staging-key.mjs. Entrada por pipe local del portapapeles (usuario), límite1024bytes/una identidad; age-keygen -y por stdin compara recipient con staging-20261007.recipient.txt público y age --decrypt -i - descifra únicamente new-key-synthetic-i6gAHz/synthetic.age contra contenido fijo ficticio. No lee staging-20261007.agekey original ni escribe la entrada a archivo, ni pasa secretos en argumentos/entorno ni imprime stderr/valores. Buffer borrado best-effort, no garantía de borrado completo de memoria/historial de portapapeles. Salida genérica PASS/NO VERIFICADO; ningún recibo sensible guardado.
+
+Ayuda age1.3.2 consultada; node --check y self-test PASS comprobados por agente sólo con identidad ficticia anterior: caso válido y tres rechazos (vacío/recipient de otra clave/ciphertext truncado). Self-test no leyó portapapeles ni identidad staging original. El PASS real comunicado por usuario significa que el verificador aceptó recipient/descifrado de la copia suministrada; su procedencia Bitwarden depende del reporte. No repetir esta prueba por actualizar documentos ni confundirla con restauración de datos.
 
 Guía Supabase mantuvo separación de preparación de claves/custodia/exportación sensible y verificación sin datos reales. Sigue pendiente acreditar aislamiento de salida del restore/cuota Drive/conexión SQL privada/autorización específica de captura staging/15casos reales. **NO-GO y AUD-018 abiertos**; los párrafos inferiores sin clave generada describen el corte anterior, no el estado actual de esta preparación.
 
@@ -71,11 +75,11 @@ La CLI2.119.0 publica puertos sin IP explícita en su implementación; el hostna
 
 ## Autorizaciones separadas antes de ejecutar
 
-1. **Autorizado por el usuario / entorno vacío operativo:** herramientas gratuitas, PG17.11/Auth/Storage/correo sólo local fuera del checkout, loopback verificado. Aislamiento de salida universal/custodia aún no acreditados; no importar datos reales/hooks hasta resolverlos. Sin exportación, restore, credenciales reales, SMTP/webhook ni servicios ajenos.
-2. Definir custodia/clave recuperable y segunda copia; después solicitar exportación exclusivamente mcyxunymhuxyiwklyfpy (BD/Auth/identidades/archivos/configuración necesaria) a paquete cifrado fuera de Git. Credencial SQL sólo en archivo privado/almacén autorizado; nunca chat. Service_role del app no es contraseña SQL ni respaldo íntegro de Auth. No extraer keys/contraseñas de otro proveedor ni cambiar credenciales para facilitar el dump.
+1. **Autorizado por el usuario / entorno vacío operativo:** herramientas gratuitas, PG17.11/Auth/Storage/correo sólo local fuera del checkout, loopback verificado. Drive ficticio comprobado y clave recuperada con PASS reportado; aislamiento de salida universal aún no acreditado. No importar datos reales/hooks hasta resolverlo. Sin exportación, restore, SMTP/webhook ni servicios ajenos.
+2. Comprobar cuota Drive y definir destino/ventana coherente/conexión SQL privada; después solicitar exportación exclusivamente mcyxunymhuxyiwklyfpy (BD/Auth/identidades/archivos/configuración necesaria) a paquete cifrado fuera de Git. Clave separada ya guardada/recuperada según reporte. Credencial SQL sólo en archivo privado/almacén autorizado; nunca chat. Service_role del app no es contraseña SQL ni respaldo íntegro de Auth. No extraer keys/contraseñas de otro proveedor ni cambiar credenciales para facilitar el dump.
 3. Mostrar destino exacto local/vacío y plan de importación antes de restaurar. Verificar schemas/privilegios/roles administrados/versiones/egress bloqueado, no reiniciar ni restaurar staging/original. Validar quince casos pendientes; una exportación cifrada sin restore no cierra AUD-018.
 
-Ventana coherente, custodia y autorización de exportación todavía no acordadas. No GO por ayuda de CLI/hardware/documentación. No new cloud project/Netlify plan/deploy/SQL/migración/Storage/Auth ni gasto.
+Ventana coherente, conexión SQL, cuota, aislamiento y autorización de exportación todavía pendientes. Custodia/recuperación ficticia reportadas, no datos reales respaldados. No GO por ayuda de CLI/hardware/documentación/PASS de clave. No new cloud project/Netlify plan/deploy/SQL/migración/Storage/Auth ni gasto.
 
 ## Alcance y evidencia comprobada
 
