@@ -11,6 +11,7 @@ work/
 
 # Estado local del proveedor, respaldos y resultados generados (no borrar del disco).
 supabase/.temp/
+supabase/.temp-*/
 supabase/.branches/
 supabase/migration-backup/
 outputs/
