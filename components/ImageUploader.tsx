@@ -24,11 +24,15 @@ export function ImageUploader({
 }: ImageUploaderProps) {
   const [images, setImages] = useState<OptimizedImage[]>([])
   const imagesRef = useRef<OptimizedImage[]>([])
+  const selectionInFlight = useRef(false)
+  const mountedRef = useRef(true)
   const [status, setStatus] = useState('')
   const [processing, setProcessing] = useState(false)
 
   useEffect(() => {
+    mountedRef.current = true
     return () => {
+      mountedRef.current = false
       imagesRef.current.forEach((image) => URL.revokeObjectURL(image.previewUrl))
     }
   }, [])
@@ -48,9 +52,9 @@ export function ImageUploader({
     const selectedFiles = Array.from(event.target.files || [])
     event.target.value = ''
 
-    if (!selectedFiles.length) return
+    if (!selectedFiles.length || selectionInFlight.current || !mountedRef.current) return
 
-    const availableSlots = maxImages - images.length
+    const availableSlots = maxImages - imagesRef.current.length
 
     if (availableSlots <= 0) {
       setStatus(`Puedes seleccionar un máximo de ${maxImages} fotografías.`)
@@ -74,13 +78,19 @@ export function ImageUploader({
       return
     }
 
+    selectionInFlight.current = true
     setProcessing(true)
     setStatus('Optimizando imágenes…')
     const optimizedImages: OptimizedImage[] = []
 
     for (const file of validFiles) {
       try {
-        optimizedImages.push(await optimizeImage(file))
+        const optimized = await optimizeImage(file)
+        if (!mountedRef.current) {
+          URL.revokeObjectURL(optimized.previewUrl)
+          break
+        }
+        optimizedImages.push(optimized)
       } catch (error) {
         errors.push(
           `${file.name}: ${error instanceof Error ? error.message : 'No fue posible optimizarla.'}`
@@ -88,14 +98,25 @@ export function ImageUploader({
       }
     }
 
+    selectionInFlight.current = false
+    if (!mountedRef.current) {
+      optimizedImages.forEach(image => URL.revokeObjectURL(image.previewUrl))
+      return
+    }
     setProcessing(false)
 
-    if (optimizedImages.length) {
-      updateImages([...images, ...optimizedImages])
+    // Durante await el usuario puede quitar fotos/cambiar títulos. No revivir
+    // el snapshot antiguo ni conservar previews que ya no tienen lugar.
+    const currentImages = imagesRef.current
+    const retained = optimizedImages.slice(0, Math.max(0, maxImages - currentImages.length))
+    optimizedImages.slice(retained.length).forEach(image => URL.revokeObjectURL(image.previewUrl))
+
+    if (retained.length) {
+      updateImages([...currentImages, ...retained])
       setStatus(
         errors.length
-          ? `${optimizedImages.length} fotografía(s) lista(s). ${errors.join(' ')}`
-          : `${images.length + optimizedImages.length} fotografía(s) lista(s) para subir.`
+          ? `${retained.length} fotografía(s) lista(s). ${errors.join(' ')}`
+          : `${currentImages.length + retained.length} fotografía(s) lista(s) para subir.`
       )
       return
     }

@@ -55,6 +55,8 @@ export function PropertyImageEditor({
   const [status, setStatus] = useState('')
   const [processing, setProcessing] = useState(false)
   const imagesRef = useRef<PropertyImageEditorItem[]>(initialItems)
+  const selectionInFlight = useRef(false)
+  const mountedRef = useRef(true)
 
   useEffect(() => {
     imagesRef.current = images
@@ -62,7 +64,9 @@ export function PropertyImageEditor({
   }, [images, onChange])
 
   useEffect(() => {
+    mountedRef.current = true
     return () => {
+      mountedRef.current = false
       imagesRef.current.forEach((image) => {
         if (image.kind === 'new') {
           URL.revokeObjectURL(image.url)
@@ -82,9 +86,9 @@ export function PropertyImageEditor({
     const selectedFiles = Array.from(event.target.files || [])
     event.target.value = ''
 
-    if (!selectedFiles.length) return
+    if (!selectedFiles.length || selectionInFlight.current || !mountedRef.current) return
 
-    const availableSlots = maxImages - images.length
+    const availableSlots = maxImages - imagesRef.current.length
 
     if (availableSlots <= 0) {
       setStatus(
@@ -115,6 +119,7 @@ export function PropertyImageEditor({
       return
     }
 
+    selectionInFlight.current = true
     setProcessing(true)
     setStatus('Optimizando imágenes…')
 
@@ -123,6 +128,10 @@ export function PropertyImageEditor({
     for (const file of validFiles) {
       try {
         const optimized = await optimizeImage(file)
+        if (!mountedRef.current) {
+          URL.revokeObjectURL(optimized.previewUrl)
+          break
+        }
 
         optimizedItems.push({
           kind: 'new',
@@ -142,16 +151,26 @@ export function PropertyImageEditor({
       }
     }
 
+    selectionInFlight.current = false
+    if (!mountedRef.current) {
+      optimizedItems.forEach(image => URL.revokeObjectURL(image.url))
+      return
+    }
     setProcessing(false)
 
-    if (optimizedItems.length) {
-      updateImages([...images, ...optimizedItems])
+    // Reconciliar contra el estado actual, no contra images previo al await.
+    const currentImages = imagesRef.current
+    const retained = optimizedItems.slice(0, Math.max(0, maxImages - currentImages.length))
+    optimizedItems.slice(retained.length).forEach(image => URL.revokeObjectURL(image.url))
 
-      const total = images.length + optimizedItems.length
+    if (retained.length) {
+      updateImages([...currentImages, ...retained])
+
+      const total = currentImages.length + retained.length
 
       setStatus(
         errors.length
-          ? `${optimizedItems.length} fotografía(s) lista(s). ${errors.join(' ')}`
+          ? `${retained.length} fotografía(s) lista(s). ${errors.join(' ')}`
           : `${total} fotografía(s) listas.`
       )
 
