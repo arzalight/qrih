@@ -79,17 +79,31 @@ export async function POST(request: Request) {
     );
   }
 
-  const { data: storagePaths, error: deleteError } = await supabase.rpc(
-    'qrih_delete_own_property', { p_property_id: property.id }
-  );
+  let storagePaths: string[] | null = null;
+  let deleteError: unknown;
+  try {
+    const result = await supabase.rpc(
+      'qrih_delete_own_property', { p_property_id: property.id }
+    );
+    storagePaths = result.data;
+    deleteError = result.error;
+  } catch {
+    return NextResponse.json({ error: 'No pudimos confirmar la eliminación. Recarga Mis propiedades antes de reintentar.' }, { status: 503 });
+  }
   if (deleteError || !storagePaths) {
-    return NextResponse.json({ error: 'No se pudo eliminar la propiedad. Los datos anteriores se conservan.' }, { status: 400 });
+    return NextResponse.json({ error: 'No pudimos confirmar la eliminación. Recarga Mis propiedades antes de reintentar.' }, { status: 400 });
   }
 
   if (storagePaths.length > 0) {
-    const { error: storageError } = await supabase.storage
-      .from('property-images')
-      .remove(storagePaths);
+    let storageError: unknown;
+    try {
+      const result = await supabase.storage
+        .from('property-images')
+        .remove(storagePaths);
+      storageError = result.error;
+    } catch {
+      storageError = true;
+    }
 
     if (storageError) {
       console.warn('QRIH_DELETE_STORAGE_CLEANUP_FAILED');

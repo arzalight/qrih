@@ -7,7 +7,7 @@
     "start": "node scripts/local-next.mjs start",
     "lint": "eslint app components lib tests proxy.ts --max-warnings 0",
     "typecheck": "tsc --noEmit",
-    "test": "node --test tests/aud002-images.test.mjs tests/security-inputs.test.mjs tests/auth-profile.test.mjs tests/password-recovery.test.mjs tests/notification-navigation.test.mjs tests/auth-navigation.test.mjs tests/contact-restoration.test.mjs tests/opportunities.test.mjs tests/dependency-security.test.mjs tests/local-environment.test.mjs tests/ssr-session.test.mjs tests/image-editor-race.test.mjs",
+    "test": "node --test tests/aud002-images.test.mjs tests/security-inputs.test.mjs tests/auth-profile.test.mjs tests/password-recovery.test.mjs tests/notification-navigation.test.mjs tests/auth-navigation.test.mjs tests/contact-restoration.test.mjs tests/opportunities.test.mjs tests/dependency-security.test.mjs tests/local-environment.test.mjs tests/ssr-session.test.mjs tests/image-editor-race.test.mjs tests/property-write-errors.test.mjs",
     "test:rls": "node --test tests/aud002-rls.test.mjs tests/staging-baseline.test.mjs tests/opportunities-rls.test.mjs",
     "test:http": "node --test tests/http-smoke.test.mjs",
     "preflight": "node scripts/deployment-preflight.mjs"

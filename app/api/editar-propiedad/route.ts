@@ -348,40 +348,47 @@ export async function POST(request: Request) {
     }
   })
 
-  const { error: updateError } = await supabase.rpc('qrih_update_property_with_images', {
-    p_property_id: property.id,
-    p_expected_updated_at: property.updated_at,
-    p_images: finalImages,
-    p_changes: {
-      title,
-      operation,
-      price_display: price,
-      price_plus_vat: pricePlusVat,
-      price_plus_maintenance: pricePlusMaintenance,
-      negotiable,
-      zone_general: zoneGeneral,
-      zone,
-      location_visibility: visibility,
-      address: address || null,
-      total_area: area,
-      covered_area: covered,
-      exterior_area: exteriorArea,
-      max_height: maxHeight || null,
-      offices_area: officesArea,
-      parking,
-      docks,
-      description,
-      share_commission: commission,
-      status: submissionAction,
-    },
-  })
+  let updateError: unknown
+  try {
+    const result = await supabase.rpc('qrih_update_property_with_images', {
+      p_property_id: property.id,
+      p_expected_updated_at: property.updated_at,
+      p_images: finalImages,
+      p_changes: {
+        title,
+        operation,
+        price_display: price,
+        price_plus_vat: pricePlusVat,
+        price_plus_maintenance: pricePlusMaintenance,
+        negotiable,
+        zone_general: zoneGeneral,
+        zone,
+        location_visibility: visibility,
+        address: address || null,
+        total_area: area,
+        covered_area: covered,
+        exterior_area: exteriorArea,
+        max_height: maxHeight || null,
+        offices_area: officesArea,
+        parking,
+        docks,
+        description,
+        share_commission: commission,
+        status: submissionAction,
+      },
+    })
+    updateError = result.error
+  } catch {
+    return NextResponse.json({ error: 'No pudimos confirmar el guardado. Recarga la propiedad antes de reintentar.' }, { status: 503 })
+  }
 
   if (updateError) {
-    await removeUploadedImages()
+    // Una respuesta perdida no demuestra rollback. Conservar las fotografías
+    // hasta conciliar referencias; nunca limpiar a partir de ese error solamente.
 
     return NextResponse.json(
       {
-        error: 'No se pudo guardar. Recarga la propiedad antes de reintentar; la edición anterior se conserva.',
+        error: 'No pudimos confirmar el guardado. Recarga la propiedad antes de reintentar.',
       },
       { status: 400 }
     )
@@ -393,9 +400,15 @@ export async function POST(request: Request) {
 
   if (removedPaths.length) {
     const storage = supabase.storage
-    const { error: storageDeleteError } = await storage
-      .from('property-images')
-      .remove(removedPaths)
+    let storageDeleteError: unknown
+    try {
+      const result = await storage
+        .from('property-images')
+        .remove(removedPaths)
+      storageDeleteError = result.error
+    } catch {
+      storageDeleteError = true
+    }
 
     if (storageDeleteError) {
       return NextResponse.json({
