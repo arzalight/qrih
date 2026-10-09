@@ -2,6 +2,8 @@
 
 2026-10-08. **MEDIO / CONFIRMADO Y CORREGIDO LOCAL — SIN OPERACIONES REALES DE DATOS.** IDs PROP-003/005/IMG-002 y riesgo residual AUD-007 conservados. No cambios de RPC, transacción/arquitectura, políticas, campos, Storage, configuración ni dependencias.
 
+**Corte posterior:** integrado en develop4302fef por fast-forward autorizado; build exacto4302fef/preflight/25HTTP anon PASS, entradas167/huella iguales al código6efd78e. Sin pérdida de respuesta/edición/eliminación real provocadas. Documentación posterior aparte, sin push/Netlify/main/producción. [Registro RC](RC_CANDIDATE_2026-10-08.md); afirmaciones de integración/build pendientes inferiores son históricas.
+
 **Versionado autorizado:** `0ca5a698c74f2d077814329ed41dab676dd3e80d`, sólo dos handlers, suite y su adición al comando test. Código final/pruebas del lote en6efd78e;114unit/lint completo/tipos reejecutados PASS. Documentación aparte, sin integración develop/main/push/deploy. Login/panel real inmediato y recarga observados, no escritura ni eliminación real para probar este error.
 
 ## Evidencia previa a corrección

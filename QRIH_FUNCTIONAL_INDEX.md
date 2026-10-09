@@ -2,6 +2,10 @@
 
 ## Control vigente consolidado — 2026-10-08
 
+**OPS-001/002/003 — integración/build local vigente:** autorización→ancestry/árbol limpio/main55b7737→fast-forward develop54faaf1→4302fef con19commits preservados→build4302feffc30413e23efb7179289b6bb6824df666/BUILD_ID `BDbYKXtzF6xa9a_dDnnJm`→preflight/25HTTP anon PASS→startguardSTAGING/loopback→panel privado conservado tras recarga→[plan/manifest](docs/RC_CANDIDATE_2026-10-08.md).167entradas/f9fc6cbb… iguales al código6efd78e;114unit/lint/tipos/43SQL anteriores conservados, sin nuevo ID/frontend/API/BD/RLS/migración. Documentación aparte; no push/remoto/Netlify/main/producción, refresh real/callback positivo/RC externo/AUD018 pausado pendientes. Supabase mantiene aislado entorno y distingue recarga/reinicio de renovación. Secciones siguientes históricas.
+
+### Antecedente — commits antes de integrar y compilar
+
 **Trazabilidad Git local y sesión — corte vigente:** IMG-001/002 y PROP-002/005 → AUD-037 → `f55ab65`; PROP-003/005/IMG-002 → AUD-038 → `0ca5a69`; AUTH-003 → cuatro pruebas SSR adicionales → `6efd78e`. Código local seleccionado6efd78ece7c433f95ae6c5b40f17eaed8fc371f4/167entradas/f9fc6cbb2f0d15a89943403650a2532cf93edddd050f5d04587fc86cd9494ca9 cotejados Git/trabajo;114unit/lint/tipos reejecutados PASS. Documentación en commit separado, IDs/frontend/API/BD/RLS/migraciones sin cambios nuevos en este versionado. Inicio de sesión informado por usuario y panel privado con publicación de prueba observados antes/después de recarga completa localhost3107, sin leer secretos ni persistir PII. Renovación prolongada/callback positivo local pendientes; build/preflight/HTTP/SQL anteriores no reejecutados. `develop`/`main` sin mover, no push/tag/PR/deploy/remoto ni producción. Supabase separa evidencia inmediata de sesión renovada; AUD-018 pausado/NO-GO conservado.
 
 ### Antecedente — cambios todavía sin versionar ni login observado

@@ -1,8 +1,26 @@
 # QRIH — Preparación del candidato local
 
-2026-10-08. **CÓDIGO VERSIONADO LOCALMENTE; NO ES UN RC APROBADO/TAG NI UN GO DE LANZAMIENTO.** Usuario autoriza también commits. No se integra en develop/main, no push/PR/deploy/producción ni se reabre descifrado/restore AUD-018 rechazado. Este corte superior sustituye las propuestas/permisos históricos inferiores.
+2026-10-08. **CÓDIGO INTEGRADO EN DEVELOP Y COMPILADO LOCALMENTE; NO ES UN RC APROBADO/TAG NI UN GO DE LANZAMIENTO.** Usuario autoriza commits y después consolidar/compilar local. Main intacta, sin push/PR/deploy/producción ni reabrir descifrado/restore AUD-018 rechazado. Este corte superior sustituye las propuestas/permisos históricos inferiores.
 
-## Corte vigente — commits separados y sesión inmediata
+## Corte vigente — integración local, compilación y servidor reabierto
+
+Autorización posterior «ok, adelante»: árbol limpio/ancestry/worktree/hook scope revisados, develop54faaf1→4302feffc30413e23efb7179289b6bb6824df666 por fast-forward. Conserva19commits de la cadena034/035/036, historia documental018 y las tres correcciones/tests separados; no cherry-pick/merge commit/rebase/force ni rama nueva. Main55b773756066cd3975b3964dc67f106cf15ead4c intacta; cached origin/develop54faaf1, no consulta/push remoto. Migraciones/lock no cambian respecto al develop previo; versionar no ejecuta SQL. Documentación del corte posterior se guarda aparte y no cambia entradas compiladas.
+
+| Control nuevo | Resultado / límite |
+|---|---|
+| Build local exacto | PASS de4302feffc30413e23efb7179289b6bb6824df666, Next16.3.6/28páginas/Proxy/BUILD_ID `BDbYKXtzF6xa9a_dDnnJm`. Sin cambio de fuentes durante/después. |
+| Identidad de entradas |167entradas Git6efd78e/Git4302fef/trabajo/manifest iguales; agregado f9fc6cbb2f0d15a89943403650a2532cf93edddd050f5d04587fc86cd9494ca9. No hash de binario/garantía universal del proveedor. |
+| Preflight | PASS: entorno STAGING fijo/roles de clave/clientbundle sin nombre/valor privado examinado; no verifica políticas/proveedores activos. |
+| HTTP compilado localhost |25PASS/0fallos/0skips, sin sesión y sólo lecturas/peticiones inválidas. Cache privada/callbacks inválidos/recovery inválido, no alta/edición/borrado válido/correo. |
+| Runtime | Anterior detenido por SIGINT normal antes de build;3107 libre. Nuevo start guardado/verificación de claves por proyección pública limit0/Ready; bind observado sólo[::1]:3107 y .next700. Sin valores/envs privados impresos ni artefacto distribuido. |
+| Sesión legítima | Panel privado/publicación sintética conservados después de recarga sobre servidor nuevo. Sólo UI, no cookies/tokens inspeccionados/caducidad forzada/logout/datos mutados. **No prueba de refresh real**. |
+| Pruebas conservadas |114unit/lint/tipos/43SQL de lotes previos sobre mismas entradas, no reejecutados ahora por mover la rama. No audit nuevo/deploy/restore ni query SQL de datos. |
+
+Build compila sin heredar clave privada en el env del hijo; runtime sí usa la clave de servidor local con guardSTAGING. Next puede incluir entorno en caché: .next restringido/ignorado, no archivado/subido a Git. No se modificaron .env reales ni configuración Supabase/Netlify. Guía Supabase orientó aislamiento, separación entre identidad/autoridad y no convertir recarga/reinicio en aprobación de renovación prolongada.
+
+**Siguiente:** sesión natural tras caducidad/callback positivo local delimitados; push Git separado con permiso/guard Netlify/Free/refs frescos y sin deploy de desarrollo; RC Netlify sólo autorizado/cuota/SHA READY/humo exactos. AUD-018 pausado/ALTO/NO CORREGIDO, originalAUD002/corte elegido pendientes: NO-GO Soft Launch. No reabrir respaldo ni repetir login/alta ya comprobados. Los cortes inferiores sin integración/build del SHA son históricos.
+
+## Antecedente — commits separados y sesión inmediata antes de integrar
 
 | Commit local | Alcance revisado |
 |---|---|

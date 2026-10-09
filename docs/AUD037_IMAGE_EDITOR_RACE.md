@@ -2,6 +2,8 @@
 
 2026-10-08. **MEDIO / CONFIRMADO Y CORREGIDO LOCAL — SIN STAGING NETLIFY NI GO EXTERNO.** IDs IMG-001/002 y PROP-002/005 conservados. No nueva funcionalidad/arquitectura, Storage, RLS, SQL, credenciales, cuotas o dependencias.
 
+**Corte posterior:** integrado en develop4302fef por fast-forward autorizado; build exacto4302fef/preflight/25HTTP anon PASS, entradas167/huella iguales al código6efd78e. Sin cambio funcional nuevo ni ensayo real de la carrera. Documentación posterior aparte, sin push/Netlify/main/producción. [Registro RC](RC_CANDIDATE_2026-10-08.md); afirmaciones de integración/build pendientes inferiores son históricas.
+
 **Versionado autorizado:** `f55ab65ec3ef1df56421eec847fa64fb417e4f61`, sólo dos componentes, suite y su adición al comando test. Código final/pruebas del lote en6efd78e;114unit/lint completo/tipos reejecutados PASS. Documentación aparte, sin integración develop/main/push/deploy. Login/panel real inmediato y recarga observados, no ensayo UI de esta carrera ni refresh tras caducidad. El build/preflight/humo inferiores son del lote anterior; no nueva compilación del SHA.
 
 ## Problema identificado antes de modificar aplicación

@@ -4,6 +4,8 @@
 
 ## Corte vigente — commits y acceso local, 2026-10-08
 
+**Actualización posterior autorizada:** cadena integrada localmente en develop4302fef, build exacto/preflight/25HTTP anon reejecutados PASS, main intacta y sin push/deploy. Servidor3107 reiniciado normalmente tras build, panel privado/publicación de prueba conservados tras recarga observada. No logout ni extracción de cookies/tokens ni expiración forzada; no cierra renovación tras caducidad/callback positivo.114unit/14SSR/lint/tipos anteriores conservados sobre entradas idénticas; documentación posterior aparte. [Evidencia del candidato](RC_CANDIDATE_2026-10-08.md). Las afirmaciones inferiores sin integración/buildnuevo describen el corte previo.
+
 Las cuatro pruebas adicionales quedan en `6efd78ece7c433f95ae6c5b40f17eaed8fc371f4`, separadas de AUD-037/038; documentación aparte.114unit actuales (incluyen14SSR), lint completo/tipos sin emisión PASS reejecutados. Sin integración develop/main/push/deploy; referencias originales conservadas. Build/preflight/25HTTP/43SQL anteriores no se reejecutan ni certifican como artefacto compilado de este SHA.
 
 Usuario inició sesión legítima personalmente en localhost3107. Agente observó `/mis-propiedades` con saludo autenticado y la publicación sintética; una recarga completa mantiene el panel y la publicación sin volver al login. Observación de sólo lectura, sin leer/exportar cookies/tokens/contraseña, modificar cuenta/propiedad ni emitir correo. Runtime loopback/STAGING continúa activo para la sesión del usuario; la afirmación inferior sobre servidores detenidos describe el lote inicial del 2026-10-06.

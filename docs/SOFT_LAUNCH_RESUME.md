@@ -1,5 +1,11 @@
 # QRIH — Punto de reanudación de validaciones
 
+## Corte vigente — develop integrado y candidato compilado local
+
+2026-10-08. Autorización local ejecutada: develop54faaf1→4302fef fast-forward/19commits preservados/main55b7737 intacta. Build exacto4302feffc30413e23efb7179289b6bb6824df666 PASS/BUILD_ID `BDbYKXtzF6xa9a_dDnnJm`, preflight y25HTTP anon nuevos PASS. Código6efd78e/build4302fef/trabajo167entradas/f9fc6cbb… iguales;114unit/lint/tipos/43SQL anteriores conservados, sin nueva aplicación/migración. Runtime3107 detenido normalmente durante compilación/reabierto STAGING-loopback y panel privado persistente tras recarga observada. Sin logout/tokens/correos/mutaciones de datos; recarga no prueba refresh. Documentos posteriores aparte; no push/remoto/Netlify/tag/PR/producción. Próximo: renovación natural/callback positivo delimitados y entrega Git sólo con permiso/guard/refs frescos; RC remoto separado. AUD-018 pausado/NO-GO siguen igual, no reabrir. [Registro compilación/alcance](RC_CANDIDATE_2026-10-08.md).
+
+## Antecedente — antes de integrar y compilar
+
 ## Corte vigente — commits locales y sesión inmediata verificados
 
 2026-10-08. Usuario autoriza también commits: f55ab65/AUD037,0ca5a69/AUD038,6efd78e/testsSSR, documentos en commit separado. Código seleccionado6efd78ece7c433f95ae6c5b40f17eaed8fc371f4/167entradas/huella f9fc6cbb2f0d15a89943403650a2532cf93edddd050f5d04587fc86cd9494ca9 coincide Git/trabajo;114unit/lint/tipos reejecutados PASS. Build/preflight/25HTTP/43SQL anteriores conservados, no nueva compilación del SHA. Login personal informado y panel privado con propiedad sintética persistente tras recarga completalocalhost3107 observados por agente, sin extraer cookies/secretos ni enviar correo/mutar datos. Runtime permanece para la sesión; no repetir login ya completado. Renovación natural tras caducidad/callback positivo local pendientes; no modificar TTL/confirmación ni programar monitor por inferencia. `develop`/`main` intactos; sin integración/push/tag/PR/deploy, remoto/Netlify no reconsultados. AUD-018 pausado y NO-GO externo vigentes. Integración local/push/RC remoto necesitan sus alcances autorizados, no permisos inferidos de los commits.

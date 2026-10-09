@@ -1,10 +1,10 @@
 {
   "format": "QRIH_RC_LOCAL_PREPARATION_V1",
   "preparedAt": "2026-10-09T00:03:07.509Z",
-  "releaseStatus": "LOCAL_VERSIONED_NOT_INTEGRATED_NOT_DEPLOYED_NOT_RELEASE_APPROVED",
+  "releaseStatus": "LOCAL_DEVELOP_INTEGRATED_COMPILED_NOT_PUSHED_NOT_DEPLOYED_NOT_RELEASE_APPROVED",
   "scope": "167 tracked application/configuration/tests/migrations/checks/baseline files, including two reviewed new test suites; excludes docs/private env/generated/cache/backup/key material and outside checkout tooling",
   "aggregateAlgorithm": "SHA256(JSON.stringify(sorted array of {path,mode,sha256})); mode from Git index, sha256 from file bytes",
-  "branch": "docs/aud-018-recovery-preparation",
+  "branch": "develop",
   "headAtCodeCommit": "6efd78ece7c433f95ae6c5b40f17eaed8fc371f4",
   "preCommitHead": "afab3b774159806f752f29ea59cbbf4dfd11496b",
   "localVersioningDate": "2026-10-08 America/Mexico_City",
@@ -13,8 +13,17 @@
   "functionalTipLocal": "ac26f643cd8393b1bb9097be4837dcf9d12db905",
   "mainLocal": "55b773756066cd3975b3964dc67f106cf15ead4c",
   "remoteRevalidated": false,
-  "candidateCommit": "6efd78ece7c433f95ae6c5b40f17eaed8fc371f4",
+  "candidateCommit": "4302feffc30413e23efb7179289b6bb6824df666",
+  "candidateCodeTip": "6efd78ece7c433f95ae6c5b40f17eaed8fc371f4",
   "candidateTag": null,
+  "localIntegration": {
+    "from": "54faaf1c079251a8cde8974c14b59e038488fc2b",
+    "toBeforeEvidenceDocumentation": "4302feffc30413e23efb7179289b6bb6824df666",
+    "method": "fast-forward",
+    "preservedExistingCommits": 19,
+    "mainChanged": false,
+    "remoteContacted": false
+  },
   "localCommits": [
     { "audit": "AUD-037", "sha": "f55ab65ec3ef1df56421eec847fa64fb417e4f61" },
     { "audit": "AUD-038", "sha": "0ca5a698c74f2d077814329ed41dab676dd3e80d" },
@@ -1048,6 +1057,18 @@
     }
   ],
   "verification": {
+    "localIntegratedBuild": {
+      "dateLocal": "2026-10-08 America/Mexico_City",
+      "sourceCommit": "4302feffc30413e23efb7179289b6bb6824df666",
+      "build": "PASS_NEXT16_3_6_28_PAGES_PROXY",
+      "buildId": "BDbYKXtzF6xa9a_dDnnJm",
+      "selectedInputs": "167 source/configuration/test/migration/check/baseline entries match code tip, compiled source commit and working files",
+      "preflight": "PASS_STAGING_LOCAL_ENV_AND_CLIENT_PRIVATE_KEY_SCAN",
+      "http": { "passed": 25, "failed": 0, "skipped": 0, "identity": "none", "scope": "localhost compiled; reads and invalid/unauthorized requests" },
+      "session": "Private panel and synthetic property retained after restarting guarded runtime and browser reload; no expiry or actual refresh demonstrated",
+      "notRerun": [ "114 unit tests", "full lint", "no-emission typecheck", "43 isolated SQL cases", "dependency audit", "Netlify guard/quota", "GitHub remote refs", "recovery runtime/backup" ],
+      "documentationAfterBuild": "separate local commit; excluded from selected inputs; not represented as a recompiled artifact"
+    },
     "currentAuditBatch": {
       "unit": {
         "passed": 114,
@@ -1094,16 +1115,17 @@
     "target": "Supabase STAGING mcyxunymhuxyiwklyfpy",
     "status": "running_with_user_legitimate_session",
     "realSessionVerified": true,
-    "realSessionScope": "Private panel and synthetic property observed before/after full localhost reload; read-only UI, no cookie/token/password inspection",
+    "realSessionScope": "Private panel and synthetic property observed after restarting exact compiled candidate and full localhost reload; read-only UI, no cookie/token/password inspection or expiry/refresh claim",
     "realProlongedSessionVerified": false,
     "positiveLocalCallbackVerified": false,
     "emailSentByAgent": false
   },
   "permissions": {
     "commit": true,
-    "localIntegration": false,
+    "localIntegration": true,
     "push": false,
-    "merge": false,
+    "fastForwardLocal": true,
+    "nonFastForwardMerge": false,
     "tag": false,
     "deploy": false,
     "production": false,
@@ -1113,7 +1135,7 @@
   "openGates": [
     "real prolonged browser session/refresh after expiry/local positive callback",
     "AUD-018 paused/unproven restoration",
-    "explicit Git integration authority",
+    "explicit GitHub push authority and fresh remote/build-stop guard checks",
     "Netlify authorization/current quota/guard/exact ready SHA",
     "explicit rollout environment decision/AUD-002 original"
   ]
