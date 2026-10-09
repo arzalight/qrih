@@ -25,13 +25,14 @@ const { proxy, config } = await import('../proxy.ts')
 const origin = 'https://synthetic-project.supabase.co'
 const cookieName = 'sb-synthetic-project-auth-token'
 const user = { id: '11111111-1111-4111-8111-111111111111', email_confirmed_at: 'synthetic', is_anonymous: false }
-const jwt = exp => [Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url'),
-  Buffer.from(JSON.stringify({ sub: user.id, exp })).toString('base64url'), 'synthetic-signature'].join('.')
-const session = exp => ({ access_token: jwt(exp), refresh_token: 'synthetic-refresh', expires_at: exp,
-  expires_in: 3600, token_type: 'bearer', user })
+const jwt = (exp, subject = user.id) => [Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url'),
+  Buffer.from(JSON.stringify({ sub: subject, exp })).toString('base64url'), 'synthetic-signature'].join('.')
+const session = (exp, actor = user, refresh = 'synthetic-refresh') => ({ access_token: jwt(exp, actor.id),
+  refresh_token: refresh, expires_at: exp, expires_in: 3600, token_type: 'bearer', user: actor })
 const encode = value => 'base64-' + Buffer.from(JSON.stringify(value)).toString('base64url')
+const decode = value => JSON.parse(Buffer.from(value.slice('base64-'.length), 'base64url').toString())
 
-async function withFixture(run, { expired = true, chunks = false, revoked = false, rejectUser = false } = {}) {
+async function withFixture(run, { expired = true, chunks = false, revoked = false, rejectUser = false, respond } = {}) {
   const saved = { fetch: globalThis.fetch, url: process.env.NEXT_PUBLIC_SUPABASE_URL,
     key: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY }
   const now = Math.floor(Date.now() / 1000)
@@ -46,6 +47,8 @@ async function withFixture(run, { expired = true, chunks = false, revoked = fals
     const url = new URL(String(input))
     assert.equal(url.origin, origin, 'Fixture must never call a real Supabase project')
     calls.push([url.pathname, init.method ?? 'GET'])
+    const response = await respond?.({ url, init, now })
+    if (response !== undefined) return response
     if (url.pathname === '/auth/v1/token') {
       assert.equal(url.searchParams.get('grant_type'), 'refresh_token')
       if (revoked) return Response.json({ code: 'refresh_token_not_found', message: 'synthetic revoked' }, { status: 400 })
@@ -228,4 +231,120 @@ test('AUD-036 control: Route Handler writable sí persiste y siguiente lectura n
     assert.notEqual(jar.get(cookieName), initial)
     assert.equal(calls.filter(([path]) => path === '/auth/v1/token').length, 1)
   })
+})
+
+test('AUD-036 red: una interrupción de refresh se recupera sin sesión fabricada', { timeout: 5000 }, async () => {
+  let attempts = 0
+  await withFixture(async ({ jar, calls, initial }) => {
+    const req = request(jar)
+    const response = await proxy(req)
+    assertPrivate(response)
+    assert.equal(attempts, 2)
+    assert.equal(calls.filter(([path]) => path === '/auth/v1/token').length, 2)
+    assert.notEqual(req.cookies.get(cookieName).value, initial)
+    assert.equal(decode(req.cookies.get(cookieName).value).refresh_token, 'synthetic-rotated')
+    applyResponse(jar, response)
+    assert.equal(jar.get(cookieName), req.cookies.get(cookieName).value)
+    await proxy(request(jar))
+    assert.equal(attempts, 2, 'La petición siguiente no vuelve a renovar')
+  }, { respond({ url, now }) {
+    if (url.pathname !== '/auth/v1/token') return
+    if (++attempts === 1) throw new TypeError('synthetic network interruption')
+    return Response.json(session(now + 3600, user, 'synthetic-rotated'))
+  } })
+})
+
+test('AUD-036 red: Auth 503 no concede identidad ni borra sesión vigente; se recupera', { timeout: 5000 }, async () => {
+  let unavailable = true
+  await withFixture(async ({ jar, calls, initial }) => {
+    const req = request(jar)
+    const response = await proxy(req)
+    assertPrivate(response)
+    assert.equal(response.cookies.getAll().length, 0)
+    assert.equal(req.cookies.get(cookieName).value, initial)
+    globalThis.__ssrCookieStore = { getAll: () => req.cookies.getAll(), set() { throw Error('RSC readonly') } }
+    const client = await createServerSupabaseClient()
+    try {
+      const denied = await client.auth.getUser()
+      assert.equal(denied.data.user, null)
+      assert.equal(denied.error.status, 503)
+      applyResponse(jar, response)
+      assert.equal(jar.get(cookieName), initial)
+      unavailable = false
+      assert.equal((await client.auth.getUser()).data.user.id, user.id)
+      assertPrivate(await proxy(request(jar)))
+      assert.equal(jar.get(cookieName), initial)
+      assert.equal(calls.filter(([path]) => path === '/auth/v1/token').length, 0)
+    } finally { client.auth.stopAutoRefresh() }
+  }, { expired: false, respond({ url }) {
+    if (unavailable && url.pathname === '/auth/v1/user') return Response.json({ message: 'synthetic unavailable' }, { status: 503 })
+  } })
+})
+
+test('AUD-036 concurrencia: dos requests reciben rotación coherente aun con respuestas invertidas', { timeout: 5000 }, async () => {
+  let attempts = 0
+  const barrier = Promise.withResolvers()
+  const deadline = setTimeout(() => barrier.reject(new Error('Synthetic refresh barrier timed out')), 1000)
+  try {
+    await withFixture(async ({ jar, calls, initial }) => {
+      const first = request(jar), second = request(jar)
+      const [a, b] = await Promise.all([proxy(first), proxy(second)])
+      assertPrivate(a); assertPrivate(b)
+      assert.equal(attempts, 2, 'Cada request mantiene su cliente independiente')
+      const rotated = a.cookies.get(cookieName).value
+      assert.notEqual(rotated, initial)
+      assert.equal(b.cookies.get(cookieName).value, rotated)
+      assert.equal(first.cookies.get(cookieName).value, rotated)
+      assert.equal(second.cookies.get(cookieName).value, rotated)
+      assert.equal(decode(rotated).refresh_token, 'synthetic-shared-rotation')
+      applyResponse(jar, b); applyResponse(jar, a)
+      assert.equal(jar.get(cookieName), rotated)
+      await proxy(request(jar))
+      assert.equal(calls.filter(([path]) => path === '/auth/v1/token').length, 2)
+    }, { async respond({ url, now }) {
+      if (url.pathname !== '/auth/v1/token') return
+      if (++attempts === 2) barrier.resolve()
+      await barrier.promise
+      // Simula reuse permitido: no prueba configuración/rotación del servidor real.
+      return Response.json(session(now + 3600, user, 'synthetic-shared-rotation'))
+    } })
+  } finally { clearTimeout(deadline) }
+})
+
+test('AUD-036 concurrencia: cuentas ficticias distintas no intercambian cookies/identidad', { timeout: 5000 }, async () => {
+  const other = { ...user, id: '22222222-2222-4222-8222-222222222222' }
+  await withFixture(async ({ jar, calls }) => {
+    const secondJar = new Map([[cookieName, encode(session(Math.floor(Date.now() / 1000) - 3600, other, 'synthetic-other-old'))]])
+    const first = request(jar), second = request(secondJar)
+    const [a, b] = await Promise.all([proxy(first), proxy(second)])
+    assertPrivate(a); assertPrivate(b)
+    applyResponse(jar, a); applyResponse(secondJar, b)
+    assert.equal(decode(jar.get(cookieName)).user.id, user.id)
+    assert.equal(decode(secondJar.get(cookieName)).user.id, other.id)
+    assert.equal(decode(jar.get(cookieName)).refresh_token, 'synthetic-first-new')
+    assert.equal(decode(secondJar.get(cookieName)).refresh_token, 'synthetic-other-new')
+    assert.equal(first.cookies.get(cookieName).value, jar.get(cookieName))
+    assert.equal(second.cookies.get(cookieName).value, secondJar.get(cookieName))
+    assert.notEqual(jar.get(cookieName), secondJar.get(cookieName))
+    for (const [req, actor] of [[first, user], [second, other]]) {
+      globalThis.__ssrCookieStore = { getAll: () => req.cookies.getAll(), set() { throw Error('RSC readonly') } }
+      const client = await createServerSupabaseClient()
+      try { assert.equal((await client.auth.getUser()).data.user.id, actor.id) }
+      finally { client.auth.stopAutoRefresh() }
+    }
+    assert.equal(calls.filter(([path]) => path === '/auth/v1/token').length, 2)
+  }, { respond({ url, init, now }) {
+    if (url.pathname === '/auth/v1/token') {
+      const { refresh_token: refresh } = JSON.parse(init.body)
+      if (refresh === 'synthetic-refresh') return Response.json(session(now + 3600, user, 'synthetic-first-new'))
+      assert.equal(refresh, 'synthetic-other-old')
+      return Response.json(session(now + 3600, other, 'synthetic-other-new'))
+    }
+    if (url.pathname === '/auth/v1/user') {
+      const bearer = new Headers(init.headers).get('Authorization')
+      const subject = JSON.parse(Buffer.from(bearer.split('.')[1], 'base64url').toString()).sub
+      assert.ok([user.id, other.id].includes(subject))
+      return Response.json(subject === other.id ? other : user)
+    }
+  } })
 })
