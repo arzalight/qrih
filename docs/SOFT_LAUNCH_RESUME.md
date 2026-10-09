@@ -1,5 +1,25 @@
 # QRIH — Punto de reanudación de validaciones
 
+## Corte vigente — commits locales y sesión inmediata verificados
+
+2026-10-08. Usuario autoriza también commits: f55ab65/AUD037,0ca5a69/AUD038,6efd78e/testsSSR, documentos en commit separado. Código seleccionado6efd78ece7c433f95ae6c5b40f17eaed8fc371f4/167entradas/huella f9fc6cbb2f0d15a89943403650a2532cf93edddd050f5d04587fc86cd9494ca9 coincide Git/trabajo;114unit/lint/tipos reejecutados PASS. Build/preflight/25HTTP/43SQL anteriores conservados, no nueva compilación del SHA. Login personal informado y panel privado con propiedad sintética persistente tras recarga completalocalhost3107 observados por agente, sin extraer cookies/secretos ni enviar correo/mutar datos. Runtime permanece para la sesión; no repetir login ya completado. Renovación natural tras caducidad/callback positivo local pendientes; no modificar TTL/confirmación ni programar monitor por inferencia. `develop`/`main` intactos; sin integración/push/tag/PR/deploy, remoto/Netlify no reconsultados. AUD-018 pausado y NO-GO externo vigentes. Integración local/push/RC remoto necesitan sus alcances autorizados, no permisos inferidos de los commits.
+
+## Antecedente — antes del permiso Git y la sesión
+
+## Corte vigente — AUD-037/038 locales, ayuda para sesión real
+
+Continuación autorizada de auditorías: dos fallos MEDIO reproducidos antes y corregidos localmente; [AUD037](AUD037_IMAGE_EDITOR_RACE.md)/[AUD038](AUD038_AMBIGUOUS_WRITES.md).114unit/lint/tipos/build/preflight/25HTTP localhost anon PASS;43SQL previas conservadas. Manifest167/huella f9fc6cbb2f0d15a89943403650a2532cf93edddd050f5d04587fc86cd9494ca9, sin SHA candidato commit/tag/Git mutado/deploy. Sólo última indentación posterior al build, semántica igual; no artefacto certificado para SHA integrado. Runtime http://localhost:3107/login/STAGING fijo/loopback activo para login personal existente. No secretos/nuevas cuentas/correos/tercera cuenta, Netlify ni producción; audiencia real/sesión prolongada/callback positivo pendientes. AUD-018 pausado por usuario, sin descifrado/restore; NO-GO conserva bloqueantes. Plan RC actual tiene propuesta4commits separados, antigua2commits inferior histórica; permiso Git/guard/refs fresco y deploy explícito después. No repetir preparación/boot/UI histórica.
+
+## Antecedente — candidato previo a las nuevas correcciones
+
+## Prioridad vigente — candidato local preparado, 2026-10-08
+
+Seguir [RC_CANDIDATE_2026-10-08.md](RC_CANDIDATE_2026-10-08.md) y maestros: cadena funcional ac26f64 sobre develop54faaf1, checkout documental afab3b7/delta sólo test SSR local; manifest165 entradas/huella exacta. Lint completo/tipos/43SQL PGlite PASS nuevos,91unit/14SSR previos sobre mismas entradas conservados. No SHA RC commit/tag, build/HTTP/remoto/guard/cuota nuevos ni Git/deploy realizados. Próxima autorización: dos commits test/docs separados y fast-forward local develop, sin main/push/deploy. GitHub/Netlify se revalidan antes de sus permisos/acciones posteriores.
+
+AUD-018: copia cifrada local+Drive y ciclo vacío verificados previamente, **análisis privado/restore rechazados y pausados por usuario**; no repetir setup/captura/custodia ni pedir ese permiso de nuevo. No prueba de recuperación integral/GO externo. Las afirmaciones inferiores «exportación/herramientas no ejecutadas» son históricas, no estado actual. Recuperación/original AUD-002/sesión real/callback positivo/RC autorizado siguen pendientes. No desplegar al renovar cuota ni cambiar producción. No repetir UI/tercera cuenta omitida.
+
+## Antecedentes — no instrucciones vigentes de despliegue
+
 ## Actualización de prioridad — 2026-10-06
 
 **Corte posterior AUD-036:** renovación SSR privada corregida local/SDK real con Auth sintético, 87unit/25HTTP en ambos modos/lint/tipos/build/preflight PASS. Dos callbacks locales exactos autorizados/guardados sólo staging; Site URL/callback remoto intactos. Rama actual fix/aud-036-ssr-session sobre AUD-034, sin merge/deploy. Sesión real prolongada/email positivo/RC/backup/corte pendientes. Seguir informe docs/AUD036_SSR_SESSION.md y cuadro maestro; referencias a branch034/preparación de callbacks inferiores son cortes previos.

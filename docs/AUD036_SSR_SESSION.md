@@ -2,7 +2,32 @@
 
 2026-10-06. **MEDIO / CORREGIDO LOCAL — RENOVACIÓN VERIFICADA CON SDK REAL Y AUTH SINTÉTICO; SESIÓN REAL PROLONGADA/RC PENDIENTES.** Rama fix/aud-036-ssr-session sobre aislamiento local AUD-034; sin deploy/merge/main/producción.
 
-## Diagnóstico previo a corrección
+## Corte vigente — commits y acceso local, 2026-10-08
+
+Las cuatro pruebas adicionales quedan en `6efd78ece7c433f95ae6c5b40f17eaed8fc371f4`, separadas de AUD-037/038; documentación aparte.114unit actuales (incluyen14SSR), lint completo/tipos sin emisión PASS reejecutados. Sin integración develop/main/push/deploy; referencias originales conservadas. Build/preflight/25HTTP/43SQL anteriores no se reejecutan ni certifican como artefacto compilado de este SHA.
+
+Usuario inició sesión legítima personalmente en localhost3107. Agente observó `/mis-propiedades` con saludo autenticado y la publicación sintética; una recarga completa mantiene el panel y la publicación sin volver al login. Observación de sólo lectura, sin leer/exportar cookies/tokens/contraseña, modificar cuenta/propiedad ni emitir correo. Runtime loopback/STAGING continúa activo para la sesión del usuario; la afirmación inferior sobre servidores detenidos describe el lote inicial del 2026-10-06.
+
+**No cierra renovación prolongada:** no se inspeccionó ni forzó caducidad/TTL y no hay evidencia de refresh real durante esa recarga. Callback positivo local, reuse real y RC Netlify pendientes. Guía Supabase orientó separar inicio/persistencia inmediata de renovación y de fixtures. AUD-036 sigue MEDIO/CORREGIDO LOCAL—PARCIAL; AUD-018 pausado/bloqueante y NO-GO externo intactos.
+
+## Antecedente — antes del versionado y de la sesión del usuario
+
+## Validación adicional — 2026-10-08, sólo pruebas locales
+
+El usuario pidió otro paso y rechazó el análisis privado del respaldo AUD-018. No se descifra/restaura, reconfigura Supabase, inicia servicios ni realiza deploy. Se completa únicamente la cobertura sintética pendiente de red/concurrencia, sin corregir código funcional: no aparece un defecto nuevo en estos cuatro casos.
+
+| Caso nuevo | Resultado comprobado |
+|---|---|
+| Interrupción breve de refresh | Primer fetch falla; SDK instalado reintenta y recibe sesión ficticia rotada. Cookie llega a request/response; petición siguiente no repite refresh. |
+| Auth devuelve503 con sesión vigente | Proxy mantiene continuación/cache privada, sin cookie/identidad fabricada. Factory real devuelve user=null/error503; conserva cookie. Al recuperar Auth vuelve a validar actor, sin refresh. |
+| Dos requests con cookie vencida | Barrera fuerza dos refresh simultáneos. Auth simulado devuelve la misma rotación a ambos; cookies coherentes aplicando respuestas en orden inverso, siguiente petición sin refresh. No se afirma deduplicación global: dos clientes independientes/dos llamadas. |
+| Dos cuentas ficticias simultáneas | Transporte asocia refresh/JWT a actor; cookies request/response y validación getUser de cada RSC permanecen separados. Sin crear cuentas reales. |
+
+**14 tests SSR / 91 unit PASS,0 fallos/skips, lint del test y git diff --check PASS.** Ejecutados sobre checkout docs/aud-018-recovery-preparation/HEAD afab3b7 más test local sin commit; no RC integrado ni publicado. El fixture sólo admite el origen ficticio y sustituye fetch íntegramente; conserva/restaura entorno público/fetch/cookie store. Timeouts5s y barrera1s acotan nuevos tests; interrupción usa backoff real del SDK(~200ms), no reloj alterado. No imports nuevos/dependencias/migraciones/env/Storage/RLS/secretos/logs reales. Avisos MODULE_TYPELESS y error sintético de revocación previos se mantienen, no cambios de arquitectura para silenciarlos.
+
+**Límites y próximos pendientes:** no reproduce reuse/configuración del Auth real, outage prolongado, browser/cold-start ni TTL real; la [guía de sesiones Supabase](https://supabase.com/docs/guides/auth/sessions) orientó separar estas pruebas de la política del servidor, sin modificarla. Sesión legítima prolongada y callback/email localhost positivos siguen pendientes. Lint/tipos/build/preflight/25HTTP/43SQL y audit anteriores no reejecutados en este lote; no convertir resultados antiguos en nuevos. AUD-036 sigue MEDIO/CORREGIDO LOCAL—PARCIAL y NO-GO externo se conserva con AUD-018 abierto/pausado.
+
+## Diagnóstico previo a corrección — evidencia del 2026-10-06
 
 lib/supabase-server.ts permite lectura de cookies en Server Components pero ignora la excepción de escritura. Sin proxy/middleware, getUser puede renovar un token vencido en memoria sin emitir la cookie renovada al navegador. Prueba del factory real y SDK @supabase/ssr instalado, transporte Auth simulado sin red: dos peticiones RSC con cookie vencida → dos refresh → dos escrituras rechazadas → cookie persistente sigue vencida. Control Route Handler writable → una renovación → cookie persistida → segunda petición sin refresh.
 
