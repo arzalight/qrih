@@ -1,0 +1,60 @@
+{
+  "status": "PASS_SCOPED_NATURAL_REFRESH_AND_LOCAL_PRIVATE_PANEL",
+  "dateLocal": "2026-10-08 America/Mexico_City",
+  "environment": "localhost:3107 + Supabase STAGING only",
+  "stagingProjectRef": "mcyxunymhuxyiwklyfpy",
+  "headAtObservation": "e5681871a8aa5e2a8d9d6741f04dab74ea9c9272",
+  "compiledSourceCommit": "4302feffc30413e23efb7179289b6bb6824df666",
+  "selectedInputsSha256": "f9fc6cbb2f0d15a89943403650a2532cf93edddd050f5d04587fc86cd9494ca9",
+  "authSettingsPreviouslyObservedReadOnly": {
+    "accessTokenExpirySeconds": 3600,
+    "refreshReuseIntervalSeconds": 10,
+    "compromisedRefreshDetection": true,
+    "configurationChanged": false
+  },
+  "baseline": {
+    "checkedAtUtc": "2026-10-09T00:33:52.887199Z",
+    "sessionCreatedAtUtc": "2026-10-09T00:07:40.906767Z",
+    "sessionUpdatedAtUtc": "2026-10-09T00:07:40.906767Z",
+    "sessionRefreshedAtDatabaseValue": null,
+    "exactMetadataRowMatches": 1
+  },
+  "afterNaturalWait": {
+    "checkedAtUtc": "2026-10-09T05:27:10.566841Z",
+    "exactMetadataRowMatches": 1,
+    "sessionCreatedAtUtc": "2026-10-09T00:07:40.906767Z",
+    "sessionUpdatedAtUtc": "2026-10-09T05:03:13.539841Z",
+    "sessionRefreshedAtDatabaseValue": "2026-10-09 05:03:13.539706"
+  },
+  "afterPrivatePanelReload": {
+    "checkedAtUtc": "2026-10-09T05:30:57.201082Z",
+    "exactMetadataRowMatches": 1,
+    "sessionUpdatedAtUtc": "2026-10-09T05:03:13.539841Z",
+    "sessionRefreshedAtDatabaseValue": "2026-10-09 05:03:13.539706",
+    "authenticatedPanelAndExistingSyntheticPropertyVisible": true,
+    "fullReloadPassedWithoutNewLogin": true
+  },
+  "queryScope": "READ ONLY transaction, statement_timeout 5s, lock_timeout 2s, ROLLBACK; same previously observed owner's session selected internally by creation timestamp, returning counts and dates only",
+  "runtime": {
+    "initiallyListening": false,
+    "preflight": "PASS",
+    "firstGuardedStart": "NETWORK_PERMISSION_BLOCKED_NO_APPLICATION_START",
+    "afterScopedNetworkPermission": "GUARDED_START_READY_EXISTING_COMPILED_CANDIDATE",
+    "listeningAddress": "[::1]:3107",
+    "originalBrowserTab": "Initial reload failed while server was stopped; browser error-page access then blocked by tool URL policy",
+    "recovery": "Fresh same-browser localhost tab and its full reload both showed the private panel, without logout or credential inspection",
+    "causeOfEarlierServerStop": "NOT_DETERMINED"
+  },
+  "positiveLocalEmailCallback": "PENDING_USER_OPENING_ONE_EXISTING_ACCOUNT_RECOVERY_EMAIL; no password change requested",
+  "limits": [
+    "No access token, exp claim, refresh token, session id, cookie or localStorage was inspected or exported.",
+    "The later refresh metadata and private panel access validate natural session continuity after the configured one-hour window, not an expired JWT reaching a Server Component.",
+    "Renewal cannot be attributed specifically to the browser or Next.js Proxy; proactive SDK refresh is possible.",
+    "No exact count of renewals, live concurrent refresh/reuse test, third-account isolation or remote Release Candidate validation is established.",
+    "refreshed_at is retained as its raw timestamp-without-time-zone database value; updated_at and checked_at provide explicit UTC timestamps.",
+    "The earlier empty database audit-log window is not evidence that Auth operations did not occur.",
+    "No data/configuration mutation, email sending, build, unit suite, isolated SQL suite, Git push, Netlify deploy or backup restore was performed in this validation."
+  ],
+  "auditStatus": "AUD-036 MEDIO / CORREGIDO LOCAL - VALIDACION PARCIAL; CALLBACK LOCAL Y RC PENDIENTES",
+  "softLaunchDecision": "NO_GO_UNCHANGED"
+}

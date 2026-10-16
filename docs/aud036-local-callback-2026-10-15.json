@@ -1,0 +1,48 @@
+{
+  "status": "PASS_USER_REPORTED_LOCAL_RECOVERY_FORM",
+  "dateLocal": "2026-10-15 America/Mexico_City",
+  "audit": "AUD-036",
+  "functionalIds": ["AUTH-003", "AUTH-005"],
+  "environment": "localhost:3107 + Supabase STAGING",
+  "headAtDocumentation": "e5681871a8aa5e2a8d9d6741f04dab74ea9c9272",
+  "compiledSourceCommit": "4302feffc30413e23efb7179289b6bb6824df666",
+  "selectedInputsSha256": "f9fc6cbb2f0d15a89943403650a2532cf93edddd050f5d04587fc86cd9494ca9",
+  "verificationKind": "EXPLICIT_USER_REPORT_NOT_INDEPENDENT_BROWSER_OBSERVATION",
+  "report": {
+    "context": "User confirms successful local recovery-form display after resuming the email-callback test",
+    "initialTitleReported": "Restablecer contraseña",
+    "clarificationAsked": "Are both password fields and the save button visible without an expired-link warning? Do not enter or save a password.",
+    "clarificationAnswer": "si",
+    "newPasswordFieldVisible": true,
+    "confirmationFieldVisible": true,
+    "saveNewPasswordButtonVisible": true,
+    "invalidOrExpiredLinkWarningAbsent": true
+  },
+  "sourceReviewed": {
+    "app/restablecer-contrasena/page.tsx": "The heading is unconditional; the password form is rendered only when getRecoveryUser returns an email, otherwise the invalid-link notice is rendered",
+    "lib/password-recovery-server.ts": "Recovery marker age and exact-token binding are checked; getUser validates the candidate token and confirmed non-anonymous identity",
+    "app/restablecer-contrasena/ResetPasswordForm.tsx": "Existing field/button labels reviewed; no submission performed"
+  },
+  "limits": [
+    "The user report supports local positive callback/form access, not independently observed browser/network evidence or a new inspection of Auth state.",
+    "No authentication code, recovery marker, cookie, token, password or account email was read, copied or stored by the agent.",
+    "The earlier invalid/expired-link URL remains a previous incident; its precise cause or whether a new email was used is not established by this later form report.",
+    "Password update, global logout, old-password rejection, subsequent login and data persistence were not retested in this local run.",
+    "No live concurrent refresh/reuse, expired JWT reaching a Server Component, third-account isolation or remote Release Candidate validation is established.",
+    "Earlier unit, HTTP, SQL and build results retain their original dates and scopes; no new implementation or full test-suite execution occurred."
+  ],
+  "agentActions": {
+    "documentationOnly": true,
+    "emailSent": false,
+    "passwordChanged": false,
+    "functionalCodeChanged": false,
+    "configurationOrBusinessDataChanged": false,
+    "newCommitOrPush": false,
+    "netlifyDeploy": false,
+    "productionTouched": false,
+    "backupDecryptedOrRestored": false
+  },
+  "next": "No repeat email, signup, login or password change for this completed support step; prepare release handoff with separate push/deploy authority and fresh guards",
+  "auditStatus": "MEDIO / CORREGIDO LOCAL - VALIDACION PARCIAL AMPLIADA; RC PENDIENTE",
+  "softLaunchDecision": "NO_GO_UNCHANGED"
+}

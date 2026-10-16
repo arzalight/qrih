@@ -2,7 +2,19 @@
 
 2026-10-08. **CÓDIGO INTEGRADO EN DEVELOP Y COMPILADO LOCALMENTE; NO ES UN RC APROBADO/TAG NI UN GO DE LANZAMIENTO.** Usuario autoriza commits y después consolidar/compilar local. Main intacta, sin push/PR/deploy/producción ni reabrir descifrado/restore AUD-018 rechazado. Este corte superior sustituye las propuestas/permisos históricos inferiores.
 
-## Corte vigente — integración local, compilación y servidor reabierto
+## Validación vigente — callback local por reporte, 2026-10-15
+
+**Preparación de entrega documental:**10archivos, sin entradas de código/configuración/SQL nuevas. Partidae568187 con20commits sobre referencia local origin/develop54faaf1; remoto no reconsultado. Versionado local autorizado separado; su SHA se obtiene de Git y no se atribuye al build4302fef. Sin push/tag/PR/deploy/main/producción/restore. Antes del envío se requieren permiso propio, refs/visibilidad y guard builds detenidos/Free frescos. Código167entradas/huella f9fc6cbb… igual; no recompilar por este lote. Matriz única de bloqueantes en QRIH_AUDIT.md, con cuota actual no comprobada.
+
+Usuario confirma ambos campos y botón de recuperación sin aviso de enlace vencido después de reportar Restablecer contraseña. [Evidencia del reporte](aud036-local-callback-2026-10-15.json)/[límites AUD036](AUD036_SSR_SESSION.md). Callback/formulario positivo local completado por reporte explícito, **no observación independiente, cambio de contraseña ni canje PKCE inspeccionado**. No pedir otro correo/login/alta para este paso. Renovación natural08oct conserva su prueba distinta; RC remoto, recuperaciónAUD018 pausada y corte original siguen pendientes/NO-GO. Sólo documentos, mismos167inputs/build4302fef/HEADe568187; sin nuevo commit/build/suites/push/deploy/producción/configuración/restore. Preparar entrega Git y fijar permisos/guards frescos después, sin ejecutar acciones remotas por este reporte.
+
+## Evidencia anterior — renovación natural local, 2026-10-08 23:30 CDMX
+
+HEAD documental e568187/167entradas/huella f9fc6cbb… cotejados nuevamente sin cambios seleccionados; build existente4302fef conservado, no recompilado. Preflight nuevo PASS. Metadatos READ ONLY de la misma sesión: creación18:07 preservada, refreshed_at NULL inicial a valor posterior/updated_at23:03. Servidor hallado apagado, guard no arrancó sin permiso de red; permiso acotado y start Ready/[::1]:3107 del candidato existente. Pestaña original en error bloqueada por herramienta; navegación nueva del mismo navegador y recarga completa confirman panel privado/publicación sintética, sin login nuevo. Causa de apagado no determinada, no fallo Auth confirmado.
+
+**PASS de renovación natural y continuidad privada local**, no de JWT vencido al RSC/atribución browser-vs-Proxy/reuse-concurrencia reales. [Reporte/JSON](AUD036_SSR_SESSION.md). Callback por correo positivo aún pendiente del usuario: una cuenta existente, mismo navegador, sin cambiar contraseña; formulario preparado/no correo enviado por agente. No token/cookie/session_id ni datos de contacto registrados en documentación; captura de panel sólo local fuera de Git. Código/TTL/RLS/Storage/SMTP/datos de negocio/commit/push/deploy/producción/restore sin cambios. Suites114unit/14SSR/43SQL/build/HTTP anteriores conservadas, no nuevas ejecuciones. AUD018 pausado/NO-GO y permisos remotos siguen igual; ya no repetir espera/login normal.
+
+## Antecedente — integración local, compilación y servidor reabierto
 
 Autorización posterior «ok, adelante»: árbol limpio/ancestry/worktree/hook scope revisados, develop54faaf1→4302feffc30413e23efb7179289b6bb6824df666 por fast-forward. Conserva19commits de la cadena034/035/036, historia documental018 y las tres correcciones/tests separados; no cherry-pick/merge commit/rebase/force ni rama nueva. Main55b773756066cd3975b3964dc67f106cf15ead4c intacta; cached origin/develop54faaf1, no consulta/push remoto. Migraciones/lock no cambian respecto al develop previo; versionar no ejecuta SQL. Documentación del corte posterior se guarda aparte y no cambia entradas compiladas.
 
@@ -115,7 +127,7 @@ Supabase/PostgreSQL orientaron separar fixtures de permisos efectivos, identidad
 |---|---|
 | AUD-018, ALTO | Usuario pausó análisis privado; respaldo cifrado y ciclo vacío verificados anteriormente, recuperación real no probada. Sigue bloqueante para GO externo; no waiver. |
 | AUD-002 original, ALTO | Bucket público/URLs legadas según evidencia anterior, no reconsultado aquí. Corte original necesita autorización/backup/ventana/pruebas propias; staging no se convierte automáticamente en producción. |
-| AUD-036, MEDIO | Corrección local y red/concurrencia ficticias aprobadas; sesión/navegador real prolongado y callback positivo pendientes, no bypass ni logout remoto nuevo demostrado. |
+| AUD-036, MEDIO | Corrección integrada local, pruebas sintéticas y renovación natural observada08oct; callback/formulario local por reporte15oct. RC y coberturas adicionales declaradas pendientes, no repetir correo/login ni convertir reporte en cambio de contraseña/inspección independiente. |
 | AUD-031 / RC publicado | Parche ya en develop, no READY staging del código pendiente; revisar dentro del RC autorizado, no deploys de desarrollo. |
 | Correo/costos AUD-023 | Evidencia de correo previa parcial; aptitud/cuotas y consumo Free no garantizados. Sin cambio SMTP/proveedor/plan. |
 | Elección del piloto | No asumir staging como producción ni tocar original/main. Requiere decisión y autorización explícitas después del dictamen. |

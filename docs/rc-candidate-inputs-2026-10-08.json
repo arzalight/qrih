@@ -30,6 +30,19 @@
     { "audit": "AUD-036 additional tests", "sha": "6efd78ece7c433f95ae6c5b40f17eaed8fc371f4" }
   ],
   "documentationVersioning": "separate_followup_commit_not_part_of_selected_code_hash",
+  "documentationDeliveryPreparation": {
+    "dateLocal": "2026-10-15 America/Mexico_City",
+    "baseHeadBeforeDocumentationCommit": "e5681871a8aa5e2a8d9d6741f04dab74ea9c9272",
+    "existingLocalCommitsAboveCachedDevelop": 20,
+    "documentationFileCount": 10,
+    "scope": "Local documentation-only versioning under prior local commit authority and current proceed instruction; no source/configuration/migration change or new compilation",
+    "expectedRemoteRepository": "arzalight/qrih",
+    "expectedDeliveryBranch": "develop",
+    "remoteRevalidated": false,
+    "pushAuthorized": false,
+    "deployAuthorized": false,
+    "nextGate": "Explicit push approval plus fresh remote refs/visibility and stopped-build/free-plan guard; separate RC deploy approval/quota/READY/smoke"
+  },
   "fileCount": 167,
   "trackedReferenceFileCount": 167,
   "preCommitReferenceFileCount": 165,
@@ -1057,6 +1070,27 @@
     }
   ],
   "verification": {
+    "positiveLocalRecoveryCallback": {
+      "dateLocal": "2026-10-15 America/Mexico_City",
+      "status": "PASS_USER_REPORTED_LOCAL_RECOVERY_FORM",
+      "evidence": "docs/aud036-local-callback-2026-10-15.json",
+      "verificationKind": "USER_REPORT_NOT_INDEPENDENT_BROWSER_OBSERVATION",
+      "scope": "Explicit confirmation that both password fields and save button are visible without an invalid/expired-link warning; not just the page title",
+      "passwordChangeTestedInThisRun": false,
+      "authStateIndependentlyInspected": false,
+      "repeatEmailOrLoginNeededForThisStep": false
+    },
+    "naturalSessionValidation": {
+      "dateLocal": "2026-10-08 America/Mexico_City",
+      "headAtObservation": "e5681871a8aa5e2a8d9d6741f04dab74ea9c9272",
+      "status": "PASS_SCOPED_NATURAL_REFRESH_AND_LOCAL_PRIVATE_PANEL",
+      "evidence": "docs/aud036-natural-renewal-2026-10-08.json",
+      "preflight": "PASS_NEW_EXECUTION",
+      "build": "EXISTING_4302FEF_NOT_RECOMPILED",
+      "scope": "Same creation timestamp and one scoped session metadata row; refreshed_at changed from NULL to later value, updated_at advanced; fresh same-browser private navigation and full reload show existing synthetic property without new login",
+      "limits": "No credential/session id/cookie inspection; no actual JWT exp/expired-RSC proof or browser-vs-Proxy attribution/live concurrent reuse/third-account/remote RC validation",
+      "callback": "PENDING_USER_OPENING_ONE_EXISTING_ACCOUNT_EMAIL_NO_PASSWORD_CHANGE"
+    },
     "localIntegratedBuild": {
       "dateLocal": "2026-10-08 America/Mexico_City",
       "sourceCommit": "4302feffc30413e23efb7179289b6bb6824df666",
@@ -1115,9 +1149,11 @@
     "target": "Supabase STAGING mcyxunymhuxyiwklyfpy",
     "status": "running_with_user_legitimate_session",
     "realSessionVerified": true,
-    "realSessionScope": "Private panel and synthetic property observed after restarting exact compiled candidate and full localhost reload; read-only UI, no cookie/token/password inspection or expiry/refresh claim",
-    "realProlongedSessionVerified": false,
-    "positiveLocalCallbackVerified": false,
+    "realSessionScope": "Private panel and synthetic property observed through fresh same-browser navigation and full reload after naturally advanced refresh metadata for the same scoped session; no cookie/token/password/session id inspection or actual expired-JWT-RSC/Proxy-attribution claim",
+    "realProlongedSessionVerified": true,
+    "positiveLocalCallbackVerified": true,
+    "positiveLocalCallbackVerificationKind": "USER_REPORT_NOT_INDEPENDENT_BROWSER_OBSERVATION",
+    "positiveLocalCallbackScope": "Recovery form fields and save button visible without invalid-link warning; no password update/logout/login retest in this run",
     "emailSentByAgent": false
   },
   "permissions": {
@@ -1133,7 +1169,6 @@
     "restore": false
   },
   "openGates": [
-    "real prolonged browser session/refresh after expiry/local positive callback",
     "AUD-018 paused/unproven restoration",
     "explicit GitHub push authority and fresh remote/build-stop guard checks",
     "Netlify authorization/current quota/guard/exact ready SHA",
