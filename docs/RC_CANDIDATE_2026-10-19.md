@@ -1,6 +1,12 @@
 # QRIH — RC de STAGING, 19 de octubre de 2026
 
-Estado: **DEPLOY AUTORIZADO / ENTREGA Y BUILD REMOTO PENDIENTES / NO-GO SOFT LAUNCH**.
+Estado vigente: **PRIMER BUILD FALLÓ ANTES DE PUBLICAR / FIX CI ENTREGADO / NUEVO BUILD REQUIERE APROBACIÓN / NO-GO SOFT LAUNCH**.
+
+## Resultado posterior
+
+[Intento y corrección](rc-deploy-attempt-2026-10-19.json) / [manifiesto180](rc-candidate-inputs-2026-10-19-ci-fix.json). Único build6ad6e67b4a3146b7e208b964/deploy6ad6e67b4a3146b7e208b966 del commitbb439a6: lint/tipos remotosPASS,117testsPASS/15fallos por origen heredado en fixtures. No llegó a compilar Next ni publicar; f67fa46 sigue activo. AUD039MEDIO confirmado/reproducido y corregido sólo en pruebas: tres suites aíslan SITE_ID/URL y restauran entorno; guard real/casos origen ajeno intactos, regresión hija33casos.133unit normales y133con proveedor sintético/0skips, lint/tipos/build/preflight localesPASS. Commit3e4ec56c3fb65fbdcfd0f7caac2af8e072da5d77 ya verificado en GitHub develop; main intacta. Sin app/seguridad/RLS/env real/datos modificados por el fix. Builds detenidos/Free; segundo intento todavía NO solicitado y requiere aprobación. Humo remoto nuevo/Auth-Storage-UI/operación pendientes y **NO-GO Soft Launch**. Los cortes inferiores de preparación del primer deploy son antecedentes.
+
+Build local corregido `AMTNL30N4szt9Ppm2B27j`, huella180 `c68db490244b8cd955ae935bfacf6f4dcfa0838b7ed1476b5d5341f0742ba537`. El manifiesto179 original conserva el intento fallido; no se reescribe como si su build remoto hubiera pasado. Cambio externo stop_builds=false detectado antes de entregar develop se restituyó a true, sin atribuir causa ni observar builds nuevos. Un único POST de build y journal consumido preservados; no activar/reintentar automáticamente.
 
 El usuario solicita «adelante y continuemos con el deploy». Alcance: un RC del proyecto existente `qrih-staging`, nunca producción/main, nueva cuenta, pago o despliegues rutinarios. La aplicación051 ya fue autorizada y verificada por separado; no se repite.
 

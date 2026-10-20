@@ -2,6 +2,10 @@
 
 ## Dictamen consolidado vigente — 2026-10-19
 
+### AUD-039 — MEDIO / CONFIRMADO / CORREGIDO EN TESTS; CI REMOTA PENDIENTE
+
+[Intento y corrección](docs/rc-deploy-attempt-2026-10-19.json) / [manifiesto180](docs/rc-candidate-inputs-2026-10-19-ci-fix.json). Único build6ad6e67b4a3146b7e208b964/deploy6ad6e67b4a3146b7e208b966 del commitbb439a6: lint/tipos remotosPASS,117testsPASS/15fallos por origen heredado en fixtures. No llegó a compilar Next ni publicar; f67fa46 sigue activo. AUD039MEDIO confirmado/reproducido y corregido sólo en pruebas: tres suites aíslan SITE_ID/URL y restauran entorno; guard real/casos origen ajeno intactos, regresión hija33casos.133unit normales y133con proveedor sintético/0skips, lint/tipos/build/preflight localesPASS. Commit3e4ec56c3fb65fbdcfd0f7caac2af8e072da5d77 ya verificado en GitHub develop; main intacta. Sin app/seguridad/RLS/env real/datos modificados por el fix. Builds detenidos/Free; segundo intento todavía NO solicitado y requiere aprobación. Humo remoto nuevo/Auth-Storage-UI/operación pendientes y **NO-GO Soft Launch**. Los cortes inferiores de preparación del primer deploy son antecedentes.
+
 ### RC nuevo autorizado — preparado para validar plataforma, no apertura de piloto
 
 [Candidato19oct](docs/RC_CANDIDATE_2026-10-19.md). Usuario solicita explícitamente continuar con deploy; sólo qrih-staging, un build Free.299/300créditos observados tras login, cuenta/variables STAGING/builds detenidos verificados por API; no configurar pagos.132unit/93SQL sintéticas/19tooling sintéticas/31HTTP locales/lint/tipos/build exacto487907b/preflight PASS,179huellas nuevas; antiguo manifiesto167 histórico. Commit funcional4c4ebde y tooling487907b separados, objetos importados a Git local con SHA idéntico desde conexión GitHub ya autorizada; no exponer ni renovar credenciales CLI vencidas. Preparación de entrega de develop, main intacta. Las seis pruebas HTTP nuevas son negativas/no autenticadas; no acreditan nuevos flujos Auth/Storage/UI. Sin deploy en este corte ni operaciones de negocio reales. **NO-GO Soft Launch** conservado; READY remoto y aceptación funcional no se infieren del permiso.

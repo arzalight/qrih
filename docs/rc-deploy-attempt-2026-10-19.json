@@ -1,0 +1,100 @@
+{
+  "format": "QRIH_RC_DEPLOY_ATTEMPT_20261019_V1",
+  "status": "FAILED_BEFORE_PUBLICATION_FIX_VERIFIED_RETRY_REQUIRES_APPROVAL",
+  "authorization": "User requested continuing with staging deploy; one attempt, no automatic retry",
+  "target": {
+    "siteId": "bc0d8fd9-e9a0-4cb1-bd28-5ad053e93859",
+    "site": "qrih-staging",
+    "supabase": "mcyxunymhuxyiwklyfpy",
+    "plan": "Free",
+    "creditsBefore": 299,
+    "monthlyAllowance": 300,
+    "autoTopup": false,
+    "overages": false,
+    "creditsAfter": "NOT_REMEASURED; no claim of free compute/refund"
+  },
+  "git": {
+    "repository": "arzalight/qrih",
+    "privateVerified": true,
+    "branch": "develop",
+    "delivery": "Authorized GitHub connector; Git trees/blobs verified against local indices, exact commit SHA imported locally, leased non-force fast-forward refs",
+    "featureCommit": "4c4ebdea30e2b2d87bf1dddf00c4150cd1b65e78",
+    "toolingCommit": "487907bfd9971e744897fb1365e325d0a56cdd83",
+    "attemptCommit": "bb439a6b26cdbc80db2b511aeb1bd24848a2363e",
+    "ciFixCommit": "3e4ec56c3fb65fbdcfd0f7caac2af8e072da5d77",
+    "ciFixDeliveredAndVerified": true,
+    "mainUnchanged": "55b773756066cd3975b3964dc67f106cf15ead4c",
+    "credentialRenewed": false,
+    "resetOrForce": false
+  },
+  "attempt": {
+    "count": 1,
+    "buildId": "6ad6e67b4a3146b7e208b964",
+    "deployId": "6ad6e67b4a3146b7e208b966",
+    "createdAt": "2026-10-20T03:56:43.509Z",
+    "terminalUpdatedAt": "2026-10-20T03:57:11.869Z",
+    "state": "error",
+    "publishedAt": null,
+    "netlifyBuild": "37.4.3",
+    "nextRuntime": "5.16.3",
+    "lint": "PASS",
+    "types": "PASS",
+    "unitPass": 117,
+    "unitFail": 15,
+    "failedBeforeNextBuildAndPublication": true,
+    "buildPostCount": 1,
+    "oneUseJournalPreserved": true,
+    "retryRequested": false
+  },
+  "published": {
+    "unchanged": true,
+    "deployId": "6ac558d161a9ab0008f7ee66",
+    "commit": "f67fa46fd62f0fbbbaba2b243f0e5455dc5083e8",
+    "newCandidateRemoteSmoke": "NOT_RUN_OLD_VERSION_REMAINS"
+  },
+  "finding": {
+    "id": "AUD-039",
+    "severity": "MEDIO",
+    "confirmed": true,
+    "type": "Test-environment isolation / CI blocker, not a demonstrated application/RLS vulnerability",
+    "cause": "Two synthetic request suites inherited provider SITE_ID/URL, so real same-origin guard correctly denied synthetic origins before mocked RPC. Same15 failures reproduced locally.",
+    "additionalReproduction": "Full arbitrary provider simulation also exposed two opportunity cases depending on canonical staging URL; same isolation cause, included in fix.",
+    "correction": "Only three test fixture suites and package test script changed; new sanitized child regression covers33cases. Tests set synthetic SITE_ID/URL in their own isolated Node process and restore prior values. Real guard and foreign-origin denial remain unchanged."
+  },
+  "fixedLocal": {
+    "normalUnitPass": 133,
+    "providerEnvironmentUnitPass": 133,
+    "fail": 0,
+    "skip": 0,
+    "lint": "PASS",
+    "types": "PASS",
+    "build": "PASS",
+    "buildId": "AMTNL30N4szt9Ppm2B27j",
+    "preflight": "PASS",
+    "manifest": "rc-candidate-inputs-2026-10-19-ci-fix.json",
+    "files": 180,
+    "hash": "c68db490244b8cd955ae935bfacf6f4dcfa0838b7ed1476b5d5341f0742ba537",
+    "appSecurityOrRlsCodeModified": false,
+    "realEnvChanged": false,
+    "realBusinessWrites": false
+  },
+  "guardIncident": {
+    "initiallyStopped": true,
+    "laterUnexpectedActive": true,
+    "cause": "NOT_DETERMINED",
+    "restoredBeforeDelivery": true,
+    "newUnexpectedBuildsObserved": false,
+    "repoBranchLogsAndPublishedPreserved": true
+  },
+  "closure": {
+    "stoppedBuilds": true,
+    "free": true,
+    "noProduction": true,
+    "noNewMigration": true,
+    "noBackupOrRestoreRepeated": true,
+    "newBuildApprovalNeeded": true,
+    "overallSoftLaunch": "NO_GO",
+    "newAuthStorageUiAcceptance": false
+  },
+  "screenshotOutsideGit": "work/rc-20261019-failed.png"
+}
