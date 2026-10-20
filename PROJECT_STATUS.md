@@ -1,5 +1,20 @@
 ## PROJECT STATUS — QRO INDUSTRIAL HUB / QRIH
 
+## Estado vigente — 2026-10-20 / NO-GO por nuevo alcance comercial
+
+El usuario añadió Compartir y MXN/USD como requisitos del Soft Launch. Confirmó que los importes históricos son MXN y que **sólo se comparten propiedades published**. El GO condicionado del artefacto previo no aprueba estas funciones. [Entrega, matriz y procedimiento](docs/COMMERCIAL_SHARING_CURRENCY.md).
+
+| Función | Implementado en código | Validación local | STAGING nuevo |
+| --- | --- | --- | --- |
+| PROP-008 · Compartir/ficha comercial pública | Sí, sólo published y cuenta habilitada; sin tokens privados/contactos/captación | Helper/SSR/SQL, escritorio/375/320 y PDF sintético | Pendiente |
+| PRICE-001 · MXN/USD | Sí: publicación/edición/duplicación, paneles, catálogo, ficha/PDF y filtro seguro | 156 pruebas de aplicación y 109 SQL temporales PASS, sin omisiones; lint/tipos/build/preflight locales PASS | 052 NO APLICADA / NO VALIDADO |
+
+052 propuesta: columna price_currency limitada a MXN/USD, numeric/importes históricos sin reescribir, RPC/ACL/vista y lecturas exactas compatibles. Prueba en memoria autorizada y realizada. El usuario autorizó continuar hasta deploy el 20oct; aplicación cloud y RC siguen sujetos a controles previos, no son acciones ya realizadas. No publicar USD sobre el Netlify anterior. Presupuestos sin moneda no se comparan; firmas existentes duran su TTL. [Límites y riesgos](docs/COMMERCIAL_SHARING_CURRENCY.md#riesgos-y-límites).
+
+Código y pruebas entregados en GitHub, rama `feature/commercial-sharing-currency`, commit `715e42acf27a515721229a7aab75c8c241640194` (41 archivos funcionales verificados). `develop` y `main` no se integraron. [Control previo al despliegue](docs/COMMERCIAL_DEPLOY_GATE_2026-10-20.md): Netlify Free con 268,5/300 créditos y builds detenidos. Falta respaldo nuevo: la copia íntegra anterior precede a 051 y a cambios posteriores, por lo que no sustituye una captura previa a 052. No nueva captura/transferencia, migración ni deploy en este control. Localhost sigue detenido para no servir código contra un esquema aún incompatible. **NO-GO comercial conservado.**
+
+### Antecedentes — el siguiente GO corresponde al alcance anterior
+
 ## Dictamen vigente — 2026-10-20 / GO CONDICIONADO
 
 **GO CONDICIONADO para Soft Launch supervisado en el QRIH STAGING existente, con datos reales ya seleccionados.** [Dictamen y condiciones](docs/SOFT_LAUNCH_GO_2026-10-20.md) / [RC y cierre AUD-040](docs/aud040-deploy-verification-2026-10-20.json). Commit publicado `f803f35faba9cf871a81f93560112e20358230c2`, fuente `4c7d05057f2429306d8ed5ba6097d9b273eb292a`, deploy `6ad79257b59620a2a787e9a1` READY/SHA/publicación exactos.138unit remotas/31HTTP remotos PASS/0fallos/0skips y lint/tipos/build/preflight completos. Selector admin corregido, guardado autenticado de fixture con éxito, `m2` conservado y huellas comerciales/galerías de ambos fixtures iguales (sólo updated_at excluido). **AUD-040 MEDIO CORREGIDO, DESPLEGADO Y VERIFICADO.**

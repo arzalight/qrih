@@ -1,0 +1,352 @@
+{
+  "format": "QRIH_COMMERCIAL_LOCAL_20261020_V1",
+  "status": "LOCAL_PASS_STAGING_NOT_APPLIED_OR_VALIDATED",
+  "verdict": "NO_GO_NEW_COMMERCIAL_SCOPE",
+  "decisions": {
+    "historicalPrices": "MXN confirmed by human",
+    "sharing": "published only; private token sharing superseded by human",
+    "sqlAuthorization": "Synthetic in-memory only; no hosted migration authorization"
+  },
+  "git": {
+    "branch": "feature/commercial-sharing-currency",
+    "baseCommit": "7b392d8e80c5eab3f302487c2356228e0d8c0aee",
+    "main": "55b773756066cd3975b3964dc67f106cf15ead4c",
+    "develop": "7b392d8e80c5eab3f302487c2356228e0d8c0aee",
+    "newCommit": false,
+    "push": false,
+    "merge": false
+  },
+  "local": {
+    "unit": {
+      "pass": 156,
+      "fail": 0,
+      "skipped": 0
+    },
+    "sql": {
+      "pass": 109,
+      "fail": 0,
+      "skipped": 0,
+      "newSuiteIncludingParent": 16,
+      "engine": "Disposable PostgreSQL in WASM",
+      "noNetwork": true,
+      "noRealData": true
+    },
+    "lint": "PASS",
+    "typeScript": "PASS",
+    "build": "PASS",
+    "buildId": "qSDHvGZv9f1-0rt8AseyB",
+    "preflight": "PASS_LOCAL_ONLY",
+    "diffCheck": "PASS",
+    "secretReview": {
+      "mode": "isolated index including working tree; real index unchanged",
+      "scannedFiles": 269,
+      "findings": 0
+    }
+  },
+  "visual": {
+    "mode": "Real components, synthetic SSR fixture, no hydration or cloud",
+    "desktopWidth": 1280,
+    "mobileWidths": [
+      375,
+      320
+    ],
+    "pdf": "Real PDF route/renderer, synthetic loader and JPEG bytes; two pages rendered/inspected and text checked; no private address",
+    "proofsOutsideAppRepo": [
+      "commercial-desktop-20261020.png",
+      "commercial-mobile-375-20261020.png",
+      "commercial-mobile-320-20261020.png",
+      "commercial-pdf-final-20261020-1.png",
+      "commercial-pdf-final-20261020-2.png"
+    ]
+  },
+  "migration": {
+    "file": "supabase/migrations/20261020212846_052_commercial_currency.sql",
+    "newColumn": "public.properties.price_currency",
+    "historicalDefault": "MXN explicitly confirmed; compatibility default retained",
+    "priceValue": "numeric unchanged; no rewriting or conversion",
+    "legacySourceInheritsCurrency": true,
+    "rlsPoliciesChanged": false,
+    "bucketChanged": false,
+    "hostedApplied": false
+  },
+  "guardrails": {
+    "productionTouched": false,
+    "netlifyDeploys": 0,
+    "realDataMutations": 0,
+    "realCredentialsExposed": false,
+    "newDependencies": false,
+    "mainChanged": false,
+    "backupExports": 0,
+    "restoreOperations": 0,
+    "app3107": "Stopped; not restarted against a schema without 052"
+  },
+  "remaining": [
+    "Explicit authorization, fresh fixed-target preflight/backup and hosted migration 052",
+    "Authenticated localhost + QRIH STAGING acceptance with authorized fixtures",
+    "PostgREST casts and new RPC/view behavior on managed services",
+    "Hydrated clipboard/WhatsApp and Safari/mobile interactions",
+    "New GitHub delivery and RC/deploy only with corresponding authorization",
+    "No USD publication on old deployed artifact; operational risks remain"
+  ],
+  "modifiedFiles": [
+    "NEXT_STEPS.md",
+    "PROJECT_STATUS.md",
+    "QRIH_AUDIT.md",
+    "QRIH_FUNCTIONAL_INDEX.md",
+    "app/admin/[id]/page.tsx",
+    "app/admin/asesores/[id]/page.tsx",
+    "app/admin/page.tsx",
+    "app/api/bodegas/[slug]/pdf/route.tsx",
+    "app/bodegas/[slug]/page.tsx",
+    "app/busco-bodega/page.tsx",
+    "app/ficha/[slug]/page.tsx",
+    "app/globals.css",
+    "app/inventario/page.tsx",
+    "app/layout.tsx",
+    "app/mis-propiedades/[id]/editar/EditarPropiedadForm.tsx",
+    "app/mis-propiedades/[id]/editar/page.tsx",
+    "app/mis-propiedades/[id]/solicitudes/page.tsx",
+    "app/mis-propiedades/page.tsx",
+    "app/page.tsx",
+    "app/publicar/PublicarForm.tsx",
+    "app/publicar/page.tsx",
+    "components/AdminPropertiesTable.tsx",
+    "components/CommercialPropertySheet.tsx",
+    "components/InventoryFilters.tsx",
+    "components/PortalFooter.tsx",
+    "components/PriceCurrencySelect.tsx",
+    "components/PropertyCard.tsx",
+    "components/SharePropertyButton.tsx",
+    "docs/COMMERCIAL_SHARING_CURRENCY.md",
+    "docs/RC_CANDIDATE_2026-10-19.md",
+    "docs/SOFT_LAUNCH_GO_2026-10-20.md",
+    "docs/SOFT_LAUNCH_OPERATIONS.md",
+    "docs/SOFT_LAUNCH_RESUME.md",
+    "docs/commercial-local-2026-10-20.json",
+    "lib/commercial-property-server.ts",
+    "lib/matching.ts",
+    "lib/property-price.ts",
+    "lib/property-save-server.ts",
+    "lib/property-sharing.ts",
+    "package.json",
+    "proxy.ts",
+    "supabase/migrations/20261020212846_052_commercial_currency.sql",
+    "tests/aud002-images.test.mjs",
+    "tests/commercial-properties-rls.test.mjs",
+    "tests/commercial-properties.test.mjs",
+    "tests/opportunities-rls.test.mjs",
+    "tests/profile-property-management.test.mjs",
+    "tests/property-write-errors.test.mjs",
+    "tests/ssr-session.test.mjs",
+    "tests/staging-flows.test.mjs",
+    "tests/synthetic-test-environment.test.mjs"
+  ],
+  "sourceInputsSha256": "f71bc7a0375b5e049042b665aff8cf27aebe073f945739f036af35f5f7cd2871",
+  "sourceInputs": [
+    {
+      "path": "app/admin/[id]/page.tsx",
+      "bytes": 38070,
+      "sha256": "c6898d090e06aeb3d7ecad483b463e908ea4ac1de4a06e926bd96fcc26f51e0d"
+    },
+    {
+      "path": "app/admin/asesores/[id]/page.tsx",
+      "bytes": 22325,
+      "sha256": "49fc56f07685dad5d472c8f94aab36a8aad1aefc081ab35b1162c1e20aeaa6ce"
+    },
+    {
+      "path": "app/admin/page.tsx",
+      "bytes": 19250,
+      "sha256": "db174f6e5a6ebece0813c657ea237fbbaa035b72ea42c68dc85b889d95e9b9c3"
+    },
+    {
+      "path": "app/api/bodegas/[slug]/pdf/route.tsx",
+      "bytes": 12104,
+      "sha256": "6d7343750fbeb95d7780e90f11d2094a233a5e0b7954adabe08fb1790c56c2f6"
+    },
+    {
+      "path": "app/bodegas/[slug]/page.tsx",
+      "bytes": 11085,
+      "sha256": "82178b32c2706a3f8de9295a18c8d86ed074263b397b77bb9d1fd70157b611e2"
+    },
+    {
+      "path": "app/busco-bodega/page.tsx",
+      "bytes": 18656,
+      "sha256": "3565938d71c7688add947cf3608dad30031e596b599cdccfb780ae57baa8795f"
+    },
+    {
+      "path": "app/ficha/[slug]/page.tsx",
+      "bytes": 675,
+      "sha256": "10101b97b190e0b8b5d39901efc039d07944caf408bbd50c133aa3101db2bf5c"
+    },
+    {
+      "path": "app/globals.css",
+      "bytes": 25233,
+      "sha256": "559f508f708c62b620ac1f2e9827d78040fb35e192edb1d5105dedb3d4d7334a"
+    },
+    {
+      "path": "app/inventario/page.tsx",
+      "bytes": 4395,
+      "sha256": "1148217081693304b108707e0931151b70ac9e9ec5d78abee45416eeb2906840"
+    },
+    {
+      "path": "app/layout.tsx",
+      "bytes": 560,
+      "sha256": "08e6c41751b1153fda83af61825d88c5d2e28fbe2448201e2f209880ff4a8d9f"
+    },
+    {
+      "path": "app/mis-propiedades/[id]/editar/EditarPropiedadForm.tsx",
+      "bytes": 13650,
+      "sha256": "9c3c3e03c2e1a0e8ac560877b38df8ae5c589c3badf8bad994ae07f0d8ebddc7"
+    },
+    {
+      "path": "app/mis-propiedades/[id]/editar/page.tsx",
+      "bytes": 3411,
+      "sha256": "ee284d3b10d1cfb35b2d5de46dbb28210b8a9fdb549a96349c7841e3faa328b4"
+    },
+    {
+      "path": "app/mis-propiedades/[id]/solicitudes/page.tsx",
+      "bytes": 10201,
+      "sha256": "05f1a0140ac6d8ff033ccb6f50a16ee64eeed86a797dac9d990dea1465cfa2dd"
+    },
+    {
+      "path": "app/mis-propiedades/page.tsx",
+      "bytes": 47644,
+      "sha256": "f575f3bd81107e80ad5b998c61fac0652d7cf0198392b7464017ed62e153ad9f"
+    },
+    {
+      "path": "app/page.tsx",
+      "bytes": 6405,
+      "sha256": "6a28209da9d352872335bd80e4cc06dd0a6a3685da4b54f6adbd3261f304aaea"
+    },
+    {
+      "path": "app/publicar/PublicarForm.tsx",
+      "bytes": 21309,
+      "sha256": "5cac1df40359c4319c3cfa9e525a336f0e28fad025bafaf55949cd4dd077d421"
+    },
+    {
+      "path": "app/publicar/page.tsx",
+      "bytes": 3460,
+      "sha256": "135b509dab82c618e91af1e64bd54c5138d2bed8fa0f5481d00ab54b3afd052f"
+    },
+    {
+      "path": "components/AdminPropertiesTable.tsx",
+      "bytes": 13898,
+      "sha256": "309fc38d8814adb31af6e5e2454ba74b63db85147dcb1ce5180ddc32429ee60f"
+    },
+    {
+      "path": "components/CommercialPropertySheet.tsx",
+      "bytes": 2742,
+      "sha256": "1a25f4f229913d02b2caa58dba8e16e1ed023d73d505bdde22ed4587c9c685f1"
+    },
+    {
+      "path": "components/InventoryFilters.tsx",
+      "bytes": 5636,
+      "sha256": "46f66dfee99b89dd6c233ae26746e0afa6657a227c5c268ff810efb515dfb1d0"
+    },
+    {
+      "path": "components/PortalFooter.tsx",
+      "bytes": 201,
+      "sha256": "3d2f4d783a5339cbf8476ba1d8e21e46f74f84b7bcfd30a081b10f8c1c5ff4e1"
+    },
+    {
+      "path": "components/PriceCurrencySelect.tsx",
+      "bytes": 383,
+      "sha256": "37703d612ccd4ba2dd95a407970fd5d433b0ec62d6767deec7a0230e4494fe8b"
+    },
+    {
+      "path": "components/PropertyCard.tsx",
+      "bytes": 1315,
+      "sha256": "a1fc2ea5c8826fddef66264ca4575a041725347f2e3b80680e62ef321eb08e49"
+    },
+    {
+      "path": "components/SharePropertyButton.tsx",
+      "bytes": 1325,
+      "sha256": "80599fd7757f508c2397df5d9df08be145c4f35963208a741c825958940bfe51"
+    },
+    {
+      "path": "lib/commercial-property-server.ts",
+      "bytes": 1879,
+      "sha256": "8661cae07b5f83e5643b578b7e73d7f34e49bb5fcf086f64288333c83f2702a7"
+    },
+    {
+      "path": "lib/matching.ts",
+      "bytes": 3494,
+      "sha256": "20cbd2d8d020903c48f3ed2d9b88e220130d5372d5a422a117931fdd3b62821f"
+    },
+    {
+      "path": "lib/property-price.ts",
+      "bytes": 3718,
+      "sha256": "af005af670d2bdd26e475fbf21e2f1147fc9c41f185100fb3535baeffbe53701"
+    },
+    {
+      "path": "lib/property-save-server.ts",
+      "bytes": 15228,
+      "sha256": "fc3be9f60e63cf69068b87feba550af1c29fad1b5e0ce30ef553b8f3794298db"
+    },
+    {
+      "path": "lib/property-sharing.ts",
+      "bytes": 534,
+      "sha256": "3312eee8a02a685e492c8b2a1a5f233600dd4928f20d42cdc0120b09b2742731"
+    },
+    {
+      "path": "package.json",
+      "bytes": 1711,
+      "sha256": "faa4ce99e552b04f1f086968966a820f453559e08e6378bb6243a05b75a6eb1d"
+    },
+    {
+      "path": "proxy.ts",
+      "bytes": 2313,
+      "sha256": "566ab3e2d3fd3085c0865c2f99a936e67caf07842752c3e31ef27a92e72b7fbb"
+    },
+    {
+      "path": "supabase/migrations/20261020212846_052_commercial_currency.sql",
+      "bytes": 13158,
+      "sha256": "e83114c3a32aea13ee4383c6f8294f76954439f1078117821342b3d65ea230d2"
+    },
+    {
+      "path": "tests/aud002-images.test.mjs",
+      "bytes": 3912,
+      "sha256": "e3133419f2a15a3c31cf9175fc1c93f3ae649866bdfefeb5e71a21e8ebe22737"
+    },
+    {
+      "path": "tests/commercial-properties-rls.test.mjs",
+      "bytes": 14158,
+      "sha256": "25727a6c754c3135a7132eea3c3e0d65e5badfa36cf772476b13e0d81f3bba5f"
+    },
+    {
+      "path": "tests/commercial-properties.test.mjs",
+      "bytes": 10753,
+      "sha256": "c74f26dd89e106e4c739089c968c5b4de8090e24a4624819454bf51d537c8b36"
+    },
+    {
+      "path": "tests/opportunities-rls.test.mjs",
+      "bytes": 11947,
+      "sha256": "4f308c4ade4aa8571e84879238109163440a589604d7ca7ec958d8472fd27d33"
+    },
+    {
+      "path": "tests/profile-property-management.test.mjs",
+      "bytes": 19329,
+      "sha256": "a5b4f7ec1cf2e62ff24e4803809f834ac488741bd29a5dc73a42461c26cdd75a"
+    },
+    {
+      "path": "tests/property-write-errors.test.mjs",
+      "bytes": 10992,
+      "sha256": "368298909983316b47b201e64d6fdf91a62f3e6a46d9a2dee01a0314753df0fd"
+    },
+    {
+      "path": "tests/ssr-session.test.mjs",
+      "bytes": 18774,
+      "sha256": "4d7af758eef8a80b6e3b0468f460f8aa89168f653c01fa8aa9ddd6657490643f"
+    },
+    {
+      "path": "tests/staging-flows.test.mjs",
+      "bytes": 23245,
+      "sha256": "67d7784052c327ba9b2dc4d321aab88c08aa8dd8fef5e41f158e5566b85bb9fb"
+    },
+    {
+      "path": "tests/synthetic-test-environment.test.mjs",
+      "bytes": 1261,
+      "sha256": "904541bb5d8dc5a8c227a2f6ddff014e01839e3f1602734ab5f9b1eb608d7184"
+    }
+  ]
+}

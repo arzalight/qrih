@@ -1,5 +1,9 @@
 # QRIH — Dictamen de Soft Launch
 
+## Dictamen histórico — alcance comercial ampliado todavía NO-GO
+
+El usuario añadió después de este dictamen Compartir y MXN/USD como requisitos. [Estado actual y matriz](COMMERCIAL_SHARING_CURRENCY.md): implementado/probado localmente, 052 sin aplicar ni validar en STAGING, sin nuevo RC. **El GO condicionado que sigue corresponde sólo al artefacto anterior; no es el GO del nuevo alcance.** Se preserva su evidencia sin reescribir resultados históricos.
+
 20 de octubre de 2026. **GO CONDICIONADO para un piloto supervisado en el QRIH STAGING existente**, con los datos reales ya seleccionados por el usuario. No GO de producción, apertura indiscriminada ni garantía de disponibilidad.
 
 ## Evidencia que cierra el gate técnico actual

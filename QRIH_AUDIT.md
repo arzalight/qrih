@@ -1,5 +1,21 @@
 # QRIH — Auditoría técnica pre-Soft-Launch
 
+## Dictamen vigente — 2026-10-20 / NO-GO comercial
+
+Nuevo alcance requerido por el usuario: Compartir sólo published y moneda MXN/USD, con históricos MXN confirmados. [Inspección, cambios, matriz de aceptación y riesgos](docs/COMMERCIAL_SHARING_CURRENCY.md). Implementación local lista para integración: **156 pruebas de aplicación y 109 SQL temporales PASS**, sin omisiones; lint/tipos/build/preflight locales PASS. No se ejecutó 052 en STAGING ni se desplegó. El GO condicionado anterior se conserva como evidencia histórica, no habilita este alcance ampliado.
+
+- **ALTO / confirmado en código, riesgo de transición:** el artefacto publicado anterior ignora USD. 052 conserva compatibilidad de escrituras anteriores, pero no autoriza publicar USD hasta un RC nuevo validado. No se afirma que ya existan registros USD mal publicados.
+- **ALTO / no verificado en servicios:** migración052 y nueva matriz Auth/Storage/HTTP/UI pendientes de integración STAGING. Usuario autorizó continuar hasta deploy el20oct, sin omitir controles. SQL en memoria no prueba Supabase gestionado ni Netlify.
+- **MEDIO / limitación explícita:** presupuesto sin moneda no aporta comparación económica; no se infiere MXN para requerimientos ni se convierte. Firmas ya emitidas pueden durar su TTL; PDFs descargados no revocables.
+- **BAJO / presentación, corregido localmente:** ruta de logo PDF inexistente sustituida por QRIH textual y título de descripción mantenido con su contenido.
+- No nueva vulnerabilidad crítica confirmada. AUD-040 permanece cerrado para su artefacto probado; AUD-018 y demás límites operativos no se cierran por estas funciones.
+
+052 sólo añade moneda/redefine contratos y proyecciones monetarias autorizadas; sin nuevas políticas públicas, cambios de bucket/RLS, borrados ni conversiones. El ensayo autorizado demostró integridad de filas históricas/updated_at/numeric/NULL, RLS/ACL y metadatos Storage en una instancia vacía sintética. No se usa el conector Supabase de otro proyecto.
+
+**Control previo20oct22:07UTC:** 41 archivos funcionales coinciden con el recibo local, entregados en GitHub `715e42a` sobre la rama de función; escaneo del índice267archivos/0hallazgos. Netlify autenticado Free, auto_topup/overages desactivados, builds detenidos y saldo visible268,5/300. Respaldo local anterior conserva su SHA256, pero precede a051 y a las pruebas posteriores; no es una copia del estado actual. Gate de copia nueva pendiente de intervención; no se reutiliza el capturador consumido, no se aplica052, no se integra develop ni se inicia RC. [Detalle](docs/COMMERCIAL_DEPLOY_GATE_2026-10-20.md). No nueva vulnerabilidad por este control ni cierre de riesgos anteriores.
+
+### Antecedentes — GO condicionado del alcance previo, no dictamen vigente ampliado
+
 ## Dictamen vigente — 2026-10-20 / GO CONDICIONADO
 
 **GO CONDICIONADO para Soft Launch supervisado en el QRIH STAGING existente, con datos reales ya seleccionados.** [Dictamen y condiciones](docs/SOFT_LAUNCH_GO_2026-10-20.md) / [RC y cierre AUD-040](docs/aud040-deploy-verification-2026-10-20.json). Commit publicado `f803f35faba9cf871a81f93560112e20358230c2`, fuente `4c7d05057f2429306d8ed5ba6097d9b273eb292a`, deploy `6ad79257b59620a2a787e9a1` READY/SHA/publicación exactos.138unit remotas/31HTTP remotos PASS/0fallos/0skips y lint/tipos/build/preflight completos. Selector admin corregido, guardado autenticado de fixture con éxito, `m2` conservado y huellas comerciales/galerías de ambos fixtures iguales (sólo updated_at excluido). **AUD-040 MEDIO CORREGIDO, DESPLEGADO Y VERIFICADO.**

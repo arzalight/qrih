@@ -1,5 +1,13 @@
 # QRIH — Punto de reanudación de validaciones
 
+## Reanudación vigente — NO-GO comercial / 2026-10-20
+
+[Entrega local y matriz nueva](COMMERCIAL_SHARING_CURRENCY.md). Usuario confirmó MXN histórico y sólo compartir published. Ensayo temporal terminado:109SQL/application156PASS, lint/tipos/build/preflight locales PASS. Ahora autorizó continuar hasta deploy; código/pruebas ya en GitHub `715e42a`, rama feature/commercial-sharing-currency. 052 NO aplicada. No reabrir ensayos/restore/AUD040 previos.
+
+Siguiente: [gate de nueva captura cifrada local+Drive](COMMERCIAL_DEPLOY_GATE_2026-10-20.md), pendiente de intervención; la copia previa a051 no refleja los cambios posteriores. Después preflight/052/aceptación localhost, integración develop y único RC autorizado con cuota Free vigente. Saldo observado268,5/300, builds detenidos, main/producción intactos. No publicar USD sobre el Netlify anterior. Localhost detenido; preview sintético no equivale al portal autenticado.
+
+### Antecedentes del alcance previo
+
 ## Cierre vigente20oct — GO condicionado del piloto
 
 **GO CONDICIONADO para Soft Launch supervisado en el QRIH STAGING existente, con datos reales ya seleccionados.** [Dictamen y condiciones](SOFT_LAUNCH_GO_2026-10-20.md) / [RC y cierre AUD-040](aud040-deploy-verification-2026-10-20.json). Commit publicado `f803f35faba9cf871a81f93560112e20358230c2`, fuente `4c7d05057f2429306d8ed5ba6097d9b273eb292a`, deploy `6ad79257b59620a2a787e9a1` READY/SHA/publicación exactos.138unit remotas/31HTTP remotos PASS/0fallos/0skips y lint/tipos/build/preflight completos. Selector admin corregido, guardado autenticado de fixture con éxito, `m2` conservado y huellas comerciales/galerías de ambos fixtures iguales (sólo updated_at excluido). **AUD-040 MEDIO CORREGIDO, DESPLEGADO Y VERIFICADO.**

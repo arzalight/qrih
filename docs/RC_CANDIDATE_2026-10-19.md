@@ -1,5 +1,9 @@
 # QRIH — RC de STAGING, 19 de octubre de 2026
 
+## Nuevo alcance comercial — NO-GO / candidato anterior histórico
+
+[Compartir y MXN/USD](COMMERCIAL_SHARING_CURRENCY.md) cambiaron el código y requieren integración052/aceptación STAGING y un nuevo candidato. Los hashes, deploys y pruebas que siguen no certifican esta rama. Sin otro deploy ni aplicación cloud en esta entrega.
+
 ## Cierre vigente20oct — GO condicionado del piloto
 
 **GO CONDICIONADO para Soft Launch supervisado en el QRIH STAGING existente, con datos reales ya seleccionados.** [Dictamen y condiciones](SOFT_LAUNCH_GO_2026-10-20.md) / [RC y cierre AUD-040](aud040-deploy-verification-2026-10-20.json). Commit publicado `f803f35faba9cf871a81f93560112e20358230c2`, fuente `4c7d05057f2429306d8ed5ba6097d9b273eb292a`, deploy `6ad79257b59620a2a787e9a1` READY/SHA/publicación exactos.138unit remotas/31HTTP remotos PASS/0fallos/0skips y lint/tipos/build/preflight completos. Selector admin corregido, guardado autenticado de fixture con éxito, `m2` conservado y huellas comerciales/galerías de ambos fixtures iguales (sólo updated_at excluido). **AUD-040 MEDIO CORREGIDO, DESPLEGADO Y VERIFICADO.**

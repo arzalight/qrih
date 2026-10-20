@@ -1,5 +1,19 @@
 # NEXT STEPS — QRO INDUSTRIAL HUB / QRIH
 
+## Próximo paso vigente — 2026-10-20 / NO-GO comercial
+
+[Entrega local y checklist completo](docs/COMMERCIAL_SHARING_CURRENCY.md). Compartir sólo publicadas y MXN/USD implementados localmente; 156 pruebas de aplicación y 109 SQL sintéticas PASS. Prueba temporal de 052 ya autorizada y terminada: no volver a pedirla. STAGING aún sin 052 y sin aceptación nueva.
+
+1. **Intervención vigente:** autorizar y completar una nueva captura cifrada de QRIH STAGING y segunda copia privada Drive, sin borrar generaciones ni restaurar. La anterior es íntegra pero anterior a051 y a cambios posteriores. Continuar hasta deploy ya está autorizado; no volver a pedir ese permiso general. [Gate actual](docs/COMMERCIAL_DEPLOY_GATE_2026-10-20.md). Después, identidad/esquema/historial/cuota/ventana y sólo052; no reenviar001–051 ni reutilizar capturadores consumidos.
+2. Comparar huellas antes/después; ninguna cantidad, unidad, estado, perfil, galería o metadato Storage preexistente debe cambiar por la migración, salvo la columna nueva MXN. Detenerse ante discrepancias.
+3. Validar localhost + STAGING con sesión legítima y fixtures autorizados: selector MXN/USD, edición/duplicado, ficha/PDF, copiar/WhatsApp, filtros, privacidad y suspensión/retiro. No publicar USD sobre el Netlify anterior.
+4. Código/pruebas ya entregados en `feature/commercial-sharing-currency`, `715e42a`. Tras aceptación integrada: fast-forward controlado a develop y manifiesto nuevo. No tocar main/producción.
+5. Un RC Netlify está autorizado, condicionado a gates previos; saldo observado268,5/300 Free y builds detenidos. Revalidar cuota antes de consumir, comprobar SHA/READY y matriz remota. Reemitir GO sólo después; conservar límites operativos y no desplegar por documentación.
+
+No se modificaron servicios, datos reales, producción, credenciales ni configuración. Localhost:3107 anterior detenido para compilar; no reiniciado con esta rama contra esquema sin 052.
+
+### Antecedentes — pasos del alcance previo, no instrucciones vigentes
+
 ## Dictamen vigente — 2026-10-20 / GO CONDICIONADO
 
 **GO CONDICIONADO para Soft Launch supervisado en el QRIH STAGING existente, con datos reales ya seleccionados.** [Dictamen y condiciones](docs/SOFT_LAUNCH_GO_2026-10-20.md) / [RC y cierre AUD-040](docs/aud040-deploy-verification-2026-10-20.json). Commit publicado `f803f35faba9cf871a81f93560112e20358230c2`, fuente `4c7d05057f2429306d8ed5ba6097d9b273eb292a`, deploy `6ad79257b59620a2a787e9a1` READY/SHA/publicación exactos.138unit remotas/31HTTP remotos PASS/0fallos/0skips y lint/tipos/build/preflight completos. Selector admin corregido, guardado autenticado de fixture con éxito, `m2` conservado y huellas comerciales/galerías de ambos fixtures iguales (sólo updated_at excluido). **AUD-040 MEDIO CORREGIDO, DESPLEGADO Y VERIFICADO.**

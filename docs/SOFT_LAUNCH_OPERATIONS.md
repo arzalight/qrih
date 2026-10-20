@@ -1,5 +1,13 @@
 # QRIH — Acuerdos mínimos de operación del piloto
 
+## Alcance comercial vigente — NO-GO / 2026-10-20
+
+El GO condicionado previo no cubre Compartir y MXN/USD nuevos. [Entrega y procedimiento](COMMERCIAL_SHARING_CURRENCY.md). Sólo se comparten published; moneda histórica MXN confirmada. 052 probada únicamente en PostgreSQL temporal, no aplicada a servicios. No publicar USD con el artefacto Netlify anterior; requiere integración/RC autorizados y aceptación nueva.
+
+Se conservan Free, no producción/main, Netlify sólo RC autorizado, respaldos por día de uso y antes de cambios, y pausa manual de altas ante fallos. Usuario autorizó continuar hasta deploy; [gate actual](COMMERCIAL_DEPLOY_GATE_2026-10-20.md) requiere nueva copia cifrada local+Drive antes de052. No captura/transferencia/restore nuevos ni pagos realizados por este control. No repetir ensayos cerrados ni herramientas de captura consumidas.
+
+### Antecedentes y política operativa conservada
+
 ## Cierre vigente20oct — GO condicionado del piloto
 
 **GO CONDICIONADO para Soft Launch supervisado en el QRIH STAGING existente, con datos reales ya seleccionados.** [Dictamen y condiciones](SOFT_LAUNCH_GO_2026-10-20.md) / [RC y cierre AUD-040](aud040-deploy-verification-2026-10-20.json). Commit publicado `f803f35faba9cf871a81f93560112e20358230c2`, fuente `4c7d05057f2429306d8ed5ba6097d9b273eb292a`, deploy `6ad79257b59620a2a787e9a1` READY/SHA/publicación exactos.138unit remotas/31HTTP remotos PASS/0fallos/0skips y lint/tipos/build/preflight completos. Selector admin corregido, guardado autenticado de fixture con éxito, `m2` conservado y huellas comerciales/galerías de ambos fixtures iguales (sólo updated_at excluido). **AUD-040 MEDIO CORREGIDO, DESPLEGADO Y VERIFICADO.**

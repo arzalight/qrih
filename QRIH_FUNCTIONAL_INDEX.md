@@ -1,5 +1,21 @@
 # QRIH FUNCTIONAL INDEX — Índice maestro tipo SIGMA
 
+## Trazabilidad vigente — 2026-10-20 / NO-GO comercial
+
+[Decisiones, entrega y matriz](docs/COMMERCIAL_SHARING_CURRENCY.md). Compartir sólo published; históricos confirmados MXN. 156 pruebas de aplicación y 109 SQL en memoria PASS. Sin aplicación/validación STAGING ni nuevo deploy/GO.
+
+Entrega de código y pruebas: GitHub `feature/commercial-sharing-currency`, `715e42acf27a515721229a7aab75c8c241640194`, 41 entradas funcionales idénticas al recibo local. Usuario autorizó continuar hasta RC; [gate de despliegue](docs/COMMERCIAL_DEPLOY_GATE_2026-10-20.md) detenido antes de052 por falta de una nueva captura cifrada del estado actual. IDs/estados de validación inferiores no cambian por subir código. `develop`/`main` y servicios sin cambios.
+
+| ID estable | Función y frontend | Servidor / BD / permisos | Pruebas y estado |
+| --- | --- | --- | --- |
+| PROP-008 | Mis propiedades → SharePropertyButton → /ficha/[slug] → CommercialPropertySheet/galería; PortalFooter excluye footer sólo allí | commercial-property-server: allowlist desde properties_public, status published; autorizador/firma privados vigentes, sin cookies ni contacto; proxy no-store/referrer/robots | commercial-properties.test.mjs, commercial-properties-rls.test.mjs, ssr-session; SSR/PDF sintéticos; IMPLEMENTADO/VALIDADO LOCAL ACOTADO, STAGING PENDIENTE |
+| PRICE-001 | PriceCurrencySelect + publicar/editor/admin; property-price compartido por tarjetas/catálogo/detalle/paneles/ficha/PDF; InventoryFilters | 052_commercial_currency: properties.price_currency MXN/USD, numeric conservado, update/duplicate RPC, vista/catálogo/listados y matching sin comparar moneda desconocida; alias de lectura price_value_text, no columna adicional | 14 pruebas comerciales + regresiones API/proxy y SQL; 052 PROBADA SÓLO EN MEMORIA / NO APLICADA AL CLOUD |
+| PROP-003/006/007 · extensión | Edición/duplicado/tarjetas conservan sus IDs anteriores; ahora propagan moneda/unidad/importe exacto | qrih_update_property_with_images y qrih_duplicate_property propuestos en 052 mantienen controles y límite7/WebP | suites existentes ampliadas, 109 SQL totales PASS; no trasladar este PASS a servicios reales |
+
+El PDF comparte cargador y función monetaria con la ficha (PDF-001 conserva su ID); contactos, Auth, Storage y RLS anteriores no se amplían. Tokens/expiración/revocación privada: NO APLICA por decisión posterior del usuario. Los recibos 180/RC anteriores son antecedentes, no un manifiesto para esta rama.
+
+### Antecedentes — dictamen y trazabilidad del artefacto previo
+
 ## Dictamen vigente — 2026-10-20 / GO CONDICIONADO
 
 **GO CONDICIONADO para Soft Launch supervisado en el QRIH STAGING existente, con datos reales ya seleccionados.** [Dictamen y condiciones](docs/SOFT_LAUNCH_GO_2026-10-20.md) / [RC y cierre AUD-040](docs/aud040-deploy-verification-2026-10-20.json). Commit publicado `f803f35faba9cf871a81f93560112e20358230c2`, fuente `4c7d05057f2429306d8ed5ba6097d9b273eb292a`, deploy `6ad79257b59620a2a787e9a1` READY/SHA/publicación exactos.138unit remotas/31HTTP remotos PASS/0fallos/0skips y lint/tipos/build/preflight completos. Selector admin corregido, guardado autenticado de fixture con éxito, `m2` conservado y huellas comerciales/galerías de ambos fixtures iguales (sólo updated_at excluido). **AUD-040 MEDIO CORREGIDO, DESPLEGADO Y VERIFICADO.**
