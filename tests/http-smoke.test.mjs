@@ -12,6 +12,35 @@ assert.ok(!development || ['localhost','127.0.0.1'].includes(origin.hostname),
 assert.ok(['127.0.0.1','localhost'].includes(origin.hostname) ||
   (origin.origin==='https://qrih-staging.netlify.app' && origin.pathname==='/'),
   'Sólo servidor local o staging aislado exacto')
+
+// Nuevas superficies de051: sin sesión no se retira/duplica ni firma una portada.
+// UUID ficticio fijo; ningún ID de propiedad real ni request autenticado.
+const syntheticPropertyId = '11111111-1111-4111-8111-111111111111'
+for (const [path, method, status] of [
+  ['/api/duplicar-propiedad', 'POST', 401],
+  ['/api/duplicar-propiedad', 'GET', 405],
+  ['/api/retirar-propiedad', 'GET', 405],
+  [`/api/mis-propiedades/${syntheticPropertyId}/portada`, 'GET', 401],
+  ['/api/mis-propiedades/invalid-id/portada', 'GET', 404],
+]) {
+  test(`051 ${method} ${path}: acceso no autenticado/método inválido denegado`, async () => {
+    const response = await fetch(base + path, { method, redirect: 'manual' })
+    assert.equal(response.status, status)
+    if (path.endsWith('/portada')) {
+      assert.match(response.headers.get('cache-control'), /private.*no-store/)
+      assert.ok(!(await response.text()).includes('/storage/v1/object/sign/'))
+    }
+  })
+}
+test('051 retiro con confirmación pero sin sesión: 401, ninguna transición', async () => {
+  const response = await fetch(base + '/api/retirar-propiedad', {
+    method: 'POST', redirect: 'manual',
+    headers: { 'Content-Type': 'application/json', Origin: origin.origin },
+    body: JSON.stringify({ propertyId: syntheticPropertyId, confirmed: true }),
+  })
+  assert.equal(response.status, 401)
+})
+
 for(const [path,method,status,notice] of [
   ['/login','GET',200],['/registro','GET',200],['/admin','GET',307],['/admin/asesores','GET',307],
   ['/recuperar-contrasena','GET',200],['/restablecer-contrasena','GET',200],

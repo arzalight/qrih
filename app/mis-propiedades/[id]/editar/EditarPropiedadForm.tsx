@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { createClient } from '@/lib/supabase'
 import { ZONAS_GENERALES, ZONAS_INDUSTRIALES_POR_ZONA } from '@/lib/zonas'
 import { useRouter } from 'next/navigation'
@@ -12,6 +12,7 @@ type Property = {
   title: string
   operation: string
   price_display: string
+  price_value?: number | null
   price_plus_vat: boolean
   price_plus_maintenance: boolean
   negotiable: boolean
@@ -34,6 +35,7 @@ zone: string
 export function EditarPropiedadForm({
   property,
   initialImages,
+  duplicate = false,
 }: {
   property: Property
   initialImages: {
@@ -42,8 +44,12 @@ export function EditarPropiedadForm({
     title: string
     position: number
   }[]
+  duplicate?: boolean
 }) {
   const router = useRouter()
+  const busy = useRef(false)
+  const requestId = useRef<string | null>(null)
+  const uploadedForAttempt = useRef(new Map<string, string>())
 const [loading, setLoading] = useState(false)
 const [error, setError] = useState('')
 const [zonaGeneral, setZonaGeneral] = useState(
@@ -58,7 +64,8 @@ const [images, setImages] = useState<PropertyImageEditorItem[]>([])
   encType="multipart/form-data"
   onSubmit={async (event) => {
     event.preventDefault()
-    if (loading) return
+    if (busy.current) return
+    busy.current = true
 
     setLoading(true)
     setError('')
@@ -74,6 +81,11 @@ const [images, setImages] = useState<PropertyImageEditorItem[]>([])
         : 'pending'
 
     formData.append('submission_action', submissionAction)
+    if (duplicate) {
+      requestId.current ||= crypto.randomUUID()
+      formData.set('request_id', requestId.current)
+      formData.set('submission_action', 'draft')
+    }
 
     const uploadedPaths: string[] = []
     let saveAttempted = false
@@ -83,6 +95,11 @@ const [images, setImages] = useState<PropertyImageEditorItem[]>([])
         if (image.kind === 'existing') {
           gallery.push({ kind: 'existing', storage_path: image.storagePath, title: image.title })
         } else {
+          const previousUpload = duplicate ? uploadedForAttempt.current.get(image.id) : null
+          if (previousUpload) {
+            gallery.push({ kind: 'uploaded', storage_path: previousUpload, title: image.title })
+            continue
+          }
           // Cada foto viaja por separado; siete fotos no exceden el límite de Netlify en un único request.
           const uploadForm = new FormData()
           uploadForm.set('image', image.file)
@@ -91,12 +108,13 @@ const [images, setImages] = useState<PropertyImageEditorItem[]>([])
           const result = await response.json().catch(() => null)
           if (!response.ok || !result?.path) throw new Error('No se pudo subir una fotografía. Revisa tu conexión y vuelve a intentar.')
           uploadedPaths.push(result.path)
+          if (duplicate) uploadedForAttempt.current.set(image.id, result.path)
           gallery.push({ kind: 'uploaded', storage_path: result.path, title: image.title })
         }
       }
       formData.append('gallery', JSON.stringify(gallery))
       saveAttempted = true
-      const response = await fetch('/api/editar-propiedad', {
+      const response = await fetch(duplicate ? '/api/duplicar-propiedad' : '/api/editar-propiedad', {
         method: 'POST',
         body: formData,
       })
@@ -110,17 +128,22 @@ const [images, setImages] = useState<PropertyImageEditorItem[]>([])
       }
 
       router.push('/mis-propiedades')
+      router.refresh()
     } catch (err) {
       // Sólo nombres generados en este intento, nunca datos del formulario.
       // Tras un corte de red, el servidor podría haber confirmado la edición.
       // No borrar entonces imágenes potencialmente referenciadas.
       if (!saveAttempted && uploadedPaths.length) await createClient()?.storage.from('property-images').remove(uploadedPaths)
+      if (!saveAttempted && duplicate) {
+        for (const [key, path] of uploadedForAttempt.current) if (uploadedPaths.includes(path)) uploadedForAttempt.current.delete(key)
+      }
       setError(
         err instanceof Error
           ? err.message
           : 'No fue posible guardar los cambios.'
       )
       setLoading(false)
+      busy.current = false
     }
   }}
 >
@@ -155,7 +178,10 @@ const [images, setImages] = useState<PropertyImageEditorItem[]>([])
               <input
                 required
                 name="price"
-                defaultValue={property.price_display}
+                type={duplicate ? 'number' : 'text'}
+                min={duplicate ? '0.01' : undefined}
+                step={duplicate ? 'any' : undefined}
+                defaultValue={duplicate ? property.price_value ?? '' : property.price_display}
                 placeholder="Precio"
               />
             </div>
@@ -392,7 +418,7 @@ const [images, setImages] = useState<PropertyImageEditorItem[]>([])
           </button>
         )}
 
-        <button
+        {!duplicate && <button
           type="submit"
           name="submission_action"
           value="pending"
@@ -403,7 +429,7 @@ const [images, setImages] = useState<PropertyImageEditorItem[]>([])
             : property.status === 'draft'
               ? 'GUARDAR CAMBIOS Y ENVIAR A REVISIÓN →'
               : 'GUARDAR CAMBIOS Y REENVIAR →'}
-        </button>
+        </button>}
 
         {error && (
           <p

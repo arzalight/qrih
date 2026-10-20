@@ -1323,3 +1323,33 @@ main {
     font-size: 24px;
   }
 }
+
+.own-property-cover {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  background: #f1f0ec;
+  display: grid;
+  place-items: center;
+  color: #62676c;
+  position: relative;
+  overflow: hidden;
+}
+.own-property-cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.own-property-card h2 { overflow-wrap: anywhere; }
+.own-property-card button, .own-property-card a { max-width: 100%; min-height: 44px; }
+.property-management-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; width: 100%; }
+.property-management-actions .property-action, .property-management-actions > button {
+  display: inline-flex; align-items: center; justify-content: center; min-height: 44px;
+  padding: 10px 16px; border: 1px solid #c9a227; border-radius: 10px;
+  background: white; color: #725a12; text-decoration: none; font-weight: 600;
+}
+.property-management-actions > button:disabled { opacity: .55; cursor: not-allowed; }
+.property-management-actions small, .property-management-actions [role="alert"] { width: 100%; }
+.property-edit-confirmation {
+  position: fixed; inset: 0; margin: auto; max-width: min(560px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px); overflow: auto; padding: 24px;
+  border: 1px solid #d5d1c8; border-radius: 16px; color: #111827;
+}
+.property-edit-confirmation::backdrop { background: rgb(0 0 0 / 55%); }
+.property-edit-confirmation > div { display: flex; flex-wrap: wrap; gap: 12px; }
+.property-edit-confirmation button { min-height: 44px; }

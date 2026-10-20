@@ -6,6 +6,9 @@ import { AutoApproveContactsToggle } from '@/components/AutoApproveContactsToggl
 import { DeletePropertyButton } from '@/components/DeletePropertyButton'
 import { AccountSuspensionNotice } from '@/components/AccountSuspensionNotice'
 import { RegisterOpportunityButton } from '@/components/RegisterOpportunityButton'
+import { OwnPropertyCover } from '@/components/OwnPropertyCover'
+import { ManagePropertyActions } from '@/components/ManagePropertyActions'
+import { createSignedPropertyImageUrlMap, PROPERTY_IMAGE_TTL_SECONDS } from '@/lib/property-image-urls'
 type Opportunity = MatchingDemand & { id: string; status: string; created_at: string }
 type OpportunityRegistration = {
   demand_request_id: string
@@ -20,6 +23,8 @@ function getStatusLabel(status: string) {
   switch (status) {
     case 'pending':
       return 'Pendiente'
+    case 'pending_update':
+      return 'Actualización en revisión'
     case 'published':
       return 'Publicada'
     case 'rejected':
@@ -126,7 +131,7 @@ let topPropertyContacts = 0
   const { data: properties, error } = await supabase
     .from('properties')
     .select(
-      'id, slug, title, operation, status, zone_general, zone, total_area, price_value, price_unit, price_display, created_at, rejection_reason'
+      'id, slug, title, operation, status, zone_general, zone, total_area, price_value, price_unit, price_display, created_at, rejection_reason, main_image_path'
     )
     .eq('owner_id', user.id)
     .order('created_at', { ascending: false })
@@ -346,6 +351,11 @@ if (totalViews > 0) {
       </main>
     )
   }
+  let coverUrls = new Map<string, string>()
+  try {
+    coverUrls = await createSignedPropertyImageUrlMap(supabase,
+      (properties || []).map(property => property.main_image_path), PROPERTY_IMAGE_TTL_SECONDS.gallery)
+  } catch { console.warn('QRIH_OWN_COVERS_UNAVAILABLE') }
 return (
   <>
     <Header />
@@ -743,7 +753,7 @@ height: '100%',
   style={{
     display: 'grid',
     gridTemplateColumns:
-      'repeat(auto-fit, minmax(320px, 1fr))',
+      'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
     gap: 20,
 alignItems: 'stretch',
   }}
@@ -751,15 +761,25 @@ alignItems: 'stretch',
           {properties.map((property) => (
             <article
               key={property.id}
+              className="own-property-card"
               style={{
                 border: '1px solid #ddd',
                 borderRadius: 12,
                 padding: 24,
+                minWidth: 0,
+                overflow: 'hidden',
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
               }}
             >
+              <div style={{ position: 'relative', margin: '-24px -24px 20px' }}>
+                <OwnPropertyCover key={`${property.id}:${coverUrls.get(property.main_image_path) || ''}`} propertyId={property.id}
+                  initialUrl={coverUrls.get(property.main_image_path) || null} title={property.title} />
+                <span className={getStatusClass(property.status)} style={{ position: 'absolute', top: 12, left: 12 }}>
+                  {getStatusLabel(property.status)}
+                </span>
+              </div>
               <div
                 style={{
                   display: 'flex',
@@ -776,6 +796,7 @@ alignItems: 'stretch',
                   <p>
                     {property.operation} · {property.price_display}
                   </p>
+                  <p>{property.total_area != null ? `${Number(property.total_area).toLocaleString('es-MX')} m²` : 'Superficie no especificada'}</p>
                   <p>
                     Registrada el{' '}
                     {new Date(property.created_at).toLocaleDateString(
@@ -849,9 +870,6 @@ alignItems: 'stretch',
   </div>
 </div>
                 </div>
-                <span className={getStatusClass(property.status)}>
-                  {getStatusLabel(property.status)}
-                </span>
               </div>
               {property.status === 'rejected' &&
                 property.rejection_reason && (
@@ -938,26 +956,7 @@ width: '180px',
   Ver propiedad
 </Link>
   )}
-  {(property.status === 'draft' || property.status === 'rejected') && (
-<Link
-  href={`/mis-propiedades/${property.id}/editar`}
-  style={{
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '10px 16px',
-    borderRadius: 10,
-    background: '#c9a227',
-    color: '#ffffff',
-    textDecoration: 'none',
-    fontSize: 14,
-    fontWeight: 600,
-width: '180px',
-  }}
->
-  Editar
-</Link>
-  )}
+  <ManagePropertyActions propertyId={property.id} status={property.status} disabled={profile?.account_status !== 'active'} />
 
   <DeletePropertyButton propertyId={property.id} />
 </div>

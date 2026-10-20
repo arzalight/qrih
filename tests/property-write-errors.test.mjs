@@ -8,6 +8,7 @@ registerHooks({ resolve(specifier, context, nextResolve) {
     '@/lib/verified-media-server': 'data:text/javascript,export async function uploadVerifiedImage(file,owner,bucket){return globalThis.__qrihWriteUpload(file,owner,bucket)}',
   }
   if (aliases[specifier]) return { url: aliases[specifier], shortCircuit: true }
+  if (specifier === '@/lib/property-save-server') return nextResolve(new URL('../lib/property-save-server.ts', import.meta.url).href, context)
   if (specifier === '@/lib/request-security') return nextResolve(new URL('../lib/request-security.ts', import.meta.url).href, context)
   if (specifier === 'next/server') return nextResolve(new URL('../node_modules/next/server.js', import.meta.url).href, context)
   return nextResolve(specifier, context)
