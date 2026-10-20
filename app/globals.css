@@ -1353,3 +1353,28 @@ main {
 .property-edit-confirmation::backdrop { background: rgb(0 0 0 / 55%); }
 .property-edit-confirmation > div { display: flex; flex-wrap: wrap; gap: 12px; }
 .property-edit-confirmation button { min-height: 44px; }
+/* Commercial presentation: isolated from portal navigation and lead tools. */
+.commercial-sheet { max-width: 1120px; margin: auto; padding: 40px 24px 64px; color: #172d3a; }
+.commercial-sheet__heading small { letter-spacing: .18em; color: #627b87; }
+.commercial-sheet__heading h1 { font-size: clamp(28px, 4vw, 46px); margin: 14px 0; line-height: 1.12; }
+.commercial-sheet__hero { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); gap: 28px; margin: 32px 0; }
+.commercial-sheet__cover { width: 100%; height: 360px; object-fit: cover; border-radius: 16px; }
+.commercial-sheet__price { padding: 28px; border: 1px solid #dbe3e6; border-radius: 16px; background: #f4f7f8; overflow-wrap: anywhere; }
+.commercial-sheet__price h2 { line-height: 1.2; font-size: 28px; }
+.commercial-sheet__price a { display: inline-block; padding: 12px 18px; border-radius: 8px; background: #172d3a; color: white; text-decoration: none; }
+.commercial-sheet__specs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.commercial-sheet__specs div { padding: 16px; border: 1px solid #e1e7ea; border-radius: 10px; }
+.commercial-sheet__specs dt { color: #627b87; font-size: 13px; }
+.commercial-sheet__specs dd { margin: 8px 0 0; font-weight: 700; }
+.commercial-sheet__description { white-space: pre-line; line-height: 1.7; }
+.commercial-sheet__legal { border-top: 1px solid #dbe3e6; margin-top: 40px; padding-top: 20px; font-size: 12px; color: #627b87; }
+.property-share-actions { border: 1px solid #cbd5db; border-radius: 8px; padding: 9px 12px; }
+.property-share-actions summary { cursor: pointer; }
+.property-share-actions > div { display: flex; flex-wrap: wrap; gap: 12px; padding-top: 12px; }
+.property-share-actions p:empty { display: none; }
+@media (max-width: 680px) {
+  .commercial-sheet { padding: 24px 16px 40px; }
+  .commercial-sheet__hero { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .commercial-sheet__cover { height: 240px; }
+  .commercial-sheet__specs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

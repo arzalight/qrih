@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation'
+import { propertyPrice } from '@/lib/property-price'
 import { Header } from '@/components/Header'
 import { PropertyContactForm } from '@/components/PropertyContactForm'
 import { PropertyImageGallery } from '@/components/PropertyImageGallery'
@@ -50,6 +51,8 @@ export default async function PropertyPage({ params }: PageProps) {
       location_visibility,
       price_display,
       price_value,
+      price_value_text:price_value::text,
+      price_currency,
       price_unit,
       price_plus_vat,
       price_plus_maintenance,
@@ -102,30 +105,8 @@ export default async function PropertyPage({ params }: PageProps) {
       ? property.address
       : null
 
-  const priceValue =
-    property.price_value !== null && property.price_value !== undefined
-      ? Number(property.price_value)
-      : null
-
-  const totalPrice =
-    priceValue !== null &&
-    property.total_area !== null &&
-    property.total_area !== undefined &&
-    property.price_unit?.toLowerCase() === 'm2'
-      ? priceValue * Number(property.total_area)
-      : null
-
-  const formattedPricePerM2 =
-    priceValue !== null && property.price_unit?.toLowerCase() === 'm2'
-      ? `$${priceValue.toLocaleString('es-MX')} / m²`
-      : null
-
-  const formattedTotalPrice =
-    totalPrice !== null
-      ? `$${totalPrice.toLocaleString('es-MX')} ${
-          property.operation?.toLowerCase() === 'renta' ? '/ mes' : ''
-        }`
-      : null
+  const formattedPricePerM2 = ['m2', 'm²'].includes(property.price_unit || '') ? propertyPrice(property) : null
+  const formattedTotalPrice = propertyPrice(property, true)
 
   return (
     <>

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { propertyPrice } from '@/lib/property-price'
 import { redirect } from 'next/navigation'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 import { rankDemandsForProperty } from '@/lib/matching'
@@ -50,7 +51,7 @@ export default async function AdminPage({
 
   const { data: properties, error } = await supabase
     .from('properties')
-    .select('*, profiles:owner_id(full_name, company_name)')
+    .select('*, price_value_text:price_value::text, profiles:owner_id(full_name, company_name)')
     .order('created_at', { ascending: false })
 
   if (error) {
@@ -84,6 +85,7 @@ console.warn('QRIH_APP_ADMIN_PAGE_76_FAILED')
         surface_m2: property.total_area,
         price_value: property.price_value,
         price_unit: property.price_unit,
+        price_currency: property.price_currency,
       },
       demandRequests ?? []
     ),
@@ -538,7 +540,7 @@ return (
                       fontWeight: 700,
                     }}
                   >
-                    {property.price_display}
+                    {propertyPrice(property)}
                   </div>
                 </div>
 

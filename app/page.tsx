@@ -17,6 +17,9 @@ type FeaturedProperty = {
   operation: string
   zone: string
   price_display: string
+  price_value?: number | string | null
+  price_currency?: string | null
+  price_unit?: string | null
   total_area: number | string | null
   covered_area: number | string | null
   max_height: string | null
@@ -33,7 +36,7 @@ export default async function Home() {
     const { data, error } = await supabase
       .from('properties_public')
       .select(
-        'id, slug, title, operation, zone, price_display, total_area, covered_area, max_height, share_commission, main_image_path'
+        'id, slug, title, operation, zone, price_display, price_value, price_value_text:price_value::text, price_currency, price_unit, total_area, covered_area, max_height, share_commission, main_image_path'
       )
       .eq('status', 'published')
       .order('featured', { ascending: false })

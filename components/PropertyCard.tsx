@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { propertyPrice } from '@/lib/property-price'
 
 type Property = {
   id: string
@@ -7,6 +8,9 @@ type Property = {
   operation: string
   zone: string
   price_display: string
+  price_value?: number | string | null
+  price_currency?: string | null
+  price_unit?: string | null
   total_area: number | null
   covered_area: number | null
   max_height: string | null
@@ -39,7 +43,7 @@ export function PropertyCard({ property: p }: { property: Property }) {
 
         <h3>{p.title}</h3>
 
-        <b>{p.price_display}</b>
+        <b>{propertyPrice(p)}</b>
 
         <p>
           {(p.total_area || 0).toLocaleString()} m² ·{' '}

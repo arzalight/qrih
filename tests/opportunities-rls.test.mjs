@@ -137,8 +137,9 @@ test('AUD-032: baseline + 044–050, colaboración sin abrir filas privadas', as
       await denied('select public.qrih_register_opportunity($1,$2)',[D,P])
     })
     await check('ranking SQL conserva algoritmo TypeScript, incluidos m²/NULL/ceros/rangos',async()=>{
-      const property={operation:' RENTA ',zone_general:' Querétaro Norte ',zone:' Jurica ',total_area:500,price_value:100,price_unit:'m²'}
-      const demand={operation:'Renta',zone_general:'Querétaro Norte',zone:'Jurica',area_min:400,area_max:600,budget_min:40000,budget_max:60000}
+      // Historical 050 fixture: explicitly same synthetic currency. Cross-currency coverage is in 052 tests.
+      const property={operation:' RENTA ',zone_general:' Querétaro Norte ',zone:' Jurica ',total_area:500,price_value:100,price_unit:'m²',price_currency:'MXN'}
+      const demand={operation:'Renta',zone_general:'Querétaro Norte',zone:'Jurica',area_min:400,area_max:600,budget_min:40000,budget_max:60000,budget_currency:'MXN'}
       for(const change of [{},{total_area:200},{total_area:900},{total_area:null},{price_value:null},{price_unit:'total'},
         {price_unit:' m2 '},{operation:'Venta',zone_general:'Other',zone:'Other'}]) {
         const p={...property,...change}

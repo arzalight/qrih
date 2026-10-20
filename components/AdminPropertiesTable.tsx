@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
+import { propertyPrice } from '@/lib/property-price'
 
 type AdminProperty = {
   id: string
@@ -11,6 +12,9 @@ type AdminProperty = {
   zone_general: string | null
   zone: string | null
   price_display: string | null
+  price_value?: number | null
+  price_currency?: string | null
+  price_unit?: string | null
   total_area: number | null
   slug: string | null
   profiles?: {
@@ -228,7 +232,7 @@ export function AdminPropertiesTable({
                     whiteSpace: 'nowrap',
                   }}
                 >
-                  {property.price_display || 'N/D'}
+                  {propertyPrice(property)}
                 </td>
 
                 <td

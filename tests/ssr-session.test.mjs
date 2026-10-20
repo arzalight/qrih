@@ -205,11 +205,11 @@ test('AUD-036 proxy: configuración ausente/excepción sin secretos en logs ni s
   })
 })
 
-test('AUD-036 matcher: sólo páginas privadas SSR; APIs/callback/recovery/público/assets excluidos', () => {
+test('AUD-036 matcher: privadas SSR y ficha no-store; resto de públicos/APIs/assets excluidos', () => {
   // La API de testing de Next16.3 instalado conserva este nombre legacy.
   const matches = path => unstable_doesMiddlewareMatch({ config, nextConfig: {}, url: 'http://localhost:3107' + path })
   for (const path of ['/perfil', '/notificaciones', '/mis-propiedades', '/mis-propiedades/x/editar',
-    '/mis-propiedades/x/solicitudes', '/admin', '/admin/x', '/admin/asesores/x', '/admin/configuracion']) assert.equal(matches(path), true, path)
+    '/mis-propiedades/x/solicitudes', '/admin', '/admin/x', '/admin/asesores/x', '/admin/configuracion', '/ficha/x']) assert.equal(matches(path), true, path)
   for (const path of ['/', '/inventario', '/bodegas/x', '/asesor/x', '/login', '/publicar', '/registro',
     '/auth/callback?code=synthetic', '/restablecer-contrasena', '/recuperar-contrasena', '/api/auth/restablecer',
     '/api/imagenes', '/_next/static/test.js', '/favicon.ico', '/administer', '/mis-propiedades-publicas']) assert.equal(matches(path), false, path)
@@ -217,6 +217,16 @@ test('AUD-036 matcher: sólo páginas privadas SSR; APIs/callback/recovery/públ
   assert.ok(!source.includes('SUPABASE_SERVICE_ROLE_KEY'))
   assert.ok(!source.includes('.auth.getSession('))
   assert.ok(!source.includes('user_metadata'))
+})
+
+test('ficha pública: headers no-store/no-referrer/noindex y ninguna llamada Auth', async () => {
+  await withFixture(async ({ calls }) => {
+    const response = await proxy(new NextRequest('http://localhost:3107/ficha/synthetic'))
+    assertPrivate(response)
+    assert.equal(response.headers.get('referrer-policy'), 'no-referrer')
+    assert.equal(response.headers.get('x-robots-tag'), 'noindex, nofollow')
+    assert.deepEqual(calls, [])
+  })
 })
 
 test('AUD-036 control: Route Handler writable sí persiste y siguiente lectura no renueva', async () => {

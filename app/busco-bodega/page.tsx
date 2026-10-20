@@ -1,5 +1,7 @@
 'use client'
 
+import { propertyPrice } from '@/lib/property-price'
+
 import { Header } from '@/components/Header'
 import { createClient } from '@/lib/supabase'
 import {
@@ -75,7 +77,7 @@ export default function Demand() {
 
       const { data: publishedProperties, error: propertiesError } = await s
         .from('properties_public')
-        .select('*')
+        .select('*,price_value_text:price_value::text')
         .eq('status', 'published')
 
       if (!propertiesError && publishedProperties) {
@@ -418,7 +420,7 @@ export default function Demand() {
 
                           <p>
                             <strong>Precio:</strong>{' '}
-                            {property.price_display || 'Consultar'}
+                            {propertyPrice(property)}
                           </p>
 
                           <div

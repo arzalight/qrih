@@ -11,6 +11,7 @@ registerHooks({ resolve(specifier, context, nextResolve) {
   if (specifier === '@/lib/verified-media-server') return { url: 'data:text/javascript,export async function uploadVerifiedImage(file,owner,bucket){return globalThis.__managementUpload(file,owner,bucket)}', shortCircuit: true }
   if (specifier === '@/lib/property-image-urls') return { url: 'data:text/javascript,export const PROPERTY_IMAGE_TTL_SECONDS={gallery:900};export async function createSignedPropertyImageUrlMap(client,paths,ttl){return globalThis.__managementSign(client,paths,ttl)}', shortCircuit: true }
   if (specifier === '@/lib/property-save-server') return nextResolve(new URL('../lib/property-save-server.ts', import.meta.url).href, context)
+  if (specifier === './property-price') return nextResolve(new URL('../lib/property-price.ts', import.meta.url).href, context)
   if (specifier === '@/lib/request-security') return nextResolve(new URL('../lib/request-security.ts', import.meta.url).href, context)
   if (specifier === 'next/server') return nextResolve(new URL('../node_modules/next/server.js', import.meta.url).href, context)
   return nextResolve(specifier, context)
@@ -78,7 +79,7 @@ function setup(options = {}) {
 function duplicateRequest({ imagePath = path, kind = 'existing', count = 1, foreignOrigin = false, requestId = attempt } = {}) {
   const form = new FormData()
   for (const [k, v] of Object.entries({ id, request_id: requestId, title: 'Nueva bodega', operation: 'Renta',
-    price: '1000', zone_general: 'Querétaro Norte', zone: 'Jurica', area: '500',
+    price: '1000', price_currency: 'MXN', price_unit: 'm2', zone_general: 'Querétaro Norte', zone: 'Jurica', area: '500',
     submission_action: 'pending', gallery: JSON.stringify(Array.from({ length: count }, () => ({ kind, storage_path: imagePath, title: 'Portada' }))) })) form.set(k, v)
   return new Request(origin + '/api/duplicar-propiedad', { method: 'POST', body: form,
     headers: { Origin: foreignOrigin ? 'https://foreign.invalid' : origin } })
@@ -88,6 +89,23 @@ function withdrawal(confirmed = true, foreignOrigin = false) {
     Origin: foreignOrigin ? 'https://foreign.invalid' : origin, 'Content-Type': 'application/json',
   }, body: JSON.stringify({ propertyId: id, confirmed }) })
 }
+test('duplicar: USD y unidad total se conservan sin conversión ni número flotante', async () => {
+  const state = setup(), body = await duplicateRequest().formData()
+  body.set('price_currency', 'USD'); body.set('price', '7.50'); body.set('price_unit', 'total')
+  const response = await duplicate(new Request(origin + '/api/duplicar-propiedad', { method: 'POST', body, headers: { Origin: origin } }))
+  assert.equal(response.status, 200)
+  const changes = state.rpc[1].params.p_changes
+  assert.equal(changes.price_currency, 'USD'); assert.equal(changes.price_value, '7.5')
+  assert.equal(changes.price_unit, 'total'); assert.equal(changes.price_display, 'US$7.50 USD/mes')
+})
+test('duplicar: moneda ausente/ajena o precio impreciso falla antes de RPC/fotos', async () => {
+  for (const [currency, price] of [['', '7.50'], ['EUR', '7.50'], ['USD', '7.5000000000001']]) {
+    const state = setup(), body = await duplicateRequest().formData()
+    body.set('price_currency', currency); body.set('price', price)
+    const response = await duplicate(new Request(origin + '/api/duplicar-propiedad', { method: 'POST', body, headers: { Origin: origin } }))
+    assert.equal(response.status, 400); assert.deepEqual(state.rpc, []); assert.deepEqual(state.copies, [])
+  }
+})
 test('duplicar: nueva portada propia, rutas independientes, draft forzado y ninguna limpieza del origen', async () => {
   const state = setup(), response = await duplicate(duplicateRequest())
   assert.deepEqual(await response.json(), { success: true, id: newId, status: 'draft' })
@@ -97,9 +115,10 @@ test('duplicar: nueva portada propia, rutas independientes, draft forzado y ning
   assert.equal(commit.p_changes.status, 'draft')
   assert.equal(commit.p_source_id, id)
   assert.equal(commit.p_request_id, attempt)
-  assert.equal(commit.p_changes.price_value, 1000)
+  assert.equal(commit.p_changes.price_value, '1000')
+  assert.equal(commit.p_changes.price_currency, 'MXN')
   assert.equal(commit.p_changes.price_unit, 'm2')
-  assert.equal(commit.p_changes.price_display, '$1000/m²')
+  assert.equal(commit.p_changes.price_display, '$1,000 MXN/m²/mes')
   assert.notEqual(commit.p_images[0].storage_path, path)
   for (const forbidden of ['owner_id', 'id', 'slug', 'featured', 'previous_data', 'publication_authorized_at', 'terms_accepted_at']) assert.ok(!(forbidden in commit.p_changes))
   assert.deepEqual(state.deleted, [])

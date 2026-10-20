@@ -5,6 +5,7 @@ export type MatchingProperty = {
   surface_m2?: number | null
   price_value?: number | null
   price_unit?: string | null
+  price_currency?: string | null
 }
 
 export type MatchingDemand = {
@@ -13,6 +14,7 @@ export type MatchingDemand = {
   zone?: string | null
   area_min?: number | null
   area_max?: number | null
+  budget_currency?: string | null
   budget_min?: number | null
   budget_max?: number | null
 }
@@ -101,7 +103,8 @@ export function calculateMatch(
     demand.area_max
   )
 
-  const comparablePrice = getComparablePrice(property)
+  const comparablePrice = property.price_currency && ['MXN', 'USD'].includes(property.price_currency)
+    && property.price_currency === demand.budget_currency ? getComparablePrice(property) : null
 
   const budget = rangeScore(
     comparablePrice,

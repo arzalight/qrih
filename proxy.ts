@@ -6,7 +6,7 @@ export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request: { headers: request.headers } })
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  if (url && key) {
+  if (url && key && !request.nextUrl.pathname.startsWith('/ficha/')) {
     try {
       const client = createServerClient(url, key, {
         cookies: {
@@ -38,9 +38,13 @@ export async function proxy(request: NextRequest) {
   response.headers.set('Cache-Control', 'private, no-store, max-age=0')
   response.headers.set('Expires', '0')
   response.headers.set('Pragma', 'no-cache')
+  if (request.nextUrl.pathname.startsWith('/ficha/')) {
+    response.headers.set('Referrer-Policy', 'no-referrer')
+    response.headers.set('X-Robots-Tag', 'noindex, nofollow')
+  }
   return response
 }
 
 export const config = {
-  matcher: ['/perfil', '/mis-propiedades/:path*', '/notificaciones', '/admin/:path*'],
+  matcher: ['/perfil', '/mis-propiedades/:path*', '/notificaciones', '/admin/:path*', '/ficha/:path*'],
 }

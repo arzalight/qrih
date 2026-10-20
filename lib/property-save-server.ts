@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { isPriceCurrency, parsePriceInput, propertyPrice } from './property-price'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 import { uploadVerifiedImage } from '@/lib/verified-media-server'
 import { assertSameOrigin, readForm, validUuid } from '@/lib/request-security'
@@ -65,8 +66,10 @@ async function performSave(request: Request, duplicate: boolean) {
 
   const title = String(form.get('title') || '').trim()
   const operation = String(form.get('operation') || '')
-  const price = String(form.get('price') || '').trim()
-  if (duplicate && (!Number.isFinite(Number(price)) || Number(price) <= 0 || Number(price) > 1e12)) {
+  const price = parsePriceInput(form.get('price'))
+  const currency = form.get('price_currency')
+  const priceUnit = String(form.get('price_unit') || '')
+  if (!price || !isPriceCurrency(currency) || !form.has('price_unit') || !['', 'm2', 'total'].includes(priceUnit)) {
     return NextResponse.json({ error: 'Ingresa un precio numérico válido para la nueva propiedad.' }, { status: 400 })
   }
   const zoneGeneral = String(form.get('zone_general') || '').trim()
@@ -402,8 +405,10 @@ async function performSave(request: Request, duplicate: boolean) {
       p_changes: {
         title,
         operation,
-        price_display: duplicate ? `$${price}${operation === 'Renta' ? '/m²' : ''}` : price,
-        ...(duplicate ? { price_value: Number(price), price_unit: operation === 'Renta' ? 'm2' : 'total' } : {}),
+        price_display: propertyPrice({ price_value: price, price_currency: currency, price_unit: priceUnit, operation }),
+        price_value: price,
+        price_unit: priceUnit || null,
+        price_currency: currency,
         price_plus_vat: pricePlusVat,
         price_plus_maintenance: pricePlusMaintenance,
         negotiable,

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { propertyPrice } from '@/lib/property-price'
 import { notFound } from 'next/navigation'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 import { AuthorizationActions } from '@/components/AuthorizationActions'
@@ -42,7 +43,7 @@ export default async function SolicitudesPage({
   const { data: property, error: propertyError } =
     await supabase
       .from('properties')
-      .select('id, title, zone, operation, price_display')
+      .select('id, title, zone, operation, price_display, price_value, price_value_text:price_value::text, price_currency, price_unit')
       .eq('id', id)
       .eq('owner_id', user.id)
       .single()
@@ -130,7 +131,7 @@ export default async function SolicitudesPage({
         </h1>
 
         <p>
-          {property.operation} · {property.price_display}
+          {property.operation} · {propertyPrice(property)}
         </p>
 
         <p>{property.zone}</p>

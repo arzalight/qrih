@@ -1,6 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Footer } from '@/components/Footer'
+import { PortalFooter } from '@/components/PortalFooter'
 
 export const metadata: Metadata = {
   title: 'QRO INDUSTRIAL HUB | QRIH',
@@ -17,7 +18,7 @@ export default function RootLayout({
     <html lang="es">
       <body>
         {children}
-        <Footer />
+        <PortalFooter><Footer /></PortalFooter>
       </body>
     </html>
   )

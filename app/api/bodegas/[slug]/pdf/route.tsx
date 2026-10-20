@@ -10,9 +10,9 @@ import {
   View,
   renderToBuffer,
 } from '@react-pdf/renderer'
-import { createPublicServerSupabaseClient } from '@/lib/supabase-public-server'
+import { loadCommercialProperty } from '@/lib/commercial-property-server'
+import { propertyPrice } from '@/lib/property-price'
 import { preparePdfImages } from '@/lib/pdf-images-server'
-import { createSignedPropertyImageUrlMap, propertyImagePaths, PROPERTY_IMAGE_TTL_SECONDS } from '@/lib/property-image-urls'
 
 export const dynamic = 'force-dynamic'
 
@@ -196,7 +196,7 @@ function PropertyPdf({ property, imageUrls, formattedTotalPrice, propertyUrl }: 
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
-          <Image src="/icons/qrih.png" style={styles.logo} />
+          <Text style={{ fontSize: 16, fontWeight: 'bold' }}>QRIH</Text>
 
           <View style={styles.headerText}>
             <Text style={styles.headerLabel}>FICHA DE PROPIEDAD</Text>
@@ -230,6 +230,10 @@ function PropertyPdf({ property, imageUrls, formattedTotalPrice, propertyUrl }: 
             {formattedTotalPrice || showValue(property.price_display)}
           </Text>
         </View>
+
+        <Text style={{ fontSize: 10, marginBottom: 10 }}>
+          Precio anunciado: {propertyPrice(property)}
+        </Text>
 
         <Text style={styles.sectionTitle}>Información de la propiedad</Text>
         <View style={styles.sectionDivider} />
@@ -331,7 +335,7 @@ function PropertyPdf({ property, imageUrls, formattedTotalPrice, propertyUrl }: 
           </View>
         ) : null}
 
-        <Text style={styles.sectionTitle}>Descripción</Text>
+        <Text style={styles.sectionTitle} minPresenceAhead={60}>Descripción</Text>
         <View style={styles.sectionDivider} />
 
         <Text style={styles.description}>
@@ -340,7 +344,7 @@ function PropertyPdf({ property, imageUrls, formattedTotalPrice, propertyUrl }: 
 
         {imageUrls.length > 1 ? (
           <>
-            <Text style={styles.sectionTitle}>Galería</Text>
+            <Text style={styles.sectionTitle} minPresenceAhead={150}>Galería</Text>
 
             <View style={styles.galleryGrid}>
               {imageUrls.slice(1).map((url, index) => (
@@ -391,91 +395,11 @@ export async function GET(
       )
     }
 
-    const supabase = createPublicServerSupabaseClient()
-
-    if (!supabase) {
-      return NextResponse.json(
-        { error: 'Supabase no está configurado correctamente.' },
-        { status: 500 },
-      )
-    }
-
-    const { data: property, error: propertyError } = await supabase
-      .from('properties_public')
-      .select(`
-        id,
-        slug,
-        title,
-        operation,
-        status,
-        zone,
-        address,
-        location_visibility,
-        price_display,
-        price_value,
-        price_unit,
-        price_plus_vat,
-        price_plus_maintenance,
-        negotiable,
-        total_area,
-        covered_area,
-        exterior_area,
-        max_height,
-        offices_area,
-        parking,
-        docks,
-        description,
-        share_commission,
-        main_image_path,
-        featured
-      `)
-      .eq('slug', slug)
-      .eq('status', 'published')
-      .single()
-
-    if (propertyError || !property) {
-      return NextResponse.json(
-        { error: 'Propiedad no encontrada.' },
-        { status: 404 },
-      )
-    }
-
-    const { data: galleryImages, error: imagesError } = await supabase
-      .from('property_images')
-      .select('storage_path, title, position')
-      .eq('property_id', property.id)
-      .order('position', { ascending: true })
-
-    if (imagesError) {
-      return NextResponse.json(
-        { error: 'No fue posible obtener las fotografías.' },
-        { status: 500 },
-      )
-    }
-
-    const priceValue =
-      property.price_value !== null && property.price_value !== undefined
-        ? Number(property.price_value)
-        : null
-
-    const totalPrice =
-      priceValue !== null &&
-      property.total_area !== null &&
-      property.total_area !== undefined &&
-      property.price_unit?.toLowerCase() === 'm2'
-        ? priceValue * Number(property.total_area)
-        : null
-
-    const formattedTotalPrice =
-      totalPrice !== null
-        ? `$${totalPrice.toLocaleString('es-MX')} ${
-            property.operation?.toLowerCase() === 'renta' ? '/ mes' : ''
-          }`
-        : null
-
-    const paths = propertyImagePaths(property.main_image_path, galleryImages || [])
-    const urls = await createSignedPropertyImageUrlMap(supabase, paths, PROPERTY_IMAGE_TTL_SECONDS.pdf)
-    const imageUrls = await preparePdfImages(paths.map((path) => urls.get(path)!))
+    const commercial = await loadCommercialProperty(slug, 'pdf')
+    if (!commercial) return NextResponse.json({ error: 'Propiedad no encontrada.' }, { status: 404 })
+    const { property, images } = commercial
+    const formattedTotalPrice = propertyPrice(property, true)
+    const imageUrls = await preparePdfImages(images.map(image => image.url))
 
     const pdfBuffer = await renderToBuffer(
       <PropertyPdf

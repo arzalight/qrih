@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { propertyPrice } from '@/lib/property-price'
 import { notFound, redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
@@ -210,7 +211,7 @@ export default async function AdminAdvisorDetailPage({ params }: Props) {
   const { data: properties, error: propertiesError } = await supabase
     .from('properties')
     .select(
-      'id, slug, title, operation, status, zone, price_display, created_at, updated_at'
+      'id, slug, title, operation, status, zone, price_display, price_value, price_value_text:price_value::text, price_currency, price_unit, created_at, updated_at'
     )
     .eq('owner_id', advisor.id)
     .order('created_at', { ascending: false })
@@ -715,7 +716,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
                         borderBottom: '1px solid #eee',
                       }}
                     >
-                      {property.price_display}
+                      {propertyPrice(property)}
                     </td>
 
                     <td

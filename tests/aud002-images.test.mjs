@@ -58,7 +58,7 @@ test('portada primero, galería completa sin duplicar fotografía principal', ()
 })
 test('superficies públicas no usan sesión ni consulta de perfiles privados', () => {
   for (const file of ['app/page.tsx','app/inventario/page.tsx','app/bodegas/[slug]/page.tsx',
-    'app/asesor/[public_id]/page.tsx','app/api/bodegas/[slug]/pdf/route.tsx']) {
+    'app/asesor/[public_id]/page.tsx','lib/commercial-property-server.ts']) {
     const source = readFileSync(new URL('../'+file, import.meta.url), 'utf8')
     assert.ok(source.includes('createPublicServerSupabaseClient'))
     assert.ok(!source.includes('getPublicUrl'))

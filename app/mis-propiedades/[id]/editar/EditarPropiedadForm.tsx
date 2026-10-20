@@ -1,5 +1,7 @@
 'use client'
 
+import { PriceCurrencySelect } from '@/components/PriceCurrencySelect'
+
 import { useRef, useState } from 'react'
 import { createClient } from '@/lib/supabase'
 import { ZONAS_GENERALES, ZONAS_INDUSTRIALES_POR_ZONA } from '@/lib/zonas'
@@ -13,6 +15,9 @@ type Property = {
   operation: string
   price_display: string
   price_value?: number | null
+  price_value_text?: string | null
+  price_unit?: string | null
+  price_currency?: string | null
   price_plus_vat: boolean
   price_plus_maintenance: boolean
   negotiable: boolean
@@ -178,15 +183,20 @@ const [images, setImages] = useState<PropertyImageEditorItem[]>([])
               <input
                 required
                 name="price"
-                type={duplicate ? 'number' : 'text'}
-                min={duplicate ? '0.01' : undefined}
-                step={duplicate ? 'any' : undefined}
-                defaultValue={duplicate ? property.price_value ?? '' : property.price_display}
+                type="number"
+                min="0.01"
+                step="any"
+                defaultValue={property.price_value_text ?? property.price_value ?? ''}
                 placeholder="Precio"
               />
             </div>
           </div>
 
+          <PriceCurrencySelect value={property.price_currency} />
+          <label>Unidad de cobro<select name="price_unit" defaultValue={property.price_unit === 'm²' ? 'm2' : property.price_unit || ''}>
+            {property.price_unit && !['m2', 'm²', 'total'].includes(property.price_unit) && <option value={property.price_unit} disabled>Unidad heredada: {property.price_unit} — selecciona una unidad</option>}
+            <option value="">Sin unidad</option><option value="m2">Por m²</option><option value="total">Total</option>
+          </select></label>
           <label className="inline-check">
             <input
               type="checkbox"

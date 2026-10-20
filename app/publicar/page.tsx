@@ -20,7 +20,7 @@ export default async function PublicarPage({ searchParams }: {
   if (profile?.account_status !== 'active') return <main className="form"><p>No puedes crear propiedades con esta cuenta.</p></main>
   // Explicit commercial projection; never send contacts, approvals or audit to the form.
   const { data: property, error } = await supabase.from('properties').select(`id,title,operation,
-    price_display,price_value,price_unit,price_plus_vat,price_plus_maintenance,negotiable,zone_general,zone,address,
+    price_display,price_value,price_value_text:price_value::text,price_unit,price_currency,price_plus_vat,price_plus_maintenance,negotiable,zone_general,zone,address,
     location_visibility,total_area,covered_area,exterior_area,max_height,offices_area,parking,docks,
     description,share_commission,main_image_path`).eq('id', duplicar).eq('owner_id', user.id).single()
   if (error || !property) notFound()

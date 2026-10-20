@@ -7,6 +7,10 @@ import {
 } from '@/lib/zonas'
 
 type InventoryFiltersProps = {
+  currency?: string
+  price_min?: string
+  price_max?: string
+  price_unit?: string
   operation?: string
   zone_general?: string
   zone?: string
@@ -18,6 +22,7 @@ export function InventoryFilters({
   zone_general = '',
   zone = '',
   area = '',
+  currency = '', price_min = '', price_max = '', price_unit = '',
 }: InventoryFiltersProps) {
   const [zonaGeneral, setZonaGeneral] = useState(zone_general)
 
@@ -165,6 +170,15 @@ export function InventoryFilters({
         </select>
       </div>
 
+      <label>Moneda<select name="currency" defaultValue={currency}>
+        <option value="">Todas las monedas</option><option value="MXN">MXN</option><option value="USD">USD</option>
+      </select></label>
+      <label>Unidad del rango<select name="price_unit" defaultValue={price_unit}>
+        <option value="">Selecciona unidad</option><option value="m2">Por m²</option><option value="total">Total</option>
+      </select></label>
+      <label>Precio mínimo<input name="price_min" type="number" min="0.01" step="0.01" defaultValue={price_min} /></label>
+      <label>Precio máximo<input name="price_max" type="number" min="0.01" step="0.01" defaultValue={price_max} /></label>
+      <small>El rango requiere moneda, operación y unidad. Sin conversión de divisas.</small>
       {/* BOTÓN */}
       <button
         type="submit"

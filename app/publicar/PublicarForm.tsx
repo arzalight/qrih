@@ -1,5 +1,8 @@
 'use client'
 
+import { PriceCurrencySelect } from '@/components/PriceCurrencySelect'
+import { isPriceCurrency, parsePriceInput, propertyPrice } from '@/lib/property-price'
+
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Header } from '@/components/Header'
@@ -132,7 +135,8 @@ export default function Publish() {
 
     const title = String(form.get('title') || '').trim()
     const currentOperation = String(form.get('operation') || '')
-    const priceValue = Number(form.get('price') || 0)
+    const priceValue = parsePriceInput(form.get('price'))
+    const currency = form.get('price_currency')
 
     const zoneGeneral = String(
       form.get('zone_general') || ''
@@ -179,7 +183,7 @@ export default function Publish() {
       return
     }
 
-    if (!Number.isFinite(priceValue) || priceValue <= 0) {
+    if (!priceValue || !isPriceCurrency(currency)) {
       setMsg('Ingresa un precio válido.')
       setLoading(false)
       return
@@ -190,10 +194,7 @@ export default function Publish() {
         ? 'm2'
         : 'total'
 
-    const priceDisplay =
-      currentOperation === 'Renta'
-        ? '$' + String(priceValue) + '/m²'
-        : '$' + String(priceValue)
+    const priceDisplay = propertyPrice({ price_value: priceValue, price_currency: currency, price_unit: priceUnit, operation: currentOperation })
 
     const uploadedImages: { path: string }[] = []
 
@@ -245,6 +246,7 @@ export default function Publish() {
 
         price_display: priceDisplay,
         price_value: priceValue,
+        price_currency: currency,
         price_unit: priceUnit,
         price_plus_vat: pricePlusVat,
         price_plus_maintenance: pricePlusMaintenance,
@@ -381,7 +383,7 @@ export default function Publish() {
                   name="price"
                   type="number"
                   min="0.01"
-                  step="0.01"
+                  step="any"
                   placeholder={
                     operation === 'Renta'
                       ? 'Precio por m²'
@@ -404,6 +406,7 @@ export default function Publish() {
                 : 'El precio se registrará como precio total de venta.'}
             </p>
 
+            <PriceCurrencySelect />
             <label className="inline-check">
               <input
                 name="commission"

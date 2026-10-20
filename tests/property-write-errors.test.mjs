@@ -9,6 +9,7 @@ registerHooks({ resolve(specifier, context, nextResolve) {
   }
   if (aliases[specifier]) return { url: aliases[specifier], shortCircuit: true }
   if (specifier === '@/lib/property-save-server') return nextResolve(new URL('../lib/property-save-server.ts', import.meta.url).href, context)
+  if (specifier === './property-price') return nextResolve(new URL('../lib/property-price.ts', import.meta.url).href, context)
   if (specifier === '@/lib/request-security') return nextResolve(new URL('../lib/request-security.ts', import.meta.url).href, context)
   if (specifier === 'next/server') return nextResolve(new URL('../node_modules/next/server.js', import.meta.url).href, context)
   return nextResolve(specifier, context)
@@ -72,7 +73,7 @@ function fixture(options = {}) {
 }
 function editRequest({ crossOrigin = false, gallery = [{ kind: 'new', title: 'Nueva', file_index: 0 }], files = 1 } = {}) {
   const body = new FormData()
-  for (const [key, value] of Object.entries({ id: property, title: 'Synthetic property', operation: 'Renta', price: '1000',
+  for (const [key, value] of Object.entries({ id: property, title: 'Synthetic property', operation: 'Renta', price: '1000', price_currency: 'MXN', price_unit: 'm2',
     zone_general: 'Querétaro Norte', zone: 'Jurica', visibility: 'zone', area: '500', submission_action: 'draft',
     gallery: JSON.stringify(gallery) })) body.set(key, value)
   for (let index = 0; index < files; index++) body.append('images', new File(['synthetic-image'], `new${index}.webp`, { type: 'image/webp' }))
@@ -80,6 +81,16 @@ function editRequest({ crossOrigin = false, gallery = [{ kind: 'new', title: 'Nu
 }
 const deleteRequest = () => new Request(origin + '/api/eliminar-propiedad', {
   method: 'POST', headers: { Origin: origin, 'Content-Type': 'application/json' }, body: JSON.stringify({ propertyId: property }),
+})
+
+test('edición: USD/unidad/importe decimal llegan juntos al RPC atómico', async () => {
+  const state = fixture(), body = await editRequest().formData()
+  body.set('price_currency', 'USD'); body.set('price', '7.50'); body.set('price_unit', 'total')
+  const response = await edit(new Request(origin + '/api/editar-propiedad', { method: 'POST', headers: { Origin: origin }, body }))
+  assert.equal(response.status, 200)
+  const changes = state.rpcs[0][1].p_changes
+  assert.equal(changes.price_currency, 'USD'); assert.equal(changes.price_value, '7.5')
+  assert.equal(changes.price_unit, 'total'); assert.equal(changes.price_display, 'US$7.50 USD/mes')
 })
 
 test('AUD-038 edición: respuesta RPC perdida no asegura rollback ni intenta borrar fotos potencialmente guardadas', async () => {

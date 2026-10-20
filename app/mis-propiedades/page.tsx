@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import { SharePropertyButton } from '@/components/SharePropertyButton'
+import { propertyPrice } from '@/lib/property-price'
 import { Header } from '@/components/Header'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 import { rankPropertiesForDemand, type MatchingDemand } from '@/lib/matching'
@@ -16,7 +18,7 @@ type OpportunityRegistration = {
   status: string
   property: {
     id: string; slug: string | null; title: string; operation: string | null
-    zone: string | null; total_area: number | null; price_display: string | null
+    zone: string | null; total_area: number | null; price_display: string | null; price_value?: number | null; price_currency?: string | null; price_unit?: string | null
   } | null
 }
 function getStatusLabel(status: string) {
@@ -121,7 +123,7 @@ let topPropertyTitle = 'Sin datos'
 let topPropertyContacts = 0
   const { data: profile } = await supabase
     .from('profiles')
-    .select('auto_approve_contact_requests, account_status')
+    .select('auto_approve_contact_requests, account_status, publications_enabled')
     .eq('id', user.id)
     .single()
 
@@ -131,7 +133,7 @@ let topPropertyContacts = 0
   const { data: properties, error } = await supabase
     .from('properties')
     .select(
-      'id, slug, title, operation, status, zone_general, zone, total_area, price_value, price_unit, price_display, created_at, rejection_reason, main_image_path'
+      'id, slug, title, operation, status, zone_general, zone, total_area, price_value, price_value_text:price_value::text, price_unit, price_currency, price_display, created_at, rejection_reason, main_image_path'
     )
     .eq('owner_id', user.id)
     .order('created_at', { ascending: false })
@@ -153,7 +155,7 @@ let topPropertyContacts = 0
     await supabase
       .from('properties')
       .select(
-        'id, slug, title, operation, zone_general, zone, total_area, price_value, price_unit, price_display'
+        'id, slug, title, operation, zone_general, zone, total_area, price_value, price_value_text:price_value::text, price_unit, price_currency, price_display'
       )
       .eq('status', 'published')
 
@@ -223,7 +225,9 @@ let topPropertyContacts = 0
           zone: property.zone,
           surface_m2: property.total_area,
           price_value: property.price_value,
+          price_value_text: property.price_value_text,
           price_unit: property.price_unit,
+          price_currency: property.price_currency,
           price_display: property.price_display,
           id: property.id,
           slug: property.slug,
@@ -794,7 +798,7 @@ alignItems: 'stretch',
                     {property.title}
                   </h2>
                   <p>
-                    {property.operation} · {property.price_display}
+                    {property.operation} · {propertyPrice(property)}
                   </p>
                   <p>{property.total_area != null ? `${Number(property.total_area).toLocaleString('es-MX')} m²` : 'Superficie no especificada'}</p>
                   <p>
@@ -957,6 +961,7 @@ width: '180px',
 </Link>
   )}
   <ManagePropertyActions propertyId={property.id} status={property.status} disabled={profile?.account_status !== 'active'} />
+  <SharePropertyButton slug={property.slug} title={property.title} status={property.status} disabled={profile?.account_status !== 'active' || profile?.publications_enabled !== true} />
 
   <DeletePropertyButton propertyId={property.id} />
 </div>
@@ -1122,7 +1127,7 @@ width: '180px',
                                   }}
                                 >
                                   {property.surface_m2 || 'N/D'} m² ·{' '}
-                                  {property.price_display || 'Consultar'}
+                                  {propertyPrice(property)}
                                 </p>
 
                                 <p
@@ -1373,7 +1378,7 @@ width: '180px',
                               }}
                             >
                               {property.total_area || 'N/D'} m² ·{' '}
-                              {property.price_display || 'Consultar'}
+                              {propertyPrice(property)}
                             </p>
 
                             {property.slug && (
@@ -1492,7 +1497,7 @@ width: '180px',
                                 }}
                               >
                                 {property.total_area || 'N/D'} m² ·{' '}
-                                {property.price_display || 'Consultar'}
+                                {propertyPrice(property)}
                               </p>
 
                                 <div

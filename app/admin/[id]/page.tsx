@@ -1,3 +1,5 @@
+import { PriceCurrencySelect } from '@/components/PriceCurrencySelect'
+import { isPriceCurrency, parsePriceInput, propertyPrice } from '@/lib/property-price'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
@@ -159,6 +161,7 @@ async function updateProperty(formData: FormData) {
     'price_display',
     'price_value',
     'price_unit',
+    'price_currency',
     'price_plus_vat',
     'price_plus_maintenance',
     'negotiable',
@@ -205,13 +208,19 @@ async function updateProperty(formData: FormData) {
 
     const value = String(formData.get(field) ?? '').trim()
 
-    if (numericFields.has(field)) {
+    if (field === 'price_value') {
+      updates[field] = parsePriceInput(value)
+      if (!updates[field]) throw new Error('Precio inválido. Usa un importe decimal válido.')
+    } else if (numericFields.has(field)) {
       updates[field] = value === '' ? null : Number(value)
     } else {
       updates[field] = value === '' ? null : value
     }
   }
 
+  if (!formData.has('price_unit')) throw new Error('Selecciona una unidad antes de guardar; no se eliminará la unidad heredada automáticamente.')
+  if (!isPriceCurrency(updates.price_currency)) throw new Error('Selecciona MXN o USD.')
+  updates.price_display = propertyPrice(updates)
   if (!updates.title || !updates.operation || !updates.zone_general || !updates.zone) {
     throw new Error('Faltan campos obligatorios para guardar la propiedad.')
   }
@@ -221,7 +230,7 @@ async function updateProperty(formData: FormData) {
     error: propertyBeforeUpdateError,
   } = await actionSupabase
     .from('properties')
-    .select('*')
+    .select('*,price_value_text:price_value::text')
     .eq('id', id)
     .single()
 
@@ -239,7 +248,7 @@ async function updateProperty(formData: FormData) {
       updated_at: new Date().toISOString(),
     })
     .eq('id', id)
-    .select('*')
+    .select('*,price_value_text:price_value::text')
     .single()
 
   if (updateError || !propertyAfterUpdate) {
@@ -325,7 +334,7 @@ redirect(
 
   const { data: property, error } = await supabase
     .from('properties')
-    .select('*')
+    .select('*,price_value_text:price_value::text')
     .eq('id', id)
  
     .single()
@@ -630,7 +639,7 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
           }}
         >
           {[
-            ['Precio', property.price_display],
+            ['Precio', propertyPrice(property)],
             ['Precio más IVA', showValue(property.price_plus_vat)],
             [
               'Precio más mantenimiento',
@@ -1117,10 +1126,11 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
           </div>
 
           <div>
-            <label><strong>Precio mostrado</strong></label>
+            <label><strong>Precio mostrado (calculado al guardar)</strong></label>
             <input
               name="price_display"
               defaultValue={property.price_display}
+              readOnly
               required
               style={{ width: '100%', padding: '10px', marginTop: '6px' }}
             />
@@ -1131,12 +1141,15 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
             <input
               name="price_value"
               type="number"
+              min="0.01"
               step="any"
-              defaultValue={property.price_value ?? ''}
+              required
+              defaultValue={property.price_value_text ?? property.price_value ?? ''}
               style={{ width: '100%', padding: '10px', marginTop: '6px' }}
             />
           </div>
 
+          <PriceCurrencySelect value={property.price_currency} />
           <div>
             <label><strong>Unidad del precio</strong></label>
             <select
@@ -1145,6 +1158,7 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
               style={{ width: '100%', padding: '10px', marginTop: '6px' }}
             >
               <option value="">Sin unidad</option>
+              {property.price_unit && !['m2', 'm²', 'total'].includes(property.price_unit) && <option value={property.price_unit} disabled>Unidad heredada: {property.price_unit}</option>}
               <option value="m2">m²</option>
               <option value="total">Total</option>
             </select>

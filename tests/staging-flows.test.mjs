@@ -109,7 +109,7 @@ try {
   const v=await data(a.client.from('properties').select('updated_at').eq('id',property.id).single(),'Concurrent version')
   const competing=await Promise.all(['One','Two'].map(title=>a.client.rpc('qrih_update_property_with_images',{p_property_id:property.id,p_expected_updated_at:v.updated_at,p_images:gallery,p_changes:{title:`Synthetic concurrent ${title}`,status:'draft'}})))
   check(competing.filter(x=>!x.error).length===1 && competing.filter(x=>x.error).length===1,'Concurrent RPC edit: one commit, one conflict')
-  const edit=()=>form({id:property.id,title:'Synthetic HTTP edit',operation:'Renta',price:'100',zone_general:'Synthetic',zone:'Synthetic',area:'100',visibility:'zone',address:'SYNTHETIC PRIVATE ADDRESS',submission_action:'draft',gallery:JSON.stringify([{kind:'existing',...gallery[0]}])})
+  const edit=()=>form({id:property.id,title:'Synthetic HTTP edit',operation:'Renta',price:'100',price_currency:'MXN',price_unit:'m2',zone_general:'Synthetic',zone:'Synthetic',area:'100',visibility:'zone',address:'SYNTHETIC PRIVATE ADDRESS',submission_action:'draft',gallery:JSON.stringify([{kind:'existing',...gallery[0]}])})
   check((await request('/api/editar-propiedad',b,{method:'POST',body:edit()})).status===403,'B cannot edit A property over HTTP')
   check((await request('/api/editar-propiedad',a,{method:'POST',body:edit(),headers:{Origin:'https://untrusted.invalid'}})).status===400,'Cross-origin authenticated edit rejected')
   check((await request('/api/editar-propiedad',a,{method:'POST',body:edit()})).status===200,'Owner HTTP edit preserves gallery and cover')
