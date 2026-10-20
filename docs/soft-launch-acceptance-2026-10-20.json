@@ -1,7 +1,7 @@
 {
   "format": "QRIH_SOFT_LAUNCH_ACCEPTANCE_20261020_V1",
-  "status": "CRITICAL_FUNCTIONAL_ACCEPTANCE_PASS_AUD040_DELIVERY_PENDING",
-  "softLaunch": "NO_GO",
+  "status": "PASS_SCOPED_CRITICAL_ACCEPTANCE_AUD040_DEPLOYED_VERIFIED",
+  "softLaunch": "GO_CONDITIONED_SUPERVISED_PILOT",
   "scope": "Up to two new PRUEBA QRIH — NO COMERCIAL properties and up to seven synthetic images each; bounded duplication/editing/moderation, at most one brief public fixture, finish unpublished and preserve all data",
   "existingBusinessPropertiesModified": false,
   "newPropertiesCreated": 2,
@@ -59,20 +59,20 @@
     },
     {
       "case": "AUD040 admin price unit",
-      "result": "CONFIRMED_LOCAL_FIX_NOT_DEPLOYED",
-      "evidence": "Stored m2 missing from deployed select, two-line canonical option fix and138unit/31HTTP/build pass locally; no defective pricing save executed"
+      "result": "CORRECTED_DEPLOYED_VERIFIED",
+      "evidence": "138remote unit/31remote HTTPPASS, correct m2 select, authenticated save succeeded, both fixture business/gallery fingerprints unchanged excluding updated_at"
     }
   ],
-  "humanHandoff": "Admin sign-in completed; bounded moderation/publication/cancel/withdraw/edit/resubmit/reject completed with legitimate sessions. Next permission is one additional RC for separately found AUD040.",
+  "humanHandoff": "All authorized gates complete; operational limits accepted. No new login/deploy/migration/fixture needed.",
   "form": "http://localhost:3107/publicar",
   "fixtureTitle": "PRUEBA QRIH — NO COMERCIAL — GO 20261019",
-  "netlifyBuildsRequested": 0,
+  "netlifyBuildsRequested": 1,
   "functionalCodeChanged": true,
   "productionChanged": false,
   "remaining": [
-    "Deliver AUD040 reviewed correction and tests to develop",
-    "Explicit permission for one additional Free staging RC; READY/exactSHA/smoke and selector/save verification on existing synthetic fixture",
-    "Final conditioned pilot GO recording; no launch invitations or production mutation inferred"
+    "Supervised operation with manual verified backups and pause policy",
+    "Measure full24h recovery, load/concurrency and prolonged signature renewal under separately scoped work",
+    "No production/main promotion, invitations or new deployment inferred"
   ],
   "propertyIds": {
     "original": "0198d9d9-08d4-4749-bc61-5f5563cbaeea",
@@ -85,7 +85,7 @@
   "duplicateEvidence": "docs/soft-launch-duplicate-2026-10-20.json",
   "evidenceLimit": "Read-only helpers perform zero mutations/signature generation; user creation and authorized application duplicate/edit are separate real authenticated writes. No deletion, third fixture, real-property edits, deploy or production.",
   "functionalAcceptance": "PASS_SCOPED",
-  "codeChangeScope": "AUD040: two lines in admin selector plus five tests and child-count update; not deployed",
+  "codeChangeScope": "AUD040 two-line selector correction and tests delivered/deployed/verified",
   "moderationEvidence": "docs/soft-launch-moderation-2026-10-20.json",
   "operationalRiskAcceptance": {
     "accepted": true,
@@ -93,5 +93,7 @@
     "measured24HourRecovery": false,
     "liveLoadConcurrencyTested": false,
     "scope": "Supervised pilot only; agreed backups and halt admissions if backup/email/quota fails; no production GO or availability guarantee"
-  }
+  },
+  "finalEvidence": "docs/aud040-deploy-verification-2026-10-20.json",
+  "goDocument": "docs/SOFT_LAUNCH_GO_2026-10-20.md"
 }

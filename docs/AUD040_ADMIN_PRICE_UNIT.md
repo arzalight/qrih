@@ -1,5 +1,15 @@
 # AUD-040 — Unidad de precio en edición administrativa
 
+## Cierre vigente20oct — GO condicionado del piloto
+
+**GO CONDICIONADO para Soft Launch supervisado en el QRIH STAGING existente, con datos reales ya seleccionados.** [Dictamen y condiciones](SOFT_LAUNCH_GO_2026-10-20.md) / [RC y cierre AUD-040](aud040-deploy-verification-2026-10-20.json). Commit publicado `f803f35faba9cf871a81f93560112e20358230c2`, fuente `4c7d05057f2429306d8ed5ba6097d9b273eb292a`, deploy `6ad79257b59620a2a787e9a1` READY/SHA/publicación exactos.138unit remotas/31HTTP remotos PASS/0fallos/0skips y lint/tipos/build/preflight completos. Selector admin corregido, guardado autenticado de fixture con éxito, `m2` conservado y huellas comerciales/galerías de ambos fixtures iguales (sólo updated_at excluido). **AUD-040 MEDIO CORREGIDO, DESPLEGADO Y VERIFICADO.**
+
+Aceptación crítica [gestionada](soft-launch-moderation-2026-10-20.json): owner/admin reales, ciclo publicado→retirado→editado→revisión→rechazo, privacidad/ficha/PDF/7WebP, duplicado y portada independientes. Fixtures finales rejected/draft,14objetos conservados; sin inmuebles reales alterados por el agente, eliminaciones, nueva migración ni producción/main. Free/saldo previo283,7créditos/sin pagos-recargas-overages, un único RC adicional autorizado y builds detenidos; no otro build por documentación.
+
+**Límites operativos aceptados expresamente:** Fabián supervisa, respaldos cifrados manuales por día de uso/antes de cambios y pausa manual de nuevas altas si falla respaldo/correo/cuota. Recuperación completa24h y carga/concurrencia real NO medidas; renovación prolongada/all-actor-all-status y demás límites conservan su alcance, no son PASS inferidos. AUD-018 mantiene riesgo operativo residual aceptado, no «totalmente corregido». Sin SLA, GO de producción, invitaciones, publicación de registros adicionales ni acciones automáticas. Los NO-GO/pedidos de permiso o deploy de cortes inferiores son **antecedentes superados por este dictamen condicionado**, no tareas vigentes.
+
+### Antecedentes de preparación y controles ya cerrados
+
 **Entrega20oct autorizada:** usuario «SI» autoriza subir a develop y un único RC adicional Free en qrih-staging, sin producción. Fuente `4c7d05057f2429306d8ed5ba6097d9b273eb292a` preparada en objeto GitHub y Git local con SHA idéntico; documentación/evidencia en commit separado, main intacta. [Manifiesto180 nuevo](rc-candidate-inputs-2026-10-20-aud040.json). Guards Free/builds detenidos/variables STAGING y saldo283,7/300créditos verificados. En este corte aún no POST de build ni validación remota de la corrección; textos inferiores de «sin autorización/commit» son antecedentes.
 
 20 de octubre de2026. **MEDIO / CONFIRMADO / CORREGIDO LOCALMENTE / NO DESPLEGADO.**

@@ -1,0 +1,165 @@
+{
+  "format": "QRIH_AUD040_RELEASE_VERIFICATION_20261020_V1",
+  "status": "PASS_DEPLOYED_ADMIN_SAVE_VERIFIED_GO_CONDITIONED_PILOT",
+  "dateLocal": "2026-10-20",
+  "sourceCommit": "4c7d05057f2429306d8ed5ba6097d9b273eb292a",
+  "deployedCommit": "f803f35faba9cf871a81f93560112e20358230c2",
+  "netlify": {
+    "readOnly": true,
+    "buildId": "6ad79257b59620a2a787e99f",
+    "deployId": "6ad79257b59620a2a787e9a1",
+    "state": "ready",
+    "commit": "f803f35faba9cf871a81f93560112e20358230c2",
+    "commitMatches": true,
+    "buildDone": true,
+    "buildError": false,
+    "errorPresent": false,
+    "publishedCommit": "f803f35faba9cf871a81f93560112e20358230c2",
+    "publishedDeployId": "6ad79257b59620a2a787e9a1",
+    "stoppedBuilds": true,
+    "free": true,
+    "url": "https://qrih-staging.netlify.app",
+    "deployUrl": "https://develop--qrih-staging.netlify.app",
+    "createdAt": "2026-10-20T16:09:59.668Z",
+    "updatedAt": "2026-10-20T16:11:26.550Z",
+    "publishedAt": "2026-10-20T16:11:16.313Z"
+  },
+  "inputs": {
+    "count": 180,
+    "sha256": "534f422dc0d3bad93116108dfe84a38d45d091bde032045573f8ea2f530e9cc0",
+    "localBuild": "NwiPepFuxUeZzLahbyAlQ",
+    "manifest": "docs/rc-candidate-inputs-2026-10-20-aud040.json"
+  },
+  "authorization": "Human SI for delivery to develop and one additional Free staging RC; exactly one build POST, no retry",
+  "creditsBeforeObservedDashboard": 283.7,
+  "creditsAfter": "NOT_REMEASURED_USAGE_MAY_LAG",
+  "remote": {
+    "unit": {
+      "pass": 138,
+      "fail": 0,
+      "skipped": 0
+    },
+    "lint": "PASS",
+    "types": "PASS",
+    "preflightBeforeAndAfter": "PASS",
+    "build": "PASS",
+    "httpSmoke": {
+      "pass": 31,
+      "fail": 0,
+      "skipped": 0,
+      "durationMs": 20862.026836,
+      "origin": "https://qrih-staging.netlify.app"
+    }
+  },
+  "adminVerification": {
+    "fixture": "0198d9d9-08d4-4749-bc61-5f5563cbaeea",
+    "before": {
+      "stored": "m2",
+      "deployedSelector": ""
+    },
+    "afterDeployedReload": {
+      "selectedValue": "m2",
+      "selectedLabel": "m²"
+    },
+    "ordinaryAuthenticatedSave": true,
+    "successRedirect": "?success=updated",
+    "afterReload": {
+      "stored": "m2",
+      "selectedValue": "m2"
+    },
+    "beforeFingerprints": {
+      "status": "PASS_READONLY_EXACT_FIXTURE_FINGERPRINTS",
+      "fixtures": [
+        {
+          "propertyId": "0198d9d9-08d4-4749-bc61-5f5563cbaeea",
+          "status": "rejected",
+          "priceUnit": "m2",
+          "businessHash": "533d5dc108931e23eae8c3ab04314b6bf1f2f490c65fbd3d9b250945d62192b9",
+          "galleryHash": "2c65b5c9deaeb84f713aaa7102f9fd21846d25dbb44489a53d56e7f6d8a0fd53",
+          "galleryCount": 7,
+          "coverMatchesFirst": true,
+          "noPersistedSignedUrl": true
+        },
+        {
+          "propertyId": "83ab4b58-54b8-4ba3-88e7-c2f990483003",
+          "status": "draft",
+          "priceUnit": "m2",
+          "businessHash": "0ebd7f4b75a997072320a4e911925b58e6f873a4c0597c3d8187e0eac70b2820",
+          "galleryHash": "abfd0e075a01e4ad9b5275a0d9edd813b61ce01c0ee3f37487c2ee1ddb5d436a",
+          "galleryCount": 7,
+          "coverMatchesFirst": true,
+          "noPersistedSignedUrl": true
+        }
+      ],
+      "ignoredPropertyField": "updated_at",
+      "privilegedWrites": 0
+    },
+    "afterFingerprints": {
+      "status": "PASS_READONLY_EXACT_FIXTURE_FINGERPRINTS",
+      "fixtures": [
+        {
+          "propertyId": "0198d9d9-08d4-4749-bc61-5f5563cbaeea",
+          "status": "rejected",
+          "priceUnit": "m2",
+          "businessHash": "533d5dc108931e23eae8c3ab04314b6bf1f2f490c65fbd3d9b250945d62192b9",
+          "galleryHash": "2c65b5c9deaeb84f713aaa7102f9fd21846d25dbb44489a53d56e7f6d8a0fd53",
+          "galleryCount": 7,
+          "coverMatchesFirst": true,
+          "noPersistedSignedUrl": true
+        },
+        {
+          "propertyId": "83ab4b58-54b8-4ba3-88e7-c2f990483003",
+          "status": "draft",
+          "priceUnit": "m2",
+          "businessHash": "0ebd7f4b75a997072320a4e911925b58e6f873a4c0597c3d8187e0eac70b2820",
+          "galleryHash": "abfd0e075a01e4ad9b5275a0d9edd813b61ce01c0ee3f37487c2ee1ddb5d436a",
+          "galleryCount": 7,
+          "coverMatchesFirst": true,
+          "noPersistedSignedUrl": true
+        }
+      ],
+      "ignoredPropertyField": "updated_at",
+      "privilegedWrites": 0
+    },
+    "businessAndGalleryFingerprintsEqual": true,
+    "onlyIgnoredField": "updated_at",
+    "privilegedWrites": 0
+  },
+  "controls": {
+    "free": true,
+    "autoTopup": false,
+    "overages": false,
+    "stoppedBuilds": true,
+    "paymentsChanged": false,
+    "productionChanged": false,
+    "mainChanged": false,
+    "migrations": 0,
+    "newFixtures": 0,
+    "deletions": 0,
+    "realBusinessPropertiesModified": false,
+    "secretValuesPrinted": false
+  },
+  "audit": {
+    "AUD040": "MEDIO_CONFIRMED_CORRECTED_DEPLOYED_VERIFIED",
+    "AUD018": "RESIDUAL_OPERATIONAL_RISK_ACCEPTED_FOR_SUPERVISED_PILOT_NOT_CLAIMED_FULLY_CORRECTED"
+  },
+  "verdict": "GO_CONDITIONED_SUPERVISED_SOFT_LAUNCH_ON_EXISTING_QRIH_STAGING_ONLY",
+  "operationalAcceptance": {
+    "humanResponse": "Sí, acepto esos límites para el piloto",
+    "responsible": "Fabián",
+    "backupPolicy": "Verified encrypted manual backup each day of use and before important changes; local plus private Drive, preserve prior generations",
+    "pausePolicy": "Operator pauses new admissions if backup/email/quota fails; not an automatic enforcement feature",
+    "full24HourRecoveryMeasured": false,
+    "liveLoadConcurrencyTested": false,
+    "productionGO": false,
+    "availabilityGuarantee": false
+  },
+  "remainingLimits": [
+    "No timed natural900s/14min renewal or all-actor/all-state managed E2E certification",
+    "No live load/multisession contention test or full24h end-to-end recovery measurement",
+    "PDF header/MIME/size and seven-image reads checked, no new visual PDF render",
+    "Two verified backup generations, target3; no daily automation, new capture or restore",
+    "Old signed URLs last their TTL and downloaded PDFs cannot be revoked",
+    "No pilot invitations, production/main promotion or new deployment authorized by this GO"
+  ]
+}

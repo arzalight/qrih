@@ -1,6 +1,6 @@
 {
   "format": "QRIH_AUD040_RC_INPUTS_20261020_V1",
-  "status": "LOCAL_PASS_SINGLE_RC_AUTHORIZED_NOT_REQUESTED_YET",
+  "status": "READY_REMOTE_SMOKE_AND_ADMIN_SAVE_PASS_GO_CONDITIONED_PILOT",
   "sourceCommit": "4c7d05057f2429306d8ed5ba6097d9b273eb292a",
   "localUnit": {
     "pass": 138,
@@ -1103,5 +1103,19 @@
       "bytes": 699,
       "sha256": "9fe2e4a0352b37c3b291fccd18e3fa462aaa018f20e286432dd5697a4fb12450"
     }
-  ]
+  ],
+  "deployedCommit": "f803f35faba9cf871a81f93560112e20358230c2",
+  "netlifyDeployId": "6ad79257b59620a2a787e9a1",
+  "remoteUnit": {
+    "pass": 138,
+    "fail": 0,
+    "skipped": 0
+  },
+  "remoteHttp": {
+    "pass": 31,
+    "fail": 0,
+    "skipped": 0
+  },
+  "adminSave": "PASS_UNIT_AND_FINGERPRINTS_PRESERVED",
+  "releaseEvidence": "docs/aud040-deploy-verification-2026-10-20.json"
 }
