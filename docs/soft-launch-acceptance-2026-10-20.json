@@ -1,0 +1,97 @@
+{
+  "format": "QRIH_SOFT_LAUNCH_ACCEPTANCE_20261020_V1",
+  "status": "CRITICAL_FUNCTIONAL_ACCEPTANCE_PASS_AUD040_DELIVERY_PENDING",
+  "softLaunch": "NO_GO",
+  "scope": "Up to two new PRUEBA QRIH — NO COMERCIAL properties and up to seven synthetic images each; bounded duplication/editing/moderation, at most one brief public fixture, finish unpublished and preserve all data",
+  "existingBusinessPropertiesModified": false,
+  "newPropertiesCreated": 2,
+  "imagesUploadedToSupabase": 14,
+  "observations": [
+    {
+      "case": "Existing legitimate localhost owner session",
+      "result": "PASS",
+      "evidence": "Authenticated Mis propiedades renders existing owner panel without new login"
+    },
+    {
+      "case": "Non-admin session cannot access admin",
+      "result": "PASS",
+      "evidence": "GET localhost:3107/admin shows Acceso restringido and no administrative controls"
+    },
+    {
+      "case": "Seven synthetic PNG selected and locally optimized",
+      "result": "PASS_UI_ONLY",
+      "evidence": "Publicar shows 7 fotografia(s) lista(s) para subir and seven previews; upload selector disabled"
+    },
+    {
+      "case": "Human submission to pending, single original",
+      "result": "PASS",
+      "evidence": "One exact-title row; pending/En revision; owner Edit disabled"
+    },
+    {
+      "case": "Physical Storage and WebP ingestion",
+      "result": "PASS_READONLY",
+      "evidence": "Seven genuine decoded 960x540 WebP objects, positions0-6, main_image_path matches first; bucket remains private with WebP allowed; format-only privileged downloads not claimed as owner RLS proof"
+    },
+    {
+      "case": "Anonymous privacy of pending original",
+      "result": "PASS",
+      "evidence": "properties/properties_public/property_images return no fixture rows; authorized_image_paths empty; seven anonymous downloads rejected, seven old-style public URLs HTTP400; public detail/PDF404 and unauthenticated cover401 in localhost and deployed staging; no signed URLs returned"
+    },
+    {
+      "case": "Owner cover and editor",
+      "result": "PASS_BROWSER",
+      "evidence": "Original cover loaded960x540 with signed source without extracting URL; duplication editor shows seven photos/first main and disabled add-photo control"
+    },
+    {
+      "case": "Authorized duplicate saved once",
+      "result": "PASS",
+      "evidence": "One new draft row and one property_duplicated audit event pointing to original;14distinct object paths and seven genuine independent re-encoded images in duplicate; original cover/state/title preserved; source order1,0,2,3,4,5,6, bounded pixel MAE all below0.25"
+    },
+    {
+      "case": "Edit duplicate independently and reload",
+      "result": "PASS_BROWSER",
+      "evidence": "Changed duplicate area100 to101, description and first photo caption, saved draft; full panel reload shows101 for duplicate and100/pending for original; duplicate cover loaded960x540"
+    },
+    {
+      "case": "New authenticated managed cycle",
+      "result": "PASS_SCOPED",
+      "evidence": "pending -> published -> draft -> pending -> rejected, seven pictures retained, one withdrawal audit, cancel preserved published, public boundaries checked both origins, admin cross-owner edit/duplicate GET404; see moderation receipt"
+    },
+    {
+      "case": "AUD040 admin price unit",
+      "result": "CONFIRMED_LOCAL_FIX_NOT_DEPLOYED",
+      "evidence": "Stored m2 missing from deployed select, two-line canonical option fix and138unit/31HTTP/build pass locally; no defective pricing save executed"
+    }
+  ],
+  "humanHandoff": "Admin sign-in completed; bounded moderation/publication/cancel/withdraw/edit/resubmit/reject completed with legitimate sessions. Next permission is one additional RC for separately found AUD040.",
+  "form": "http://localhost:3107/publicar",
+  "fixtureTitle": "PRUEBA QRIH — NO COMERCIAL — GO 20261019",
+  "netlifyBuildsRequested": 0,
+  "functionalCodeChanged": true,
+  "productionChanged": false,
+  "remaining": [
+    "Deliver AUD040 reviewed correction and tests to develop",
+    "Explicit permission for one additional Free staging RC; READY/exactSHA/smoke and selector/save verification on existing synthetic fixture",
+    "Final conditioned pilot GO recording; no launch invitations or production mutation inferred"
+  ],
+  "propertyIds": {
+    "original": "0198d9d9-08d4-4749-bc61-5f5563cbaeea",
+    "duplicate": "83ab4b58-54b8-4ba3-88e7-c2f990483003"
+  },
+  "currentStates": {
+    "original": "rejected",
+    "duplicate": "draft"
+  },
+  "duplicateEvidence": "docs/soft-launch-duplicate-2026-10-20.json",
+  "evidenceLimit": "Read-only helpers perform zero mutations/signature generation; user creation and authorized application duplicate/edit are separate real authenticated writes. No deletion, third fixture, real-property edits, deploy or production.",
+  "functionalAcceptance": "PASS_SCOPED",
+  "codeChangeScope": "AUD040: two lines in admin selector plus five tests and child-count update; not deployed",
+  "moderationEvidence": "docs/soft-launch-moderation-2026-10-20.json",
+  "operationalRiskAcceptance": {
+    "accepted": true,
+    "response": "Sí, acepto esos límites para el piloto",
+    "measured24HourRecovery": false,
+    "liveLoadConcurrencyTested": false,
+    "scope": "Supervised pilot only; agreed backups and halt admissions if backup/email/quota fails; no production GO or availability guarantee"
+  }
+}

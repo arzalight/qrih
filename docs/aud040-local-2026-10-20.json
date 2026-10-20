@@ -1,0 +1,73 @@
+{
+  "format": "QRIH_AUD040_LOCAL_FIX_20261020_V1",
+  "status": "LOCAL_FIX_PASS_NOT_DEPLOYED_REQUIRES_AUTHORIZED_RC",
+  "severity": "MEDIO",
+  "confirmed": {
+    "databaseUnit": "m2",
+    "deployedSelectedValue": "",
+    "deployedOptions": [
+      "",
+      "m²",
+      "total"
+    ],
+    "actualCorruptionReproduced": false,
+    "potentialDataLossBySourcePath": true
+  },
+  "baseHead": "a6567b992dba7f6e3a6f1f20dce4cf7cd90112cd",
+  "previousManifestCount": 180,
+  "changed": [
+    {
+      "path": "app/admin/[id]/page.tsx",
+      "bytes": 36936,
+      "sha256": "1c694afb001355df0d48d3d668a4c07455aa3fbb4a81701391f63ae25a0aebb3"
+    },
+    {
+      "path": "tests/profile-property-management.test.mjs",
+      "bytes": 17829,
+      "sha256": "9d860052f08fd78be3f23c804723b4a7f3a603b092e8795e653fd882d2e29897"
+    },
+    {
+      "path": "tests/synthetic-test-environment.test.mjs",
+      "bytes": 1261,
+      "sha256": "2d00fc66fcf74b1529a5c7a1dd8ff335a1b11de855b2f1e017be56d3ee9a0ed8"
+    }
+  ],
+  "buildId": "NwiPepFuxUeZzLahbyAlQ",
+  "red": {
+    "aud040Cases": 5,
+    "pass": 0,
+    "fail": 5
+  },
+  "green": {
+    "aud040Cases": 5,
+    "pass": 5,
+    "fail": 0,
+    "unit": {
+      "pass": 138,
+      "fail": 0,
+      "skipped": 0
+    },
+    "providerSyntheticChild": {
+      "pass": 38,
+      "fail": 0,
+      "skipped": 0
+    },
+    "localHttp": {
+      "pass": 31,
+      "fail": 0,
+      "skipped": 0
+    },
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "build": "PASS_30_PAGES_PROXY",
+    "preflight": "PASS_EXAMINED_PRIVATE_CREDENTIAL_ABSENT_FROM_CLIENT_BUNDLE",
+    "diffCheck": "PASS"
+  },
+  "intermediateRun": "First full unit run detected obsolete child count33 after adding5tests; count updated to38, retaining exit0/fail0/skipped0 checks; final138PASS",
+  "functionalScope": "Two lines in admin select; canonical submitted m2, display m², legacy m² default mapped to m2, total/null/empty preserved. No server action, RLS, data, migration or dependency change.",
+  "delivered": false,
+  "netlifyBuildsThisTurn": 0,
+  "productionChanged": false,
+  "operationalRiskAcceptance": "Human accepted supervised pilot limits; does not waive AUD040 delivery and verification.",
+  "next": "Reviewed delivery to develop + specifically authorized single Free staging RC, exact SHA/READY/smoke and admin select/save on retained synthetic rejected fixture."
+}

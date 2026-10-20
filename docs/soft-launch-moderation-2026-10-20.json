@@ -1,0 +1,417 @@
+{
+  "format": "QRIH_MANAGED_MODERATION_ACCEPTANCE_20261020_V1",
+  "status": "PASS_SCOPED_CRITICAL_FUNCTIONAL_ACCEPTANCE_AUD040_SEPARATE",
+  "userDate": "2026-10-20",
+  "project": "mcyxunymhuxyiwklyfpy",
+  "propertyId": "0198d9d9-08d4-4749-bc61-5f5563cbaeea",
+  "duplicateId": "83ab4b58-54b8-4ba3-88e7-c2f990483003",
+  "sessions": "Legitimate existing publisher at localhost and separate legitimate admin at hosted staging; no JWT/cookie extraction or role elevation",
+  "states": [
+    "pending",
+    "published",
+    "draft",
+    "pending",
+    "rejected"
+  ],
+  "browserCases": {
+    "adminPendingGallery": "Seven photos and cover present",
+    "ownerEditPublished": "Confirmation warning appears; Cancel leaves published, no withdraw audit; confirmed action preserves ID and creates one withdraw audit",
+    "resubmission": "Changed only fixture description and sent to pending; no automatic publication",
+    "finalModeration": "Admin rejects with explicit synthetic-test reason; no deletion",
+    "crossOwnerDuplicationGet": "Authenticated admin opening another owner's duplication URL receives404",
+    "crossOwnerEditGet": "Authenticated admin opening another owner's edit URL receives404",
+    "galleryInteraction": "Admin rejected-fixture lightbox1/7 ->2/7 ->1/7, Escape closes"
+  },
+  "published": {
+    "status": "PASS_FIXTURE_STATE_BOUNDARY",
+    "propertyId": "0198d9d9-08d4-4749-bc61-5f5563cbaeea",
+    "state": "published",
+    "totalArea": 100,
+    "gallery": 7,
+    "coverMatchesFirst": true,
+    "anonymousVisible": true,
+    "authorizedAnonymousPaths": 7,
+    "withdrawAuditEvents": 0,
+    "results": [
+      {
+        "origin": "http://localhost:3107",
+        "detail": 200,
+        "pdf": 200,
+        "pdfBytes": 230985,
+        "pdfMagicVerified": true,
+        "publicImages": 7,
+        "images": [
+          {
+            "bytes": 10708,
+            "format": "webp",
+            "width": 960,
+            "height": 540,
+            "sha256": "ed16e61c3e4ac43e5af3fe0bc725d83eb6fb547426fc2b31a820e01fde158c54"
+          },
+          {
+            "bytes": 10814,
+            "format": "webp",
+            "width": 960,
+            "height": 540,
+            "sha256": "f211c01f1f1d1a76cfad3e67a281de4f291fdaa317bcf8743e5af5228a01c62d"
+          },
+          {
+            "bytes": 11440,
+            "format": "webp",
+            "width": 960,
+            "height": 540,
+            "sha256": "2a56f166d5731eeb7b22f4976fd72960f7f578892e1b8bc160efbd155ea0e8b5"
+          },
+          {
+            "bytes": 10920,
+            "format": "webp",
+            "width": 960,
+            "height": 540,
+            "sha256": "fe35499eb588d9d68562f97b81dba222e115d9a132f4aab83915bc7c074d1113"
+          },
+          {
+            "bytes": 11818,
+            "format": "webp",
+            "width": 960,
+            "height": 540,
+            "sha256": "e0b0e1b6a9bde61a2b09ee5aed8838e0bed9a0a758f27ef13e3a4449c5476450"
+          },
+          {
+            "bytes": 11476,
+            "format": "webp",
+            "width": 960,
+            "height": 540,
+            "sha256": "3675d0e0304bc5d6799e1115c747035fdc777ec3c94f3eee671eeed7531f1ac5"
+          },
+          {
+            "bytes": 11576,
+            "format": "webp",
+            "width": 960,
+            "height": 540,
+            "sha256": "69021b5ad2964831a47fdce24908a6f091b31d8a52c776139f7d50378016fb13"
+          }
+        ]
+      },
+      {
+        "origin": "https://qrih-staging.netlify.app",
+        "detail": 200,
+        "pdf": 200,
+        "pdfBytes": 231042,
+        "pdfMagicVerified": true,
+        "publicImages": 7,
+        "images": [
+          {
+            "bytes": 10708,
+            "format": "webp",
+            "width": 960,
+            "height": 540,
+            "sha256": "ed16e61c3e4ac43e5af3fe0bc725d83eb6fb547426fc2b31a820e01fde158c54"
+          },
+          {
+            "bytes": 10814,
+            "format": "webp",
+            "width": 960,
+            "height": 540,
+            "sha256": "f211c01f1f1d1a76cfad3e67a281de4f291fdaa317bcf8743e5af5228a01c62d"
+          },
+          {
+            "bytes": 11440,
+            "format": "webp",
+            "width": 960,
+            "height": 540,
+            "sha256": "2a56f166d5731eeb7b22f4976fd72960f7f578892e1b8bc160efbd155ea0e8b5"
+          },
+          {
+            "bytes": 10920,
+            "format": "webp",
+            "width": 960,
+            "height": 540,
+            "sha256": "fe35499eb588d9d68562f97b81dba222e115d9a132f4aab83915bc7c074d1113"
+          },
+          {
+            "bytes": 11818,
+            "format": "webp",
+            "width": 960,
+            "height": 540,
+            "sha256": "e0b0e1b6a9bde61a2b09ee5aed8838e0bed9a0a758f27ef13e3a4449c5476450"
+          },
+          {
+            "bytes": 11476,
+            "format": "webp",
+            "width": 960,
+            "height": 540,
+            "sha256": "3675d0e0304bc5d6799e1115c747035fdc777ec3c94f3eee671eeed7531f1ac5"
+          },
+          {
+            "bytes": 11576,
+            "format": "webp",
+            "width": 960,
+            "height": 540,
+            "sha256": "69021b5ad2964831a47fdce24908a6f091b31d8a52c776139f7d50378016fb13"
+          }
+        ]
+      }
+    ],
+    "privilegedWrites": 0,
+    "newPrivilegedSignatures": 0,
+    "privateTokensLogged": false,
+    "limit": "Public GETs are fixture-only; a downloaded PDF and previously issued signed URLs are not retroactively revoked. PDF header/MIME/size checked, not new visual render."
+  },
+  "cancel": {
+    "status": "PASS_FIXTURE_STATE_BOUNDARY",
+    "metadataOnly": true,
+    "propertyId": "0198d9d9-08d4-4749-bc61-5f5563cbaeea",
+    "state": "published",
+    "totalArea": 100,
+    "gallery": 7,
+    "coverMatchesFirst": true,
+    "anonymousVisible": true,
+    "authorizedAnonymousPaths": 7,
+    "withdrawAuditEvents": 0,
+    "results": [],
+    "privilegedWrites": 0,
+    "newPrivilegedSignatures": 0,
+    "privateTokensLogged": false,
+    "limit": "Public GETs are fixture-only; a downloaded PDF and previously issued signed URLs are not retroactively revoked. PDF header/MIME/size checked, not new visual render."
+  },
+  "withdrawn": {
+    "status": "PASS_FIXTURE_STATE_BOUNDARY",
+    "metadataOnly": false,
+    "propertyId": "0198d9d9-08d4-4749-bc61-5f5563cbaeea",
+    "state": "draft",
+    "totalArea": 100,
+    "gallery": 7,
+    "coverMatchesFirst": true,
+    "anonymousVisible": false,
+    "authorizedAnonymousPaths": 0,
+    "withdrawAuditEvents": 1,
+    "results": [
+      {
+        "origin": "http://localhost:3107",
+        "detail": 404,
+        "pdf": 404,
+        "pdfBytes": 0,
+        "pdfMagicVerified": false,
+        "publicImages": 0,
+        "images": []
+      },
+      {
+        "origin": "https://qrih-staging.netlify.app",
+        "detail": 404,
+        "pdf": 404,
+        "pdfBytes": 0,
+        "pdfMagicVerified": false,
+        "publicImages": 0,
+        "images": []
+      }
+    ],
+    "privilegedWrites": 0,
+    "newPrivilegedSignatures": 0,
+    "privateTokensLogged": false,
+    "limit": "Public GETs are fixture-only; a downloaded PDF and previously issued signed URLs are not retroactively revoked. PDF header/MIME/size checked, not new visual render."
+  },
+  "resubmitted": {
+    "status": "PASS_FIXTURE_STATE_BOUNDARY",
+    "metadataOnly": true,
+    "propertyId": "0198d9d9-08d4-4749-bc61-5f5563cbaeea",
+    "state": "pending",
+    "totalArea": 100,
+    "gallery": 7,
+    "coverMatchesFirst": true,
+    "anonymousVisible": false,
+    "authorizedAnonymousPaths": 0,
+    "withdrawAuditEvents": 1,
+    "results": [],
+    "privilegedWrites": 0,
+    "newPrivilegedSignatures": 0,
+    "privateTokensLogged": false,
+    "limit": "Public GETs are fixture-only; a downloaded PDF and previously issued signed URLs are not retroactively revoked. PDF header/MIME/size checked, not new visual render."
+  },
+  "finalRejected": {
+    "status": "PASS_FIXTURE_STATE_BOUNDARY",
+    "metadataOnly": false,
+    "propertyId": "0198d9d9-08d4-4749-bc61-5f5563cbaeea",
+    "state": "rejected",
+    "totalArea": 100,
+    "gallery": 7,
+    "coverMatchesFirst": true,
+    "anonymousVisible": false,
+    "authorizedAnonymousPaths": 0,
+    "withdrawAuditEvents": 1,
+    "results": [
+      {
+        "origin": "http://localhost:3107",
+        "detail": 404,
+        "pdf": 404,
+        "pdfBytes": 0,
+        "pdfMagicVerified": false,
+        "publicImages": 0,
+        "images": []
+      },
+      {
+        "origin": "https://qrih-staging.netlify.app",
+        "detail": 404,
+        "pdf": 404,
+        "pdfBytes": 0,
+        "pdfMagicVerified": false,
+        "publicImages": 0,
+        "images": []
+      }
+    ],
+    "privilegedWrites": 0,
+    "newPrivilegedSignatures": 0,
+    "privateTokensLogged": false,
+    "limit": "Public GETs are fixture-only; a downloaded PDF and previously issued signed URLs are not retroactively revoked. PDF header/MIME/size checked, not new visual render."
+  },
+  "finalDuplicate": {
+    "status": "PASS_READONLY_DUPLICATE_INDEPENDENCE",
+    "originalId": "0198d9d9-08d4-4749-bc61-5f5563cbaeea",
+    "duplicateId": "83ab4b58-54b8-4ba3-88e7-c2f990483003",
+    "originalState": "rejected",
+    "duplicateState": "draft",
+    "duplicateRows": 1,
+    "duplicateAuditEvents": 1,
+    "originalGallery": 7,
+    "duplicateGallery": 7,
+    "distinctPaths": 14,
+    "sourceOrder": [
+      1,
+      0,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "images": [
+      {
+        "position": 0,
+        "sourcePosition": 1,
+        "independentPath": true,
+        "format": "webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 10678,
+        "sha256": "db503d5942cb91f0441c345d426ccbb3387b5720e397e64695f8f3ad4773c568",
+        "meanAbsolutePixelError": 0.14950231481481482,
+        "anonymousDenied": true
+      },
+      {
+        "position": 1,
+        "sourcePosition": 0,
+        "independentPath": true,
+        "format": "webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 10614,
+        "sha256": "7aa6ec46a1503c844ced239aca3119d3aea7ccee59e968196b73a620710c647a",
+        "meanAbsolutePixelError": 0.15448495370370371,
+        "anonymousDenied": true
+      },
+      {
+        "position": 2,
+        "sourcePosition": 2,
+        "independentPath": true,
+        "format": "webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 11326,
+        "sha256": "cdbf9c82289c7e3b1ae457003690361235524ece8b916cec9513f9d0a0e3d5e6",
+        "meanAbsolutePixelError": 0.1645601851851852,
+        "anonymousDenied": true
+      },
+      {
+        "position": 3,
+        "sourcePosition": 3,
+        "independentPath": true,
+        "format": "webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 10550,
+        "sha256": "d57cb6d66750293c4e5679d0884ff4d15086be58859ea843a81a6e22284c8b05",
+        "meanAbsolutePixelError": 0.24920267489711934,
+        "anonymousDenied": true
+      },
+      {
+        "position": 4,
+        "sourcePosition": 4,
+        "independentPath": true,
+        "format": "webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 11450,
+        "sha256": "57719dbbe3e174bcb77a2eb3a8e8b15f03f45a91cfe80f81250889dccb40c996",
+        "meanAbsolutePixelError": 0.15887538580246913,
+        "anonymousDenied": true
+      },
+      {
+        "position": 5,
+        "sourcePosition": 5,
+        "independentPath": true,
+        "format": "webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 11178,
+        "sha256": "d8d0d60c09cebca9a749ec481a7a9f1e8fbf978610fb0a48ce94ae023c170f10",
+        "meanAbsolutePixelError": 0.15751157407407407,
+        "anonymousDenied": true
+      },
+      {
+        "position": 6,
+        "sourcePosition": 6,
+        "independentPath": true,
+        "format": "webp",
+        "width": 960,
+        "height": 540,
+        "bytes": 11472,
+        "sha256": "7238ae096e2d56aae86fd409861303824c3433528530479259e7a8c02078d73d",
+        "meanAbsolutePixelError": 0.1216576646090535,
+        "anonymousDenied": true
+      }
+    ],
+    "sourceTitleStateCoverPreserved": true,
+    "publicRowsHidden": true,
+    "mutations": 0,
+    "newSignatures": 0,
+    "limit": "Only sequential single-save success and physical image independence, not concurrent retries or deletion independence; no deletion authorized/performed."
+  },
+  "operations": {
+    "acceptedByHuman": true,
+    "response": "Sí, acepto esos límites para el piloto",
+    "scope": "Supervised pilot with Fabian responsible, previously agreed backups, pause new admissions if backup/email/quota fails; no production GO or availability guarantee",
+    "full24HourRecoveryMeasured": false,
+    "liveLoadConcurrencyTested": false,
+    "existingCiphertextHashUnchanged": true,
+    "existingCiphertextBytes": 7866424,
+    "backupFinishedAtUtc": "2026-10-20T02:56:17.642Z",
+    "observedAtUtc": "2026-10-20T15:45:25Z",
+    "approximateBackupAgeHours": 12.82,
+    "newCapture": false,
+    "newRestore": false,
+    "drivePermissionsRecheckedThisTurn": false
+  },
+  "limits": [
+    "No suspended real account mutation, no third external account or arbitrary actor impersonation",
+    "No proof of every status/actor combination on managed service; previous SQL/synthetic evidence keeps its scope",
+    "No timed 900-second expiry/14-minute renewal or live multi-session contention test",
+    "PDF MIME/header/size and seven public WebP reads verified; no new visual PDF render",
+    "Existing signed URLs/PDFs already downloaded are not retroactively revoked",
+    "AUD-040 separately confirmed in active admin template; local correction not deployed"
+  ],
+  "boundaries": {
+    "newFixturesTotal": 2,
+    "retainedWebPObjects": 14,
+    "finalStates": {
+      "original": "rejected",
+      "duplicate": "draft"
+    },
+    "fixturePublicViewsAndRateLimits": "Ordinary public test GETs can create fixture-only view/quota entries",
+    "realBusinessPropertiesChangedByAgent": false,
+    "deletions": 0,
+    "privilegedWrites": 0,
+    "migrations": 0,
+    "deploys": 0,
+    "productionChanges": 0
+  },
+  "verdict": "NO_GO_UNTIL_AUD040_CORRECTION_DELIVERED_AND_VERIFIED; operational risk acceptance does not waive this new confirmed pricing defect"
+}

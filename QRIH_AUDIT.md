@@ -1,5 +1,15 @@
 # QRIH — Auditoría técnica pre-Soft-Launch
 
+## Cierre vigente — 2026-10-20
+
+**Aceptación funcional crítica PASS, dentro de su alcance; límites operativos del piloto ACEPTADOS por el usuario; GO pendiente de entregar/verificar AUD-040.** [Ciclo gestionado y límites](docs/soft-launch-moderation-2026-10-20.json): sesión publisher localhost y admin legítimo STAGING; original pending→published→draft→pending→rejected, Cancelar conserva publicada, un solo evento de retiro, edición/reenvío normales. Ficha/PDF y7WebP públicos200 sólo publicada; nuevas lecturas404 y autorización vacía al retirar/rechazar en ambos sitios. Admin no-owner recibe404 en editor/duplicación privados. Duplicado draft101m²,14rutas independientes/7fotos cada uno; visor admin1→2→1/EscapePASS. Cero borrados/tercer fixture/cambios de inmuebles reales/DDL/deploy en esta aceptación; ambos fixtures conservados sin publicar.
+
+**AUD-040 MEDIO / CONFIRMADO / CORREGIDO LOCALMENTE / NO DESPLEGADO.** [Informe](docs/AUD040_ADMIN_PRICE_UNIT.md): BD `m2` no correspondía a opción `m²` del editor admin; selector vacío podía enviarse comoNULL. Inconsistencia reproducida en BD+DOM, pérdida real no provocada. Dos líneas de corrección, cinco regresiones antesFAIL/despuésPASS y conteo hijo33→38.138unit/31HTTPlocal/lint/tipos/build/preflightPASS; tres entradas funcionales cambian y READY5c4970e anterior no contiene el fix. Sin migración/datos/configuración/producción cambiados. Falta entregar develop, único RC adicional con autorización explícita y comprobación de selector/guardado sobre fixture; no repetir ciclo completo, copias,051 o recuperación.
+
+**Aceptación operativa explícita:** «Sí, acepto esos límites para el piloto»: piloto supervisado/Fabián, política de respaldos ya aprobada, pausa de nuevas altas si falla respaldo/correo/cuota; recuperación completa24h y carga/concurrencia real no medidas, sin SLA ni GO de producción. Copia cifrada local rehashPASS,12,82h de antigüedad al corte20oct15:45UTC; no nueva captura/restore ni readbackDrive actual. Renovación cronometrada/concurrencia y demás límites quedan declarados, no convertidos en PASS. No pedir nuevamente esa aceptación. **NO-GO vigente del artefacto remoto hasta AUD-040 entregado y verificado; después dictamen condicionado del piloto, nunca apertura/invitaciones automáticas.**
+
+### Antecedentes históricos — prevalece el cierre anterior
+
 ## Dictamen consolidado vigente — 2026-10-19
 
 ### AUD-039 — MEDIO / CONFIRMADO / CORREGIDO Y VALIDADO EN CI REMOTA
