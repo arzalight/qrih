@@ -3,6 +3,8 @@ import { readFileSync } from 'node:fs'
 import { registerHooks, stripTypeScriptTypes } from 'node:module'
 import { after, test } from 'node:test'
 import babel from '@babel/core'
+import { createElement } from 'react'
+import { renderToStaticMarkup } from 'react-dom/server'
 
 registerHooks({ resolve(specifier, context, nextResolve) {
   if (specifier === '@/lib/supabase-server') return { url: 'data:text/javascript,export async function createServerSupabaseClient(){return globalThis.__managementClient}', shortCircuit: true }
@@ -227,6 +229,31 @@ function actionAst() {
   const ast = babel.parseSync(source, { filename: 'actions.tsx', configFile: false, babelrc: false,
     plugins: [['@babel/plugin-syntax-typescript', { isTSX: true }]] })
   return { source, ast }
+}
+for (const [stored, expected] of [['m2', 'm2'], ['m²', 'm2'], ['total', 'total'], [null, ''], ['', '']]) {
+  test(`AUD-040: selector administrativo conserva la unidad canónica (${stored ?? 'NULL'})`, () => {
+    const source = readFileSync(new URL('../app/admin/[id]/page.tsx', import.meta.url), 'utf8')
+    const ast = babel.parseSync(source, { filename: 'admin-page.tsx', configFile: false, babelrc: false,
+      plugins: [['@babel/plugin-syntax-typescript', { isTSX: true }]] })
+    let field
+    babel.traverse(ast, { JSXElement(path) {
+      if (path.node.openingElement.name.name === 'select'
+        && path.node.openingElement.attributes.some(a => a.name?.name === 'name' && a.value?.value === 'price_unit')) field = path.node
+    } })
+    assert.ok(field)
+    const expression = field.openingElement.attributes.find(a => a.name?.name === 'defaultValue').value.expression
+    const defaultValue = new Function('property', `return (${source.slice(expression.start, expression.end)})`)({ price_unit: stored })
+    const options = field.children.filter(c => c.type === 'JSXElement').map(option => ({
+      value: option.openingElement.attributes.find(a => a.name?.name === 'value').value.value,
+      text: option.children.filter(c => c.type === 'JSXText').map(c => c.value).join('').trim(),
+    }))
+    const html = renderToStaticMarkup(createElement('select', { name: 'price_unit', defaultValue },
+      options.map(option => createElement('option', { key: option.value, value: option.value }, option.text))))
+    const selected = [...html.matchAll(/<option\b([^>]*)>/g)].find(m => /\bselected=""/.test(m[1]))
+    assert.ok(selected, 'El valor persistido debe seleccionar una opción real, no el fallback del navegador')
+    assert.equal(selected[1].match(/\bvalue="([^"]*)"/)[1], expected)
+    assert.ok(options.some(o => o.value === 'm2' && o.text === 'm²'), 'La etiqueta es m²; el valor de formulario es m2')
+  })
 }
 test('UI real: Cancelar sólo cierra confirmación y limpia error, sin fetch', () => {
   const { source, ast } = actionAst()

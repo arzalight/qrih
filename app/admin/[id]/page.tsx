@@ -1141,11 +1141,11 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
             <label><strong>Unidad del precio</strong></label>
             <select
               name="price_unit"
-              defaultValue={property.price_unit || ''}
+              defaultValue={property.price_unit === 'm²' ? 'm2' : property.price_unit || ''}
               style={{ width: '100%', padding: '10px', marginTop: '6px' }}
             >
               <option value="">Sin unidad</option>
-              <option value="m²">m²</option>
+              <option value="m2">m²</option>
               <option value="total">Total</option>
             </select>
           </div>
