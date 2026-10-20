@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { registerHooks, stripTypeScriptTypes } from 'node:module'
-import { test } from 'node:test'
+import { after, test } from 'node:test'
 import babel from '@babel/core'
 
 registerHooks({ resolve(specifier, context, nextResolve) {
@@ -17,6 +17,16 @@ const { POST } = await import('../app/api/registrar-oportunidad/route.ts')
 const A = '11111111-1111-4111-8111-111111111111'
 const B = '22222222-2222-4222-8222-222222222222'
 const C = '33333333-3333-4333-8333-333333333333'
+const testOrigin = 'https://qrih-synthetic.invalid'
+const inheritedProviderOrigin = { SITE_ID: process.env.SITE_ID, URL: process.env.URL }
+process.env.SITE_ID = 'qrih-synthetic-test'
+process.env.URL = testOrigin
+after(() => {
+  for (const [key, value] of Object.entries(inheritedProviderOrigin)) {
+    if (value === undefined) delete process.env[key]
+    else process.env[key] = value
+  }
+})
 function fixture(options = {}) {
   const rpcs = []
   globalThis.__qrihOpportunityClient = options.noClient ? null : {
@@ -35,11 +45,11 @@ function fixture(options = {}) {
   }
   return rpcs
 }
-function request({ demand = A, property = B, origin = 'https://qrih-staging.netlify.app' } = {}) {
+function request({ demand = A, property = B, origin = testOrigin } = {}) {
   const body = new FormData()
   body.set('demand_request_id', demand); body.set('property_id', property)
   body.set('registered_by', B); body.set('role', 'admin')
-  return new Request('https://qrih-staging.netlify.app/api/registrar-oportunidad', {
+  return new Request(testOrigin + '/api/registrar-oportunidad', {
     method: 'POST', headers: { Origin: origin }, body,
   })
 }

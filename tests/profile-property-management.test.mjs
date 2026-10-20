@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { registerHooks, stripTypeScriptTypes } from 'node:module'
-import { test } from 'node:test'
+import { after, test } from 'node:test'
 import babel from '@babel/core'
 
 registerHooks({ resolve(specifier, context, nextResolve) {
@@ -22,6 +22,18 @@ const attempt = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb'
 const newId = 'cccccccc-cccc-4ccc-8ccc-cccccccccccc'
 const path = `${owner}/source.webp`
 const origin = 'https://qrih-synthetic.invalid'
+
+// Keep the real origin guard enabled, but never inherit a provider's live URL.
+// Node runs each test file in a separate process; restore its env after the suite.
+const inheritedProviderOrigin = { SITE_ID: process.env.SITE_ID, URL: process.env.URL }
+process.env.SITE_ID = 'qrih-synthetic-test'
+process.env.URL = origin
+after(() => {
+  for (const [key, value] of Object.entries(inheritedProviderOrigin)) {
+    if (value === undefined) delete process.env[key]
+    else process.env[key] = value
+  }
+})
 function setup(options = {}) {
   const state = { rpc: [], copies: [], deleted: [], filters: [], signs: [], downloads: [], uploadCalls: 0 }
   globalThis.__managementUpload = async (_file, actor, bucket) => {

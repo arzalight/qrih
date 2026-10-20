@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { registerHooks } from 'node:module'
-import { test } from 'node:test'
+import { after, test } from 'node:test'
 
 registerHooks({ resolve(specifier, context, nextResolve) {
   const aliases = {
@@ -19,6 +19,18 @@ const owner = '11111111-1111-4111-8111-111111111111'
 const property = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'
 const oldPath = `${owner}/old.webp`, newPath = `${owner}/new.webp`
 const origin = 'https://qrih-synthetic.invalid'
+
+// Keep the real origin guard enabled, but never inherit a provider's live URL.
+// Node runs each test file in a separate process; restore its env after the suite.
+const inheritedProviderOrigin = { SITE_ID: process.env.SITE_ID, URL: process.env.URL }
+process.env.SITE_ID = 'qrih-synthetic-test'
+process.env.URL = origin
+after(() => {
+  for (const [key, value] of Object.entries(inheritedProviderOrigin)) {
+    if (value === undefined) delete process.env[key]
+    else process.env[key] = value
+  }
+})
 
 function fixture(options = {}) {
   const state = { committed: false, uploadAttempts: 0, uploads: [], removals: [], rpcs: [], filters: [] }
