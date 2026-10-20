@@ -1,0 +1,175 @@
+{
+  "status": "PASS_LOCAL_PRIVATE_WRITE_ACCEPTANCE_SCOPED_TEMPORARY_ACCESS_CLOSED",
+  "clientDate": "2026-10-19",
+  "clientTimezone": "America/Mexico_City",
+  "httpTrial": {
+    "status": "PASS_LOCAL_PRIVATE_WRITE_TESTS_SCOPED",
+    "recordedAt": "2026-10-19T16:32:27.093Z",
+    "failureStage": null,
+    "tests": [
+      {
+        "case": "real_session_for_original_server_routes",
+        "status": "PASS"
+      },
+      {
+        "case": "anonymous_private_page_denied_by_application",
+        "status": "PASS"
+      },
+      {
+        "case": "authenticated_panel_server_render",
+        "status": "PASS"
+      },
+      {
+        "case": "legitimate_admin_read",
+        "status": "PASS"
+      },
+      {
+        "case": "non_admin_http_rejection",
+        "status": "NOT_VERIFIED_NO_SECOND_SESSION"
+      },
+      {
+        "case": "eight_synthetic_uploads_jpeg_png_webp_reencoded_with_provenance",
+        "status": "PASS"
+      },
+      {
+        "case": "invalid_bytes_rejected_no_storage_upload",
+        "status": "PASS"
+      },
+      {
+        "case": "synthetic_draft_created_with_real_user_rls",
+        "status": "PASS"
+      },
+      {
+        "case": "seven_images_saved_and_reloaded",
+        "status": "PASS"
+      },
+      {
+        "case": "draft_invisible_in_public_view",
+        "status": "PASS"
+      },
+      {
+        "case": "original_edit_api_cover_persists_all_seven",
+        "status": "PASS"
+      },
+      {
+        "case": "eighth_association_rejected_by_original_edit_api_without_changes",
+        "status": "PASS"
+      },
+      {
+        "case": "eighth_association_rejected_by_real_jwt_rpc_without_changes",
+        "status": "PASS"
+      },
+      {
+        "case": "fixture_pending_invisible_publicly",
+        "status": "PASS"
+      },
+      {
+        "case": "owner_image_paths_allowed_anonymous_pending_paths_denied",
+        "status": "PASS"
+      },
+      {
+        "case": "local_signout_and_refresh_rejected",
+        "status": "PASS"
+      },
+      {
+        "case": "preexisting_business_migration_storage_rows_preserved",
+        "status": "PASS"
+      }
+    ],
+    "observations": {
+      "panel": {
+        "httpStatus": 200,
+        "expectedAuthenticatedHeadingFound": true,
+        "anonymousNoticeFound": false,
+        "propertyLoadErrorFound": false
+      },
+      "ingestion": {
+        "attemptIndex": 7,
+        "httpStatus": 200,
+        "privatePathReturned": true,
+        "activeAccountRequiredMessage": false,
+        "genericFailureMessage": false
+      }
+    },
+    "passed": 16,
+    "existingRowsPreserved": true,
+    "baselineTables": 17,
+    "rateWindowPurgingExplicitlyAuthorized": true,
+    "fixtureCreated": true,
+    "newSyntheticObjects": 8,
+    "newObjectsRetained": true,
+    "fixturesDeleted": false,
+    "localSessionSignedOut": true,
+    "metrics": {
+      "denied": 1,
+      "relayFailures": 0,
+      "deletionAttemptsBlocked": 1,
+      "mutations": 29
+    },
+    "sourceCommit": "a496790ecc4169cb291232923f0f746ffef45440",
+    "originalAppSourceModified": false,
+    "remoteStagingProductionNetlifyTouched": false,
+    "credentialsOrTokensRecorded": false,
+    "scope": "Original server HTTP routes and real-JWT PostgREST. No full interactive publication/edit UI or every actor/state HTTP acceptance claimed."
+  },
+  "independentReadOnlyVerification": {
+    "status": "PASS_INDEPENDENT_READ_ONLY_AFTER_PRIVATE_WRITES",
+    "recordedAt": "2026-10-19T16:39:11.175Z",
+    "readOnly": "on",
+    "accounts": 4,
+    "identities": 4,
+    "sessions": 0,
+    "activeRefreshTokens": 0,
+    "properties": 2,
+    "galleryImages": 14,
+    "storageObjects": 15,
+    "syntheticFixtures": 1,
+    "pendingFixtures": 1,
+    "fixtureGalleryImages": 7,
+    "coverBelongsToFixtureGallery": true,
+    "newVerifiedUploads": 8,
+    "unassociatedNewImages": 1,
+    "images": {
+      "status": "PASS_STORED_SYNTHETIC_WEBP_HASHES",
+      "objectsVerified": 8,
+      "bytesVerified": 644,
+      "readOnly": true,
+      "serviceKeyStayedInsideLocalContainer": true,
+      "rlsActorTestClaimed": false
+    },
+    "originalReceiptValidated": true,
+    "sourceExistingRowsPreservedPerOriginal17TableHashCheck": true,
+    "noResetReimportCleanupOrNewDataWrites": true,
+    "cloudContacted": false,
+    "credentialsOrPrivatePathsReturned": false,
+    "limits": "Admin-owner session in original HTTP trial; no non-admin HTTP or all-actor acceptance inferred. Privileged local GET here checks stored bytes, not RLS."
+  },
+  "actualActor": "Existing recovered admin account, also fixture owner; no role elevation or fabricated JWT",
+  "fixturesRetained": "One pending property, seven associations and eight synthetic objects; eighth object remains unassociated. No cleanup.",
+  "temporaryAccess": {
+    "ownedRunnerPid": 6207,
+    "identityAndCwdVerifiedBeforeShutdown": true,
+    "listenerPortsConfirmedAbsent": [
+      3118,
+      3120,
+      3122
+    ],
+    "rancherContainersStopped": false
+  },
+  "additionalReaderToolingIssue": "Embedded read-only worker syntax/escaping defect diagnosed offline and corrected before independent PASS. No application defect or replayed write implied.",
+  "sourceCommit": "a496790ecc4169cb291232923f0f746ffef45440",
+  "functionalSourceEnvSchemaRlsMigrationsOrBucketsChanged": false,
+  "cloudStagingProductionNetlifyOtherSupabaseConnectorCommitOrPushUsed": false,
+  "limits": [
+    "Admin-owner account only; non-admin/publisher HTTP boundary not verified",
+    "Original HTTP APIs and SSR, not full interactive publication/edit UI",
+    "Privileged GET validates stored bytes, not user RLS",
+    "No all-actor/all-status HTTP or full managed-platform semantic parity inferred"
+  ],
+  "remainingGates": [
+    "Integral recovery acceptance and operational owner/RPO/RTO/frequency/retention/contingency decisions",
+    "Pilot destination and original-environment AUD-002 decision",
+    "Separately authorized Netlify RC with current Free quota, guards, exact SHA READY and tests"
+  ],
+  "decision": "Scoped local write gate completed. AUD-018 ALTO / EN REVISIÓN — NO CORREGIDO / NO-GO. Do not repeat this trial or request another login to close the same gate."
+}

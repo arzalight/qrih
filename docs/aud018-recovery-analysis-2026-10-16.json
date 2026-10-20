@@ -1,0 +1,75 @@
+{
+  "format": "QRIH_AUD018_RECOVERY_ANALYSIS_SUMMARY_V1",
+  "dateLocal": "2026-10-16 America/Mexico_City",
+  "status": "PASS_OFFLINE_PACKAGE_ANALYSIS_IMPORT_BLOCKED_LOCAL_RUNTIME",
+  "authorization": "User resumed recovery testing and then other pending work, excluding Netlify deploy; supersedes previous recovery pause",
+  "sourceProjectRef": "mcyxunymhuxyiwklyfpy",
+  "captureStartedAt": "2026-10-08T21:20:55.176Z",
+  "captureFinishedAt": "2026-10-08T21:22:25.798Z",
+  "ciphertextAndPriorReceiptsRevalidated": true,
+  "bundleSha256": "2ceb49509c2f4b45cebc0e34ba1bef9c821aa7a0a3696d53f6fc1ff9949cfc21",
+  "privateAnalysisRecordedAt": "2026-10-16T15:12:18.386Z",
+  "manifestBeforeAfterEqual": true,
+  "allEightEncryptedPartsAuthenticatedAndHashesVerified": true,
+  "archiveTablesWithCapturedRowCountsMatching": 51,
+  "webpPhotosVerified": 7,
+  "photoBytesVerified": 803872,
+  "schemaEntryCountsNotSemanticEquivalence": {
+    "policies": 66,
+    "functions": 79,
+    "triggers": 20,
+    "securityDefinerOccurrences": 43
+  },
+  "managedComparison": {
+    "targetEvidence": "Historical empty-target catalog from 2026-10-08, not fresh runtime evidence",
+    "missingCopiedColumnsOnHistoricalTarget": 0,
+    "extraHistoricalTargetColumns": [
+      { "table": "auth.identities", "columns": ["email"] },
+      { "table": "auth.scim_users", "columns": ["user_name", "external_id", "active"] },
+      { "table": "auth.users", "columns": ["confirmed_at"] },
+      { "table": "storage.objects", "columns": ["path_tokens"] }
+    ],
+    "generatedDefaultTypeAclCompatibilityVerified": false,
+    "interpretation": "COPY omits generated columns; extras are not automatically incompatibilities or omitted data. Fresh catalog and generated/default/type/constraint review still required."
+  },
+  "sessionQuarantineProposal": {
+    "approved": false,
+    "tables": ["auth.sessions", "auth.refresh_tokens", "auth.one_time_tokens", "auth.flow_state"],
+    "scope": "Preserve encrypted source; do not activate old operational sessions/tokens in local test. Complete dependency review and user approval required before import."
+  },
+  "analyzerValidation": {
+    "syntheticChecksPassed": 11,
+    "initialToolFailures": "Synthetic incomplete-COPY test and historical-column comparator corrected before acceptance; no SQL execution or import during failed attempts",
+    "plainArchiveAndPhotosPersisted": false,
+    "identityBytesReadByNodeOrModel": false,
+    "storedIdentityReadByAgeChild": true,
+    "memoryClearing": "Best effort buffer clearing; no forensic erasure guarantee"
+  },
+  "localRuntime": {
+    "initialDockerSocketPresent": false,
+    "initialDaemonAvailable": false,
+    "rancherStartCommandInvocations": 1,
+    "startCommandExitStatus": 0,
+    "startCommandProvesDaemonReady": false,
+    "lastLimaVmState": "Stopped",
+    "lastRancherApiAvailable": false,
+    "freshTargetGate": "NO_VERIFICADO",
+    "helpRequested": "User to inspect Rancher Desktop notice/engine state; no reset or deletion"
+  },
+  "sourceRemoteContacted": false,
+  "unrelatedSupabaseConnectorUsed": false,
+  "sqlExecutedFromArchive": false,
+  "dataImported": false,
+  "realPostRestoreCasesPassed": 0,
+  "runtimeConfigurationChanged": false,
+  "containersNetworksFirewallChanged": false,
+  "backupOrKeyModified": false,
+  "newCaptureOrDriveTransfer": false,
+  "functionalCodeChanged": false,
+  "gitCommitPushPerformed": false,
+  "netlifyDeploymentPerformed": false,
+  "productionTouched": false,
+  "auditStatus": "AUD-018 ALTO / EN REVISION - NO CORREGIDO",
+  "launchDecision": "NO-GO",
+  "nextGate": "Resolve local runtime availability, revalidate isolation/disk/mounts/empty catalog, review exact adapter/session and local URL changes before import; do not skip any failing gate"
+}

@@ -1,0 +1,53 @@
+{
+  "status": "TEST_TOOLING_DIAGNOSED_FIXED_OFFLINE_REOPEN_BLOCKED_AWAITING_CONFIRMATION",
+  "clientDate": "2026-10-17",
+  "clientTimezone": "America/Mexico_City",
+  "attemptReceiptUtc": "2026-10-18T04:47:54.760Z",
+  "attemptStatus": "INCOMPLETE_LOCAL_PRIVATE_WRITE_TESTS",
+  "failedStage": "authenticated-panel",
+  "actualAuthenticatedPanelAcceptance": "NOT_VERIFIED: failed assertion did not record enough response details to declare the page PASS",
+  "confirmedToolingErrors": [
+    {
+      "component": "Authenticated-panel assertion",
+      "cause": "Expected Mis propiedades, but successful existing markup uses h1 Aquí están tus publicaciones. Mis propiedades is used in anonymous/error branches.",
+      "correction": "Match the actual success heading and reject the anonymous/load-error notices; record only status and diagnostic booleans in future results.",
+      "applicationCodeChanged": false
+    },
+    {
+      "component": "Private local relay",
+      "cause": "for-await on a null Response.body turns an empty successful logout HTTP 204 into a synthetic 502.",
+      "correction": "Read the body only if present and preserve the actual status with an empty byte buffer.",
+      "applicationCodeChanged": false
+    }
+  ],
+  "offlinePolicyAndRegressionTestsPassed": 17,
+  "regressionEmptyStatusesTested": [204, 201, 200, 400],
+  "regressionsUseMocksNotActualCredentialsOrDatabaseWrites": true,
+  "sourceCommit": "a496790ecc4169cb291232923f0f746ffef45440",
+  "attemptExistingRowsPreserved": true,
+  "baselineTables": 17,
+  "attemptFixtureCreated": false,
+  "attemptNewSyntheticObjects": 0,
+  "attemptTransportDataMutations": 0,
+  "independentReadOnlyState": {
+    "guardVerified": true,
+    "authSessions": 0,
+    "activeRefreshTokens": 0,
+    "properties": 1,
+    "storageObjects": 7,
+    "credentialsOrTokenRowsRead": false
+  },
+  "signoutReceiptReconciliation": "Original result falsely leaves localSessionSignedOut=false because relay mishandles empty 204. Subsequent read-only counts independently confirm no sessions or active refresh tokens. Refresh-after-logout HTTP negative assertion was not reached and remains NOT_VERIFIED for this attempt.",
+  "oldTemporaryRunnerPid": 19310,
+  "oldTemporaryRunnerClosed": true,
+  "oldRunnerIdentityAndCwdCheckedBeforeSignal": true,
+  "rancherContainersAndRecoveredDataStoppedResetOrDeleted": false,
+  "originalReadyAndResultReceiptsPreserved": true,
+  "correctedRuntimeStarted": false,
+  "retryExecuted": false,
+  "reopeningStatus": "Blocked by execution safety review because the latest reported message includes no reintentes. No bypass attempted. Fresh user confirmation required to reopen, then user enters credentials locally.",
+  "functionalCodeSchemaRlsMigrationBucketOrDataCleanupChanged": false,
+  "remoteStagingProductionNetlifyOrOtherSupabaseConnectorUsed": false,
+  "commitOrPushPerformed": false,
+  "decision": "AUD-018 ALTO / EN REVISIÓN — NO CORREGIDO / NO-GO. Tooling correction is not authenticated write acceptance or a QRIH product fix."
+}

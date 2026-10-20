@@ -1,0 +1,58 @@
+{
+  "status": "PRIVATE_PANEL_ADMIN_READ_AND_LOGOUT_PASS_IMAGE_PHASE_INTERRUPTED_CANONICAL_HELPER_READY",
+  "clientDate": "2026-10-19",
+  "clientTimezone": "America/Mexico_City",
+  "attemptFinishedAtUtc": "2026-10-19T16:24:52.435Z",
+  "attemptReceipt": "recovery-private-result-20261019.json in private local work directory; preserved",
+  "passedCases": [
+    "real_session_for_original_server_routes",
+    "anonymous_private_page_denied_by_application",
+    "authenticated_panel_server_render",
+    "legitimate_admin_read",
+    "local_signout_and_refresh_rejected",
+    "preexisting_business_migration_storage_rows_preserved"
+  ],
+  "actualActor": "Existing recovered account with legitimate admin role; not a fabricated/elevated role",
+  "notVerified": [
+    "non_admin_http_rejection: no second legitimate session",
+    "unprivileged publisher/owner HTTP acceptance",
+    "synthetic image ingestion and false-image rejection",
+    "new fixture creation, gallery association, editing, cover and eighth-image rejection",
+    "fixture submission to review and public/private image authorization"
+  ],
+  "interruptedStage": "synthetic-image-ingestion",
+  "preexistingRowHashesPreservedAcrossTables": 17,
+  "fixtureCreated": false,
+  "newSyntheticObjects": 0,
+  "transportDataMutations": 0,
+  "sessionSignedOut": true,
+  "refreshAfterSignoutRejected": true,
+  "confirmedDiagnosticEnvironmentMismatch": {
+    "ipOriginAnonymousPostStatus": 400,
+    "noOriginAnonymousPostStatus": 401,
+    "installedNextRequestReproduction": "NextRequest normalizes 127.0.0.1 to localhost, but the test used the IP literal in Origin. Original application's exact-origin guard therefore correctly rejects the mismatch before authentication/upload.",
+    "scope": "Diagnostic local origin choice; no production upload failure or permission vulnerability inferred",
+    "correction": "Use http://localhost:3120 for application requests/Origin and Next hostname, still bind only 127.0.0.1. Diagnostic screen and local Supabase endpoint unchanged.",
+    "applicationOriginValidationModifiedOrWeakened": false
+  },
+  "offlinePolicyRegressionTestsPassed": 18,
+  "newReadyAtUtc": "2026-10-19T16:28:10.973Z",
+  "expiresAfterMinutes": 45,
+  "accessUrl": "http://127.0.0.1:3118/",
+  "newReadyReceipt": "recovery-private-ready-20261019b.json in private local work directory",
+  "futureResultReceipt": "recovery-private-result-20261019b.json; absent at readiness",
+  "newPreflight": {
+    "canonicalOriginAnonymousUploadReachesSessionGate401": true,
+    "foreignOriginRejected403": true,
+    "anonymousPanelDeniedByApplication": true,
+    "outOfScopeMutationRequestsRejected": 4,
+    "sourceFilesByteCompared": 118,
+    "publicBundleFilesScanned": 58,
+    "guardVerified": true,
+    "credentialsSubmittedOrDataWritesRepeated": false
+  },
+  "functionalSourceEnvSchemaRlsMigrationsOrBucketsChanged": false,
+  "cloudStagingProductionOtherSupabaseConnectorGitOrNetlifyChanged": false,
+  "dataCleanupOrReimportPerformed": false,
+  "decision": "AUD-018 EN REVISIÓN / NO-GO; retain proven private/admin/logout cases but do not mark image/write acceptance complete."
+}

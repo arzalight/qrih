@@ -1,0 +1,52 @@
+{
+  "format": "QRIH_CAPTURE_EXPIRY_DIAGNOSIS_V1",
+  "dateLocal": "2026-10-19",
+  "observedAtUtc": "2026-10-20T02:50:15.132Z",
+  "userReportedResult": "CONTROL_NO_VERIFICADO",
+  "originalAttemptTimestampAvailable": false,
+  "confirmedAtDiagnosis": {
+    "approvalPreparedAtUtc": "2026-10-19T22:38:46.633Z",
+    "approvalAgeMinutesApprox": 251.48,
+    "approvalMaximumAgeMinutes": 120,
+    "approvalExpired": true,
+    "quotaMaximumAgeHours": 12,
+    "quotaStillValid": true,
+    "quotaAndApprovalAndCutFileModeOwnerChecksPass": true,
+    "fullWorkingCodeCutMatches": true,
+    "releaseConsumed": false,
+    "onlyExistingRealCaptureDirectory": "capture-88e6a4a1-260c-4d19-9bed-56235edd13db",
+    "newCaptureDirectoryExists": false,
+    "expiredApprovalRejectionReproducedWithoutCapture": true,
+    "diagnosticOutput": "AUTORIZACION_CAPTURA_VENCIDA",
+    "diagnosticDidNotUseStorageKeyOrContactStaging": true
+  },
+  "finding": {
+    "severity": "BAJO — diagnóstico de herramienta, no vulnerabilidad Supabase confirmada",
+    "problem": "Expired local approval was rejected correctly, but the adapter converted the typed gate failure to an uninformative generic category. Previous readiness check did not check approval freshness.",
+    "correctionScope": "Outside-repository capture tooling only",
+    "changes": [
+      "Allowlisted fixed categories for approval expiry, quota expiry and code drift; no arbitrary exception text or secrets emitted",
+      "Readiness checks the same approval before key access or network, without consuming the release",
+      "Two-hour approval and twelve-hour quota limits unchanged; original capture remains blocked/byte-identical"
+    ],
+    "testsPassed": 15,
+    "testsFailed": 0,
+    "testsSkipped": 0,
+    "syntheticEncryptionAndFailureChecksPassed": 39
+  },
+  "renewal": {
+    "sameHumanAuthorizedBackupScope": true,
+    "priorReleaseWasUnused": true,
+    "preparedAtUtc": "2026-10-20T02:52:37.181Z",
+    "validUntilExclusiveUtc": "2026-10-20T04:52:37.181Z",
+    "maximumAgeStillHours": 2,
+    "codeCutRepinnedAfterDocumentation": true,
+    "claimNotConsumedByDiagnosticsOrPreparation": true
+  },
+  "newRealBackupCompleted": false,
+  "driveUploadPerformed": false,
+  "databasePasswordReadOrChanged": false,
+  "migrationOrDeployPerformed": false,
+  "productionOrRecoveryCopyModified": false,
+  "globalVerdict": "NO_GO"
+}

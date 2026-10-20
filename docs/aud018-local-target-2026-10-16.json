@@ -1,0 +1,93 @@
+{
+  "format": "QRIH_AUD018_LOCAL_TARGET_REVALIDATION_V1",
+  "dateLocal": "2026-10-16 America/Mexico_City",
+  "status": "PASS_LOCAL_TARGET_AND_MANAGED_COLUMNS_NOT_RESTORED",
+  "supersedesRuntimeUnavailableGate": true,
+  "userReportedRancherStarted": true,
+  "localOnlyTarget": "qrih-aud018-empty-20261006",
+  "beforeResume": {
+    "exactSixStopped": true,
+    "restartPoliciesNo": true,
+    "idsImagesVolumesPreserved": true,
+    "unrelatedContainersStopped": 15,
+    "effectiveHostPublishedPorts": 0,
+    "historicalConfiguredBindingsRetained": true,
+    "ownGuardPresent": false
+  },
+  "operations": {
+    "createdOnlyOwnGuardTable": "inet qrih_aud018_bridge_guard",
+    "ownRules": 2,
+    "guardVerifiedBeforeAnyStart": true,
+    "onlyExactSixExistingContainersStarted": true,
+    "restartPoliciesChanged": false,
+    "networksVolumesImagesRecreated": false,
+    "otherContainersOrRulesChanged": false
+  },
+  "readback": {
+    "recordedAt": "2026-10-16T16:35:06.437Z",
+    "sixRunning": true,
+    "sixRestartPoliciesNo": true,
+    "ownGuardPresentExactTwoRules": true,
+    "unrelatedContainersPreserved": 15,
+    "effectiveHostPublishedPorts": 0,
+    "noDefaultRoutesV4V6": true,
+    "externalV4NoRoute": true,
+    "gatewaySshBlockedForSix": true,
+    "internalHttpChecksPassed": 7,
+    "internalDatabaseTcpChecksPassed": 4,
+    "usersIdentitiesBucketsObjectsPublicTables": 0,
+    "propertiesAndQrihPrivateAbsent": true,
+    "scope": "Finite probes, not universal isolation; complete restore isolation matrix still pending"
+  },
+  "diskAndMounts": {
+    "vmRunning": true,
+    "vmMountCount": 7,
+    "keyConnectionBackupDirectoriesMode700OwnedNotSharedWithVm": true,
+    "fileVaultVerifiedOn": true,
+    "privateKeyContentsReadByMountCheck": false
+  },
+  "managedSchemaComparison": {
+    "recordedAt": "2026-10-16T16:37:14.521Z",
+    "sourceTablesParsed": 51,
+    "managedTablesCompared": 35,
+    "columnNameTypeNullabilityGeneratedDifferences": 0,
+    "sixPreviousExtraCopyColumnsAreGenerated": true,
+    "extensionsMatchNamedVersionsSchemas": true,
+    "sourceRoleAbsentOnLocal": "supabase_realtime_admin",
+    "defaultExpressionsGeneratedExpressionsConstraintsAclAndFunctionSemanticsVerified": false,
+    "outboundMarkerReview": "http_get/http_post/net.http occurrences found in extensions.grant_pg_net_access provider function; no source SQL executed. Do not import provider extension hooks blindly or infer an active outbound call from marker alone."
+  },
+  "proposedLocalAdaptationsNotApplied": {
+    "approved": false,
+    "quarantineTables": ["auth.sessions", "auth.refresh_tokens", "auth.one_time_tokens", "auth.flow_state", "auth.mfa_amr_claims"],
+    "sessionDependencyDiscovered": "auth.mfa_amr_claims has four source rows; include dependency in quarantine rather than creating orphans",
+    "userDataAndAccountIdsToPreserve": true,
+    "sourceSnapshotMfaFactors": 0,
+    "nonemptyUserOperationalFieldObserved": "confirmation_sent_at only; timestamp does not itself activate an old confirmation token",
+    "supabaseUrlOccurrencesInData": "Only supabase_migrations.schema_migrations.statements in inspected snapshot",
+    "imageFieldUrlTransformsNeededForThisSnapshot": false,
+    "keepSqlHistoryUnchanged": true,
+    "noBlanketUrlReplacement": true,
+    "userApprovalRequested": "Preserve accounts/data but do not activate old operational sessions/links; local-only image URL translation if needed"
+  },
+  "toolValidation": {
+    "resumeSyntheticChecks": 8,
+    "schemaParserSyntheticChecks": 7,
+    "firstVerificationIssues": "Compared configured historical bindings to empty instead of exact historical values, then compared Docker mount arrays without canonicalizing order. Corrected with rejection tests; no repeated mutation/start. Actual effective ports remained zero.",
+    "rawReadbackPreviewFields": "sixStopped and guardPresent in original resume-readback receipt describe BEFORE resume only; fresh-target receipt verifies six running and guard present. Original receipt retained, helper corrected for future output."
+  },
+  "sourceRemoteContacted": false,
+  "unrelatedSupabaseConnectorUsed": false,
+  "archiveSqlExecuted": false,
+  "dataImported": false,
+  "plaintextBackupPersisted": false,
+  "backupAndKeyModified": false,
+  "functionalCodeChanged": false,
+  "gitCommitPushPerformed": false,
+  "netlifyDeploymentPerformed": false,
+  "productionTouched": false,
+  "realPostRestoreCasesPassed": 0,
+  "auditStatus": "AUD-018 ALTO / EN REVISION - NO CORREGIDO",
+  "launchDecision": "NO-GO",
+  "nextGate": "Approve local session adaptation; review exact adapter/allowlist/managed owners ACL defaults functions and local-only transport before importing into freshly protected empty target"
+}

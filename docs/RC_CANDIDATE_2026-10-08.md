@@ -1,8 +1,68 @@
 # QRIH — Preparación del candidato local
 
+**Candidato anterior histórico tras cambio funcional19oct:** [Mis propiedades](PROFILE_PROPERTY_MANAGEMENT.md) cambia frontend/API/formularios y añade tests en rama `feature/profile-property-management`. Build local nuevo no es RC ni está autorizado para Netlify. Migración051 generada por CLI y probada sólo en PostgreSQL en memoria:93SQL/132unit/lint/tipos/build PASS; render estático1440/375/320px verificado ([recibo](profile-property-management-local-2026-10-19.json)). No aplicada a STAGING ni copia recuperada/producción; Auth/Storage físico/UI autenticada y privacidad gestionada pendientes. No usar SHA/manifiesto/READY inferiores para certificar este árbol. Antes de RC: respaldo reciente verificado/controles/permiso explícito de aplicación051 e integración real, revisión del diff y secretos, versionado/GitHub con permiso, manifiesto nuevo y autorización explícita de deployFree. Sin commit/push/deploy actual; NO-GO.
+
+**Corte vigente2026-10-19 — escrituras recuperadas PASS acotado:** [16casos HTTP/SSR y verificación independiente](aud018-private-write-acceptance-2026-10-19.json), admin-owner legítimo, ingesta/edición/portada/7asociaciones-rechazo8ª/pending oculto/logout/datos previos preservados.8WebP/644bytes verificados; fixture conservado y accesos temporales cerrados. Sin cobertura publisher/no-admin/UIcompleta inferida. Fuente167/huella/build/envSTAGING intactos, sin cambios funcionales/Git/cloud/Netlify. No promover build de recuperación aRC. Operación/aceptación integral/piloto y RC autorizado separados; AUD018ENREVISIÓN/NO-GO. No repetir este ensayo/login.
+
+## Corte vigente — build separado de recuperación, público/galería/PDF comprobados
+
+La autorización de copia/lectura se ejecutó sin alterar candidatoSTAGING:118archivosapp iguales/buildproduction separado,58bundle públicos sin privatekey/cloudorigins. [Evidencia](aud018-recovered-public-app-2026-10-16.json). Inventario/ficha200/sieteWebP-hash/visor7→6→7/Escape/PDF200dos páginas renderizadasPASS;16huellasapp-historial posteriores iguales.10tests relayguard; escrituras/estadísticas/privados bloqueados. Tooling [slug] corregido antes de aceptarbrowser, no fixapp; cosméticoPDFOBS01no bloqueante documentado. Fuente167/hash/buildnormal/env/guardSTAGING/Git/Netlify/producción intactos; no promover este build de recuperación a RC. Privados/escrituras/aceptación integral/operación/piloto pendientes; AUD018ENREVISIÓN/NO-GO. No repetir fase pública ni interpretar estado pendiente de cortes inferiores como actual.
+
+## Corte vigente — Auth recuperado comprobado; candidato fuente intacto
+
+16octCDMX: [PASS real de una cuenta](aud018-real-local-login-2026-10-16.json), perfil por JWTemitido/RLS, cierre sólo sesión nueva y refresh rechazado.16huellas app/historial iguales/cuentas4-identidades4/sesiones0-refreshactivos0. Pantalla temporal cerrada/listener3118ausente, no usarla para más pruebas. Fuente167/build/env normalSTAGING intactos; no reutilizar su build ni debilitar guard para probar QRIH recuperado: siguiente plan separado de código/build/env/transporte y escrituras. No app/PDF/allroles/aceptación integral aprobados; AUD018 ENREVISIÓN/NO-GO/piloto/operación pendientes. Sin Git/Netlify/deploy/producción. Login pendiente en cortes siguientes es antecedente resuelto.
+
+## Actualización vigente — acceso diagnóstico local preparado, sin modificar candidato
+
+Usuario autoriza pantalla temporal separada, [recibo](aud018-local-login-access-2026-10-16.json): sólo127.0.0.1:3118/30min,12tests y9negativos HTTP PASS, guard/identidades verificados, destinos internos Auth/REST fijos. No login humano todavía ni QRIHapp/PDF probado; no usa/modifica configuración STAGING del app ni build/código167entradas. Permiso/transporte inferiores ya no pendientes; esperar uso personal de cuenta snapshot08oct y recibo sanitizado, nunca contraseña por chat. Auth legítimo puede modificar filas operativas locales/timestamps. Después aceptación integral/operación/piloto; AUD018 EN REVISIÓN/NO-GO, sin Git/deploy/Netlify/producción.
+
+## Gate vigente — R1 corregido localmente, Auth/app de recuperación pendientes
+
+16oct CDMX: reanudación protegida de seis servicios existentes después de guard2, puertos efectivos0/15 ajenos intactos. ACL fuente70 validada con ROLLBACK y confirmada mismo lote; R1 ALTO/CORREGIDO LOCAL. Copia: 37 huellas/24 FKs/15 RLS/tres perfiles, matriz imágenes252/84 contextos revertida y huellas finales iguales, HTTP Storage público rechazado/firma exacta y vencida PASS. No login real ni API QRIH/PDF/escrituras/aceptación integral inferidos. [Evidencia](aud018-local-restore-2026-10-16.json). Próximo permiso: acceso temporal loopback separado para Auth real de copia, aún no abierto; localhost QRIH sigue STAGING. Mantener candidato a496790/167 entradas sin cambios funcionales ni build/Git nuevos. AUD-018 EN REVISIÓN/NO-GO; decisiones piloto/operación pendientes y Netlify excluido, no deploy. Estados inferiores históricos, no repetir importación/reset ni gates ya cumplidos.
+
+## Gate vigente — restore parcial y nuevo subhallazgo local de ACL
+
+2026-10-16. Datos37tablas y7fotos ya restaurados/huellas-bytes-procedencia,5operativas vacías con aprobación del usuario. **AUD018-R1 ALTO local** detectado por readonly: permiso anónimo a RPC restringido en fuente; corregir ACL exacta en copia y revalidar, sin inferir vulnerabilidad cloud. Corrección preparada no aplicada porque motor volvió a estar ausente/VM Stopped; ayuda usuario solicitada, no reset/restart automático/reimportación. Copia ahora contiene datos: guard antes de todo start de seis servicios. [Evidencia](aud018-local-restore-2026-10-16.json). Auth HTTP/app/PDF/matriz de aceptación/decisión piloto/operación y NO-GO se mantienen. Código candidatoa496790 sin cambios funcionales/Git; Netlify sigue excluido, no deploy.
+
+## Gate previo vigente — destino de recuperación disponible, no importado
+
+2026-10-16. Bloqueo Rancher resuelto por usuario y verificado: seis servicios protegidos/guard exacto2/15ajenos y reglas previas conservados, destino vacío/puertos0/probes internos-externos acotados PASS.35managed compatibles en columnas/tipos/nulabilidad/generación y extensiones; quedan ACL/defaults/funciones/role proveedor/adaptador/transporte. [Evidencia](aud018-local-target-2026-10-16.json). Aprobación de cuarentena local de sesiones/enlaces con dependencia auth.mfa_amr_claims solicitada, no aplicada; snapshot sin traducción operativa de imágenes necesaria.0/15post-restore/NO-GO. Candidatoa496790 sin cambios funcionales/Git/cloud; Netlify excluido. No repetir ayuda de abrir Rancher ya completada.
+
+## Gate previo vigente — recuperación retomada, 2026-10-16
+
+Usuario pide completar recuperación y otros pendientes sin deploy Netlify. AUD018 reactivado: análisis privado del respaldo PASS51tablas/conteos/7WebP/hashes, **sin importación ni pruebas post-restore**. Gate actual RancherVM Stopped/API no disponible tras único start; ayuda usuario para aviso visible, no reset/reintento/importación a ciegas. [Evidencia](aud018-recovery-analysis-2026-10-16.json)/[plan](../supabase/staging/backup-recovery-plan-2026-10-06.md). Revalidación destino/compatibilidad/adaptador/cuarentena/15casos pendientes; pausa histórica sustituida. NO-GO y decisión de destino piloto/AUD002 original/operación siguen abiertos. Código candidatoa496790 sin modificar; documento local no autoriza push/Netlify ni usa conector Supabase ajeno.
+
+## Preparación offline vigente — aislamiento Supabase, 2026-10-16
+
+El conector Supabase de ChatGPT conectado pertenece a otro proyecto, según instrucción expresa del usuario. No usarlo para QRIH ni cambiar/desconectar esa cuenta. Para cualquier control real futuro se requiere acceso autorizado al STAGING exacto `mcyxunymhuxyiwklyfpy` y verificar su identidad antes de consultar. No enviar secretos al chat ni sustituirlo por producción. La falta de conector correcto no impide las comprobaciones locales.
+
+**Revisión propuesta para RC:** `a496790ecc4169cb291232923f0f746ffef45440`, entregada a GitHub en develop y verificada en el paso anterior. Cotejo offline nuevo PASS de167archivos/huella `f9fc6cbb2f0d15a89943403650a2532cf93edddd050f5d04587fc86cd9494ca9` contra Git/manifest/trabajo; fuente equivalente al build local4302fef, no build remoto ni compilación nueva de a496790. Main intacta. Registros posteriores son locales y quedan fuera de esa revisión.
+
+Preflight local nuevo PASS: origen STAGING fijo, variables presentes/formato válido y sin referencia/valor de la credencial privada examinada en bundle cliente existente. No se mostraron valores ni se contactaron servicios. Claves opacas no permiten comprobar offline su pertenencia; Auth/Storage/RLS y permisos reales **no revalidados**. Sin nuevas suites, build, migración, commit/push o despliegue.
+
+### Secuencia preparada — no ejecutada ni autorizada como deploy
+
+| Paso | Condición para avanzar / detenerse |
+|---|---|
+| Autorizar un RC | Permiso explícito para un único deploy de staging del SHA anterior; «continúa» o renovación de créditos no lo autoriza. No reactivar builds de desarrollo ni conectar producción/main. |
+| Revalidar destino y costo | GitHub privado/develop en SHA exacto; sitio qrih-staging esperado, Free, sin recargas/overages, builds detenidos y saldo real suficiente. Publicado actual se revalida, no se deduce del recibo histórico. Si difiere algo o falta cuota, detener sin deploy/reintento/compra. |
+| Revisar configuración del RC | Verificar destino STAGING correcto y variables runtime/build por un mecanismo autorizado sin mostrar valores. No usar la cuenta Supabase ajena. Conservar callbacks/configuración existentes; no aplicar migraciones por inferencia. |
+| Construir y comprobar | Una compilación Netlify del SHA aprobado; registrar ID/estado READY/SHA exacto. No subir `.next` local ni asignar el build4302fef al deploy nuevo. Ante error, conservar diagnóstico sanitizado y parar, no encadenar redeploys. |
+| Humo remoto acotado | Suite existente `tests/http-smoke.test.mjs`,25casos, sólo origen exacto https://qrih-staging.netlify.app, sin modo development ni identidad; lecturas y solicitudes inválidas, no altas/escrituras válidas/correos. Es verificación HTTP, no prueba de flujos autenticados/RLS reales. |
+| Diferencias de plataforma | Verificar únicamente lo no cubierto por HTTP: imágenes privadas/autorización y caducidad, galería/PDF y continuidad privada con sesión legítima existente. Sin tercera cuenta ni repetir alta/recuperación histórica; cualquier escritura de prueba exige alcance STAGING concreto. No afirmar PASS sin evidencia. |
+| Cierre | Registrar límites y GO/NO-GO. Un RC READY no cierra AUD018/restauración ni decide destino piloto/AUD002 original. Sin aprobación global de lanzamiento. |
+
+No se ejecuta rollback/republicación/configuración automática ante un fallo; requiere autorización específica y revisión de compatibilidad de código/datos. No restaurar artefactos locales, borrar datos ni reabrir AUD018 para superar este gate.
+
+## Antecedentes de compilación e integración local
+
 2026-10-08. **CÓDIGO INTEGRADO EN DEVELOP Y COMPILADO LOCALMENTE; NO ES UN RC APROBADO/TAG NI UN GO DE LANZAMIENTO.** Usuario autoriza commits y después consolidar/compilar local. Main intacta, sin push/PR/deploy/producción ni reabrir descifrado/restore AUD-018 rechazado. Este corte superior sustituye las propuestas/permisos históricos inferiores.
 
-## Validación vigente — callback local por reporte, 2026-10-15
+## Entrega vigente — GitHub develop confirmado, 2026-10-16
+
+Push autorizado y verificado: develop54faaf1→a496790/21commits, repo privado y main55b7737 preservada por readback. Guard Netlify detenido/Free antes-después PASS, publicadof67fa46 sin cambios. [Recibo](github-delivery-2026-10-16.json). Sin force/tags/PR/deploy/configuración/producción/restore ni nueva credencial. Fuentes167/f9fc6cbb… iguales al build4302fef, no build nuevo ni suite funcional remota por enviar Git. Crédito restante no medido; RC exacto de GitHub y su deploy exigen autorización distinta/cuota/READY/humo. AUD018 pausado y elección de destino/AUD002 original condicionado mantienen NO-GO. Documentación posterior sólo local sin segundo commit/push; no repetir entrega/login/correo ya completados.
+
+## Evidencia anterior — callback local por reporte, 2026-10-15
 
 **Preparación de entrega documental:**10archivos, sin entradas de código/configuración/SQL nuevas. Partidae568187 con20commits sobre referencia local origin/develop54faaf1; remoto no reconsultado. Versionado local autorizado separado; su SHA se obtiene de Git y no se atribuye al build4302fef. Sin push/tag/PR/deploy/main/producción/restore. Antes del envío se requieren permiso propio, refs/visibilidad y guard builds detenidos/Free frescos. Código167entradas/huella f9fc6cbb… igual; no recompilar por este lote. Matriz única de bloqueantes en QRIH_AUDIT.md, con cuota actual no comprobada.
 
@@ -125,7 +185,7 @@ Supabase/PostgreSQL orientaron separar fixtures de permisos efectivos, identidad
 
 | Pendiente | Estado / efecto |
 |---|---|
-| AUD-018, ALTO | Usuario pausó análisis privado; respaldo cifrado y ciclo vacío verificados anteriormente, recuperación real no probada. Sigue bloqueante para GO externo; no waiver. |
+| AUD-018, ALTO | Restore parcial confirmado37tablas/7fotos/5operativasvacías. AUD018-R1 ACL local ALTO pendiente; corrección no aplicada por motor otra vez Stopped. Guard/identidades antes de start con datos, después ACL/roles/Auth HTTP/app/PDF/matriz completa. No waiver/GO. |
 | AUD-002 original, ALTO | Bucket público/URLs legadas según evidencia anterior, no reconsultado aquí. Corte original necesita autorización/backup/ventana/pruebas propias; staging no se convierte automáticamente en producción. |
 | AUD-036, MEDIO | Corrección integrada local, pruebas sintéticas y renovación natural observada08oct; callback/formulario local por reporte15oct. RC y coberturas adicionales declaradas pendientes, no repetir correo/login ni convertir reporte en cambio de contraseña/inspección independiente. |
 | AUD-031 / RC publicado | Parche ya en develop, no READY staging del código pendiente; revisar dentro del RC autorizado, no deploys de desarrollo. |

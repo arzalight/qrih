@@ -1,0 +1,30 @@
+{
+  "status": "REOPEN_AUTHORIZED_READY_AWAITING_LOCAL_LOGIN",
+  "clientDate": "2026-10-17",
+  "clientTimezone": "America/Mexico_City",
+  "explicitReopenAuthorizationReceived": true,
+  "runtimeReadyAtUtc": "2026-10-18T04:54:14.671Z",
+  "expiresAfterMinutes": 45,
+  "accessUrl": "http://127.0.0.1:3118/",
+  "sameScopeAsApprovedPlan": true,
+  "policyAndRegressionTestsPassed": 17,
+  "localGuardVerified": true,
+  "readOnlyCountsBeforeOpening": {
+    "sessions": 0,
+    "activeRefreshTokens": 0,
+    "properties": 1,
+    "galleryImages": 7,
+    "storageObjects": 7
+  },
+  "sourceFilesByteCompared": 118,
+  "publicBundleFilesScanned": 58,
+  "baselineTables": 17,
+  "originalFailedAttemptReceiptPreserved": true,
+  "newReadyReceipt": "recovery-private-ready-20261017b.json in private local work directory",
+  "futureResultReceipt": "recovery-private-result-20261017b.json; not created at reopening",
+  "userLoginOrTestDataWritesExecutedAtReadiness": false,
+  "functionalCodeSchemaRlsEnvOrMigrationChanged": false,
+  "remoteStagingProductionNetlifyOrOtherSupabaseConnectorUsed": false,
+  "resetReimportCleanupCommitOrPushPerformed": false,
+  "decision": "AUD-018 EN REVISIÓN / NO-GO. Reopening is not authenticated write acceptance."
+}

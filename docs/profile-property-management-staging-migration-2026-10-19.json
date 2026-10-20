@@ -1,0 +1,174 @@
+{
+  "schemaVersion": 1,
+  "dateLocal": "2026-10-19",
+  "verifiedAtUtc": "2026-10-20T03:20:48Z",
+  "status": "APPLIED_TO_QRIH_STAGING_AND_CATALOG_VERIFIED",
+  "authorization": {
+    "userRequest": "Si, aplica las migraciones pendientes",
+    "scope": "Only new migration051 after reconciliation of existing baseline/history; non-destructive transaction, no business fixture writes, no Git push/deploy/production"
+  },
+  "target": {
+    "projectRef": "mcyxunymhuxyiwklyfpy",
+    "name": "QRIH Staging",
+    "organization": "QRO INDUSTRIAL HUB",
+    "planObserved": "Free",
+    "dashboardUrl": "https://supabase.com/dashboard/project/mcyxunymhuxyiwklyfpy/sql/b5031596-e1a1-4f99-92a0-0871b61bb59f",
+    "connectorUsed": false,
+    "executionRole": "postgres"
+  },
+  "git": {
+    "branch": "feature/profile-property-management",
+    "head": "a496790ecc4169cb291232923f0f746ffef45440",
+    "dirtyTreePreserved": true,
+    "newCommit": false,
+    "push": false
+  },
+  "backup": {
+    "evidence": "backup-verification-2026-10-19.json",
+    "generation": "capture-b19dbe83-4d5c-4432-b910-f48b349080e3",
+    "localAndDriveVerified": true,
+    "originalReceiptUnmodified": true
+  },
+  "migration": {
+    "file": "supabase/migrations/20261019212016_051_profile_property_management.sql",
+    "version": "20261019212016",
+    "name": "051_profile_property_management",
+    "sha256": "cdf2076a623d694a04c75036cae45ed6d54bb6dbc86d2888a5449c8b0ef1a549",
+    "canonicalFileUnmodified": true,
+    "initialHeaderIsHistorical": true,
+    "pendingNewMigrationsBefore": 1,
+    "appliedOnce": true,
+    "newMigrationHistoryRowInSameTransaction": true,
+    "priorHistoryRows": [
+      {
+        "version": "20261004051244",
+        "name": "qrih_staging_verified_schema_baseline"
+      },
+      {
+        "version": "20261004051331",
+        "name": "044_add_property_main_image_path"
+      },
+      {
+        "version": "20261004051334",
+        "name": "045_make_property_images_private"
+      },
+      {
+        "version": "20261004051336",
+        "name": "046_soft_launch_authorization_boundaries"
+      },
+      {
+        "version": "20261004051338",
+        "name": "047_verified_media_ingestion"
+      },
+      {
+        "version": "20261004051340",
+        "name": "048_atomic_property_writes"
+      },
+      {
+        "version": "20261004053218",
+        "name": "049_lockdown_function_privileges"
+      },
+      {
+        "version": "20261006201920",
+        "name": "050_cross_account_opportunities"
+      }
+    ],
+    "historyRowsAfter": 9,
+    "priorRowsUnchanged": true,
+    "historyRepairOrReplay": false,
+    "historyBodyMd5": "69ba5e37453050d03a55c52088b952a0",
+    "historyBodyBytes": 8721,
+    "historyBodyFormat": "Canonical DDL without outer BEGIN/COMMIT, surrounded by dollar-quote delimiter newlines, stored as one text[] element; no semantic rewrite."
+  },
+  "execution": {
+    "method": "Authenticated SQL Editor for correct project; exact guarded wrapper around canonical DDL, not blanket db push",
+    "isolation": "repeatable read",
+    "lockTimeout": "3s",
+    "statementTimeout": "30s",
+    "advisoryTransactionLock": true,
+    "preconditions": "24 data/history tables match new backup; catalog and function/ACL fingerprints equal; new objects absent",
+    "postconditionsBeforeCommit": "Exact new function sources; unrelated functions/ACL and catalog/RLS unchanged except specified index; business/Storage/prior history unchanged; index valid; ACL/search_path correct",
+    "applyResult": "051_APPLIED",
+    "applyScriptSha256": "4df729cfcb44a35ab942e998f7089bf92272d3aca9235bbdff2d41eebdf5ad80"
+  },
+  "verification": {
+    "independentReadOnlyQuery": true,
+    "resultRows": 14,
+    "booleanAssertions": 11,
+    "allBooleanAssertionsPassed": true,
+    "migration051Rows": 1,
+    "historyRows": 9,
+    "priorHistoryAnd23BusinessStorageTablesMatchBackup": true,
+    "rlsPoliciesCatalogUnchangedExceptNewIndex": true,
+    "threeFunctionSourcesExact": true,
+    "securityDefinerAndEmptySearchPath": true,
+    "anonAndPUBLICExecuteDenied": true,
+    "authenticatedOnlyTwoRpcs": true,
+    "uniqueIndexValid": true,
+    "historyBodyExact": true,
+    "publicVisibilityHelperUnchanged": true,
+    "propertyImagesPrivateAndWebP": true,
+    "querySha256": "bf10575aa7085d32fa9523a6ffb80695ec647a853b98bfb3cdc56126aca9075d",
+    "functionSourceMd5": [
+      {
+        "name": "qrih_protect_property_fields",
+        "md5": "149eaf050117cb327a06b68545ce1af0"
+      },
+      {
+        "name": "qrih_withdraw_own_property",
+        "md5": "99fae58d171fe5e39f181c658ca66508"
+      },
+      {
+        "name": "qrih_duplicate_property",
+        "md5": "cb31564e2ea2874a2a7c528ab87def2e"
+      }
+    ]
+  },
+  "tests": {
+    "sqlIntegration": {
+      "passed": 93,
+      "failed": 0,
+      "skipped": 0,
+      "scope": "New PGlite database, synthetic actors/Storage metadata only, rerun this task"
+    },
+    "wrapper": {
+      "passed": true,
+      "scope": "Fresh synthetic PGlite; exact DDL, ACL/catalog/source/history/rerun guards; noncryptographic digest stub and synthetic expected fingerprints, NOT hosted backup proof"
+    },
+    "priorUnitLintTypesBuild": "Previously passed, not rerun this migration-only operation"
+  },
+  "advisor": {
+    "reviewedInCorrectProject": true,
+    "newExpectedWarnings": [
+      "Signed-In Users Can Execute SECURITY DEFINER Function public.qrih_duplicate_property(...)",
+      "Signed-In Users Can Execute SECURITY DEFINER Function public.qrih_withdraw_own_property(...)"
+    ],
+    "assessment": "Intentional authenticated RPC entry points; active owner and field/path checks in exact reviewed source, anon/PUBLIC denied; warning not dismissed or suppressed. Does not prove real Auth/HTTP/Storage tests.",
+    "existingCritical": "Security Definer View public.properties_public; known deliberate public projection, security_barrier and qrih_property_is_public published+active+enabled filter verified; not modified.",
+    "otherWarnings": "Existing RLS initialization, multiple permissive policies, duplicate indexes, executable helper/admin functions, Leaked Password Protection Disabled also listed; not corrected or claimed absent by this scope."
+  },
+  "diagnostics": {
+    "migrationFailed": false,
+    "verificationOnlyIssues": [
+      "SQL editor static RLS heuristic on embedded canonical DDL string: cancelled; switched read-only verification to hashes; no Run without RLS used.",
+      "First history byte comparison omitted dollar-quote delimiter newlines; false result diagnosed and expected hash corrected from exact executed wrapper. Live SQL/history not rewritten."
+    ]
+  },
+  "limits": {
+    "noBusinessPropertiesRetiredOrDuplicated": true,
+    "noUploadOrDeletion": true,
+    "noPolicyOrBucketChange": true,
+    "noNewRestoreOrExport": true,
+    "noUnrelatedConnector": true,
+    "noProduction": true,
+    "noNetlify": true,
+    "hostedAuthStorageUiAcceptance": false,
+    "multisessionConcurrency": false,
+    "overallDecision": "NO-GO remains; migration installed does not validate new feature flows or operational/RC gates."
+  },
+  "next": "Use localhost against QRIH STAGING to validate new owner workflows with explicitly authorized separate fixtures and legitimate session; preserve real properties/photos. No need to repeat backup/DDL/recovery.",
+  "proof": {
+    "screenshotOutsideGit": "work/aud018-tools-20261006.KqHlHu/051-staging-applied.png",
+    "screenshotSha256": "05327d20994525a0ab52c6ee1d752f0bb94b35b57c15a27c046d0f6fefd70f5a"
+  }
+}
