@@ -39,8 +39,12 @@ export function propertyPrice(property: PricedProperty, total = false): string {
   const d = decimal(property.price_value_text ?? property.price_value)
   if (!d) return property.price_display ? `${property.price_display} (${property.price_currency})` : 'Consultar'
   const normalizedUnit = (property.price_unit || '').trim().toLowerCase()
-  if (!['', 'm2', 'm²', 'total'].includes(normalizedUnit)) return property.price_display
-    ? `${property.price_display} (${property.price_currency})` : 'Consultar unidad de precio'
+  if (!['m2', 'm²', 'total'].includes(normalizedUnit)) {
+    // Missing legacy units are unknown, not an implicit total/month amount.
+    // Preserve the original announcement; never label it as a calculated total.
+    if (total) return 'Consultar unidad de precio'
+    return property.price_display ? `${property.price_display} (${property.price_currency})` : 'Consultar unidad de precio'
+  }
   const perArea = ['m2', 'm²'].includes(normalizedUnit)
   const area = total && perArea ? decimal(property.total_area) : null
   if (total && perArea && !area) return 'Consultar'

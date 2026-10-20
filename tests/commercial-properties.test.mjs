@@ -60,6 +60,14 @@ test('decimal: multiplicación exacta, venta sin mensualidad y moneda desconocid
   assert.equal(propertyPrice({ ...base, price_value: 999999999999.1, price_value_text: '999999999999.1234567', price_unit: 'total' }),
     'US$999,999,999,999.1234567 USD/mes', 'Priorizar decimal textual de PostgreSQL sobre JSON number')
 })
+test('unidad heredada vacía/desconocida conserva anuncio y no inventa un total', () => {
+  for (const unit of [null, undefined, '', 'desconocida']) {
+    const property = { ...base, price_unit: unit, price_display: '$7.50/m²' }
+    assert.equal(propertyPrice(property), '$7.50/m² (USD)')
+    assert.equal(propertyPrice(property, true), 'Consultar unidad de precio')
+    assert.equal(propertyPrice({ ...property, price_display: null }), 'Consultar unidad de precio')
+  }
+})
 test('precio de escritura: string decimal, límite y rechazo de floats implícitos', () => {
   assert.equal(parsePriceInput('007.50'), '7.5')
   assert.equal(parsePriceInput('123.4567'), '123.4567', 'No redondear precios históricos al editarlos')
