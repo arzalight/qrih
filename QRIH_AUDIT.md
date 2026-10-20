@@ -2,13 +2,17 @@
 
 ## Dictamen consolidado vigente — 2026-10-19
 
-### AUD-039 — MEDIO / CONFIRMADO / CORREGIDO EN TESTS; CI REMOTA PENDIENTE
+### AUD-039 — MEDIO / CONFIRMADO / CORREGIDO Y VALIDADO EN CI REMOTA
 
-[Intento y corrección](docs/rc-deploy-attempt-2026-10-19.json) / [manifiesto180](docs/rc-candidate-inputs-2026-10-19-ci-fix.json). Único build6ad6e67b4a3146b7e208b964/deploy6ad6e67b4a3146b7e208b966 del commitbb439a6: lint/tipos remotosPASS,117testsPASS/15fallos por origen heredado en fixtures. No llegó a compilar Next ni publicar; f67fa46 sigue activo. AUD039MEDIO confirmado/reproducido y corregido sólo en pruebas: tres suites aíslan SITE_ID/URL y restauran entorno; guard real/casos origen ajeno intactos, regresión hija33casos.133unit normales y133con proveedor sintético/0skips, lint/tipos/build/preflight localesPASS. Commit3e4ec56c3fb65fbdcfd0f7caac2af8e072da5d77 ya verificado en GitHub develop; main intacta. Sin app/seguridad/RLS/env real/datos modificados por el fix. Builds detenidos/Free; segundo intento todavía NO solicitado y requiere aprobación. Humo remoto nuevo/Auth-Storage-UI/operación pendientes y **NO-GO Soft Launch**. Los cortes inferiores de preparación del primer deploy son antecedentes.
+[Resultado del RC](docs/rc-deploy-retry-2026-10-19.json): build `6ad6ea1852ec38abfbd9bb20`, deploy `6ad6ea1852ec38abfbd9bb22`, commit publicado `5c4970eb31e52b5af2cdfe41ecf1636839320da3`; READY y publicado comprobados por API y dashboard, 19oct22:12:54 CDMX / 20oct04:12:54 UTC. **133/133 pruebas unitarias remotas y 31/31 comprobaciones HTTP del sitio desplegado PASS, 0 fallos/0 omisiones**; lint, tipos, preflight y compilación completados por el pipeline. Huella de las180entradas igual al manifiesto corregido; fuente funcional sin cambios por este intento.
 
-### RC nuevo autorizado — preparado para validar plataforma, no apertura de piloto
+AUD-039 **MEDIO / CONFIRMADO / CORREGIDO Y VALIDADO EN CI REMOTA**: aislamiento de fixtures verificado en proveedor, sin debilitar el guard de origen. El primer intento fallido y su recibo se conservan como antecedentes. Segundo intento autorizado por «SI», un único POST nuevo/journal separado, sin tercer intento. Free/saldo previo299/300/sin recargas ni overages; `stop_builds=true` restituido y comprobado. Sin producción/main, pagos, cambios de configuración de Supabase, repetición051, respaldo/restore ni operaciones de negocio autenticadas. Las peticiones de humo fueron lecturas o solicitudes inválidas/no autenticadas; no verifican físicamente Storage/RLS con usuario real ni sustituyen la aceptación UI.
 
-[Candidato19oct](docs/RC_CANDIDATE_2026-10-19.md). Usuario solicita explícitamente continuar con deploy; sólo qrih-staging, un build Free.299/300créditos observados tras login, cuenta/variables STAGING/builds detenidos verificados por API; no configurar pagos.132unit/93SQL sintéticas/19tooling sintéticas/31HTTP locales/lint/tipos/build exacto487907b/preflight PASS,179huellas nuevas; antiguo manifiesto167 histórico. Commit funcional4c4ebde y tooling487907b separados, objetos importados a Git local con SHA idéntico desde conexión GitHub ya autorizada; no exponer ni renovar credenciales CLI vencidas. Preparación de entrega de develop, main intacta. Las seis pruebas HTTP nuevas son negativas/no autenticadas; no acreditan nuevos flujos Auth/Storage/UI. Sin deploy en este corte ni operaciones de negocio reales. **NO-GO Soft Launch** conservado; READY remoto y aceptación funcional no se infieren del permiso.
+**GO técnico de despliegue del RC en STAGING; NO-GO para apertura del Soft Launch.** Pendientes: aceptación de los nuevos flujos Auth/Storage/UI con sesión legítima y fixtures expresamente autorizados, concurrencia/renovación de firmas según checklist, y cierre operativo/RPO-RTO24h/aceptación final. Los recibos sintéticos y la recuperación anterior conservan su alcance, sin repetir trabajo cerrado.
+
+### Antecedentes de migración, recuperación y operación
+
+Los cortes inferiores mantienen la evidencia de cada momento; sus frases «deploy pendiente» o «sin Netlify» no describen el estado vigente.
 
 ### Migración051 autorizada y aplicada — gate de BD cerrado, no GO
 

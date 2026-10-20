@@ -1,12 +1,23 @@
 # NEXT STEPS — QRO INDUSTRIAL HUB / QRIH
 
-## Próximos pasos vigentes — cierre consolidado 2026-10-19
+## Próximos pasos vigentes — 2026-10-19
 
-**Intervención actual: aprobar un único nuevo build del RC corregido.**
+**RC ya publicado y humo remoto PASS: no solicitar otro deploy ni repetir051/backups/restore.**
 
-[Intento y corrección](docs/rc-deploy-attempt-2026-10-19.json) / [manifiesto180](docs/rc-candidate-inputs-2026-10-19-ci-fix.json). Único build6ad6e67b4a3146b7e208b964/deploy6ad6e67b4a3146b7e208b966 del commitbb439a6: lint/tipos remotosPASS,117testsPASS/15fallos por origen heredado en fixtures. No llegó a compilar Next ni publicar; f67fa46 sigue activo. AUD039MEDIO confirmado/reproducido y corregido sólo en pruebas: tres suites aíslan SITE_ID/URL y restauran entorno; guard real/casos origen ajeno intactos, regresión hija33casos.133unit normales y133con proveedor sintético/0skips, lint/tipos/build/preflight localesPASS. Commit3e4ec56c3fb65fbdcfd0f7caac2af8e072da5d77 ya verificado en GitHub develop; main intacta. Sin app/seguridad/RLS/env real/datos modificados por el fix. Builds detenidos/Free; segundo intento todavía NO solicitado y requiere aprobación. Humo remoto nuevo/Auth-Storage-UI/operación pendientes y **NO-GO Soft Launch**. Los cortes inferiores de preparación del primer deploy son antecedentes.
+[Resultado del RC](docs/rc-deploy-retry-2026-10-19.json): build `6ad6ea1852ec38abfbd9bb20`, deploy `6ad6ea1852ec38abfbd9bb22`, commit publicado `5c4970eb31e52b5af2cdfe41ecf1636839320da3`; READY y publicado comprobados por API y dashboard, 19oct22:12:54 CDMX / 20oct04:12:54 UTC. **133/133 pruebas unitarias remotas y 31/31 comprobaciones HTTP del sitio desplegado PASS, 0 fallos/0 omisiones**; lint, tipos, preflight y compilación completados por el pipeline. Huella de las180entradas igual al manifiesto corregido; fuente funcional sin cambios por este intento.
 
-**Vigente — continuar el RC STAGING autorizado.** [Candidato19oct](docs/RC_CANDIDATE_2026-10-19.md),179entradas/build local exacto PASS;132unit/93SQL sintéticas/19tooling/31HTTP locales PASS. Terminar entrega develop bajo guard builds detenidos, main intacta; un único build Netlify Free con299/300créditos observados, detener nuevamente los builds y comprobar READY/SHA exacto/31HTTP remotos. No pedir otra autorización genérica del deploy ya solicitado; si falla un control, parar sin reintentos/pagos/cuentas nuevas. Después aceptación Auth/Storage/UI nueva y operación/RC con sus límites; **NO-GO de Soft Launch**, no sólo desplegar.051/respaldo/restore cerrados en su alcance y no se repiten.
+AUD-039 **MEDIO / CONFIRMADO / CORREGIDO Y VALIDADO EN CI REMOTA**: aislamiento de fixtures verificado en proveedor, sin debilitar el guard de origen. El primer intento fallido y su recibo se conservan como antecedentes. Segundo intento autorizado por «SI», un único POST nuevo/journal separado, sin tercer intento. Free/saldo previo299/300/sin recargas ni overages; `stop_builds=true` restituido y comprobado. Sin producción/main, pagos, cambios de configuración de Supabase, repetición051, respaldo/restore ni operaciones de negocio autenticadas. Las peticiones de humo fueron lecturas o solicitudes inválidas/no autenticadas; no verifican físicamente Storage/RLS con usuario real ni sustituyen la aceptación UI.
+
+**GO técnico de despliegue del RC en STAGING; NO-GO para apertura del Soft Launch.** Pendientes: aceptación de los nuevos flujos Auth/Storage/UI con sesión legítima y fixtures expresamente autorizados, concurrencia/renovación de firmas según checklist, y cierre operativo/RPO-RTO24h/aceptación final. Los recibos sintéticos y la recuperación anterior conservan su alcance, sin repetir trabajo cerrado.
+
+1. Autorizar fixtures nuevos y acotados en QRIH STAGING real para probar sólo los flujos nuevos; sesión legítima con contraseña introducida por el usuario. No retirar/duplicar propiedades reales existentes por inferencia.
+2. Validar retiro/cancelación/edición→pending→moderación, duplicado independiente/idempotente, portada persistente/renovable y límites7/WebP; documentar fallos/concurrencia y los límites no verificados.
+3. Cerrar operación diaria de respaldos/RPO, medición o contingencia RTO24h y aceptación integral; emitir GO/NO-GO final. No abrir piloto ni tocar producción sin permiso explícito.
+4. Continuar desarrollo local + Supabase STAGING + GitHub; Netlify permanece con builds detenidos y cualquier nuevo RC requiere autorización específica. No desplegar un commit que sólo actualiza documentación.
+
+### Antecedentes históricos, no instrucciones pendientes
+
+Las listas inferiores reflejan cortes previos. Si contradicen los cuatro pasos vigentes, prevalece lo anterior.
 
 **051 ya autorizada, APLICADA y verificada — no repetirla.** [Recibo](docs/profile-property-management-staging-migration-2026-10-19.json). Baseline y044–050 existentes no deben reenviarse ni repararse. Respaldo nuevo local+Drive y gate de BD completados; no pedir otra contraseña/login de respaldo ni repetir captura/restore por este cambio.
 

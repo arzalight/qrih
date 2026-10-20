@@ -1,6 +1,12 @@
 {
   "format": "QRIH_RC_CI_FIX_20261019_V1",
-  "status": "CI_FIX_VERIFIED_NEW_BUILD_REQUIRES_APPROVAL",
+  "status": "CI_FIX_VERIFIED_STAGING_READY_HTTP_SMOKE_PASS",
+  "deployedCommit": "5c4970eb31e52b5af2cdfe41ecf1636839320da3",
+  "netlifyBuildId": "6ad6ea1852ec38abfbd9bb20",
+  "netlifyDeployId": "6ad6ea1852ec38abfbd9bb22",
+  "deployEvidence": "docs/rc-deploy-retry-2026-10-19.json",
+  "remoteUnitTests": { "pass": 133, "fail": 0, "skipped": 0 },
+  "remoteHttpSmoke": { "pass": 31, "fail": 0, "skipped": 0 },
   "codeCommit": "3e4ec56c3fb65fbdcfd0f7caac2af8e072da5d77",
   "priorFailedCommit": "bb439a6b26cdbc80db2b511aeb1bd24848a2363e",
   "head": "3e4ec56c3fb65fbdcfd0f7caac2af8e072da5d77",
