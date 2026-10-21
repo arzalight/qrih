@@ -125,6 +125,8 @@ registerHooks({
     if (specifier === '@/lib/safe-navigation') return next(new URL('../lib/safe-navigation.ts', import.meta.url).href, context)
     if (specifier === '@/lib/property-price') return next(new URL('../lib/property-price.ts', import.meta.url).href, context)
     if (specifier === '@/components/PropertyStatusBadge') return next(new URL('../components/PropertyStatusBadge.tsx', import.meta.url).href, context)
+    if (specifier === './PropertyImageGallery' && context.parentURL === new URL('../components/CommercialPropertySheet.tsx', import.meta.url).href)
+      return next(new URL('../components/PropertyImageGallery.tsx', import.meta.url).href, context)
     return next(specifier, context)
   },
   load(url, context, next) {
@@ -135,6 +137,61 @@ registerHooks({
   },
 })
 const { Header } = await import('../components/Header.tsx')
+
+const authenticationHandlers = {
+  "app/login/page.tsx": {
+    "names": [
+      "signIn"
+    ],
+    "hash": "3e55ef13ba2f163b0f8d440c0b4bdc6566ad6d42b0d633a8378e51bab12f6089"
+  },
+  "app/registro/page.tsx": {
+    "names": [
+      "handleContinue",
+      "handleCreate"
+    ],
+    "hash": "7d3c0e62038bdb1ce4275f051fd727e5686a6c6ddd6f22847ad831abfb517d68"
+  },
+  "app/recuperar-contrasena/page.tsx": {
+    "names": [
+      "submit"
+    ],
+    "hash": "fcd6259fdeefd61db7050b9307ff1dbcb5253a1c07bd1aa791ba94f5db69e9e0"
+  },
+  "app/restablecer-contrasena/ResetPasswordForm.tsx": {
+    "names": [
+      "submit"
+    ],
+    "hash": "88ac6a5bf299250c9bff0229011207819bcf0e78d26194d00ab82984599f7449"
+  }
+}
+for (const [file, { names, hash }] of Object.entries(authenticationHandlers)) {
+  test(`Auth visual: handlers previos intactos en ${file}`, () => {
+    const ast = astBabel.parseSync(readFileSync(new URL(file, root), 'utf8'), {
+      configFile: false, babelrc: false, parserOpts: { plugins: ['jsx', 'typescript'] },
+    })
+    const handlers = []
+    astBabel.traverse(ast, { FunctionDeclaration(path) {
+      if (names.includes(path.node.id?.name)) handlers.push(contractAst(path.node))
+    } })
+    assert.equal(createHash('sha256').update(JSON.stringify(handlers)).digest('hex'), hash)
+  })
+}
+test('ficha real independiente: sólo datos autorizados, precio exacto y galería/PDF existentes', async () => {
+  const { CommercialPropertySheet } = await import('../components/CommercialPropertySheet.tsx')
+  const property = { slug: 'synthetic-sheet', title: 'Ficha sintética', zone: 'Zona pública',
+    address: 'Dirección privada sintética', location_visibility: 'zone', total_area: 100,
+    price_currency: 'USD', price_value: '7.50', price_unit: 'm2', operation: 'Renta' }
+  const html = renderToStaticMarkup(createElement(CommercialPropertySheet, { property,
+    images: [{ url: 'https://synthetic.invalid/authorized-ephemeral-image', title: 'Portada sintética' }] }))
+  assert.doesNotMatch(html, /<header|<footer|<nav|<form|Dirección privada sintética/)
+  assert.match(html, /US\$7.50 USD\/m²\/mes/)
+  assert.match(html, /US\$750 USD\/mes/)
+  assert.match(html, /href="\/api\/bodegas\/synthetic-sheet\/pdf"/)
+  assert.match(html, /width="1200" height="800" decoding="async"/)
+  assert.match(html, /Ampliar Portada sintética/)
+})
+
 test('tabla administrativa real: región enfocable, cabeceras, moneda, estados legibles y paginación existente', async () => {
   const { AdminPropertiesTable } = await import('../components/AdminPropertiesTable.tsx')
   const states = ['draft', 'pending', 'published', 'paused', 'rejected', 'expired', 'pending_update']

@@ -21,7 +21,7 @@ Se mantiene el CSS y la arquitectura actuales, con clases reutilizables de panel
 | 3 · catálogo/detalle/galería | SÍ: tarjetas semánticas, filtros, detalle agrupado y visor accesible |21UI/157aplicación,lint/tipos PASS; visor real móvil/teclado PASS. Nueva pasada completa de cuatro anchos PENDIENTE | PENDIENTE |
 | 4 · panel/perfil/formularios | SÍ: etiquetas asociadas, tokens, panel y confirmación/carga |32UI/157aplicación,lint/tipos PASS; publicación real1440 sin overflow ni campos sin label; resto responsive/éxito real PENDIENTE | PENDIENTE |
 | 5 · administración/secundarios | SÍ: tablas, estados, etiquetas y tokens |33UI/157aplicación,lint/tipos PASS; render de36filas/paginación. Nueva pasada visual admin real PENDIENTE por herramienta | PENDIENTE |
-| 6 · ficha/Auth | PENDIENTE; recibe únicamente tokens globales por ahora | PENDIENTE | PENDIENTE |
+| 6 · ficha/Auth | SÍ: ficha independiente/tokens; etiquetas/autocomplete/foco/mensajes Auth |38UI/157aplicación,lint/tipos/build/preflight PASS; no nuevos correos ni cambio de contraseña real | PENDIENTE |
 | 7 · cierre responsive/accesibilidad/performance | PENDIENTE | Pruebas por bloque no equivalen a cierre | PENDIENTE |
 
 ### Bloque 1
@@ -55,6 +55,14 @@ Tablas de propiedades/asesores con región de scroll enfoc able y descrita, capt
 Seis páginas admin, filtros/configuración y solicitudes/notificaciones adoptan tokens en estilos existentes. Formularios admin con labels previos ahora vinculados por htmlFor/id; selectores de zonas etiquetados. Historial permite wrap de filtros. No nuevas acciones/consultas ni cambio de moderación, verificación, suspensión, notificaciones leídas o autorización de contactos. Rutas admin siguen bajo los guards originales (prueba positiva sólo sesión legítima anterior, no rol fabricado).
 
 33UI y157aplicación PASS,lint/tipos PASS. La herramienta también agotó tiempo al retomar/recargar admin; no se afirma haber visto el nuevo interior completo ni tener sesión nueva verificada por ese intento. Aceptación visual admin real, cuatro anchos, contacto/avisos con todos sus estados y Safari siguen pendientes. No confundir render sintético con prueba E2E del servicio.
+
+### Bloque 6 — 21oct2026
+
+Ficha comercial usa los mismos tokens, portada con dimensiones reservadas y columnas adaptables; permanece sin Header/Footer/nav/forms ni captación. Mismos datos autorizados/formatter/PDF/galería; prueba SSR comprueba dirección privada ausente,USD7.50/m²/mes y total750USD/mes. El formatter existente omite decimales de total entero: prueba corregida para respetar esa convención, sin modificar importes/formatter.
+
+Login y registro con labels asociados/autocomplete; resumen de registro recibe foco al cambiar de paso y errores anunciados. Login tiene carga explícita en Suspense, no pantalla vacía. Recuperación/restablecimiento mantienen controles etiquetados existentes; no se reimplementan mecanismos Auth. Cuatro huellas AST de handlers previos (ecb956d) verificadas idénticas. Sin registro, correos, recovery real, cambio de contraseña, claves o callbacks nuevos. Revisar Auth real sólo en3000/3107 autorizados, no3108.
+
+38UI y157aplicación PASS;lint/tipos/buildNext y preflight de bundle sin credencial privada examinada PASS. Primer fixture de ficha necesitó resolver la importación relativa real de galería en el loader de prueba; no defecto de bundling de Next. Estas pruebas no validan nuevo deploy, PDF real posterior ni Safari/WCAGglobal. AUD043 del enlace PDF continúa separado y no corregido.
 
 ## Límites y continuación
 

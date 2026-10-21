@@ -79,7 +79,8 @@ function LoginForm() {
         )}
 
         <form onSubmit={signIn}>
-          <input
+          <label htmlFor="login-email">Correo electrónico</label>
+          <input id="login-email" autoComplete="email"
             type="email"
             required
             placeholder="Correo electrónico"
@@ -88,7 +89,8 @@ function LoginForm() {
             }
           />
 
-          <input
+          <label htmlFor="login-password">Contraseña</label>
+          <input id="login-password" autoComplete="current-password"
             type="password"
             required
             placeholder="Contraseña"
@@ -102,7 +104,7 @@ function LoginForm() {
           </button>
 
           {(message || callbackMessage) && (
-            <p className="notice">
+            <p className="notice" role="status" aria-live="polite">
               {message || callbackMessage}
             </p>
           )}
@@ -134,7 +136,7 @@ function LoginForm() {
 
 export default function Login() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<main className="form"><p className="ui-loading" role="status">Preparando acceso…</p></main>}>
       <LoginForm />
     </Suspense>
   )

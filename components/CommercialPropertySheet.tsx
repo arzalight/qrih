@@ -17,7 +17,7 @@ export function CommercialPropertySheet({ property: p, images }: { property: Com
       {p.location_visibility === 'address' && p.address && <p>{p.address}</p>}
     </section>
     <section className="commercial-sheet__hero">
-      <div>{images[0] ? <img className="commercial-sheet__cover" src={images[0].url} alt={p.title} /> : <p>Fotografías no disponibles</p>}</div>
+      <div>{images[0] ? <img className="commercial-sheet__cover" src={images[0].url} alt={p.title} width={1200} height={800} decoding="async" /> : <p>Fotografías no disponibles</p>}</div>
       <div className="commercial-sheet__price"><small>{p.operation}</small><h2>{propertyPrice(p)}</h2>
         {['m2', 'm²'].includes(p.price_unit || '') && <p>Total: {propertyPrice(p, true)}</p>}
         {p.price_plus_vat && <p>Más IVA</p>}{p.price_plus_maintenance && <p>Más mantenimiento</p>}

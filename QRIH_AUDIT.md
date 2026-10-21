@@ -2,6 +2,8 @@
 
 ## Actualización vigente — implementación UX/UI parcial / NO-GO
 
+**21oct / bloque6:** ficha comercial independiente con tokens/portada dimensionada; login/registro etiquetados y mensajes/foco/carga mejorados.38UI/157aplicación,lint/tipos/build/preflight PASS. HandlersAuth idénticos por AST; sin correos, contraseña, permisos ni mecanismo Auth alterado. Aceptación integral local/remota pendiente; [detalle](docs/PRELAUNCH_UI_IMPLEMENTATION.md). NO-GO visual.
+
 **21oct / bloque5:** tablas admin con scroll enfocable/cabeceras y estados legibles; etiquetas admin y tokens de secundarios.33UI/157aplicación,lint/tipos PASS; permisos/acciones/consultas intactos. Aceptación visual real del interior actualizado pendiente por timeout de herramienta, no por falta de contraseña. [Límites](docs/PRELAUNCH_UI_IMPLEMENTATION.md). Sin deploy; NO-GO visual.
 
 **21oct / bloque4:** FormField/publicación/edición/requerimiento/contacto con etiquetas asociadas; panel/perfil con tokens y saludo neutro; carga/éxito de publicación accesibles sin cambiar datos/handlers.32UI y157aplicación,lint/tipos PASS; publicación real1440 etiquetada/sin overflow, guardados nuevos y aceptación responsive integral pendientes. [Registro](docs/PRELAUNCH_UI_IMPLEMENTATION.md). NO-GO visual; sin push/deploy/BD.

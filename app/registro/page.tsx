@@ -1,6 +1,6 @@
 'use client'
 
-import { FormEvent, useState } from 'react'
+import { FormEvent, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
@@ -25,6 +25,8 @@ export default function RegistroPage() {
   const [confirming, setConfirming] = useState(false)
   const [loading, setLoading] = useState(false)
   const [msg, setMsg] = useState('')
+  const heading = useRef<HTMLHeadingElement>(null)
+  useEffect(() => { heading.current?.focus() }, [confirming])
 
   function update(
     field: keyof typeof form,
@@ -154,7 +156,7 @@ export default function RegistroPage() {
           </div>
 
           <div className="registration-card">
-            <h1>
+            <h1 ref={heading} tabIndex={-1}>
               ¿Tus datos son correctos?
             </h1>
 
@@ -212,7 +214,7 @@ export default function RegistroPage() {
             </dl>
 
             {msg && (
-              <p className="auth-message">
+              <p className="auth-message" role="alert">
                 {msg}
               </p>
             )}
@@ -258,7 +260,7 @@ export default function RegistroPage() {
         </div>
 
         <div className="registration-card">
-          <h1>
+          <h1 ref={heading} tabIndex={-1}>
             Crear cuenta
           </h1>
 
@@ -271,10 +273,10 @@ export default function RegistroPage() {
             className="registration-form"
           >
             <div className="registration-field">
-              <label>
+              <label htmlFor="registration-name">
                 Nombre completo *
               </label>
-              <input
+              <input id="registration-name" autoComplete="name"
                 value={form.name}
                 onChange={(e) =>
                   update('name', e.target.value)
@@ -283,10 +285,10 @@ export default function RegistroPage() {
             </div>
 
             <div className="registration-field">
-              <label>
+              <label htmlFor="registration-phone">
                 Teléfono *
               </label>
-              <input
+              <input id="registration-phone" autoComplete="tel"
                 value={form.phone}
                 onChange={(e) =>
                   update(
@@ -299,10 +301,10 @@ export default function RegistroPage() {
             </div>
 
             <div className="registration-field">
-              <label>
+              <label htmlFor="registration-company">
                 Empresa
               </label>
-              <input
+              <input id="registration-company" autoComplete="organization"
                 value={form.company}
                 onChange={(e) =>
                   update('company', e.target.value)
@@ -311,10 +313,10 @@ export default function RegistroPage() {
             </div>
 
             <div className="registration-field">
-              <label>
+              <label htmlFor="registration-userType">
                 Soy *
               </label>
-              <select
+              <select id="registration-userType"
                 value={form.userType}
                 onChange={(e) =>
                   update('userType', e.target.value)
@@ -330,10 +332,10 @@ export default function RegistroPage() {
             </div>
 
             <div className="registration-field">
-              <label>
+              <label htmlFor="registration-email">
                 Correo electrónico *
               </label>
-              <input
+              <input id="registration-email" autoComplete="email"
                 type="email"
                 value={form.email}
                 onChange={(e) =>
@@ -343,10 +345,10 @@ export default function RegistroPage() {
             </div>
 
             <div className="registration-field">
-              <label>
+              <label htmlFor="registration-password">
                 Contraseña *
               </label>
-              <input
+              <input id="registration-password" autoComplete="new-password"
                 type="password"
                 value={form.password}
                 onChange={(e) =>
@@ -356,7 +358,7 @@ export default function RegistroPage() {
             </div>
 
             {msg && (
-              <p className="auth-message">
+              <p className="auth-message" role="alert">
                 {msg}
               </p>
             )}
