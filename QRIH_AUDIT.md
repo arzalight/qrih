@@ -2,6 +2,8 @@
 
 ## Actualización vigente — implementación UX/UI parcial / NO-GO
 
+**AUD-044 /21oct — MEDIO confirmado/corregido en datosSTAGING, UI local verificada:** faltaba la fila singleton de configuración. Bajo autorización explícita se insertó sólo id=true/correoNULL (0→1),sin sobrescribir/borrar/RLS/migraciones. Configuración vuelve a abrir con sesión admin legítima. Correo por definir; UI remota no comprobada. [Evidencia independiente](docs/AUD044_PLATFORM_SETTINGS_2026-10-21.md). NO-GO visual conservado.
+
 **21oct / bloque6:** ficha comercial independiente con tokens/portada dimensionada; login/registro etiquetados y mensajes/foco/carga mejorados.38UI/157aplicación,lint/tipos/build/preflight PASS. HandlersAuth idénticos por AST; sin correos, contraseña, permisos ni mecanismo Auth alterado. Aceptación integral local/remota pendiente; [detalle](docs/PRELAUNCH_UI_IMPLEMENTATION.md). NO-GO visual.
 
 **21oct / bloque5:** tablas admin con scroll enfocable/cabeceras y estados legibles; etiquetas admin y tokens de secundarios.33UI/157aplicación,lint/tipos PASS; permisos/acciones/consultas intactos. Aceptación visual real del interior actualizado pendiente por timeout de herramienta, no por falta de contraseña. [Límites](docs/PRELAUNCH_UI_IMPLEMENTATION.md). Sin deploy; NO-GO visual.

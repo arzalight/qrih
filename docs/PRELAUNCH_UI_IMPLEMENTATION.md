@@ -6,6 +6,8 @@ Referencia gráfica recibida e inspeccionada el20oct2026: archivo AVIF aportado 
 
 **IMPLEMENTACIÓN PARCIAL / NO-GO del nuevo alcance visual.** Rama `feature/prelaunch-ui-review`; base del diagnóstico `a558807`. Sin push, deploy, migraciones, cambio de Supabase, RLS, permisos, datos de negocio o producción/main. El GO comercial anterior no valida este código.
 
+**Excepción posterior autorizada21oct:** AUD-044 confirmó ausencia de fila singleton de configuración en STAGING. Se creó únicamente id=true/correoNULL, tras autorización explícita y con readback;0updates/deletes/migraciones/RLS. [Registro independiente](AUD044_PLATFORM_SETTINGS_2026-10-21.md). No se editan propiedades ni se elige correo por inferencia.
+
 ## Sistema adoptado
 
 Inspiración: fondo claro, superficies blancas, navegación compacta, jerarquía tipográfica y acentos índigo/lila; no copiar tarjetas financieras ni inventar estadísticas. Tokens en `app/globals.css`: fondo#F5F7FA, superficie#FFFFFF, texto#253247, primario#5365A8, hover#42538F, muted#59677D, acento#8C87C8 exclusivamente decorativo y acento claro#D8D4F5 sobre superficies oscuras. Estados semánticos con texto, no sólo color; foco opaco#394C96, escala espacial4/8/12/16/24/32/48, radios8/12/16 y sombras suaves. Fuente del sistema sin descargas ni dependencias nuevas.
