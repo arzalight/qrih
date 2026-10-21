@@ -1,5 +1,20 @@
 # QRIH — Gate de entrega comercial a STAGING
 
+## Corte vigente21oct — nuevo alcance visual local, sin nuevoRC
+
+[Cierre por bloques/evidencia y límites](PRELAUNCH_UI_IMPLEMENTATION.md). Siete bloques implementados en feature/prelaunch-ui-review;196tests (39UI incluidas)/31HTTP,lint/tipos/build/preflight PASS;112mediciones/28vistas en cuatro anchos sin overflow. Admin real/visor/etiquetas/PDF local revisados. AUD044 fila faltante reparada sólo bajo autorización,correo vacío. Main/develop sin cambios,push/deploy0.
+
+- [x] Referencia recibida;diagnóstico anterior conservado.
+- [x] Siete bloques en commits separados; contratos Auth/formularios y código privilegiado preservados.
+- [x] Catálogo/precios/labels/galería/foco y geometría local con límites explícitos.
+- [x] Pruebas automatizadas/lint/tipos/build/preflight del código local final.
+- [ ] Aprobación humana visual y completar aceptación crítica de estados/acciones no ensayados mediante lectura.
+- [ ] Autorizar nuevoRC y verificar cuotaFree actual; no usar autorizaciones históricas.
+- [ ] Publicar/verificar SHA exacto del nuevoRC y su comportamiento Netlify/Storage/Auth/PDF.
+- [ ] Reemitir GO condicionado sólo con evidencia remota suficiente;WCAGglobal/Safari/performance no certificados.
+
+**NO-GO visual para Soft Launch conservado.** Los checklists y cuotas inferiores pertenecen a cortes anteriores, no autorización para desplegar hoy.
+
 **Actualización visual:** referencia gráfica recibida e inspeccionada; bloque1 implementado/validado localmente según [seguimiento](PRELAUNCH_UI_IMPLEMENTATION.md), resto pendiente. La casilla de referencia del corte inferior queda completada; NO-GO visual/nuevoRC sin autorización conservados. No desplegar por esta documentación.
 
 ## Gate adicional vigente — rediseño UX/UI solicitado después del RC comercial

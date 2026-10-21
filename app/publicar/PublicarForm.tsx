@@ -664,8 +664,6 @@ export default function Publish() {
             </p>
           )}
         </form>
-      </main>
-
       {showSuccess && (
         <section ref={successNotice} tabIndex={-1} className="publish-success ui-panel" role="status" aria-live="polite">
           <span className="publish-success__icon" aria-hidden="true">✓</span>
@@ -677,6 +675,7 @@ export default function Publish() {
           <Link className="button" href="/mis-propiedades">Ir a Mis propiedades</Link>
         </section>
       )}
+      </main>
     </>
   )
 }

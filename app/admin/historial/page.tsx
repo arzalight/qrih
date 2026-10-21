@@ -323,7 +323,7 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
           <option value="profile">Asesores</option>
         </select>
 
-        <input
+        <label className="ui-field">Desde<input
           type="date"
           name="desde"
           defaultValue={desde ?? ''}
@@ -335,9 +335,9 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
             background: "var(--surface)",
             fontSize: '13px',
           }}
-        />
+        /></label>
 
-        <input
+        <label className="ui-field">Hasta<input
           type="date"
           name="hasta"
           defaultValue={hasta ?? ''}
@@ -349,9 +349,9 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
             background: "var(--surface)",
             fontSize: '13px',
           }}
-        />
+        /></label>
 
-        <input
+        <label className="ui-field">Buscar propiedad o asesor<input
           type="search"
           name="busqueda"
           defaultValue={busqueda ?? ''}
@@ -364,9 +364,9 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
             background: "var(--surface)",
             fontSize: '13px',
           }}
-        />
+        /></label>
 
-        <select
+        <label className="ui-field">Acción<select
           id="accion"
           name="accion"
           defaultValue={actionFilter ?? ''}
@@ -388,7 +388,7 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
           <option value="profile_unverified">Verificación retirada</option>
           <option value="profile_suspended">Asesor suspendido</option>
           <option value="profile_reactivated">Asesor reactivado</option>
-        </select>
+        </select></label>
 
         <button
           type="submit"

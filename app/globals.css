@@ -1047,8 +1047,8 @@ main {
   display: none;
   align-items: center;
   justify-content: center;
-  min-width: 42px;
-  min-height: 42px;
+  min-width: 44px;
+  min-height: 44px;
   padding: 0;
   background: transparent;
   color: var(--ink);
@@ -1352,7 +1352,7 @@ main {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 42px;
+  min-height: 44px;
   padding: 10px 16px;
   border-radius: 12px;
   border: 1px solid #d1d5db;

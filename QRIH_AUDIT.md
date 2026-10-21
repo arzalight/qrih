@@ -2,6 +2,17 @@
 
 ## Actualización vigente — implementación UX/UI parcial / NO-GO
 
+### Dictamen local21oct2026 — interfaz implementada, NO-GO hasta aceptación RC
+
+196pruebas/31HTTP,lint/tipos/build/preflight PASS;112mediciones/28vistas,body sin overflow y precios legibles en inventario13/catálogo habilitado12. Sesión legítima admin/owner sólo para lectura/navegación;galería con foco/teclado y PDF real inspeccionados. [Registro y límites](docs/PRELAUNCH_UI_IMPLEMENTATION.md).
+
+- UX-001/002/003/005/006/007/011/012/013:correcciones de código/evidencia local según alcance;no aceptaciónSTAGING ni cierre global por medir viewport.
+- UX-004/008/009/010/014:tokens/confirmación/semántica/cascada intervenidos;estados completos,éxito real/lectores/Safari/zoom/performance y aceptación remota siguen limitados,no certificados.
+- AUD-044 MEDIO confirmado:singleton ausente,COUNT privilegiado0;1fila id=true/correoNULL autorizada/readback1 y UI local correcta. No causa histórica inferida ni políticas debilitadas. Correo de soporte pendiente humano.
+- AUD-043 MEDIO y riesgosAUD018 permanecen;no nueva vulnerabilidad crítica/alta confirmada por el rediseño. Catálogo del admin404 por regla publisher existente;catálogo habilitado positivo comprobado aparte,sin cambiar roles.
+
+Sin push/deploy/producción/main ni migraciones. Sin nuevas escrituras comerciales;única excepción de datosAUD044 bajo permiso. Falta aprobación visual y aceptación funcional/Netlify de un nuevoRC explícitamente autorizado;el GO anterior no se transfiere.
+
 **AUD-044 /21oct — MEDIO confirmado/corregido en datosSTAGING, UI local verificada:** faltaba la fila singleton de configuración. Bajo autorización explícita se insertó sólo id=true/correoNULL (0→1),sin sobrescribir/borrar/RLS/migraciones. Configuración vuelve a abrir con sesión admin legítima. Correo por definir; UI remota no comprobada. [Evidencia independiente](docs/AUD044_PLATFORM_SETTINGS_2026-10-21.md). NO-GO visual conservado.
 
 **21oct / bloque6:** ficha comercial independiente con tokens/portada dimensionada; login/registro etiquetados y mensajes/foco/carga mejorados.38UI/157aplicación,lint/tipos/build/preflight PASS. HandlersAuth idénticos por AST; sin correos, contraseña, permisos ni mecanismo Auth alterado. Aceptación integral local/remota pendiente; [detalle](docs/PRELAUNCH_UI_IMPLEMENTATION.md). NO-GO visual.

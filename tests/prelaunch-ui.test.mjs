@@ -76,6 +76,12 @@ test('panel sin saludo personal fijo y éxito de publicación no modal ni formul
   assert.match(publish, /role="status" aria-live="polite"/)
   assert.doesNotMatch(publish, /if \(!ready\)\s*\{\s*return null|position: 'fixed'/)
 })
+test('historial administrativo: filtros visibles y asociados sin cambiar sus nombres', () => {
+  const source = readFileSync(new URL('app/admin/historial/page.tsx', root), 'utf8')
+  for (const text of ['Desde', 'Hasta', 'Buscar propiedad o asesor', 'Acción']) assert.ok(source.includes(`<label className="ui-field">${text}`))
+  for (const name of ['desde', 'hasta', 'busqueda', 'accion']) assert.ok(source.includes(`name="${name}"`))
+  assert.match(source, /method="get"/)
+})
 
 
 const css = readFileSync(new URL('../app/globals.css', import.meta.url), 'utf8')

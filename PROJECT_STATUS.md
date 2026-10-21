@@ -2,6 +2,14 @@
 
 ## Actualización vigente — referencia recibida / implementación UX/UI por bloques
 
+### Cierre local21oct2026 — siete bloques de interfaz
+
+**IMPLEMENTADO EN CÓDIGO / VALIDACIÓN LOCAL ACOTADA / NUEVO STAGING PENDIENTE / NO-GO del rediseño.**196pruebas (39UI incluidas),31HTTP,lint/tipos/build/preflight PASS.28vistas×4anchos=112mediciones sin overflow;catálogo13precios y asesor habilitado12 sin recortes. Menú/visor/etiquetas/admin y PDF real3páginas/6fotos verificados en local,sin nuevos guardados comerciales ni aceptación legal.
+
+[Sistema,pantallas,trazabilidad,commits,evidencias y límites](docs/PRELAUNCH_UI_IMPLEMENTATION.md). Rama feature/prelaunch-ui-review;main55b7737/develop1992ca8 intactos;sin push/deploy/migraciones/cambiosRLS. Única escritura autorizada:AUD044 fila de configuraciónSTAGING(0→1,correoNULL),UI local correcta. Falta dirección de soporte humana,aprobación visual/aceptación crítica del nuevoRC y autorización explícita para desplegarlo en Free. No trasladar GO anterior ni afirmar WCAG/Safari/performance/E2E universal.
+
+Los cortes de bloques siguientes son cronológicos;no son tareas que deban repetirse.
+
 **AUD-044 /21oct — MEDIO confirmado/corregido en datosSTAGING, UI local verificada:** faltaba la fila singleton de configuración. Bajo autorización explícita se insertó sólo id=true/correoNULL (0→1),sin sobrescribir/borrar/RLS/migraciones. Configuración vuelve a abrir con sesión admin legítima. Correo por definir; UI remota no comprobada. [Evidencia independiente](docs/AUD044_PLATFORM_SETTINGS_2026-10-21.md). NO-GO visual conservado.
 
 **21oct / bloque6:** ficha comercial independiente con tokens/portada dimensionada; login/registro etiquetados y mensajes/foco/carga mejorados.38UI/157aplicación,lint/tipos/build/preflight PASS. HandlersAuth idénticos por AST; sin correos, contraseña, permisos ni mecanismo Auth alterado. Aceptación integral local/remota pendiente; [detalle](docs/PRELAUNCH_UI_IMPLEMENTATION.md). NO-GO visual.

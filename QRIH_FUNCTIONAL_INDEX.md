@@ -2,6 +2,15 @@
 
 ## Actualización vigente — UX/UI en implementación incremental
 
+### Cierre local21oct — IDs existentes conservados
+
+- UI-001–028 / UX-001–014:inventario en docs/PRELAUNCH_UI_AUDIT.md→páginas,Header/Footer,globals.css,FormField y PropertyStatusBadge→tests/prelaunch-ui.test.mjs. Siete bloques/commits y112mediciones/28vistas. [Seguimiento y límites](docs/PRELAUNCH_UI_IMPLEMENTATION.md).
+- PROP-003/006/007/008 / IMG-001–002:panel/editor/PublicarForm→portada/editor/galería/share→APIs/BD/RLS existentes sin cambios. Precarga/lectura/render/teclado locales;no nuevos guardados/publicaciones/copias/fotos.
+- AUTH-001–005 / PRICE-001 / PDF-001:etiquetas/mensajes→handlers/formatter/autorizadores existentes;huellasAST y suites previas/UI.196tests(39UI incluidas)/31HTTP,lint/tipos/build/preflight PASS;PDF real local3páginas/6fotos. NuevoRC remoto pendiente.
+- AUD-044:admin/configuracion→platform_settings(id=true)→seed036 existente;[registro independiente](docs/AUD044_PLATFORM_SETTINGS_2026-10-21.md).1fila creada con autorización;0updates/deletes/RLS/migraciones;UI local comprobada;correoNULL por definir.
+
+Sin renumerar funciones ni crear APIs/migraciones por estética. Main/develop/push/deploy sin cambios;NO-GO del nuevo alcance hasta aceptación del RC autorizado.
+
 **AUD-044 /21oct — MEDIO confirmado/corregido en datosSTAGING, UI local verificada:** faltaba la fila singleton de configuración. Bajo autorización explícita se insertó sólo id=true/correoNULL (0→1),sin sobrescribir/borrar/RLS/migraciones. Configuración vuelve a abrir con sesión admin legítima. Correo por definir; UI remota no comprobada. [Evidencia independiente](docs/AUD044_PLATFORM_SETTINGS_2026-10-21.md). NO-GO visual conservado.
 
 **21oct / bloque6:** ficha comercial independiente con tokens/portada dimensionada; login/registro etiquetados y mensajes/foco/carga mejorados.38UI/157aplicación,lint/tipos/build/preflight PASS. HandlersAuth idénticos por AST; sin correos, contraseña, permisos ni mecanismo Auth alterado. Aceptación integral local/remota pendiente; [detalle](docs/PRELAUNCH_UI_IMPLEMENTATION.md). NO-GO visual.

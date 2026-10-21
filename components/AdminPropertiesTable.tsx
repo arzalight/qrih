@@ -368,7 +368,7 @@ export function AdminPropertiesTable({
                   aria-current={currentPage === page ? 'page' : undefined}
                   onClick={() => setCurrentPage(page)}
                   style={{
-                    minWidth: '34px',
+                    minWidth: '44px',
                     padding: '8px 9px',
                     border: '1px solid #d5d5d5',
                     borderRadius: '8px',

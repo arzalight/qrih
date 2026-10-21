@@ -2,7 +2,13 @@
 
 ## Actualización vigente — continuar bloques UX/UI, referencia ya recibida
 
-No volver a pedir la imagen: AVIF inspeccionado y bloque1 iniciado/validado localmente. Continuar bloques2–7 del [seguimiento](docs/PRELAUNCH_UI_IMPLEMENTATION.md), sin deploy/main/producción ni nuevas reglas. Mantener NO-GO visual y separación código/local/STAGING. Origen3108 sólo revisión dev; Auth/callbacks futuros desde origen local ya autorizado. Los pasos inferiores de referencia faltante son históricos.
+Siete bloques implementados;196tests/31HTTP,lint/tipos/build/preflight y112mediciones locales PASS con límites. No repetir diagnóstico,imagen,036/052,fixtures,backups o contraseñas ya comprobados. [Cierre y evidencias](docs/PRELAUNCH_UI_IMPLEMENTATION.md). NO-GO del nuevo alcance hasta aceptación;los pasos inferiores son históricos.
+
+1. Revisar/aprobar visualmente el build local3107,sin modificar propiedades reales. Completar estados/acciones críticas no demostrados mediante lectura con cuentas/fixtures y aceptación legal autorizados;no afirmar E2E total por geometría.
+2. Definir dirección de soporte. AUD044 fila creada/verificada con correoNULL;no inferir dirección de SMTP/personales ni volver a insertar036.
+3. Tras aprobación y autorización explícita:entrega de rama/integración develop sin main,cuotaFree vigente y únicoRC Netlify. No activar auto-deploy ni usar permisos históricos.
+4. Aceptar SHA/READY/origen/headers/Storage/ficha/PDF/Auth/acciones críticas del nuevoRC;reemitir GO/NO-GO con límites. Hasta entonces la UI nueva sólo está validada localmente.
+5. Conservar AUD043/riesgosAUD018;WCAGglobal/Safari/lectores/zoom/performance/carga no certificados. Congelar nuevas funciones/alcance visual y atender sólo defectos/aceptación del MVP.
 
 ### Corte anterior — instrucciones previas a recibir la referencia
 

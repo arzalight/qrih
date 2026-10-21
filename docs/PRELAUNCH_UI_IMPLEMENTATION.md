@@ -4,7 +4,7 @@
 
 Referencia gráfica recibida e inspeccionada el20oct2026: archivo AVIF aportado por el usuario,740×528. Se decodificó localmente aPNG únicamente para inspección; no se incorpora el diseño ajeno como imagen del producto. Sustituye el bloqueo por referencia ausente del [diagnóstico inicial](PRELAUNCH_UI_AUDIT.md), que conserva su fecha/evidencia.
 
-**IMPLEMENTACIÓN PARCIAL / NO-GO del nuevo alcance visual.** Rama `feature/prelaunch-ui-review`; base del diagnóstico `a558807`. Sin push, deploy, migraciones, cambio de Supabase, RLS, permisos, datos de negocio o producción/main. El GO comercial anterior no valida este código.
+**SIETE BLOQUES IMPLEMENTADOS / VALIDACIÓN LOCAL ACOTADA / NO-GO hasta aceptación del nuevoRC.** Rama `feature/prelaunch-ui-review`; base del diagnóstico `a558807`. Sin push, deploy, migraciones, cambiosRLS/permisos/propiedades ni producción/main. Única escritura STAGING: fila de configuración AUD-044 expresamente autorizada, descrita debajo. El GO comercial anterior no valida este código.
 
 **Excepción posterior autorizada21oct:** AUD-044 confirmó ausencia de fila singleton de configuración en STAGING. Se creó únicamente id=true/correoNULL, tras autorización explícita y con readback;0updates/deletes/migraciones/RLS. [Registro independiente](AUD044_PLATFORM_SETTINGS_2026-10-21.md). No se editan propiedades ni se elige correo por inferencia.
 
@@ -19,12 +19,35 @@ Se mantiene el CSS y la arquitectura actuales, con clases reutilizables de panel
 | Bloque | Implementado | Validado localmente | STAGING |
 | --- | --- | --- | --- |
 | 1 · tokens/base/componentes compartidos | SÍ: tipografía, paleta, controles/foco/disabled, estados y tarjetas responsive | 11pruebasUI PASS,lint/tiposPASS; catálogo13precios sin clipping/bodyoverflow en375/768/1024/1440 | PENDIENTE |
-| 2 · navegación/layouts | SÍ: cabecera, disclosure de cuenta, rail de gestión>=1200, menú adaptable y redirect/panel |18UI y12Auth/notificacionesPASS;nav pública y admin375/768/1024/1440,Escape/foco y filtro sin overflowPASS;privadas restantes pendientes | PENDIENTE |
-| 3 · catálogo/detalle/galería | SÍ: tarjetas semánticas, filtros, detalle agrupado y visor accesible |21UI/157aplicación,lint/tipos PASS; visor real móvil/teclado PASS. Nueva pasada completa de cuatro anchos PENDIENTE | PENDIENTE |
-| 4 · panel/perfil/formularios | SÍ: etiquetas asociadas, tokens, panel y confirmación/carga |32UI/157aplicación,lint/tipos PASS; publicación real1440 sin overflow ni campos sin label; resto responsive/éxito real PENDIENTE | PENDIENTE |
-| 5 · administración/secundarios | SÍ: tablas, estados, etiquetas y tokens |33UI/157aplicación,lint/tipos PASS; render de36filas/paginación. Nueva pasada visual admin real PENDIENTE por herramienta | PENDIENTE |
+| 2 · navegación/layouts | SÍ: cabecera, disclosure de cuenta, rail de gestión>=1200, menú adaptable y redirect/panel |Nav pública/admin cuatro anchos,Escape/foco,menú44px y redirect real PASS | PENDIENTE |
+| 3 · catálogo/detalle/galería | SÍ: tarjetas semánticas, filtros, detalle agrupado y visor accesible |Cuatro anchos y precios sin recorte; visor real build final móvil/teclado PASS | PENDIENTE |
+| 4 · panel/perfil/formularios | SÍ: etiquetas asociadas, tokens, panel y confirmación/carga |Cuatro anchos,2tarjetas propias,edición/duplicado precargados/labels PASS; guardados/éxito real nuevos PENDIENTES | PENDIENTE |
+| 5 · administración/secundarios | SÍ: tablas, estados, etiquetas y tokens |Seis interiores admin reales/cuatro anchos PASS;33UI de corte y render36filas. AUD044 reparado aparte | UI RC PENDIENTE; filaAUD044 comprobada |
 | 6 · ficha/Auth | SÍ: ficha independiente/tokens; etiquetas/autocomplete/foco/mensajes Auth |38UI/157aplicación,lint/tipos/build/preflight PASS; no nuevos correos ni cambio de contraseña real | PENDIENTE |
-| 7 · cierre responsive/accesibilidad/performance | PENDIENTE | Pruebas por bloque no equivalen a cierre | PENDIENTE |
+| 7 · cierre responsive/accesibilidad/performance | SÍ en alcance local; no certificación global |196pruebas (157previas+39UI)/31HTTP,lint/tipos/build/preflight PASS;28vistas×4anchos y PDF real | PENDIENTE |
+
+Los apartados por bloque conservan los cortes de cada commit; sus pendientes de herramientas/medición quedan sustituidos sólo por la evidencia concreta del bloque7 siguiente, no por aceptación remota o E2E de todos los estados.
+
+### Bloque 7 — cierre local21oct2026
+
+- **196pruebas** en npm test (incluye ahora39UI),0fallos/0skips;31HTTP anónimas sobre build final3107,lint/tipos/build/preflight PASS. No omitir UI en la ejecución habitual; dependencias/lockfile sin cambios.
+- **28vistas×375/768/1024/1440=112mediciones:** body sin desbordamiento. Inventario13precios y catálogo de asesor habilitado12 sin clipping. Seis interiores admin reales, panel con2tarjetas propias, requerimientos/oportunidades, perfil, avisos, alta, edición y duplicación precargadas, solicitudes, Auth y legales. Recuperación muestra caso sin enlace válido, no éxito real; solicitudes del registro probado sin contactos. No afirmar que se aceptaron todos los estados/roles por medir geometría.
+- Menú móvil final44px, expanded/Escape/retorno de foco PASS; galería real final375px con6fotos,dialog:modal,Tab/ShiftTab/flechas/Escape/scroll/restauración PASS. Capturas de publicación móvil/escritorio,admin y ficha fuera de Git. Los timeouts previos se superaron con pestaña nueva/control documentado y lecturaDOM; no fallo productivo inferido.
+- Catálogo del propio admin devuelve404 por regla existente publisher/active/publications_enabled; no se cambió su rol ni se contó ese404 como catálogo positivo. Catálogo real habilitado100033 mostró12propiedades en los cuatro anchos. Restablecimiento sin marca válida es prueba negativa, no cambio de contraseña.
+- En historial se detectaron dos filtros sin nombre accesible durante la pasada: se añadieron labels visibles a búsqueda/acción y fechas; repetidos los cuatro anchos sin campos sin etiqueta. Confirmación de alta queda dentro de main y mantiene formulario oculto/redirect; no se hizo un guardado nuevo para provocar ese éxito.
+- PDF actual descargado desde la ficha local:3páginas,6imágenes,6.50USD/m²/mes y total73,788USD; las tres páginas renderizadas/inspeccionadas sin solapamiento ni fotos faltantes. Renderer/API/PDF no modificados. Poppler encontró un fallo de fontconfig local y se detuvo; revisión alternativa con PDFium ya instalado, sin instalaciones ni cambios del documento. Enlace del PDF local apunta a localhost, no es validación de origen Netlify; AUD043 remoto sigue abierto.
+- CSS fuente25.233→38.762bytes;gzip5.522→7.994bytes en el corte final. El crecimiento acompaña extracción de inline/navegación/estados;no afirmar mejora de transferencia/LCP/CLS sin medir bundle/página/red. Sin fuentes externas,animación pesada,librería o dependencia nueva.
+- Sin cambios en lib,API,callback,proxy,migraciones o lockfile respecto a develop1992ca8. Main55b7737/develop1992ca8 conservados. Datos/RLS/Auth/Storage no modificados por el rediseño salvo AUD044 autorizado.
+
+### Aceptación pendiente y dictamen
+
+**Preparado para revisión humana local, NO-GO Soft Launch del nuevo alcance.** Falta aprobar visualmente y autorizar un nuevoRC Free; no se despliega ni fusiona main automáticamente. En ese RC comprobar origen/headers/firmas/PDF y repetir flujos de escritura críticos (alta/edición/revisión/duplicado/contacto/moderación/Auth/logout) con cuentas/fixtures autorizados, aceptación legal/contraseña por el usuario y límites vigentes. No reutilizar el GO del RC anterior ni crear nuevas cuentas/fixtures sin necesidad/autoridad.
+
+WCAG2.2AA es objetivo, no certificación: falta matriz de estados/lectores/zoom/Safari/rendimiento real. Soporte necesita dirección humana; AUD043 y riesgos operativosAUD018 continúan. No nuevo crítico/alto confirmado en este rediseño; las limitaciones de prueba no son PASS.
+
+### Historial de commits de implementación
+
+1.2e138d0 tokens/base;2.d19dc46 navegación/layouts;3.c61b495 catálogo/detalle/galería;4.c1f9df3 panel/formularios;5.ecb956d administración/secundarios;6.588ce7b ficha/Auth;7.commit de cierre que contiene este registro. a558807 conserva diagnóstico;288659c registra AUD044 autorizado por separado. Todos locales en feature/prelaunch-ui-review, sin push/deploy.
 
 ### Bloque 1
 
@@ -52,7 +75,7 @@ Panel conserva consultas, cifras calculadas, tarjetas, portadas, Editar/Duplicar
 
 ### Bloque 5 — 21oct2026
 
-Tablas de propiedades/asesores con región de scroll enfoc able y descrita, caption, scope de columnas y enlaces44px. PropertyStatusBadge sólo presenta los siete estados existentes con texto español/clases semánticas; no concede permisos. Paginación conserva20/35/50/60/100, cálculo/handlers; indica página actual. Render real con36fixtures sintéticas muestra1–35, segunda página disponible y precioUSD exacto. Filtros no cambian GET, campos ni opciones.
+Tablas de propiedades/asesores con región de scroll enfocable y descrita, caption, scope de columnas y enlaces44px. PropertyStatusBadge sólo presenta los siete estados existentes con texto español/clases semánticas; no concede permisos. Paginación conserva20/35/50/60/100, cálculo/handlers; indica página actual. Render real con36fixtures sintéticas muestra1–35, segunda página disponible y precioUSD exacto. Filtros no cambian GET, campos ni opciones.
 
 Seis páginas admin, filtros/configuración y solicitudes/notificaciones adoptan tokens en estilos existentes. Formularios admin con labels previos ahora vinculados por htmlFor/id; selectores de zonas etiquetados. Historial permite wrap de filtros. No nuevas acciones/consultas ni cambio de moderación, verificación, suspensión, notificaciones leídas o autorización de contactos. Rutas admin siguen bajo los guards originales (prueba positiva sólo sesión legítima anterior, no rol fabricado).
 
