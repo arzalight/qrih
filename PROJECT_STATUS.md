@@ -1,5 +1,11 @@
 ## PROJECT STATUS — QRO INDUSTRIAL HUB / QRIH
 
+## Actualización vigente — referencia recibida / implementación UX/UI por bloques
+
+[Seguimiento de implementación](docs/PRELAUNCH_UI_IMPLEMENTATION.md): referencia AVIF740×528 recibida/inspeccionada, bloqueo gráfico superado. Bloque1 de tokens/base implementado y validado localmente (11UI,lint/tiposPASS; catálogo13precios sin clipping en375/768/1024/1440). Resto pendiente según tabla; NO-GO visual, sin nuevoRC ni deploy. No tocar Supabase/Auth/RLS/reglas de negocio. Los apartados siguientes conservan el diagnóstico y RC anteriores, no el estado de implementación actual.
+
+### Corte anterior — diagnóstico inicial antes de recibir la imagen
+
 ## Estado vigente — 20oct2026 / auditoría UX/UI inicial, NO-GO del rediseño
 
 [Inventario, hallazgos y plan visual](docs/PRELAUNCH_UI_AUDIT.md). Rama local `feature/prelaunch-ui-review`, base1992ca8/develop inicialmente limpio.25archivos de página inventariados/28entradas visuales;19vistas×4anchos=76mediciones locales.157pruebas de aplicación y31HTTP locales PASS,0fallos/0skips;lint/tiposPASS. Recorte de precio en tableta, labels/foco de galería, contraste y panel antiguo con métricas fijas identificados, NO corregidos todavía. Referencia gráfica mencionada en la solicitud aún no recibida; sólo llegó texto.

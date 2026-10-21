@@ -1,5 +1,11 @@
 # QRIH FUNCTIONAL INDEX — Índice maestro tipo SIGMA
 
+## Actualización vigente — UX/UI en implementación incremental
+
+[Bloques, archivos, sistema y pruebas](docs/PRELAUNCH_UI_IMPLEMENTATION.md). Referencia gráfica recibida; UX-001 corregido/verificado en catálogo local por grid+wrap; UX-004 pares de tokens corregidos/probados, no toda la UI. `globals.css`→componentes existentes;11pruebas nuevas en `prelaunch-ui.test.mjs`/`npm run test:ui`. PROP/PRICE/PDF y contratos de BD/API intactos en este bloque. STAGING pendiente / NO-GO visual. Diagnóstico inferior conserva evidencia previa, no ausencia vigente de referencia.
+
+### Corte anterior — inventario inicial
+
 ## Trazabilidad vigente — auditoría UX/UI previa, NO-GO del nuevo alcance visual
 
 [Inventario UI-001–028 / hallazgos UX-001–014 / matriz y plan](docs/PRELAUNCH_UI_AUDIT.md).25archivos de página, vistas/variantes separadas;19vistas/76mediciones locales de la base1992ca8. Nuevo diseño NO implementado, NO validado en STAGING. Rama local `feature/prelaunch-ui-review`; referencia gráfica pendiente de reenvío. IDs funcionales existentes conservados, sin migraciones ni APIs nuevas.

@@ -1,5 +1,7 @@
 # QRIH — Gate de entrega comercial a STAGING
 
+**Actualización visual:** referencia gráfica recibida e inspeccionada; bloque1 implementado/validado localmente según [seguimiento](PRELAUNCH_UI_IMPLEMENTATION.md), resto pendiente. La casilla de referencia del corte inferior queda completada; NO-GO visual/nuevoRC sin autorización conservados. No desplegar por esta documentación.
+
 ## Gate adicional vigente — rediseño UX/UI solicitado después del RC comercial
 
 **NO-GO del nuevo alcance visual.** El gate comercial inferior permanece cerrado para5f7b8e2, pero no aprueba cambios visuales posteriores. [Auditoría inicial y matriz](PRELAUNCH_UI_AUDIT.md). Rama local `feature/prelaunch-ui-review`,base1992ca8, sin código visual nuevo ni deploy. Referencia gráfica pendiente;25páginas inventariadas/19vistas/76mediciones de base.157unit/31HTTP locales PASS,lint/tiposPASS; no build/aceptación del rediseño.

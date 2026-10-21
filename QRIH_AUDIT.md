@@ -1,5 +1,11 @@
 # QRIH — Auditoría técnica pre-Soft-Launch
 
+## Actualización vigente — implementación UX/UI parcial / NO-GO
+
+[Seguimiento y límites](docs/PRELAUNCH_UI_IMPLEMENTATION.md). Referencia gráfica recibida. UX-001 ALTO corregido/verificado LOCAL en catálogo a375/768/1024/1440,13precios sin recorte; aceptación remota pendiente. UX-004 MEDIO: tokens con ocho pares de texto>=4,5:1 y foco>=3:1 probados, estilos incrustados/resto de UI aún pendientes.11UI/lint/tiposPASS. No cierre WCAGglobal, hallazgos restantes ni nuevoRC. Sin cambios Supabase/RLS/datos/producción/Netlify. Diagnóstico inferior es evidencia anterior al bloque1.
+
+### Corte anterior — auditoría inicial, sin correcciones todavía
+
 ## Dictamen vigente — auditoría UX/UI inicial / NO-GO del nuevo alcance visual
 
 [Informe e inventario visual](docs/PRELAUNCH_UI_AUDIT.md), base1992ca8/rama local `feature/prelaunch-ui-review`. Nuevo alcance de rediseño solicitado después del GO comercial: NO implementado ni aceptado.25páginas inventariadas,19vistas×4anchos/76mediciones. Sólo auditoría/documentación, sin modificar fuentes funcionales/Auth/RLS/Storage/BD/producción/main o Netlify.

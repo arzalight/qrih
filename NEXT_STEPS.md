@@ -1,5 +1,11 @@
 # NEXT STEPS — QRO INDUSTRIAL HUB / QRIH
 
+## Actualización vigente — continuar bloques UX/UI, referencia ya recibida
+
+No volver a pedir la imagen: AVIF inspeccionado y bloque1 iniciado/validado localmente. Continuar bloques2–7 del [seguimiento](docs/PRELAUNCH_UI_IMPLEMENTATION.md), sin deploy/main/producción ni nuevas reglas. Mantener NO-GO visual y separación código/local/STAGING. Origen3108 sólo revisión dev; Auth/callbacks futuros desde origen local ya autorizado. Los pasos inferiores de referencia faltante son históricos.
+
+### Corte anterior — instrucciones previas a recibir la referencia
+
 ## Acciones vigentes — nuevo alcance visual / NO-GO hasta aceptación
 
 1. Recibir la imagen de referencia mencionada (el adjunto disponible sólo contiene texto), o indicación explícita de usar exclusivamente la paleta/criterios escritos. [Auditoría inicial, inventario y secuencia](docs/PRELAUNCH_UI_AUDIT.md). Diagnóstico terminado; interfaz no modificada todavía.

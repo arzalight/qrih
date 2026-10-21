@@ -1,5 +1,7 @@
 # QRIH — Auditoría UX/UI previa al rediseño
 
+**Actualización posterior:** referencia AVIF recibida/inspeccionada; el diagnóstico inferior conserva su corte anterior. Implementación incremental y estado de correcciones en [seguimiento visual](PRELAUNCH_UI_IMPLEMENTATION.md). No interpretar la solicitud de imagen inferior como pendiente vigente.
+
 ## Corte y dictamen
 
 20oct2026, 22:09 CDMX / 21oct2026, 04:09 UTC. Base `1992ca81e9967ee2946133154c81a0b6597c7399`; rama local `feature/prelaunch-ui-review`, creada desde `develop` limpio. `main` no se modifica. **Fase 1: inventario y diagnóstico inicial completados con límites explícitos. Fases 2–10: pendientes; NO-GO del nuevo alcance visual.** Ninguna corrección de interfaz implementada en este corte.
