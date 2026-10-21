@@ -127,7 +127,7 @@ export default async function Inventory({
         </aside>
 
         <section>
-          {priceFilter.invalid && <p role="alert">Para filtrar precios selecciona moneda, operación y unidad, y un rango válido. No se comparan monedas ni unidades distintas.</p>}
+          {priceFilter.invalid && <p className="notice" role="alert">Para filtrar precios selecciona moneda, operación y unidad, y un rango válido. No se comparan monedas ni unidades distintas.</p>}
           <div className="head">
             <h2>{properties.length} propiedades</h2>
             <small>Destacadas primero</small>
@@ -148,7 +148,7 @@ export default async function Inventory({
           </div>
 
           {properties.length === 0 && (
-            <p>
+            <p className="ui-empty">
               No hay propiedades publicadas que coincidan con los filtros.
             </p>
           )}

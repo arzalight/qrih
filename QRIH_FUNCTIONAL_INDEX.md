@@ -2,6 +2,8 @@
 
 ## Actualización vigente — UX/UI en implementación incremental
 
+**21oct / bloque3:** catálogo, detalle y galería implementados localmente; tarjetas con alt/lazy/dimensiones, filtros sin cambiar GET, detalle con precios/visibilidad existentes y visor con foco/Escape/Tab/flechas verificados.21UI y157aplicación PASS,lint/tiposPASS. UX-003 corregido localmente,UX-012 texto corregido; nueva pasada integral de cuatro anchos pendiente por timeout del control de viewport, no PASS inferido. [Evidencia y límites](docs/PRELAUNCH_UI_IMPLEMENTATION.md). Sin nuevo RC; NO-GO visual conservado.
+
 **Bloque2 /21oct:** Header/estilos→navegación adaptable/rail de gestión; variantes de las seis páginas admin tras guards; `/panel`→redirect `/mis-propiedades`; AdminPropertyFilters sólo grid responsive.18UI y12regresionesAuth-notificacionesPASS, menú/foco/estado activo y geometría catálogo/admin en cuatro anchos verificados localmente. Sin cambio BD/API/RLS ni aceptación remota. [Seguimiento](docs/PRELAUNCH_UI_IMPLEMENTATION.md).
 
 [Bloques, archivos, sistema y pruebas](docs/PRELAUNCH_UI_IMPLEMENTATION.md). Referencia gráfica recibida; UX-001 corregido/verificado en catálogo local por grid+wrap; UX-004 pares de tokens corregidos/probados, no toda la UI. `globals.css`→componentes existentes;11pruebas nuevas en `prelaunch-ui.test.mjs`/`npm run test:ui`. PROP/PRICE/PDF y contratos de BD/API intactos en este bloque. STAGING pendiente / NO-GO visual. Diagnóstico inferior conserva evidencia previa, no ausencia vigente de referencia.

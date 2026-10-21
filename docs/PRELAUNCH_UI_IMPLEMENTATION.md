@@ -18,7 +18,7 @@ Se mantiene el CSS y la arquitectura actuales, con clases reutilizables de panel
 | --- | --- | --- | --- |
 | 1 · tokens/base/componentes compartidos | SÍ: tipografía, paleta, controles/foco/disabled, estados y tarjetas responsive | 11pruebasUI PASS,lint/tiposPASS; catálogo13precios sin clipping/bodyoverflow en375/768/1024/1440 | PENDIENTE |
 | 2 · navegación/layouts | SÍ: cabecera, disclosure de cuenta, rail de gestión>=1200, menú adaptable y redirect/panel |18UI y12Auth/notificacionesPASS;nav pública y admin375/768/1024/1440,Escape/foco y filtro sin overflowPASS;privadas restantes pendientes | PENDIENTE |
-| 3 · catálogo/detalle/galería | PARCIAL: grid y wrap de precio del bloque1 | Geometría de catálogo PASS; resto PENDIENTE | PENDIENTE |
+| 3 · catálogo/detalle/galería | SÍ: tarjetas semánticas, filtros, detalle agrupado y visor accesible |21UI/157aplicación,lint/tipos PASS; visor real móvil/teclado PASS. Nueva pasada completa de cuatro anchos PENDIENTE | PENDIENTE |
 | 4 · panel/perfil/formularios | PENDIENTE | PENDIENTE | PENDIENTE |
 | 5 · administración/secundarios | PENDIENTE | PENDIENTE; necesita rol legítimo para aceptación real | PENDIENTE |
 | 6 · ficha/Auth | PENDIENTE; recibe únicamente tokens globales por ahora | PENDIENTE | PENDIENTE |
@@ -31,6 +31,14 @@ Archivos: `app/globals.css`, `tests/prelaunch-ui.test.mjs`, script `test:ui` de 
 Ocho pares reales de tokens superan4,5:1 en pruebas calculadas de luminancia; foco/surface y foco/paper superan3:1. Esto no certifica WCAGglobal: estilos inline, imágenes, teclado/lectores y todos los estados siguen sujetos a revisión. Catálogo local a768px: tarjeta≈419px frente a≈134px anteriores;375≈337,5/1024≈314,8/1440≈274,7px. Cero precios con scrollWidth>clientWidth de13 y sin overflow del body en los cuatro anchos. Capturas comparativas permanecen en el espacio privado de trabajo, no en Git.
 
 UX-001: corrección local y reproducción de catálogo verificadas; aceptación del RC pendiente. UX-004: pares de tokens corregidos/probados, revisión de toda la UI pendiente. UX-008/014: consolidación inicial, no cierre global. Resto de hallazgos abiertos hasta sus respectivos bloques.
+
+### Bloque 3 — 21oct2026
+
+Tarjetas con fotografía semántica, texto alternativo, dimensiones reservadas y carga diferida; se conservan la URL autorizada recibida, destino y formatter MXN/USD. Filtros conservan nombres/opciones/GET y handlers; sólo se retira presentación inline. Detalle conserva consultas, barrera published, firma de fotografías, dirección autorizada, contacto y PDF; se organiza en paneles/especificaciones legibles. Inicio corrige «dos caminos» por los tres existentes (UX-012).
+
+El visor utiliza dialog nativo, foco inicial, ciclo Tab/ShiftTab explícito, Escape, flechas y retorno al disparador; restaura el scroll anterior. Verificado en ficha real a375px con seis fotografías: ShiftTab del cierre llega a Siguiente, Tab vuelve al cierre, flechas cambian fotografía y Escape vuelve a Ampliar Foto1. Sin navegación/footer/formularios añadidos a ficha. Pruebas del handler real y render de siete fotografías incluidas. UX-003 corregido/verificado localmente, aceptación remota pendiente. UX-010 mejora semántica, no medición de LCP/CLS ni rendimiento certificado.
+
+21pruebasUI y157aplicación PASS, sin fallos/omisiones; lint/tipos PASS. Capturas privadas conservadas fuera de Git. La nueva repetición conjunta de home/catálogo/detalle/ficha en los cuatro anchos se interrumpió por timeout del control de viewport del navegador (también en llamada aislada); no se declara PASS ni fallo de la aplicación por ello. Las mediciones anteriores de bloques1/2 mantienen sólo su alcance. Build final y aceptación visual integral todavía pendientes.
 
 ## Límites y continuación
 

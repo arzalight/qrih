@@ -33,14 +33,10 @@ export function InventoryFilters({
     <form method="get" className="inventory-filters">
 
       {/* OPERACIÓN */}
-      <div style={{ marginTop: '20px' }}>
+      <div >
         <label
           htmlFor="operation"
-          style={{
-            display: 'block',
-            marginBottom: '8px',
-            fontWeight: 600,
-          }}
+
         >
           Operación
         </label>
@@ -49,12 +45,7 @@ export function InventoryFilters({
           id="operation"
           name="operation"
           defaultValue={operation}
-          style={{
-            width: '100%',
-            padding: '10px',
-            borderRadius: '8px',
-            border: '1px solid #ccc',
-          }}
+
         >
           <option value="">Todas</option>
           <option value="Renta">Renta</option>
@@ -63,14 +54,10 @@ export function InventoryFilters({
       </div>
 
       {/* ZONA GENERAL */}
-      <div style={{ marginTop: '20px' }}>
+      <div >
         <label
           htmlFor="zone_general"
-          style={{
-            display: 'block',
-            marginBottom: '8px',
-            fontWeight: 600,
-          }}
+
         >
           Zona general
         </label>
@@ -80,12 +67,7 @@ export function InventoryFilters({
           name="zone_general"
           value={zonaGeneral}
           onChange={(e) => setZonaGeneral(e.target.value)}
-          style={{
-            width: '100%',
-            padding: '10px',
-            borderRadius: '8px',
-            border: '1px solid #ccc',
-          }}
+
         >
           <option value="">Todas</option>
 
@@ -98,14 +80,10 @@ export function InventoryFilters({
       </div>
 
       {/* ZONA INDUSTRIAL */}
-      <div style={{ marginTop: '20px' }}>
+      <div >
         <label
           htmlFor="zone"
-          style={{
-            display: 'block',
-            marginBottom: '8px',
-            fontWeight: 600,
-          }}
+
         >
           Zona industrial
         </label>
@@ -115,13 +93,7 @@ export function InventoryFilters({
           name="zone"
           defaultValue={zonaGeneral ? zone : ''}
           disabled={!zonaGeneral}
-          style={{
-            width: '100%',
-            padding: '10px',
-            borderRadius: '8px',
-            border: '1px solid #ccc',
-            opacity: zonaGeneral ? 1 : 0.6,
-          }}
+
         >
           <option value="">
             {zonaGeneral
@@ -138,14 +110,10 @@ export function InventoryFilters({
       </div>
 
       {/* SUPERFICIE */}
-      <div style={{ marginTop: '20px' }}>
+      <div >
         <label
           htmlFor="area"
-          style={{
-            display: 'block',
-            marginBottom: '8px',
-            fontWeight: 600,
-          }}
+
         >
           Superficie mínima
         </label>
@@ -154,12 +122,7 @@ export function InventoryFilters({
           id="area"
           name="area"
           defaultValue={area}
-          style={{
-            width: '100%',
-            padding: '10px',
-            borderRadius: '8px',
-            border: '1px solid #ccc',
-          }}
+
         >
           <option value="">Cualquier superficie</option>
           <option value="0-200">Menos de 200 m²</option>
@@ -182,17 +145,7 @@ export function InventoryFilters({
       {/* BOTÓN */}
       <button
         type="submit"
-        style={{
-          width: '100%',
-          marginTop: '24px',
-          padding: '12px 16px',
-          borderRadius: '8px',
-          border: 'none',
-          background: '#111',
-          color: '#fff',
-          fontWeight: 600,
-          cursor: 'pointer',
-        }}
+
       >
         Aplicar filtros
       </button>
@@ -200,12 +153,7 @@ export function InventoryFilters({
       {/* LIMPIAR */}
       <a
         href="/inventario"
-        style={{
-          display: 'block',
-          marginTop: '12px',
-          textAlign: 'center',
-          fontSize: '14px',
-        }}
+
       >
         Limpiar filtros
       </a>

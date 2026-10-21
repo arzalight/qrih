@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
-import { registerHooks } from 'node:module'
+import { registerHooks, stripTypeScriptTypes } from 'node:module'
+import astBabel from '@babel/core'
 import babel from 'next/dist/compiled/babel/core.js'
 import reactPreset from 'next/dist/compiled/babel/preset-react.js'
 import typescriptPreset from 'next/dist/compiled/babel/preset-typescript.js'
@@ -53,11 +54,12 @@ registerHooks({
     if (specifier === 'next/link') return { url: 'data:text/javascript,import{createElement}from"react";export default function Link({href,children,...props}){return createElement("a",{...props,href},children)}', shortCircuit: true }
     if (specifier === '@/lib/supabase') return { url: 'data:text/javascript,export const createClient=()=>{throw Error("No network in UI fixture")}', shortCircuit: true }
     if (specifier === '@/lib/safe-navigation') return next(new URL('../lib/safe-navigation.ts', import.meta.url).href, context)
+    if (specifier === '@/lib/property-price') return next(new URL('../lib/property-price.ts', import.meta.url).href, context)
     return next(specifier, context)
   },
   load(url, context, next) {
-    if (url.endsWith('/components/Header.tsx')) return { format: 'module', shortCircuit: true,
-      source: babel.transformSync(readFileSync(new URL(url), 'utf8'), { filename: 'Header.tsx', configFile: false, babelrc: false,
+    if (url.startsWith(root.href) && url.endsWith('.tsx')) return { format: 'module', shortCircuit: true,
+      source: babel.transformSync(readFileSync(new URL(url), 'utf8'), { filename: new URL(url).pathname, configFile: false, babelrc: false,
         presets: [[typescriptPreset, { allExtensions: true, isTSX: true }], [reactPreset, { runtime: 'automatic' }]] }).code }
     return next(url, context)
   },
@@ -96,4 +98,57 @@ test('filtros administrativos usan ancho disponible sin cambiar sus contratos GE
   assert.match(s, /repeat\(auto-fit, minmax\(min\(100%, 160px\), 1fr\)\)/)
   assert.match(s, /method="get"/)
   for (const name of ['search', 'status', 'operation', 'zone_general', 'zone']) assert.ok(s.includes(`name="${name}"`))
+})
+test('tarjeta real: imagen semántica diferida, moneda/unidad y destino intactos', async () => {
+  const { PropertyCard } = await import('../components/PropertyCard.tsx')
+  const property = { id: 'synthetic', slug: 'synthetic-property', title: 'Bodega de prueba', zone: 'El Marqués', operation: 'Renta',
+    price_value: '7.50', price_unit: 'm2', price_currency: 'USD', total_area: 5000, covered_area: 4000,
+    main_image: 'https://synthetic.invalid/ephemeral-image', max_height: '9m', share_commission: true }
+  const html = renderToStaticMarkup(createElement(PropertyCard, { property }))
+  assert.match(html, /US\$7.50 USD\/m²\/mes/)
+  assert.match(html, /href="\/bodegas\/synthetic-property"/)
+  assert.match(html, /<img[^>]*alt="Bodega de prueba"[^>]*loading="lazy"/)
+  assert.match(html, /width="640" height="400"/)
+  const empty = renderToStaticMarkup(createElement(PropertyCard, { property: { ...property, main_image: null } }))
+  assert.match(empty, /Fotografía no disponible/)
+  assert.doesNotMatch(empty, /<img/)
+})
+test('galería real: primera foto eager, resto lazy y modal nativo con foco restaurado', async () => {
+  const { PropertyImageGallery } = await import('../components/PropertyImageGallery.tsx')
+  const html = renderToStaticMarkup(createElement(PropertyImageGallery, {
+    propertyTitle: 'Galería sintética', images: Array.from({ length: 7 }, (_, i) => ({ url: `https://synthetic.invalid/${i}`, title: `Foto ${i + 1}` })),
+  }))
+  assert.equal((html.match(/<img /g) || []).length, 7)
+  assert.equal((html.match(/loading="eager"/g) || []).length, 1)
+  assert.equal((html.match(/loading="lazy"/g) || []).length, 6)
+  const s = readFileSync(new URL('../components/PropertyImageGallery.tsx', import.meta.url), 'utf8')
+  assert.match(s, /<dialog/)
+  assert.match(s, /activeDialog.showModal\(\)/)
+  assert.match(s, /previousFocus\.focus\(\)/)
+  assert.match(s, /onCancel=\{\(\) => setActiveIndex\(null\)\}/)
+  assert.doesNotMatch(s, /getPublicUrl|createSignedUrl|localStorage/)
+})
+test('handler real de galería: Tab/ShiftTab se mantienen dentro y flechas conservan orden', () => {
+  const s = readFileSync(new URL('../components/PropertyImageGallery.tsx', import.meta.url), 'utf8')
+  const ast = astBabel.parseSync(s, { filename: 'PropertyImageGallery.tsx', configFile: false, babelrc: false,
+    plugins: [['@babel/plugin-syntax-typescript', { isTSX: true }]] })
+  let handler
+  astBabel.traverse(ast, { FunctionDeclaration(path) { if (path.node.id?.name === 'handleKeyDown') handler = path.node } })
+  assert.ok(handler)
+  const code = stripTypeScriptTypes(s.slice(handler.start, handler.end), { mode: 'strip' })
+  const document = { activeElement: null }
+  const first = { focus() { document.activeElement = first } }, last = { focus() { document.activeElement = last } }
+  let index = 0, prevented = 0
+  const key = new Function('activeDialog', 'document', 'setActiveIndex', 'total', `${code};return handleKeyDown`)(
+    { querySelectorAll: () => [first, {}, last] }, document, updater => { index = updater(index) }, 7)
+  document.activeElement = first
+  key({ key: 'Tab', shiftKey: true, preventDefault() { prevented++ } })
+  assert.equal(document.activeElement, last)
+  key({ key: 'Tab', shiftKey: false, preventDefault() { prevented++ } })
+  assert.equal(document.activeElement, first)
+  key({ key: 'ArrowRight', preventDefault() { prevented++ } })
+  assert.equal(index, 1)
+  key({ key: 'ArrowLeft', preventDefault() { prevented++ } })
+  assert.equal(index, 0)
+  assert.equal(prevented, 4)
 })

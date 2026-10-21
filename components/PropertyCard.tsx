@@ -21,14 +21,9 @@ type Property = {
 export function PropertyCard({ property: p }: { property: Property }) {
   return (
     <Link href={`/bodegas/${p.slug}`} className="card">
-      <div
-        className="photo"
-        style={{
-          backgroundImage: p.main_image
-            ? `url(${p.main_image})`
-            : 'none',
-        }}
-      >
+      <div className="photo">
+        {p.main_image ? <img src={p.main_image} alt={p.title} loading="lazy" decoding="async" width={640} height={400} />
+          : <div className="photo__empty">Fotografía no disponible</div>}
         <span>
           {p.operation} · {p.zone}
         </span>
@@ -46,8 +41,8 @@ export function PropertyCard({ property: p }: { property: Property }) {
         <b>{propertyPrice(p)}</b>
 
         <p>
-          {(p.total_area || 0).toLocaleString()} m² ·{' '}
-          {(p.covered_area || 0).toLocaleString()} m² techados · Altura{' '}
+          {(p.total_area || 0).toLocaleString('es-MX')} m² ·{' '}
+          {(p.covered_area || 0).toLocaleString('es-MX')} m² techados · Altura{' '}
           {p.max_height || 'N/D'}
         </p>
       </div>

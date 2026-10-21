@@ -2,6 +2,8 @@
 
 ## Actualización vigente — implementación UX/UI parcial / NO-GO
 
+**21oct / bloque3:** catálogo, detalle y galería implementados localmente; tarjetas con alt/lazy/dimensiones, filtros sin cambiar GET, detalle con precios/visibilidad existentes y visor con foco/Escape/Tab/flechas verificados.21UI y157aplicación PASS,lint/tiposPASS. UX-003 corregido localmente,UX-012 texto corregido; nueva pasada integral de cuatro anchos pendiente por timeout del control de viewport, no PASS inferido. [Evidencia y límites](docs/PRELAUNCH_UI_IMPLEMENTATION.md). Sin nuevo RC; NO-GO visual conservado.
+
 **Bloque2 /21oct:** UX-005 corregido en código y probado localmente para navegación pública/admin y disclosure de cuenta (estado activo/Escape/foco); resto de matriz pendiente. UX-006 corregido localmente: redirect de `/panel` en lugar de cifras fijas. UX-011 amplía evidencia: filtros admin desbordaban a768px, grid corregido/reprobado en cuatro anchos; tabla/estilos interiores pendientes.18UI/12regresionesAuth-notificaciones,lint/tiposPASS. Autorización de servidor/consultas/handlers preservados; ningún guardado/moderación/rol alterado. STAGING/noGO visual sin cambios.
 
 [Seguimiento y límites](docs/PRELAUNCH_UI_IMPLEMENTATION.md). Referencia gráfica recibida. UX-001 ALTO corregido/verificado LOCAL en catálogo a375/768/1024/1440,13precios sin recorte; aceptación remota pendiente. UX-004 MEDIO: tokens con ocho pares de texto>=4,5:1 y foco>=3:1 probados, estilos incrustados/resto de UI aún pendientes.11UI/lint/tiposPASS. No cierre WCAGglobal, hallazgos restantes ni nuevoRC. Sin cambios Supabase/RLS/datos/producción/Netlify. Diagnóstico inferior es evidencia anterior al bloque1.

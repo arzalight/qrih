@@ -132,7 +132,7 @@ export default async function Home() {
 
       <section className="home-capabilities" aria-label="Cómo funciona QRIH">
         <div>
-          <small>UNA PLATAFORMA, DOS CAMINOS</small>
+          <small>UNA PLATAFORMA, TRES CAMINOS</small>
           <h2>Industria conectada, sin procesos opacos.</h2>
         </div>
         <div className="home-capabilities__grid">

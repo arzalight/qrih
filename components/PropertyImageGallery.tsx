@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export type GalleryImage = {
   url: string
@@ -17,20 +17,37 @@ export function PropertyImageGallery({
   variant?: 'public' | 'admin'
 }) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
+  const dialog = useRef<HTMLDialogElement>(null)
   const total = images.length
+  const isOpen = activeIndex !== null
 
   useEffect(() => {
-    if (activeIndex === null) return
-
+    if (!isOpen || !dialog.current) return
+    const activeDialog = dialog.current
+    const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
+    activeDialog.showModal()
 
     function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === 'Escape') setActiveIndex(null)
+      if (event.key === 'Tab') {
+        const buttons = activeDialog.querySelectorAll<HTMLButtonElement>('button:not([disabled])')
+        const first = buttons[0]
+        const last = buttons[buttons.length - 1]
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault()
+          last?.focus()
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault()
+          first?.focus()
+        }
+      }
       if (event.key === 'ArrowRight') {
+        event.preventDefault()
         setActiveIndex((current) => current === null ? null : (current + 1) % total)
       }
       if (event.key === 'ArrowLeft') {
+        event.preventDefault()
         setActiveIndex((current) => current === null ? null : (current - 1 + total) % total)
       }
     }
@@ -39,8 +56,10 @@ export function PropertyImageGallery({
     return () => {
       document.body.style.overflow = previousOverflow
       window.removeEventListener('keydown', handleKeyDown)
+      if (activeDialog.open) activeDialog.close()
+      if (previousFocus?.isConnected) previousFocus.focus()
     }
-  }, [activeIndex, total])
+  }, [isOpen, total])
 
   if (!total) return null
 
@@ -59,7 +78,7 @@ export function PropertyImageGallery({
             onClick={() => setActiveIndex(index)}
             aria-label={`Ampliar ${description(image, index)}`}
           >
-            <img src={image.url} alt={description(image, index)} />
+            <img src={image.url} alt={description(image, index)} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" width={1200} height={800} />
             {index === 0 && <span className="property-gallery__main-label">Principal</span>}
             {variant === 'admin' && (
               <span className="property-gallery__caption">{image.title || `Foto ${index + 1}`}</span>
@@ -69,11 +88,12 @@ export function PropertyImageGallery({
       </div>
 
       {activeImage && activeIndex !== null && (
-        <div
+        <dialog
+          ref={dialog}
           className="image-lightbox"
-          role="dialog"
           aria-modal="true"
           aria-label={`Visor de fotografías de ${propertyTitle}`}
+          onCancel={() => setActiveIndex(null)}
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) setActiveIndex(null)
           }}
@@ -100,7 +120,7 @@ export function PropertyImageGallery({
 
           <figure className="image-lightbox__content">
             <img src={activeImage.url} alt={description(activeImage, activeIndex)} />
-            <figcaption>
+            <figcaption aria-live="polite">
               <span>{activeImage.title || `Foto ${activeIndex + 1}`}</span>
               {total > 1 && <small>{activeIndex + 1} de {total}</small>}
             </figcaption>
@@ -116,7 +136,7 @@ export function PropertyImageGallery({
               ›
             </button>
           )}
-        </div>
+        </dialog>
       )}
     </>
   )
