@@ -1,9 +1,11 @@
 'use client'
 
+import { FormField } from '@/components/FormField'
+
 import { PriceCurrencySelect } from '@/components/PriceCurrencySelect'
 import { isPriceCurrency, parsePriceInput, propertyPrice } from '@/lib/property-price'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Header } from '@/components/Header'
 import { ImageUploader, SelectedImage } from '@/components/ImageUploader'
@@ -50,6 +52,7 @@ export default function Publish() {
   const [successAction, setSuccessAction] = useState<'draft' | 'pending'>('pending')
   const [accountStatus, setAccountStatus] = useState<'active' | 'suspended'>('active')
   const [images, setImages] = useState<SelectedImage[]>([])
+  const successNotice = useRef<HTMLElement>(null)
 
   useEffect(() => {
     const supabase = createClient()
@@ -87,6 +90,8 @@ export default function Publish() {
     if (!showSuccess) {
       return
     }
+
+    successNotice.current?.focus()
 
     const timer = setTimeout(() => {
       router.push('/mis-propiedades')
@@ -335,7 +340,7 @@ export default function Publish() {
       <Link href="/login?error=profile">Iniciar sesión</Link></main></>
   }
   if (!ready) {
-    return null
+    return <><Header /><main className="form"><p className="ui-loading" role="status">Verificando tu cuenta…</p></main></>
   }
 
   const zonasIndustriales =
@@ -353,32 +358,33 @@ export default function Publish() {
         {accountStatus === 'suspended' && <AccountSuspensionNotice />}
 
         <form
+          hidden={showSuccess}
           onSubmit={submit}
           encType="multipart/form-data"
         >
           <fieldset>
             <legend>Información general</legend>
 
-            <input
+            <FormField id="field-0-title" label="Título de la propiedad" required><input id="field-0-title"
               required
               name="title"
               placeholder="Título de la propiedad"
-            />
+            /></FormField>
 
             <div className="two">
-              <select
+              <FormField id="field-0-operation" label="Operación"><select id="field-0-operation"
                 name="operation"
                 value={operation}
                 onChange={(e) => setOperation(e.target.value)}
               >
                 <option value="Renta">Renta</option>
                 <option value="Venta">Venta</option>
-              </select>
+              </select></FormField>
 
-              <div className="price-input">
+              <FormField id="field-0-price" label="Precio" required><div className="price-input">
                 <span>$</span>
 
-                <input
+                <input id="field-0-price"
                   required
                   name="price"
                   type="number"
@@ -390,15 +396,15 @@ export default function Publish() {
                       : 'Precio total'
                   }
                 />
-              </div>
+              </div></FormField>
             </div>
 
             <p
               style={{
-                marginTop: '-10px',
+                marginTop: '0',
                 marginBottom: '18px',
                 fontSize: '13px',
-                color: '#777',
+                color: "var(--muted)",
               }}
             >
               {operation === 'Renta'
@@ -416,9 +422,9 @@ export default function Publish() {
               <span>Comparto comisión</span>
             </label>
 
-            <div className="two">
+            <div className="form-location-grid">
               <div className="two">
-                <select
+                <FormField id="field-0-zone_general" label="Zona general" required><select id="field-0-zone_general"
                   required
                   name="zone_general"
                   value={zonaGeneral}
@@ -436,9 +442,9 @@ export default function Publish() {
                       {zona}
                     </option>
                   ))}
-                </select>
+                </select></FormField>
 
-                <select
+                <FormField id="field-0-zone" label="Zona industrial" required><select id="field-0-zone"
                   required
                   name="zone"
                   value={zonaIndustrial}
@@ -458,10 +464,10 @@ export default function Publish() {
                       {zona}
                     </option>
                   ))}
-                </select>
+                </select></FormField>
               </div>
 
-              <select name="visibility">
+              <FormField id="field-0-visibility" label="Visibilidad de la ubicación"><select id="field-0-visibility" name="visibility">
                 <option value="zone">
                   Mostrar únicamente zona
                 </option>
@@ -469,13 +475,13 @@ export default function Publish() {
                 <option value="address">
                   Mostrar dirección completa
                 </option>
-              </select>
+              </select></FormField>
             </div>
 
-            <input
+            <FormField id="field-0-address" label="Dirección"><input id="field-0-address"
               name="address"
               placeholder="Dirección"
-            />
+            /></FormField>
           </fieldset>
 
           <fieldset>
@@ -515,70 +521,70 @@ export default function Publish() {
             <legend>Superficies y especificaciones</legend>
 
             <div className="two">
-              <input
+              <FormField id="field-0-area" label="Superficie total (m²)" required><input id="field-0-area"
                 required
                 name="area"
                 type="number"
                 min="0"
                 step="0.01"
                 placeholder="Superficie total m²"
-              />
+              /></FormField>
 
-              <input
+              <FormField id="field-0-covered" label="Superficie techada (m²)"><input id="field-0-covered"
                 name="covered"
                 type="number"
                 min="0"
                 step="0.01"
                 placeholder="Superficie techada m²"
-              />
+              /></FormField>
             </div>
 
             <div className="two">
-              <input
+              <FormField id="field-0-exterior_area" label="Superficie exterior (m²)"><input id="field-0-exterior_area"
                 name="exterior_area"
                 type="number"
                 min="0"
                 step="0.01"
                 placeholder="Superficie exterior m²"
-              />
+              /></FormField>
 
-              <input
+              <FormField id="field-0-offices_area" label="Área de oficinas (m²)"><input id="field-0-offices_area"
                 name="offices_area"
                 type="number"
                 min="0"
                 step="0.01"
                 placeholder="Área de oficinas m²"
-              />
+              /></FormField>
             </div>
 
             <div className="two">
-              <input
+              <FormField id="field-0-max_height" label="Altura máxima"><input id="field-0-max_height"
                 name="max_height"
                 placeholder="Altura máxima"
-              />
+              /></FormField>
 
-              <input
+              <FormField id="field-0-parking" label="Estacionamientos"><input id="field-0-parking"
                 name="parking"
                 type="number"
                 min="0"
                 step="1"
                 placeholder="Estacionamientos"
-              />
+              /></FormField>
             </div>
 
-            <input
+            <FormField id="field-0-docks" label="Número de andenes"><input id="field-0-docks"
               name="docks"
               type="number"
               min="0"
               step="1"
               placeholder="Número de andenes"
-            />
+            /></FormField>
 
-            <textarea
+            <FormField id="field-0-description" label="Descripción de la propiedad"><textarea id="field-0-description"
               name="description"
               placeholder="Descripción de la propiedad"
               rows={8}
-            />
+            /></FormField>
           </fieldset>
 
           <fieldset>
@@ -625,7 +631,7 @@ export default function Publish() {
               disabled={loading || accountStatus === 'suspended'}
               style={{
                 flex: '1 1 220px',
-                background: '#8f9499',
+                background: "var(--primary-hover)",
                 opacity: accountStatus === 'suspended' ? 0.55 : 1,
                 cursor: accountStatus === 'suspended' ? 'not-allowed' : 'pointer',
               }}
@@ -653,7 +659,7 @@ export default function Publish() {
           </div>
 
           {msg && (
-            <p className="notice">
+            <p className="notice" role="status" aria-live="polite">
               {msg}
             </p>
           )}
@@ -661,82 +667,15 @@ export default function Publish() {
       </main>
 
       {showSuccess && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0, 0, 0, 0.55)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 9999,
-            padding: '24px',
-          }}
-        >
-          <div
-            style={{
-              width: '100%',
-              maxWidth: '460px',
-              background: '#fff',
-              borderRadius: '18px',
-              padding: '40px 32px',
-              textAlign: 'center',
-              boxShadow:
-                '0 20px 60px rgba(0, 0, 0, 0.25)',
-            }}
-          >
-            <div
-              style={{
-                width: '64px',
-                height: '64px',
-                borderRadius: '50%',
-                margin: '0 auto 20px',
-                background: '#111',
-                color: '#fff',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '30px',
-              }}
-            >
-              ✓
-            </div>
-
-            <h2
-              style={{
-                margin: '0 0 12px',
-                fontSize: '28px',
-              }}
-            >
-              {successAction === 'draft'
-                ? '¡Propiedad guardada como borrador!'
-                : '¡Propiedad enviada a revisión!'}
-            </h2>
-
-            <p
-              style={{
-                margin: 0,
-                lineHeight: 1.6,
-                color: '#555',
-              }}
-            >
-              {successAction === 'draft'
-                ? 'Tu propiedad se guardó como borrador y puedes editarla antes de enviarla a revisión.'
-                : 'Tu propiedad fue enviada correctamente y ahora se encuentra pendiente de revisión.'}
-            </p>
-
-            <p
-              style={{
-                marginTop: '20px',
-                marginBottom: 0,
-                fontSize: '14px',
-                color: '#777',
-              }}
-            >
-              Serás redirigido a Mis propiedades en unos segundos...
-            </p>
-          </div>
-        </div>
+        <section ref={successNotice} tabIndex={-1} className="publish-success ui-panel" role="status" aria-live="polite">
+          <span className="publish-success__icon" aria-hidden="true">✓</span>
+          <h2>{successAction === 'draft' ? '¡Propiedad guardada como borrador!' : '¡Propiedad enviada a revisión!'}</h2>
+          <p>{successAction === 'draft'
+            ? 'Tu propiedad se guardó como borrador y puedes editarla antes de enviarla a revisión.'
+            : 'Tu propiedad fue enviada correctamente y ahora se encuentra pendiente de revisión.'}</p>
+          <p>Serás redirigido a Mis propiedades en unos segundos…</p>
+          <Link className="button" href="/mis-propiedades">Ir a Mis propiedades</Link>
+        </section>
       )}
     </>
   )

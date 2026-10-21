@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
 import { registerHooks, stripTypeScriptTypes } from 'node:module'
@@ -8,6 +9,74 @@ import reactPreset from 'next/dist/compiled/babel/preset-react.js'
 import typescriptPreset from 'next/dist/compiled/babel/preset-typescript.js'
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
+
+
+function contractAst(value) {
+  if (Array.isArray(value)) return value.map(contractAst)
+  if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value)
+    .filter(([key]) => !['loc', 'start', 'end', 'extra', 'leadingComments', 'trailingComments', 'innerComments'].includes(key))
+    .map(([key, entry]) => [key, contractAst(entry)]))
+  return value
+}
+const formContracts = {
+  "app/publicar/PublicarForm.tsx": "05e3f3413a04c62ac5a132bacadbaea45b2f9e30bb85151c9ef04740df9e2930",
+  "app/mis-propiedades/[id]/editar/EditarPropiedadForm.tsx": "ec8cc447078d9ac64a79f7a52bcfc631e92bfdff3f0b7c5f917c3d270d519582",
+  "app/busco-bodega/page.tsx": "d864701dbf57355dd9cd8e39c0bd872206d5b7adf99611a8a5bfa5b912b6fba1",
+  "components/PropertyContactForm.tsx": "83051941b5ff19a86a319349c6ae504d2c2692b014ff834242d9660893cd5e29",
+  "components/ImageUploader.tsx": "15df5a8f52492b39d169f338ecab18b2f31d1b7c5ef2ce1e132d83ddb7b02be0",
+  "components/PropertyImageEditor.tsx": "5b185ed0c6e6d74cea83f2d8ba65050b6ae371a500aaeecfd711f02c801e9e76",
+  "components/ProfileInfoForm.tsx": "9892c551ddbc6157aac960aca124e7c31460f85f9c0b9bb540d70ad60eff1f2c",
+  "components/ProfileSocialForm.tsx": "cf3a78bb626a91d4022fe2fbdacda8beea8a9f92c4f80e45f522635eb6421df2"
+}
+for (const [file, expected] of Object.entries(formContracts)) {
+  test(`formularios: contrato previo intacto en ${file}`, () => {
+    const source = readFileSync(new URL(file, root), 'utf8')
+    const ast = astBabel.parseSync(source, { configFile: false, babelrc: false, parserOpts: { plugins: ['jsx', 'typescript'] } })
+    const controls = []
+    astBabel.traverse(ast, { JSXOpeningElement(path) {
+      if (!['input', 'select', 'textarea', 'form', 'option'].includes(path.node.name.name)) return
+      controls.push({ tag: path.node.name.name, attributes: contractAst(path.node.attributes.filter(attribute =>
+        !['style', 'className', 'id', 'hidden', 'role'].includes(attribute.name?.name) && !attribute.name?.name?.startsWith('aria-'))) })
+    } })
+    assert.equal(createHash('sha256').update(JSON.stringify(controls)).digest('hex'), expected,
+      'Mismos campos, validaciones, opciones, valores, disabled y handlers; sólo presentación autorizada')
+  })
+}
+test('FormField real: etiqueta persistente asociada, obligatorio sólo informativo', async () => {
+  const { FormField } = await import('../components/FormField.tsx')
+  const html = renderToStaticMarkup(createElement(FormField, { id: 'synthetic-price', label: 'Precio', required: true },
+    createElement('input', { id: 'synthetic-price', name: 'price', required: true })))
+  assert.match(html, /<label for="synthetic-price">Precio/)
+  assert.match(html, /obligatorio/)
+  assert.match(html, /<input id="synthetic-price"[^>]*name="price"/)
+  assert.match(html, /<input[^>]*required=""/)
+})
+test('formularios intervenidos: cada campo nombrado tiene etiqueta asociada sin anidar labels', () => {
+  for (const file of Object.keys(formContracts).slice(0, 4)) {
+    const source = readFileSync(new URL(file, root), 'utf8')
+    const ast = astBabel.parseSync(source, { configFile: false, babelrc: false, parserOpts: { plugins: ['jsx', 'typescript'] } })
+    astBabel.traverse(ast, { JSXElement(path) {
+      const opening = path.node.openingElement
+      if (!['input', 'select', 'textarea'].includes(opening.name.name)) return
+      const attr = name => opening.attributes.find(attribute => attribute.name?.name === name)?.value?.value
+      if (!attr('name') || ['hidden', 'checkbox', 'file'].includes(attr('type'))) return
+      const ancestor = path.findParent(parent => parent.isJSXElement() && ['label', 'FormField'].includes(parent.node.openingElement.name.name))
+      assert.ok(ancestor, `${file}: ${attr('name')} sin etiqueta`)
+      if (ancestor.node.openingElement.name.name === 'FormField') {
+        assert.equal(attr('id'), ancestor.node.openingElement.attributes.find(attribute => attribute.name?.name === 'id').value.value)
+      }
+    } })
+  }
+})
+test('panel sin saludo personal fijo y éxito de publicación no modal ni formulario duplicable visible', () => {
+  assert.doesNotMatch(readFileSync(new URL('app/mis-propiedades/page.tsx', root), 'utf8'), /HOLA, FABIÁN/)
+  const publish = readFileSync(new URL('app/publicar/PublicarForm.tsx', root), 'utf8')
+  assert.match(publish, /hidden=\{showSuccess\}/)
+  assert.match(publish, /successNotice.current\?\.focus\(\)/)
+  assert.match(publish, /role="status" aria-live="polite"/)
+  assert.doesNotMatch(publish, /if \(!ready\)\s*\{\s*return null|position: 'fixed'/)
+})
+
 
 const css = readFileSync(new URL('../app/globals.css', import.meta.url), 'utf8')
 const variables = Object.fromEntries([...css.matchAll(/--([a-z0-9-]+):\s*(#[a-f0-9]{6});/gi)].map(([, key, value]) => [key, value]))

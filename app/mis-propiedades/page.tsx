@@ -363,7 +363,7 @@ if (totalViews > 0) {
 return (
   <>
     <Header />
-    <main style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 24px' }}>
+    <main className="workspace-page" style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 24px' }}>
       <div style={{ marginBottom: 32 }}>
         <div
           style={{
@@ -373,7 +373,7 @@ return (
             marginBottom: 8,
           }}
         >
-          HOLA, FABIÁN
+          TU ESPACIO EN QRIH
         </div>
         <h1>Aquí están tus publicaciones</h1>
         <p>
@@ -383,14 +383,15 @@ return (
         <div style={{ marginTop: 16, marginBottom: 24 }}>
           <Link
             href="/notificaciones"
+            className="button"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
               padding: '12px 20px',
-              border: '1px solid #111827',
+              border: "1px solid var(--primary)",
               borderRadius: 8,
-              background: '#111827',
-              color: '#ffffff',
+              background: "var(--ink)",
+              color: "var(--surface)",
               fontWeight: 600,
               textDecoration: 'none',
             }}
@@ -410,23 +411,24 @@ return (
             display: 'flex',
             gap: 24,
             marginTop: 24,
-            borderBottom: '1px solid #e5e7eb',
+            borderBottom: "1px solid var(--line)",
           }}
         >
           <Link
             href="/mis-propiedades?view=properties"
+            aria-current={activeView === 'properties' ? 'page' : undefined}
             style={{
               paddingBottom: 12,
               borderBottom:
                 activeView === 'properties'
-                  ? '2px solid #111827'
+                  ? "2px solid var(--primary)"
                   : '2px solid transparent',
               fontWeight:
                 activeView === 'properties' ? 600 : 400,
               color:
                 activeView === 'properties'
-                  ? '#111827'
-                  : '#6b7280',
+                  ? "var(--ink)"
+                  : "var(--muted)",
               textDecoration: 'none',
             }}
           >
@@ -435,18 +437,19 @@ return (
 
           <Link
             href="/mis-propiedades?view=requirements"
+            aria-current={activeView === 'requirements' ? 'page' : undefined}
             style={{
               paddingBottom: 12,
               borderBottom:
                 activeView === 'requirements'
-                  ? '2px solid #111827'
+                  ? "2px solid var(--primary)"
                   : '2px solid transparent',
               fontWeight:
                 activeView === 'requirements' ? 600 : 400,
               color:
                 activeView === 'requirements'
-                  ? '#111827'
-                  : '#6b7280',
+                  ? "var(--ink)"
+                  : "var(--muted)",
               textDecoration: 'none',
             }}
           >
@@ -455,18 +458,19 @@ return (
 
           <Link
             href="/mis-propiedades?view=opportunities"
+            aria-current={activeView === 'opportunities' ? 'page' : undefined}
             style={{
               paddingBottom: 12,
               borderBottom:
                 activeView === 'opportunities'
-                  ? '2px solid #111827'
+                  ? "2px solid var(--primary)"
                   : '2px solid transparent',
               fontWeight:
                 activeView === 'opportunities' ? 600 : 400,
               color:
                 activeView === 'opportunities'
-                  ? '#111827'
-                  : '#6b7280',
+                  ? "var(--ink)"
+                  : "var(--muted)",
               textDecoration: 'none',
             }}
           >
@@ -479,7 +483,7 @@ return (
   style={{
     marginBottom: 40,
     padding: 24,
-    border: '1px solid #ddd',
+    border: "1px solid var(--line)",
     borderRadius: 16,
   }}
 >
@@ -499,9 +503,9 @@ return (
   <div
   style={{
     padding: 24,
-    border: '1px solid #e7e2d8',
+    border: "1px solid var(--line)",
     borderRadius: 16,
-    background: '#ffffff',
+    background: "var(--surface)",
     boxShadow: '0 8px 24px rgba(0, 0, 0, 0.06)',
     display: 'flex',
     flexDirection: 'column',
@@ -524,9 +528,9 @@ return (
   <div
     style={{
       padding: 24,
-border: '1px solid #e7e2d8',
+border: "1px solid var(--line)",
 borderRadius: 16,
-background: '#ffffff',
+background: "var(--surface)",
 boxShadow: '0 8px 24px rgba(0, 0, 0, 0.06)',
     }}
   >
@@ -546,9 +550,9 @@ boxShadow: '0 8px 24px rgba(0, 0, 0, 0.06)',
   <div
     style={{
       padding: 24,
-border: '1px solid #e7e2d8',
+border: "1px solid var(--line)",
 borderRadius: 16,
-background: '#ffffff',
+background: "var(--surface)",
 boxShadow: '0 8px 24px rgba(0, 0, 0, 0.06)',
     }}
   >
@@ -568,9 +572,9 @@ boxShadow: '0 8px 24px rgba(0, 0, 0, 0.06)',
   <div
     style={{
       padding: 24,
-border: '1px solid #e7e2d8',
+border: "1px solid var(--line)",
 borderRadius: 16,
-background: '#ffffff',
+background: "var(--surface)",
 boxShadow: '0 8px 24px rgba(0, 0, 0, 0.06)',
 display: 'flex',
 flexDirection: 'column',
@@ -597,7 +601,7 @@ height: '100%',
   style={{
     marginTop: 24,
     paddingTop: 24,
-    borderTop: '1px solid #eee',
+    borderTop: "1px solid var(--line)",
   }}
 >
 <h3
@@ -612,7 +616,7 @@ height: '100%',
 <p
   style={{
     margin: 0,
-    color: '#6b7280',
+    color: "var(--muted)",
     fontSize: 14,
   }}
 >
@@ -655,7 +659,7 @@ height: '100%',
               alignItems: 'flex-end',
               justifyContent: 'center',
               gap: 6,
-              borderBottom: '1px solid #ddd',
+              borderBottom: "1px solid var(--line)",
             }}
           >
             <div
@@ -663,7 +667,7 @@ height: '100%',
               style={{
                 width: '28%',
                 height: `${Math.max(viewHeight, 4)}px`,
-                background: '#111827',
+                background: "var(--ink)",
                 borderRadius: '6px 6px 0 0',
               }}
             />
@@ -672,7 +676,7 @@ height: '100%',
               style={{
                 width: '28%',
                 height: `${Math.max(contactHeight, 4)}px`,
-                background: '#c9a227',
+                background: "var(--accent)",
                 borderRadius: '6px 6px 0 0',
               }}
             />
@@ -714,7 +718,7 @@ height: '100%',
       width: 10,
       height: 10,
       borderRadius: 3,
-      background: '#111827',
+      background: "var(--ink)",
       display: 'inline-block',
     }}
   />
@@ -732,7 +736,7 @@ height: '100%',
       width: 10,
       height: 10,
       borderRadius: 3,
-      background: '#c9a227',
+      background: "var(--accent)",
       display: 'inline-block',
     }}
   />
@@ -744,7 +748,7 @@ height: '100%',
         <section
           style={{
             padding: 32,
-            border: '1px solid #ddd',
+            border: "1px solid var(--line)",
             borderRadius: 12,
           }}
         >
@@ -767,7 +771,7 @@ alignItems: 'stretch',
               key={property.id}
               className="own-property-card"
               style={{
-                border: '1px solid #ddd',
+                border: "1px solid var(--line)",
                 borderRadius: 12,
                 padding: 24,
                 minWidth: 0,
@@ -819,13 +823,13 @@ alignItems: 'stretch',
     style={{
       padding: 14,
       borderRadius: 12,
-      background: '#f7f7f7',
+      background: "var(--surface-subtle)",
     }}
   >
     <small
       style={{
         display: 'block',
-        color: '#6b7280',
+        color: "var(--muted)",
         marginBottom: 4,
       }}
     >
@@ -841,7 +845,7 @@ alignItems: 'stretch',
     <small
       style={{
         display: 'block',
-        color: '#6b7280',
+        color: "var(--muted)",
         marginTop: 2,
       }}
     >
@@ -852,13 +856,13 @@ alignItems: 'stretch',
     style={{
       padding: 14,
       borderRadius: 12,
-      background: '#f7f7f7',
+      background: "var(--surface-subtle)",
     }}
   >
     <small
       style={{
         display: 'block',
-        color: '#6b7280',
+        color: "var(--muted)",
         marginBottom: 4,
       }}
     >
@@ -882,7 +886,7 @@ alignItems: 'stretch',
                       marginTop: 20,
                       padding: 16,
                       borderRadius: 8,
-                      background: '#f8f8f8',
+                      background: "var(--surface-subtle)",
                     }}
                   >
                     <strong>Motivo del rechazo</strong>
@@ -895,8 +899,8 @@ alignItems: 'stretch',
       marginTop: '16px',
       padding: '14px 16px',
       borderRadius: '10px',
-      background: '#f7f7f7',
-      border: '1px solid #e5e5e5',
+      background: "var(--surface-subtle)",
+      border: "1px solid var(--line)",
       fontSize: '14px',
       lineHeight: 1.5,
     }}
@@ -929,8 +933,8 @@ marginBottom: 4,
     justifyContent: 'center',
     padding: '10px 16px',
     borderRadius: 10,
-    background: '#111827',
-    color: '#ffffff',
+    background: "var(--ink)",
+    color: "var(--surface)",
     textDecoration: 'none',
     fontSize: 14,
     fontWeight: 600,
@@ -949,8 +953,8 @@ width: '180px',
     padding: '10px 16px',
     borderRadius: 10,
     border: '1px solid #c9a227',
-    background: '#ffffff',
-    color: '#8a6d13',
+    background: "var(--surface)",
+    color: "var(--warning)",
     textDecoration: 'none',
     fontSize: 14,
     fontWeight: 600,
@@ -978,7 +982,7 @@ width: '180px',
           style={{
             marginTop: 40,
             padding: 24,
-            border: '1px solid #ddd',
+            border: "1px solid var(--line)",
             borderRadius: 16,
           }}
         >
@@ -989,7 +993,7 @@ width: '180px',
           <p
             style={{
               margin: '0 0 24px',
-              color: '#6b7280',
+              color: "var(--muted)",
             }}
           >
             Requerimientos de clientes que coinciden con alguna de tus propiedades publicadas.
@@ -1007,7 +1011,7 @@ width: '180px',
                   key={opportunity.id}
                   style={{
                     padding: 20,
-                    border: '1px solid #e5e7eb',
+                    border: "1px solid var(--line)",
                     borderRadius: 12,
                   }}
                 >
@@ -1027,7 +1031,7 @@ width: '180px',
                       <p
                         style={{
                           margin: '8px 0 0',
-                          color: '#374151',
+                          color: "var(--ink)",
                         }}
                       >
                         {opportunity.operation}
@@ -1075,7 +1079,7 @@ width: '180px',
                     style={{
                       marginTop: 18,
                       paddingTop: 18,
-                      borderTop: '1px solid #eee',
+                      borderTop: "1px solid var(--line)",
                     }}
                   >
                     <small>
@@ -1102,7 +1106,7 @@ width: '180px',
                             key={property.id}
                             style={{
                               padding: '14px 16px',
-                              border: '1px solid #e5e7eb',
+                              border: "1px solid var(--line)",
                               borderRadius: 10,
                               background: '#fafafa',
                             }}
@@ -1133,7 +1137,7 @@ width: '180px',
                                 <p
                                   style={{
                                     margin: '6px 0 0',
-                                    color: '#6b7280',
+                                    color: "var(--muted)",
                                     fontSize: 13,
                                   }}
                                 >
@@ -1147,8 +1151,8 @@ width: '180px',
                                     padding: '9px 14px',
                                     border: '1px solid #d1d5db',
                                     borderRadius: 8,
-                                    background: '#f9fafb',
-                                    color: '#111827',
+                                    background: "var(--surface-subtle)",
+                                    color: "var(--ink)",
                                     fontWeight: 600,
                                     fontSize: 13,
                                   }}
@@ -1174,7 +1178,7 @@ width: '180px',
             <div
               style={{
                 padding: 24,
-                border: '1px solid #e5e7eb',
+                border: "1px solid var(--line)",
                 borderRadius: 12,
                 background: '#fafafa',
               }}
@@ -1183,7 +1187,7 @@ width: '180px',
               <p
                 style={{
                   margin: '8px 0 0',
-                  color: '#6b7280',
+                  color: "var(--muted)",
                 }}
               >
                 Cuando exista un requerimiento compatible con alguna de tus propiedades publicadas, aparecerá aquí.
@@ -1198,7 +1202,7 @@ width: '180px',
         style={{
           marginTop: 40,
           padding: 24,
-          border: '1px solid #ddd',
+          border: "1px solid var(--line)",
           borderRadius: 16,
         }}
       >
@@ -1219,7 +1223,7 @@ width: '180px',
                 key={request.id}
                 style={{
                   padding: 20,
-                  border: '1px solid #e5e7eb',
+                  border: "1px solid var(--line)",
                   borderRadius: 12,
                 }}
               >
@@ -1253,7 +1257,7 @@ width: '180px',
                       background:
                         request.status === 'active'
                           ? '#f3f4f6'
-                          : '#e5e7eb',
+                          : "var(--line)",
                       fontSize: 13,
                       fontWeight: 600,
                     }}
@@ -1293,7 +1297,7 @@ width: '180px',
                   style={{
                     display: 'block',
                     marginTop: 14,
-                    color: '#6b7280',
+                    color: "var(--muted)",
                   }}
                 >
                   Publicado el{' '}
@@ -1306,7 +1310,7 @@ width: '180px',
                   style={{
                     marginTop: 24,
                     paddingTop: 20,
-                    borderTop: '1px solid #eee',
+                    borderTop: "1px solid var(--line)",
                   }}
                 >
                   <strong>Propiedades que podrían interesarte</strong>
@@ -1315,7 +1319,7 @@ width: '180px',
                     <div
                       style={{
                         marginTop: 12,
-                        border: '1px solid #e5e7eb',
+                        border: "1px solid var(--line)",
                         borderRadius: 12,
                         overflow: 'hidden',
                       }}
@@ -1328,9 +1332,9 @@ width: '180px',
                             key={property.id}
                             style={{
                               padding: 16,
-                              border: '1px solid #e5e7eb',
+                              border: "1px solid var(--line)",
                               borderRadius: 12,
-                              background: '#fff',
+                              background: "var(--surface)",
                             }}
                           >
                             <div
@@ -1389,8 +1393,8 @@ width: '180px',
                                   marginTop: 12,
                                   padding: '9px 14px',
                                   borderRadius: 9,
-                                  background: '#111',
-                                  color: '#fff',
+                                  background: "var(--primary)",
+                                  color: "var(--surface)",
                                   textDecoration: 'none',
                                   fontSize: 13,
                                   fontWeight: 600,
@@ -1407,7 +1411,7 @@ width: '180px',
                     <p
                       style={{
                         margin: '10px 0 0',
-                        color: '#6b7280',
+                        color: "var(--muted)",
                         fontSize: 14,
                       }}
                     >
@@ -1419,7 +1423,7 @@ width: '180px',
                   style={{
                     marginTop: 24,
                     paddingTop: 20,
-                    borderTop: '1px solid #eee',
+                    borderTop: "1px solid var(--line)",
                   }}
                 >
                   <strong>Propiedades registradas para este requerimiento</strong>
@@ -1431,7 +1435,7 @@ width: '180px',
                     <div
                       style={{
                         marginTop: 12,
-                        border: '1px solid #e5e7eb',
+                        border: "1px solid var(--line)",
                         borderRadius: 12,
                         overflow: 'hidden',
                       }}
@@ -1461,7 +1465,7 @@ width: '180px',
                                 justifyContent: 'space-between',
                                 gap: 16,
                                 padding: '14px 16px',
-                                borderBottom: '1px solid #e5e7eb',
+                                borderBottom: "1px solid var(--line)",
                               }}
                             >
                               <div
@@ -1505,7 +1509,7 @@ width: '180px',
                                     marginTop: 5,
                                     fontSize: 12,
                                     fontWeight: 600,
-                                    color: '#374151',
+                                    color: "var(--ink)",
                                   }}
                                 >
                                   Registrada
@@ -1519,8 +1523,8 @@ width: '180px',
                                     flexShrink: 0,
                                     padding: '8px 12px',
                                     borderRadius: 8,
-                                    background: '#111',
-                                    color: '#fff',
+                                    background: "var(--primary)",
+                                    color: "var(--surface)",
                                     textDecoration: 'none',
                                     fontSize: 12,
                                     fontWeight: 600,
@@ -1537,7 +1541,7 @@ width: '180px',
                     <p
                       style={{
                         margin: '10px 0 0',
-                        color: '#6b7280',
+                        color: "var(--muted)",
                         fontSize: 14,
                       }}
                     >

@@ -19,7 +19,7 @@ Se mantiene el CSS y la arquitectura actuales, con clases reutilizables de panel
 | 1 · tokens/base/componentes compartidos | SÍ: tipografía, paleta, controles/foco/disabled, estados y tarjetas responsive | 11pruebasUI PASS,lint/tiposPASS; catálogo13precios sin clipping/bodyoverflow en375/768/1024/1440 | PENDIENTE |
 | 2 · navegación/layouts | SÍ: cabecera, disclosure de cuenta, rail de gestión>=1200, menú adaptable y redirect/panel |18UI y12Auth/notificacionesPASS;nav pública y admin375/768/1024/1440,Escape/foco y filtro sin overflowPASS;privadas restantes pendientes | PENDIENTE |
 | 3 · catálogo/detalle/galería | SÍ: tarjetas semánticas, filtros, detalle agrupado y visor accesible |21UI/157aplicación,lint/tipos PASS; visor real móvil/teclado PASS. Nueva pasada completa de cuatro anchos PENDIENTE | PENDIENTE |
-| 4 · panel/perfil/formularios | PENDIENTE | PENDIENTE | PENDIENTE |
+| 4 · panel/perfil/formularios | SÍ: etiquetas asociadas, tokens, panel y confirmación/carga |32UI/157aplicación,lint/tipos PASS; publicación real1440 sin overflow ni campos sin label; resto responsive/éxito real PENDIENTE | PENDIENTE |
 | 5 · administración/secundarios | PENDIENTE | PENDIENTE; necesita rol legítimo para aceptación real | PENDIENTE |
 | 6 · ficha/Auth | PENDIENTE; recibe únicamente tokens globales por ahora | PENDIENTE | PENDIENTE |
 | 7 · cierre responsive/accesibilidad/performance | PENDIENTE | Pruebas por bloque no equivalen a cierre | PENDIENTE |
@@ -39,6 +39,14 @@ Tarjetas con fotografía semántica, texto alternativo, dimensiones reservadas y
 El visor utiliza dialog nativo, foco inicial, ciclo Tab/ShiftTab explícito, Escape, flechas y retorno al disparador; restaura el scroll anterior. Verificado en ficha real a375px con seis fotografías: ShiftTab del cierre llega a Siguiente, Tab vuelve al cierre, flechas cambian fotografía y Escape vuelve a Ampliar Foto1. Sin navegación/footer/formularios añadidos a ficha. Pruebas del handler real y render de siete fotografías incluidas. UX-003 corregido/verificado localmente, aceptación remota pendiente. UX-010 mejora semántica, no medición de LCP/CLS ni rendimiento certificado.
 
 21pruebasUI y157aplicación PASS, sin fallos/omisiones; lint/tipos PASS. Capturas privadas conservadas fuera de Git. La nueva repetición conjunta de home/catálogo/detalle/ficha en los cuatro anchos se interrumpió por timeout del control de viewport del navegador (también en llamada aislada); no se declara PASS ni fallo de la aplicación por ello. Las mediciones anteriores de bloques1/2 mantienen sólo su alcance. Build final y aceptación visual integral todavía pendientes.
+
+### Bloque 4 — 21oct2026
+
+Componente FormField sin estado ni dependencias: etiqueta visible asociada por id y obligatoriedad informativa; controles originales mantienen name/type/required/min/max/step/valores/disabled y handlers. Publicación, edición/duplicación, requerimiento y solicitud de contacto intervenidos; títulos de fotografías ahora tienen label visible. No se envió ningún formulario, aceptaron términos ni subieron imágenes. Ocho huellas AST de contratos anteriores (c61b495) verifican los campos/opciones/handlers, sin depender de Git al ejecutar pruebas.
+
+Panel conserva consultas, cifras calculadas, tarjetas, portadas, Editar/Duplicar/Compartir/eliminar y condiciones por estado/cuenta. Saludo fijo Fabián sustituido por neutro (UX-007). Perfil y formularios adoptan tokens, sin cambiar permisos ni bloqueo de identidad. Publicación deja de devolver pantalla en blanco al cargar (UX-013 parcial) y muestra confirmación en página con foco/live, formulario oculto y el mismo redirect de3segundos, sin overlay modal inaccesible (UX-009 parcial).
+
+32UI y157aplicación PASS,lint/tipos/diff-check PASS. En navegador real local1440: publicación cargó la sesión legítima, ningún control sin label y body1440. Revisión visual detectó zonas comprimidas por grid anidado; se separó el bloque de ubicación para dar el ancho completo a sus dos zonas. No se declara aceptación de guardado/éxito real, mobile, Safari o STAGING. La primera prueba nueva falló por orden de atributos SSR y por buscar return null también en el parser numérico legítimo; se acotaron las aserciones, sin alterar ese parser.
 
 ## Límites y continuación
 

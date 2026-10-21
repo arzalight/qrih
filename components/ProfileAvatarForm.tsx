@@ -78,7 +78,7 @@ export function ProfileAvatarForm({
           height: 120,
           borderRadius: "50%",
           overflow: "hidden",
-          background: "#e5e7eb",
+          background: "var(--line)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -98,7 +98,7 @@ export function ProfileAvatarForm({
         ) : (
           <span
             style={{
-              color: "#6b7280",
+              color: "var(--muted)",
               fontSize: 32,
               fontWeight: 700,
             }}
@@ -114,8 +114,8 @@ export function ProfileAvatarForm({
           alignItems: "center",
           padding: "10px 16px",
           borderRadius: 9,
-          background: "#111827",
-          color: "#fff",
+          background: "var(--ink)",
+          color: "var(--surface)",
           fontWeight: 600,
           cursor: saving ? "wait" : "pointer",
         }}
@@ -133,7 +133,7 @@ export function ProfileAvatarForm({
       <p
         style={{
           margin: "10px 0 0",
-          color: "#6b7280",
+          color: "var(--muted)",
           fontSize: 13,
         }}
       >
@@ -144,7 +144,7 @@ export function ProfileAvatarForm({
         <p
           style={{
             margin: "10px 0 0",
-            color: "#374151",
+            color: "var(--ink)",
             fontSize: 14,
           }}
         >

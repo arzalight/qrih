@@ -53,6 +53,7 @@ export function DeletePropertyButton({
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
       <button
+        className="button--danger"
         type="button"
         onClick={handleDelete}
         disabled={deleting}
@@ -61,8 +62,8 @@ export function DeletePropertyButton({
           minHeight: '44px',
           borderRadius: '10px',
           border: '1px solid #d1d5db',
-          background: deleting ? '#f3f4f6' : '#fff',
-          color: '#b91c1c',
+          background: deleting ? '#f3f4f6' : "var(--surface)",
+          color: "var(--danger)",
           fontWeight: 700,
           cursor: deleting ? 'not-allowed' : 'pointer',
           padding: '10px 16px',
@@ -73,12 +74,13 @@ export function DeletePropertyButton({
 
       {error && (
         <p
+          role="alert"
           style={{
             margin: 0,
             maxWidth: '180px',
             fontSize: '12px',
             lineHeight: 1.4,
-            color: '#b91c1c',
+            color: "var(--danger)",
           }}
         >
           {error}

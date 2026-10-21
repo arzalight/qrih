@@ -125,11 +125,11 @@ export function ProfileInfoForm({
     width: "100%",
     boxSizing: "border-box" as const,
     padding: "10px 12px",
-    border: "1px solid #d1d5db",
+    border: "1px solid var(--line)",
     borderRadius: 9,
     fontSize: 14,
-    color: "#111827",
-    background: "#fff",
+    color: "var(--ink)",
+    background: "var(--surface)",
   };
 
   const labelStyle = {
@@ -139,7 +139,7 @@ export function ProfileInfoForm({
 
   const labelTextStyle = {
     fontSize: 12,
-    color: "#6b7280",
+    color: "var(--muted)",
     fontWeight: 600,
   };
 
@@ -166,7 +166,7 @@ export function ProfileInfoForm({
             disabled={identityLocked}
             style={{
               ...inputStyle,
-              background: identityLocked ? "#f3f4f6" : "#fff",
+              background: identityLocked ? "#f3f4f6" : "var(--surface)",
             }}
           />
         </label>
@@ -180,7 +180,7 @@ export function ProfileInfoForm({
             style={{
               ...inputStyle,
               background: "#f3f4f6",
-              color: "#6b7280",
+              color: "var(--muted)",
             }}
           />
         </label>
@@ -215,7 +215,7 @@ export function ProfileInfoForm({
             disabled={identityLocked}
             style={{
               ...inputStyle,
-              background: identityLocked ? "#f3f4f6" : "#fff",
+              background: identityLocked ? "#f3f4f6" : "var(--surface)",
             }}
           />
         </label>
@@ -274,8 +274,8 @@ export function ProfileInfoForm({
             border: 0,
             borderRadius: 9,
             padding: "10px 16px",
-            background: "#111827",
-            color: "#fff",
+            background: "var(--ink)",
+            color: "var(--surface)",
             fontWeight: 600,
             cursor: saving ? "wait" : "pointer",
           }}
@@ -287,7 +287,7 @@ export function ProfileInfoForm({
           <span
             style={{
               fontSize: 14,
-              color: "#374151",
+              color: "var(--ink)",
             }}
           >
             {message}

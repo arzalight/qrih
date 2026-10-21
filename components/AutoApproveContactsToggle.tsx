@@ -65,7 +65,7 @@ export function AutoApproveContactsToggle({
       style={{
         marginTop: 24,
         padding: 20,
-        border: '1px solid #e5e7eb',
+        border: "1px solid var(--line)",
         borderRadius: 14,
         background: '#fafafa',
       }}
@@ -91,7 +91,7 @@ export function AutoApproveContactsToggle({
 
           <span
             style={{
-              color: '#6b7280',
+              color: "var(--muted)",
               fontSize: 14,
               lineHeight: 1.5,
             }}
@@ -115,7 +115,7 @@ export function AutoApproveContactsToggle({
             padding: 0,
             border: 'none',
             borderRadius: 999,
-            background: enabled ? '#111827' : '#d1d5db',
+            background: enabled ? "var(--ink)" : '#d1d5db',
             cursor: saving ? 'wait' : 'pointer',
             transition: 'background 0.2s ease',
           }}
@@ -128,7 +128,7 @@ export function AutoApproveContactsToggle({
               width: 24,
               height: 24,
               borderRadius: '50%',
-              background: '#fff',
+              background: "var(--surface)",
               boxShadow: '0 1px 3px rgba(0, 0, 0, 0.2)',
               transition: 'left 0.2s ease',
             }}
@@ -141,7 +141,7 @@ export function AutoApproveContactsToggle({
           style={{
             margin: '12px 0 0',
             fontSize: 13,
-            color: '#6b7280',
+            color: "var(--muted)",
           }}
         >
           {message}

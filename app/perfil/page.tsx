@@ -49,6 +49,7 @@ export default async function PerfilPage() {
       <Header />
 
       <main
+        className="workspace-page profile-page"
         style={{
           maxWidth: 1000,
           margin: '0 auto',
@@ -58,7 +59,7 @@ export default async function PerfilPage() {
         <div style={{ marginBottom: 32 }}>
           <small
             style={{
-              color: '#6b7280',
+              color: "var(--muted)",
               fontWeight: 600,
               letterSpacing: 1,
             }}
@@ -70,7 +71,7 @@ export default async function PerfilPage() {
             style={{
               margin: '8px 0 8px',
               fontSize: 32,
-              color: '#111827',
+              color: "var(--ink)",
             }}
           >
             Mi perfil
@@ -79,7 +80,7 @@ export default async function PerfilPage() {
           <p
             style={{
               margin: 0,
-              color: '#6b7280',
+              color: "var(--muted)",
             }}
           >
             Administra tu información y la forma en que aparecerá ante tus
@@ -91,16 +92,16 @@ export default async function PerfilPage() {
           style={{
             marginBottom: 20,
             padding: 24,
-            border: '1px solid #e5e7eb',
+            border: "1px solid var(--line)",
             borderRadius: 14,
-            background: '#fff',
+            background: "var(--surface)",
           }}
         >
           <h2
             style={{
               margin: '0 0 8px',
               fontSize: 20,
-              color: '#111827',
+              color: "var(--ink)",
             }}
           >
             Foto de perfil
@@ -109,7 +110,7 @@ export default async function PerfilPage() {
           <p
             style={{
               margin: '0 0 20px',
-              color: '#6b7280',
+              color: "var(--muted)",
             }}
           >
             Esta foto aparecerá en tu catálogo público.
@@ -132,16 +133,16 @@ export default async function PerfilPage() {
             style={{
               gridColumn: '1 / -1',
               padding: 24,
-              border: '1px solid #e5e7eb',
+              border: "1px solid var(--line)",
               borderRadius: 14,
-              background: '#fff',
+              background: "var(--surface)",
             }}
           >
             <h2
               style={{
                 margin: '0 0 8px',
                 fontSize: 20,
-                color: '#111827',
+                color: "var(--ink)",
               }}
             >
               Información personal y profesional
@@ -150,7 +151,7 @@ export default async function PerfilPage() {
             <p
               style={{
                 margin: '0 0 20px',
-                color: '#6b7280',
+                color: "var(--muted)",
               }}
             >
               Estos datos aparecerán en tu perfil y catálogo público.
@@ -172,13 +173,13 @@ export default async function PerfilPage() {
               style={{
                 marginTop: 20,
                 paddingTop: 16,
-                borderTop: '1px solid #e5e7eb',
-                color: '#6b7280',
+                borderTop: "1px solid var(--line)",
+                color: "var(--muted)",
                 fontSize: 13,
               }}
             >
               Tipo de cuenta:{' '}
-              <strong style={{ color: '#111827' }}>
+              <strong style={{ color: "var(--ink)" }}>
                 {profile?.role === 'publisher'
                   ? 'Asesor / publicador'
                   : profile?.role || 'Sin definir'}
@@ -191,16 +192,16 @@ export default async function PerfilPage() {
           style={{
             marginTop: 20,
             padding: 24,
-            border: '1px solid #e5e7eb',
+            border: "1px solid var(--line)",
             borderRadius: 14,
-            background: '#fff',
+            background: "var(--surface)",
           }}
         >
           <h2
             style={{
               margin: '0 0 8px',
               fontSize: 20,
-              color: '#111827',
+              color: "var(--ink)",
             }}
           >
             Redes y contacto
@@ -209,7 +210,7 @@ export default async function PerfilPage() {
           <p
             style={{
               margin: '0 0 20px',
-              color: '#6b7280',
+              color: "var(--muted)",
             }}
           >
             Estos datos podrán aparecer en tu catálogo público para que tus
@@ -229,16 +230,16 @@ export default async function PerfilPage() {
           style={{
             marginTop: 20,
             padding: 24,
-            border: '1px solid #e5e7eb',
+            border: "1px solid var(--line)",
             borderRadius: 14,
-            background: '#fff',
+            background: "var(--surface)",
           }}
         >
           <h2
             style={{
               margin: '0 0 8px',
               fontSize: 20,
-              color: '#111827',
+              color: "var(--ink)",
             }}
           >
             Mi catálogo
@@ -247,7 +248,7 @@ export default async function PerfilPage() {
           <p
             style={{
               margin: '0 0 18px',
-              color: '#6b7280',
+              color: "var(--muted)",
             }}
           >
             Aquí podrás administrar la información que utilizaremos para crear
@@ -261,8 +262,8 @@ export default async function PerfilPage() {
               alignItems: 'center',
               padding: '10px 16px',
               borderRadius: 9,
-              background: '#111827',
-              color: '#fff',
+              background: "var(--ink)",
+              color: "var(--surface)",
               textDecoration: 'none',
               fontWeight: 600,
               fontSize: 14,
@@ -276,16 +277,16 @@ export default async function PerfilPage() {
           style={{
             marginTop: 20,
             padding: 24,
-            border: '1px solid #e5e7eb',
+            border: "1px solid var(--line)",
             borderRadius: 14,
-            background: '#fff',
+            background: "var(--surface)",
           }}
         >
           <h2
             style={{
               margin: '0 0 8px',
               fontSize: 20,
-              color: '#111827',
+              color: "var(--ink)",
             }}
           >
             Seguridad
@@ -294,7 +295,7 @@ export default async function PerfilPage() {
           <p
             style={{
               margin: 0,
-              color: '#6b7280',
+              color: "var(--muted)",
             }}
           >
             La administración de contraseña y otras opciones de seguridad se

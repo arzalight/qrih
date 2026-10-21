@@ -325,7 +325,7 @@ export function PropertyImageEditor({
               </div>
 
               <div style={{ padding: 10 }}>
-                <input
+                <label className="ui-field">Título de la fotografía {index + 1}<input
                   value={image.title}
                   onChange={(event) =>
                     updateTitle(index, event.target.value)
@@ -336,7 +336,7 @@ export function PropertyImageEditor({
                     width: '100%',
                     margin: 0,
                   }}
-                />
+                /></label>
 
                 <div
                   style={{

@@ -2,6 +2,8 @@
 
 ## Actualización vigente — referencia recibida / implementación UX/UI por bloques
 
+**21oct / bloque4:** FormField/publicación/edición/requerimiento/contacto con etiquetas asociadas; panel/perfil con tokens y saludo neutro; carga/éxito de publicación accesibles sin cambiar datos/handlers.32UI y157aplicación,lint/tipos PASS; publicación real1440 etiquetada/sin overflow, guardados nuevos y aceptación responsive integral pendientes. [Registro](docs/PRELAUNCH_UI_IMPLEMENTATION.md). NO-GO visual; sin push/deploy/BD.
+
 **21oct / bloque3:** catálogo, detalle y galería implementados localmente; tarjetas con alt/lazy/dimensiones, filtros sin cambiar GET, detalle con precios/visibilidad existentes y visor con foco/Escape/Tab/flechas verificados.21UI y157aplicación PASS,lint/tiposPASS. UX-003 corregido localmente,UX-012 texto corregido; nueva pasada integral de cuatro anchos pendiente por timeout del control de viewport, no PASS inferido. [Evidencia y límites](docs/PRELAUNCH_UI_IMPLEMENTATION.md). Sin nuevo RC; NO-GO visual conservado.
 
 **21oct / bloque2:** navegación/layouts implementados y verificados localmente en catálogo y `/admin` con sesión legítima:375/768/1024/1440 sin overflow,Escape/foco y estado activo. Variante admin sólo tras guards existentes; `/panel` redirige al panel real, filtros admin ya no desbordan en tableta.18UI/12regresionesAuth-notificaciones,lint/tiposPASS. No datos cambiados ni nuevoRC. [Registro por bloques](docs/PRELAUNCH_UI_IMPLEMENTATION.md); resto pendiente / NO-GO visual.

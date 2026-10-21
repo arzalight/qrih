@@ -1,5 +1,7 @@
 'use client'
 
+import { FormField } from '@/components/FormField'
+
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
@@ -253,7 +255,7 @@ export function PropertyContactForm({
         style={{
           marginTop: 20,
           padding: 20,
-          border: '1px solid #ddd',
+          border: "1px solid var(--line)",
           borderRadius: 12,
           background: '#fafafa',
         }}
@@ -308,7 +310,7 @@ export function PropertyContactForm({
           gap: 12,
         }}
       >
-        <input
+        <FormField id="field-3-name" label="Nombre completo" required><input id="field-3-name"
           name="name"
           type="text"
           placeholder="Nombre"
@@ -318,11 +320,11 @@ export function PropertyContactForm({
           style={{
             padding: 12,
             borderRadius: 8,
-            border: '1px solid #ccc',
+            border: "1px solid var(--line)",
           }}
-        />
+        /></FormField>
 
-        <input
+        <FormField id="field-3-phone" label="Teléfono (10 dígitos)" required><input id="field-3-phone"
           name="phone"
           type="tel"
           placeholder="Teléfono a 10 dígitos"
@@ -337,11 +339,11 @@ export function PropertyContactForm({
           style={{
             padding: 12,
             borderRadius: 8,
-            border: '1px solid #ccc',
+            border: "1px solid var(--line)",
           }}
-        />
+        /></FormField>
 
-        <input
+        <FormField id="field-3-email" label="Correo electrónico" required><input id="field-3-email"
           name="email"
           type="email"
           placeholder="Correo electrónico"
@@ -351,11 +353,11 @@ export function PropertyContactForm({
           style={{
             padding: 12,
             borderRadius: 8,
-            border: '1px solid #ccc',
+            border: "1px solid var(--line)",
           }}
-        />
+        /></FormField>
 
-        <input
+        <FormField id="field-3-company" label="Empresa"><input id="field-3-company"
           name="company"
           type="text"
           placeholder="Empresa (opcional)"
@@ -364,21 +366,21 @@ export function PropertyContactForm({
           style={{
             padding: 12,
             borderRadius: 8,
-            border: '1px solid #ccc',
+            border: "1px solid var(--line)",
           }}
-        />
+        /></FormField>
 
-        <textarea
+        <FormField id="field-3-message" label="Mensaje (opcional)"><textarea id="field-3-message"
           name="message"
           placeholder="Mensaje (opcional)"
           rows={4}
           style={{
             padding: 12,
             borderRadius: 8,
-            border: '1px solid #ccc',
+            border: "1px solid var(--line)",
             resize: 'vertical',
           }}
-        />
+        /></FormField>
 
         <button
           type="submit"
@@ -387,8 +389,8 @@ export function PropertyContactForm({
             padding: '12px 16px',
             borderRadius: 8,
             border: 'none',
-            background: '#111827',
-            color: '#fff',
+            background: "var(--ink)",
+            color: "var(--surface)",
             cursor: loading ? 'not-allowed' : 'pointer',
             opacity: loading ? 0.6 : 1,
           }}
@@ -402,7 +404,7 @@ export function PropertyContactForm({
           style={{
             margin: 0,
             fontSize: 13,
-            color: '#6b7280',
+            color: "var(--muted)",
             lineHeight: 1.5,
           }}
         >

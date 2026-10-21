@@ -169,14 +169,14 @@ export function ImageUploader({
                 <img src={image.previewUrl} alt={`Fotografía seleccionada ${index + 1}`} />
                 <div>
                   <strong>Foto {index + 1}</strong>
-                  <input
+                  <label className="ui-field">Título de la fotografía {index + 1}<input
                     type="text"
                     value={image.title || ''}
                     maxLength={120}
                     placeholder={`Título de la foto ${index + 1}`}
                     aria-label={`Título de la foto ${index + 1}`}
                     onChange={(event) => updateTitle(index, event.target.value)}
-                  />
+                  /></label>
                 </div>
                 <button type="button" onClick={() => removeImage(index)}>
                   Quitar

@@ -184,6 +184,20 @@ button:disabled, input:disabled, select:disabled, textarea:disabled {
 .ui-loading { padding: var(--space-6); color: var(--muted); }
 .ui-field { display: grid; min-width: 0; align-content: start; gap: 6px; }
 .ui-field > span, form label { font-weight: 600; }
+.ui-field > label { color: var(--ink); font-size: 14px; line-height: 1.5; }
+.ui-required { color: var(--muted); font-size: 12px; font-weight: 400; }
+.form .ui-field { margin-bottom: 16px; }
+.form-location-grid { display: grid; gap: 12px; }
+.form .ui-field :is(input, select, textarea) { margin: 0; }
+.form .ui-field .price-input input { min-height: 44px; }
+.form form[hidden] { display: none; }
+.publish-success { max-width: 680px; margin: 24px auto 64px; text-align: center; }
+.publish-success__icon { display: inline-grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: var(--success-soft); color: var(--success); font-size: 32px; }
+.workspace-page { width: 100%; min-width: 0; overflow-wrap: anywhere; }
+.own-property-card { background: var(--surface); box-shadow: var(--shadow); }
+.own-property-card h2 { font-size: 22px; line-height: 1.3; }
+.workspace-page a[aria-current="page"] { color: var(--primary); }
+.property-share-actions summary { min-height: 44px; display: list-item; padding: 10px 4px; color: var(--primary-hover); font-weight: 600; }
 .ui-field small, .ui-help { color: var(--muted); font-size: 13px; font-weight: 400; }
 .ui-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
 
@@ -1463,15 +1477,15 @@ main {
 .property-management-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; width: 100%; }
 .property-management-actions .property-action, .property-management-actions > button {
   display: inline-flex; align-items: center; justify-content: center; min-height: 44px;
-  padding: 10px 16px; border: 1px solid #c9a227; border-radius: 10px;
-  background: white; color: #725a12; text-decoration: none; font-weight: 600;
+  padding: 10px 16px; border: 1px solid var(--line); border-radius: 10px;
+  background: var(--primary-soft); color: var(--primary-hover); text-decoration: none; font-weight: 600;
 }
 .property-management-actions > button:disabled { opacity: .55; cursor: not-allowed; }
 .property-management-actions small, .property-management-actions [role="alert"] { width: 100%; }
 .property-edit-confirmation {
   position: fixed; inset: 0; margin: auto; max-width: min(560px, calc(100vw - 32px));
   max-height: calc(100dvh - 32px); overflow: auto; padding: 24px;
-  border: 1px solid #d5d1c8; border-radius: 16px; color: #111827;
+  border: 1px solid var(--line); border-radius: 16px; color: var(--ink); background: var(--surface);
 }
 .property-edit-confirmation::backdrop { background: rgb(0 0 0 / 55%); }
 .property-edit-confirmation > div { display: flex; flex-wrap: wrap; gap: 12px; }

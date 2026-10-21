@@ -1,5 +1,7 @@
 'use client'
 
+import { FormField } from '@/components/FormField'
+
 import { PriceCurrencySelect } from '@/components/PriceCurrencySelect'
 
 import { useRef, useState } from 'react'
@@ -161,26 +163,26 @@ const [images, setImages] = useState<PropertyImageEditorItem[]>([])
         <fieldset>
           <legend>Información general</legend>
 
-          <input
+          <FormField id="field-1-title" label="Título de la propiedad" required><input id="field-1-title"
             required
             name="title"
             defaultValue={property.title}
             placeholder="Título de la propiedad"
-          />
+          /></FormField>
 
           <div className="two">
-            <select
+            <FormField id="field-1-operation" label="Operación"><select id="field-1-operation"
               name="operation"
               defaultValue={property.operation}
             >
               <option value="Renta">Renta</option>
               <option value="Venta">Venta</option>
-            </select>
+            </select></FormField>
 
-            <div className="price-input">
+            <FormField id="field-1-price" label="Precio" required><div className="price-input">
               <span>$</span>
 
-              <input
+              <input id="field-1-price"
                 required
                 name="price"
                 type="number"
@@ -189,7 +191,7 @@ const [images, setImages] = useState<PropertyImageEditorItem[]>([])
                 defaultValue={property.price_value_text ?? property.price_value ?? ''}
                 placeholder="Precio"
               />
-            </div>
+            </div></FormField>
           </div>
 
           <PriceCurrencySelect value={property.price_currency} />
@@ -207,7 +209,7 @@ const [images, setImages] = useState<PropertyImageEditorItem[]>([])
           </label>
 
           <div className="two">
-           <select
+           <FormField id="field-1-zone_general" label="Zona general" required><select id="field-1-zone_general"
   required
   name="zone_general"
   value={zonaGeneral}
@@ -222,9 +224,9 @@ const [images, setImages] = useState<PropertyImageEditorItem[]>([])
       {zona}
     </option>
   ))}
-</select>
+</select></FormField>
 
-<select
+<FormField id="field-1-zone" label="Zona industrial" required><select id="field-1-zone"
   required
   name="zone"
   defaultValue={property.zone}
@@ -238,9 +240,9 @@ const [images, setImages] = useState<PropertyImageEditorItem[]>([])
       {zona}
     </option>
   ))}
-</select>
+</select></FormField>
 
-            <select
+            <FormField id="field-1-visibility" label="Visibilidad de la ubicación"><select id="field-1-visibility"
               name="visibility"
               defaultValue={property.location_visibility}
             >
@@ -251,14 +253,14 @@ const [images, setImages] = useState<PropertyImageEditorItem[]>([])
               <option value="address">
                 Mostrar dirección completa
               </option>
-            </select>
+            </select></FormField>
           </div>
 
-          <input
+          <FormField id="field-1-address" label="Dirección"><input id="field-1-address"
             name="address"
             defaultValue={property.address || ''}
             placeholder="Dirección"
-          />
+          /></FormField>
         </fieldset>
 
         <fieldset>
@@ -300,7 +302,7 @@ const [images, setImages] = useState<PropertyImageEditorItem[]>([])
           <legend>Superficies y especificaciones</legend>
 
           <div className="two">
-            <input
+            <FormField id="field-1-area" label="Superficie total (m²)" required><input id="field-1-area"
               required
               name="area"
               type="number"
@@ -308,70 +310,70 @@ const [images, setImages] = useState<PropertyImageEditorItem[]>([])
               step="0.01"
               defaultValue={property.total_area ?? ''}
               placeholder="Superficie total m²"
-            />
+            /></FormField>
 
-            <input
+            <FormField id="field-1-covered" label="Superficie techada (m²)"><input id="field-1-covered"
               name="covered"
               type="number"
               min="0"
               step="0.01"
               defaultValue={property.covered_area ?? ''}
               placeholder="Superficie techada m²"
-            />
+            /></FormField>
           </div>
 
           <div className="two">
-            <input
+            <FormField id="field-1-exterior_area" label="Superficie exterior (m²)"><input id="field-1-exterior_area"
               name="exterior_area"
               type="number"
               min="0"
               step="0.01"
               defaultValue={property.exterior_area ?? ''}
               placeholder="Superficie exterior m²"
-            />
+            /></FormField>
 
-            <input
+            <FormField id="field-1-offices_area" label="Área de oficinas (m²)"><input id="field-1-offices_area"
               name="offices_area"
               type="number"
               min="0"
               step="0.01"
               defaultValue={property.offices_area ?? ''}
               placeholder="Área de oficinas m²"
-            />
+            /></FormField>
           </div>
 
           <div className="two">
-            <input
+            <FormField id="field-1-max_height" label="Altura máxima"><input id="field-1-max_height"
               name="max_height"
               defaultValue={property.max_height || ''}
               placeholder="Altura máxima"
-            />
+            /></FormField>
 
-            <input
+            <FormField id="field-1-parking" label="Estacionamientos"><input id="field-1-parking"
               name="parking"
               type="number"
               min="0"
               step="1"
               defaultValue={property.parking ?? ''}
               placeholder="Estacionamientos"
-            />
+            /></FormField>
           </div>
 
-          <input
+          <FormField id="field-1-docks" label="Número de andenes"><input id="field-1-docks"
             name="docks"
             type="number"
             min="0"
             step="1"
             defaultValue={property.docks ?? ''}
             placeholder="Número de andenes"
-          />
+          /></FormField>
 
-          <textarea
+          <FormField id="field-1-description" label="Descripción de la propiedad"><textarea id="field-1-description"
             name="description"
             defaultValue={property.description || ''}
             placeholder="Descripción de la propiedad"
             rows={8}
-          />
+          /></FormField>
         </fieldset>
 
         <fieldset>
@@ -385,7 +387,7 @@ const [images, setImages] = useState<PropertyImageEditorItem[]>([])
           <p
             style={{
               fontSize: 13,
-              color: '#666',
+              color: "var(--muted)",
               marginTop: 8,
             }}
           >
@@ -399,7 +401,7 @@ const [images, setImages] = useState<PropertyImageEditorItem[]>([])
             marginTop: 24,
             padding: 18,
             borderRadius: 10,
-            background: '#f7f7f7',
+            background: "var(--surface-subtle)",
             fontSize: 14,
             lineHeight: 1.6,
           }}

@@ -1,5 +1,7 @@
 'use client'
 
+import { FormField } from '@/components/FormField'
+
 import { propertyPrice } from '@/lib/property-price'
 
 import { Header } from '@/components/Header'
@@ -135,20 +137,20 @@ export default function Demand() {
                 margin: '0 0 14px',
                 fontSize: 16,
                 fontWeight: 600,
-                color: '#111827',
+                color: "var(--ink)",
               }}
             >
               Tu información de contacto
             </h2>
 
             <div className="two">
-              <input
+              <FormField id="field-2-name" label="Nombre completo" required><input id="field-2-name"
                 required
                 name="name"
                 placeholder="Nombre completo"
-              />
+              /></FormField>
 
-              <input
+              <FormField id="field-2-phone" label="Teléfono (10 dígitos)" required><input id="field-2-phone"
                 required
                 type="tel"
                 name="phone"
@@ -159,21 +161,21 @@ export default function Demand() {
                 onInput={(event) => {
                   event.currentTarget.value = event.currentTarget.value.replace(/\D/g, '').slice(0, 10)
                 }}
-              />
+              /></FormField>
             </div>
 
-            <input
+            <FormField id="field-2-email" label="Correo electrónico" required><input id="field-2-email"
               required
               type="email"
               name="email"
               placeholder="Correo electrónico"
-            />
+            /></FormField>
 
             <div
               style={{
                 marginTop: 18,
                 paddingTop: 18,
-                borderTop: '1px solid #e5e7eb',
+                borderTop: "1px solid var(--line)",
               }}
             >
               <h3
@@ -181,34 +183,34 @@ export default function Demand() {
                   margin: '0 0 12px',
                   fontSize: 14,
                   fontWeight: 600,
-                  color: '#374151',
+                  color: "var(--ink)",
                 }}
               >
                 Datos de la empresa que busca la propiedad
               </h3>
 
               <div className="two">
-                <input
+                <FormField id="field-2-company" label="Empresa"><input id="field-2-company"
                   name="company"
                   placeholder="Empresa"
-                />
+                /></FormField>
 
-                <input
+                <FormField id="field-2-giro" label="Giro de la empresa"><input id="field-2-giro"
                   name="giro"
                   placeholder="Giro"
-                />
+                /></FormField>
               </div>
             </div>
 
             <p
               style={{
                 margin: '18px 0 0',
-                color: '#6b7280',
+                color: "var(--muted)",
                 fontSize: 13,
                 lineHeight: 1.5,
               }}
             >
-              <strong style={{ color: '#374151' }}>Tu información no será pública.</strong>{' '}
+              <strong style={{ color: "var(--ink)" }}>Tu información no será pública.</strong>{' '}
               Tus datos de contacto permanecerán privados mientras tu requerimiento
               esté publicado. Solo podrán compartirse cuando exista una oportunidad
               compatible y ambas partes autoricen continuar con la colaboración.
@@ -217,7 +219,7 @@ export default function Demand() {
 
           <div
             style={{
-              borderTop: '1px solid #e5e7eb',
+              borderTop: "1px solid var(--line)",
               paddingTop: 24,
             }}
           >
@@ -226,19 +228,19 @@ export default function Demand() {
                 margin: '0 0 14px',
                 fontSize: 16,
                 fontWeight: 600,
-                color: '#111827',
+                color: "var(--ink)",
               }}
             >
               Información de la bodega
             </h2>
 
             <div className="two">
-              <select name="operation" required>
+              <FormField id="field-2-operation" label="Operación" required><select id="field-2-operation" name="operation" required>
                 <option value="Renta">Renta</option>
                 <option value="Venta">Venta</option>
-              </select>
+              </select></FormField>
 
-              <select
+              <FormField id="field-2-zone_general" label="Zona general" required><select id="field-2-zone_general"
                 name="zone_general"
                 required
                 value={zonaGeneral}
@@ -256,11 +258,11 @@ export default function Demand() {
                     {zona}
                   </option>
                 ))}
-              </select>
+              </select></FormField>
             </div>
 
             <div className="two">
-              <select
+              <FormField id="field-2-zone" label="Zona industrial" required><select id="field-2-zone"
                 name="zone"
                 required
                 value={zonaIndustrial}
@@ -278,49 +280,49 @@ export default function Demand() {
                     {zona}
                   </option>
                 ))}
-              </select>
+              </select></FormField>
 
               <div>
-                <input
+                <FormField id="field-2-area_min" label="Superficie mínima (m²)" required><input id="field-2-area_min"
                   required
                   type="number"
                   min="1"
                   name="area_min"
                   placeholder="Superficie mínima m²"
-                />
+                /></FormField>
 
-                <input
+                <FormField id="field-2-area_max" label="Superficie máxima (m²)" required><input id="field-2-area_max"
                   required
                   type="number"
                   min="1"
                   name="area_max"
                   placeholder="Superficie máxima m²"
-                />
+                /></FormField>
               </div>
             </div>
 
             <div className="two">
-              <input
+              <FormField id="field-2-budget_min" label="Presupuesto mínimo" required><input id="field-2-budget_min"
                 required
                 type="number"
                 min="0"
                 name="budget_min"
                 placeholder="Presupuesto mínimo"
-              />
+              /></FormField>
 
-              <input
+              <FormField id="field-2-budget_max" label="Presupuesto máximo" required><input id="field-2-budget_max"
                 required
                 type="number"
                 min="0"
                 name="budget_max"
                 placeholder="Presupuesto máximo"
-              />
+              /></FormField>
             </div>
 
-            <textarea
+            <FormField id="field-2-notes" label="Características especiales y comentarios"><textarea id="field-2-notes"
               name="notes"
               placeholder="Características especiales y comentarios"
-            />
+            /></FormField>
           </div>
 
           <button type="submit" disabled={sending}>
@@ -370,10 +372,10 @@ export default function Demand() {
                             width: '100%',
                             maxWidth: '680px',
                             margin: '0 auto',
-                            border: '1px solid #e5e5e5',
+                            border: "1px solid var(--line)",
                             borderRadius: '16px',
                             padding: '20px',
-                            background: '#fff',
+                            background: "var(--surface)",
                             boxSizing: 'border-box',
                             boxShadow: '0 8px 24px rgba(0,0,0,0.05)',
                           }}
@@ -438,8 +440,8 @@ export default function Demand() {
                                   display: 'inline-block',
                                   padding: '11px 18px',
                                   borderRadius: '10px',
-                                  background: '#111',
-                                  color: '#fff',
+                                  background: "var(--primary)",
+                                  color: "var(--surface)",
                                   textDecoration: 'none',
                                   fontWeight: 600,
                                 }}
@@ -496,8 +498,8 @@ export default function Demand() {
                                   property.id
                                 )
                                   ? '#f3f4f6'
-                                  : '#fff',
-                                color: '#111',
+                                  : "var(--surface)",
+                                color: "var(--primary)",
                                 fontWeight: 600,
                                 cursor: interestedProperties.includes(
                                   property.id
@@ -520,9 +522,9 @@ export default function Demand() {
                 <p
                   style={{
                     padding: '20px',
-                    border: '1px solid #e5e5e5',
+                    border: "1px solid var(--line)",
                     borderRadius: '16px',
-                    background: '#fff',
+                    background: "var(--surface)",
                   }}
                 >
                   Ya registramos tu requerimiento. Cuando aparezca una
