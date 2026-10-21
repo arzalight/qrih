@@ -1,6 +1,12 @@
 # QRIH — Gate de entrega comercial a STAGING
 
-## Gate RC cerrado — aceptación comercial final pendiente
+## Gate técnico y aceptación comercial cerrados
+
+**GO CONDICIONADO del piloto STAGING supervisado.** [Dictamen](SOFT_LAUNCH_GO_2026-10-20.md) / [aceptación](COMMERCIAL_ACCEPTANCE_2026-10-20.md). AltaUSD/duplicado guardado/revisión y privacidad gestionadas PASS. RC5f7b8e2/deploy6ad82c6afc32e2d1cb980405 ya publicado/verificado y sin cambios funcionales187fuentes. No otro deploy por cierre documental. Mantener builds detenidos/Free y permisos separados para producción/main/nuevoRC. No repetir052/backups/restore/fixtures/aceptación legal. AUD043MEDIO/riesgos operativos aceptados permanecen, no SLA.
+
+### Gate previo a la aceptación final
+
+## Gate RC cerrado — aceptación comercial entonces pendiente
 
 [Recibo](commercial-deploy-verification-2026-10-20.json):5f7b8e2/deploy6ad82c6afc32e2d1cb980405 READY/publicado,20oct21:08CDMX;157unit/31HTTP remotos, ficha/6WebP/PDF/filtros PASS. Un build bajo autorización, saldo previo268,1Free/sin recargas-overages; stop_builds restituido. Manifiesto187entradas conserva fuente77cd680, docs integradas develop/main intacta. No nuevo deploy por documentación ni repetición052/copia. **GO técnico del RC/NO-GO comercial** hasta altaUSD/duplicación guardada/revisión monetaria gestionadas bajo alcance adicional; las lecturas/edición actual no equivalen a ese caso. [Detalle y AUD043](COMMERCIAL_INTEGRATION_2026-10-20.md).
 

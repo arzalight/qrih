@@ -1,6 +1,14 @@
 # QRIH — Integración comercial / control vigente
 
-## Resultado vigente — RC publicado, aceptación final pendiente
+## Resultado vigente — GO CONDICIONADO del piloto supervisado
+
+[Aceptación crítica comercial cerrada](COMMERCIAL_ACCEPTANCE_2026-10-20.md) / [recibo](commercial-acceptance-2026-10-20.json) / [dictamen](SOFT_LAUNCH_GO_2026-10-20.md). AltaUSD7.50/m2, duplicación completa independiente y revisión conservan moneda; anónimo denegado en tabla/vista/ficha/detalle/PDF/imagen, otra sesión autenticada404en edición ajena. Nuevasfixturespending1WebP/draft0, previasrejected/draft7+7intactas; cuatro sin publicar. Usuario aceptó términos/alta inicial, sin suplantación ni acuerdos por agente.
+
+RC5f7b8e2/deploy6ad82c6afc32e2d1cb980405 continúa READY/publicado,187fuentes iguales,157unit/31HTTP remotos y validaciones anteriores conservadas. No otro deploy/código/052/copia/restore/borrado/main/producción por este cierre. AUD041/042 corregidos/verificados; AUD043MEDIO y riesgo operativoAUD018 aceptado conservan alcance. RTO24h/carga/renovación prolongada no se declaran medidos. Prevalece GO condicionado sólo de STAGING supervisado, no apertura indiscriminada.
+
+### Corte anterior a la aceptación final
+
+## Resultado anterior — RC publicado, aceptación final pendiente
 
 20oct2026,21:08CDMX: RC `5f7b8e2a50c55ea1b4320746f1a7468e8e1ce623` publicado en QRIH STAGING, deploy `6ad82c6afc32e2d1cb980405`. [Recibo remoto](commercial-deploy-verification-2026-10-20.json): un único build, SHA/READY/publicación exactos,157unitCI/31HTTP PASS,0fallos/0skips, lint/tipos/build/preflight/scanner276archivos PASS.187entradas funcionales/huella5f72e610… conservadas; main/producción intactos, Free/saldo previo268,1 y stop_builds restituido. No otro deploy por documentos.
 

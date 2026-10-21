@@ -1,6 +1,12 @@
 # QRIH — Punto de reanudación de validaciones
 
-## Reanudación vigente — RC publicado, falta aceptación comercial acotada
+## Reanudación vigente — GO CONDICIONADO del piloto, sin intervención técnica pendiente
+
+[Dictamen](SOFT_LAUNCH_GO_2026-10-20.md) / [aceptación y recibo](COMMERCIAL_ACCEPTANCE_2026-10-20.md). Usuario completó términos/alta; pruebaUSD y duplicado guardados, original pending1WebP/copia draft0fotos, importes/moneda conservados, privacidad y otra sesión denegadas. Cuatro fixtures autorizadas sin publicar, no aprobar el pending sintético. RC5f7b8e2 READY/publicado,187fuentes intactas;157unit/31HTTP y pruebas comerciales PASS acotadas. No repetir términos/altas/duplicados/052/backups/restore/deploy. Siguiente: operación supervisada bajo política aceptada, auditoría de incidentes y medición separada RTO24h/carga; AUD043MEDIOenlacecanónico pendiente futuro. Sin main/producción/pagos ni automatismos; builds detenidos.
+
+### Reanudación anterior a la aceptación final
+
+## Reanudación anterior — RC publicado, faltaba aceptación comercial acotada
 
 [Recibo remoto](commercial-deploy-verification-2026-10-20.json).5f7b8e2/deploy6ad82c6afc32e2d1cb980405 ya READY/publicado;157unit/31HTTP y ficha/galería/PDF/filtros PASS. No pedir otro deploy ni repetir052/backups/restore. EdiciónUSD del borrador existente/precarga duplicado PASS, finalmenteMXN y dos fixtures sin publicar/fotos intactas. Falta permiso adicional para probar altaUSD/duplicado guardado/revisión; no tercera fixture por inferencia, términos por usuario si aparecen. **NO-GO comercial**, GO técnico del RC. AUD043MEDIOenlacePDFpermalink actual200/no canónico, próximo lote autorizado. Builds detenidos/Free, main/producción intactos. Secciones inferiores históricas.
 

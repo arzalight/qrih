@@ -1,10 +1,19 @@
 # QRIH FUNCTIONAL INDEX — Índice maestro tipo SIGMA
 
-## Trazabilidad vigente — 20oct2026 / RC PUBLICADO, aceptación comercial parcial
+## Trazabilidad vigente — 20oct2026 / GO CONDICIONADO del piloto
 
-[Recibo del RC](docs/commercial-deploy-verification-2026-10-20.json). PROP-008/PRICE-001/PDF-001→fuente77cd680→manifiesto187entradas/huella5f72e610…→artefacto5f7b8e2→deploy6ad82c6afc32e2d1cb980405 READY/publicado→157unitCI/31HTTP/6WebP/ficha-galería-PDF-filtros PASS. Sin cambios de IDs ni autorización ampliada de datos. AUD042 cerrado para ese artefacto; AUD041 datos reconciliados por confirmación humana.
+[Dictamen](docs/SOFT_LAUNCH_GO_2026-10-20.md) / [aceptación y límites](docs/COMMERCIAL_ACCEPTANCE_2026-10-20.md) / [recibo](docs/commercial-acceptance-2026-10-20.json). IDs estables conservados. Código fuente77cd680→manifiesto187/huella5f72e610…→artefacto5f7b8e2→deploy6ad82c6afc32e2d1cb980405 READY/publicado→157unitCI/31HTTP y aceptación comercial gestionada PASS acotados.
 
-PROP-003/PRICE-001: edición de fixture existente MXN→USD→MXN persistida, precarga PROP006 USD7fotos sin guardar nueva copia. AltaUSD/duplicación completa/revisión monetaria gestionadas aún pendientes; no se trasladan PASS sintéticos. PDF001→AUD043MEDIO: enlace de PDF a permalink actual200, no dominio canónico; propuesta futura, no corregido. OPS002→unbuild/Free/buildsdetenidos; documentación posterior no provoca otro deploy. **GO técnico RC / NO-GO apertura comercial.** Cortes inferiores históricos.
+| ID | Frontend / servidor / BD / pruebas | Estado del alcance comercial |
+| --- | --- | --- |
+| PROP-008 | SharePropertyButton→/ficha/[slug]→commercial-property-server→properties_public/autorizador vigente; tests comerciales + HTTP/galería real | IMPLEMENTADO / VALIDADO LOCAL Y STAGING ACOTADO; sólo published/cuenta habilitada |
+| PRICE-001 | PriceCurrencySelect/PublicarForm/editor/admin/property-price→escrituras/RPC052→numeric+price_currency; commercial-properties/rls + recibo gestionado | AltaUSD7.50/m2, copia completa y revisión conservan moneda; filtros comparables y dato histórico confirmado |
+| PROP-003/006/007 | Editor/duplicación/portadas→property-save-server→052/051/ingesta047/galería048; hashes y sesiones legítimas | Nuevaspending1foto/draft0, sin cambios cruzados; anteriores7+7 conservadas. No inferir duplicaciónUSD7fotos nueva |
+| PDF-001 | Ruta PDF→cargador/formato compartidos→fotos autorizadas; render/texto/6imágenes reales | Remoto PASS; AUD043MEDIO/permalink200/no canónico pendiente |
+| OPS-002 | GitHub develop→Netlify Free→RC exacto/pipeline/HTTP | Un build, stop_builds restituido; documentación posterior no despliega |
+| OPS-003 / AUD018 | Respaldo20oct local+Drive/tres generaciones→política manual/ensayo previo | Verificado al corte; RTO24h/operación continua no certificados |
+
+AUD041datos reconciliados/AUD042código desplegado-verificado; AUD043no corregido, riesgo operativoAUD018aceptado sin cierre total. GO sólo de piloto STAGING supervisado, no producción/main/SLA. Cuenta nueva y otra sesión de propietario distinto probaron aislamiento sin credenciales extraídas. Los cortes inferiores son antecedentes, no autorizaciones ni pendientes vigentes.
 
 ### Integración anterior al RC publicado
 

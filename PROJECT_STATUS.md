@@ -1,14 +1,28 @@
 ## PROJECT STATUS — QRO INDUSTRIAL HUB / QRIH
 
-## Estado vigente — 20oct2026 / RC comercial PUBLICADO, aceptación final pendiente
+## Estado vigente — 20oct2026 / GO CONDICIONADO del Soft Launch supervisado
 
-**GO técnico del RC en STAGING; NO-GO de apertura comercial hasta la prueba crítica restante.** [Recibo remoto](docs/commercial-deploy-verification-2026-10-20.json). Artefacto `5f7b8e2a50c55ea1b4320746f1a7468e8e1ce623`, deploy `6ad82c6afc32e2d1cb980405` READY/publicación exacta20oct21:08CDMX.157unit remotas/31HTTP remotos PASS,0fallos/0skips; lint/tipos/build/preflight/scanner276archivos PASS.187entradas funcionales congeladas iguales. Un único build autorizado, Free/saldo previo268,1, stop_builds restituido; sin producción/main ni deploy adicional documental.
+**Estado de entrega:** autorización humana explícita recibida para subir a `arzalight/qrih` privado documentación con rutas locales de respaldos, referencias/IDs/enlaces de Drive y referencias de custodia, visibles a sus colaboradores; quedan excluidos claves, contraseñas y archivos de respaldo. Se reanuda el cierre documental tras la detención preventiva, sin eludir controles. La entrega no cambia fuentes funcionales, `main` ni el RC publicado `5f7b8e2`, y no autoriza otro deploy.
 
-Ficha/galería interactiva/seis WebP/PDF3páginas-fotos-precio-total/filtros MXN-USD y denegación de fichas draft/rejected/inexistente comprobados en el RC. AUD-041 corregido/verificado; AUD-042 **CORREGIDO, DESPLEGADO Y VERIFICADO**. Borrador existente editado MXN→USD→MXN y precarga de duplicado USD+7fotos comprobados con sesión real/localhost+STAGING; siguen dos fixtures sin publicar, galerías/portadas iguales, sólo updated_at/texto derivado esperados. AltaUSD/guardado completo de duplicado/envío a revisión con moneda nuevos aún pendientes de alcance adicional, no se afirman PASS.
+**GO CONDICIONADO para el piloto en el QRIH STAGING existente, con los límites operativos ya aceptados.** [Dictamen](docs/SOFT_LAUNCH_GO_2026-10-20.md) / [aceptación comercial](docs/COMMERCIAL_ACCEPTANCE_2026-10-20.md) / [recibo](docs/commercial-acceptance-2026-10-20.json). Sustituye el NO-GO por altaUSD/duplicación/revisión pendientes; no GO de producción ni invitaciones/publicaciones automáticas.
 
-AUD-043 **MEDIO/CONFIRMADO/NO CORREGIDO**: enlace interno PDF usa permalink del artefacto en vez del dominio estable; responde200 ahora, longevidad tras futuros despliegues/retención no medida. No bloquea la validación actual ni justifica consumir otro build; corrección mínima en próximo lote autorizado. Las tablas/cortes siguientes describen integración previa al RC y son antecedentes.
+| Función | Estado comprobado |
+| --- | --- |
+| PROP-008 · compartir | IMPLEMENTADO / LOCAL VALIDADO / STAGING VALIDADO ACOTADO: copiar con sesión legítima, ficha anónima200, galería/6WebP/PDF y rechazo de no publicadas |
+| PRICE-001 · MXN/USD | IMPLEMENTADO / LOCAL+STAGING VALIDADOS ACOTADOS: altaUSD7.50, copia completa independiente, revisión conservaUSD/m2; ediciónMXN→USD→MXN, filtros y cinco correcciones humanas sin conversión |
+| PROP-003/006/007 · extensión | Nuevo original pending con1WebP y copia draft0fotos; origen/copia independientes por hashes. Anteriores rejected/draft con7fotos conservadas. No nueva duplicaciónUSD de7fotos declarada |
+| PDF-001 · extensión | PDF real remoto3páginas/6fotos, anunciado6.50USD y total73,788USD, render revisado; AUD043MEDIO de enlace no canónico abierto |
+| AUD-041 / AUD-042 | ALTO/CONFIRMADOS: datos reconciliados y verificados; formatter corregido/desplegado/verificado en el RC |
+
+RC publicado `5f7b8e2a50c55ea1b4320746f1a7468e8e1ce623`, deploy `6ad82c6afc32e2d1cb980405`, READY/SHA exactos.157unit remotas/31HTTP PASS,0fallos/0skips;109SQL sintéticas, lint/tipos/build/preflight previos y scanner remoto276archivos PASS.187entradas funcionales/huella5f72e610… siguen iguales.052 aplicada una vez, respaldo previo local+Drive/tres generaciones y cinco preciosUSD ya comprobados, no repetidos.
+
+Aceptación nueva sobre dos registros adicionales expresamente autorizados, términos/alta inicial por el usuario. Total4fixtures sin publicar; privacidad anónima de tabla/vista/ficha/detalle/PDF y Storage probada; otra sesión autenticada recibe404 en edición ajena. No contacto comercial/borrado/restore/producción/main ni nuevo deploy. Código/GitHub oficiales en develop; documentación posterior no es otro artefacto.
+
+Sin bloqueante crítico/alto confirmado pendiente para este piloto en el alcance probado. AUD018 sigue con riesgo operativo aceptado, no totalmente corregido; RTO24h/carga/concurrencia/renovación prolongada y todos los roles/estados no medidos en vivo. Mantener Fabián supervisor, copia cifrada por día de uso/antes de cambios y pausa manual ante fallo de respaldo/correo/cuota. AUD043MEDIO/permalinkPDF actual200, corrección futura autorizada. Cortes inferiores históricos, no gates que deban repetirse.
 
 ### Integración anterior al RC publicado
+
+**Continuación autorizada posterior:** usuario permite hasta dos registros sintéticos adicionales sin publicar para altaUSD/duplicación/revisión. Formulario de alta preparado en el propio RC STAGING con USD7.50/m²,100m² y título NO COMERCIAL; ningún registro nuevo guardado ni términos aceptados por el agente. Pausa de intervención humana en aceptación legal y Guardar como borrador; no solicitar el permiso de fixtures nuevamente. Documentación publicada en develop9096ffd, artefacto funcional sigue5f7b8e2; esta nota posterior es local y no produce otro build.
 
 **NO-GO comercial hasta nuevo RC y aceptación remota.** [Control vigente y hallazgos](docs/COMMERCIAL_INTEGRATION_2026-10-20.md) / [recibo](docs/commercial-integration-verification-2026-10-20.json). Respaldo nuevo local+Drive verificado y tres generaciones conservadas;052 APLICADA UNA VEZ en QRIH STAGING, historial/huellas/ACL/RLS/Storage contrastados. No repetir captura ni migraciones cerradas.
 

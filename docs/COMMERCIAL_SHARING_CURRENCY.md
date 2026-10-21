@@ -1,6 +1,12 @@
 # QRIH — Compartir y monedas / entrega local
 
-## Resultado posterior vigente
+## Resultado vigente — GO CONDICIONADO
+
+[Aceptación gestionada crítica](COMMERCIAL_ACCEPTANCE_2026-10-20.md) / [recibo](commercial-acceptance-2026-10-20.json) / [dictamen](SOFT_LAUNCH_GO_2026-10-20.md). AltaUSD/duplicado guardado/revisión conservandoUSD7.50/m2 completados en el RC5f7b8e2, con privacidad y aislamiento comprobados, sin publicación. Cuatro fixtures autorizadas, no más altas/reintentos requeridos. PROP008/PRICE001/PDF001implementados y validados local+STAGING en el alcance descrito; no matriz universal ni nueva duplicaciónUSD7fotos inferidas. Sin bloqueante crítico/alto confirmado pendiente para el piloto, condiciones operativas previas y AUD043MEDIO conservados. No otro deploy ni producción/main. Los estados siguientes son cortes históricos.
+
+### Antes de la aceptación final
+
+## Resultado posterior anterior
 
 [RC publicado y aceptación](commercial-deploy-verification-2026-10-20.json) / [informe](COMMERCIAL_INTEGRATION_2026-10-20.md):052 integrada una vez, respaldo verificado, cinco correccionesUSD confirmadas, AUD042 desplegado/verificado. RC5f7b8e2 READY/publicado,157unit/31HTTP remotos y ficha/galería/PDF/filtros PASS. EdiciónUSD y precarga duplicado reales con fixture existente, sin alta nueva. **NO-GO comercial** hasta altaUSD/duplicado completo/revisión monetaria en alcance adicional autorizado. AUD043MEDIO: linkPDF a permalink200, canónico pendiente futuro. Los estados inferiores son el diseño/entrega iniciales, no nuevos gates de backup/migración/deploy.
 

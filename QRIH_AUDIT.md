@@ -1,12 +1,18 @@
 # QRIH — Auditoría técnica pre-Soft-Launch
 
-## Dictamen vigente — 20oct2026 / RC PUBLICADO Y VERIFICADO, NO-GO comercial
+## Dictamen vigente — 20oct2026 / GO CONDICIONADO del piloto supervisado
 
-[Recibo remoto](docs/commercial-deploy-verification-2026-10-20.json): SHA5f7b8e2/deploy6ad82c6afc32e2d1cb980405 READY/publicación exactos;157unit/31HTTP remotos PASS,0fallos/0skips; ficha/galería/6WebP/PDF real/filtros y404no públicas comprobados. AUD-041 ALTO corregido con verdad humana, AUD-042 ALTO **CORREGIDO/DESPLEGADO/VERIFICADO**. GO técnico de este RC en STAGING, no apertura comercial automática.
+[Dictamen y condiciones](docs/SOFT_LAUNCH_GO_2026-10-20.md) / [aceptación comercial crítica](docs/COMMERCIAL_ACCEPTANCE_2026-10-20.md) / [recibo](docs/commercial-acceptance-2026-10-20.json). Cerrado el gate de altaUSD/duplicación guardada/revisión: el RC publicado5f7b8e2 conservaUSD7.50/m2, copia independiente, originalpending/copia draft, fotografía sintética WebP privada y denegaciones de lectura/firma anónimas. El término `draft` corresponde al estado real de la copia. Cuatro fixtures autorizadas conservadas sin publicar.
 
-**AUD-043 MEDIO / CONFIRMADO / NO CORREGIDO:** `app/api/bodegas/[slug]/pdf/route.tsx:409` usa origen de Request.url; Netlify representa aquí el permalink `6ad82c6afc32e2d1cb980405--qrih-staging.netlify.app`, visible en el enlace del PDF real. Destino actual200, sin localhost/secretos. No es un enlace canónico estable; una eventual retirada por retención después de cambiar artefacto es riesgo inferido de plataforma, no fallo actual observado. Propuesta mínima: origen público canónico allowlisted y regresión del adaptador, en próximo lote/deploy autorizado, sin confiar ciegamente en Host ni desactivar protecciones. No consumir otro build ni declarar corregido.
+- **AUD-041 ALTO / CONFIRMADO / CORREGIDO Y VERIFICADO EN DATOS:** cinco preciosUSD confirmados explícitamente, sin conversión ni reescritura de importes/descripciones/estados/fotos por esa reconciliación.
+- **AUD-042 ALTO / CONFIRMADO / CORREGIDO/DESPLEGADO/VERIFICADO:** unidad heredada desconocida no se convierte en total mensual inventado.157unitCI/31HTTP y comportamiento remoto PASS.
+- **AUD-043 MEDIO / CONFIRMADO / NO CORREGIDO:** enlace interno del PDF usa permalink de deploy, actual200, no origen canónico. Riesgo de longevidad futura por retención es inferido, no caída actual. Corrección mínima en próximo lote autorizado; no otro deploy por esta documentación.
+- **AUD-018 / residual operativo previamente aceptado:** no cierre total; RTO24h/carga/concurrencia/renovación prolongada y matriz universal gestionada no medidos. El GO no los presenta como PASS.
+- No nuevo crítico/alto confirmado pendiente bloqueante dentro del alcance probado para el piloto. La validación sin foto fue rechazada correctamente por regla1–7, no nueva vulnerabilidad ni corrección de código.
 
-Aceptación restante bloqueante: altaUSD/guardado completo de duplicación/envío a revisión conservando moneda en servicios. Alcance de dos fixtures agotado; petición adicional acotada, no ejecutada por inferencia. Edición del borrador existente MXN→USD→MXN/precargaUSD7fotos PASS, galerías y resto de campos conservados salvo texto derivado/updated_at. RTO24h/carga y demás límites previos no medidos conservan alcance. Sin main/producción, borrados, restores ni repetición052.
+RC5f7b8e2/deploy6ad82c6afc32e2d1cb980405 READY/publicado;157unit/31HTTP remotos,0fallos/0skips, preflight/lint/tipos/build/scannerPASS.187fuentes idénticas. Datos anónimos denegados en tabla/vista, seis GET de ficha/detalle/PDF404; imagenpending no firmable por anónimo/URL pública denegada,19.082bytesWebP comprobados. Otra sesión autenticada de distinto propietario recibe404 al editar el draft. Servicio privilegiado usado sólo para huellas/readback, no prueba de autorización positiva ni suplantación.
+
+GO sólo para STAGING supervisado, con Fabián/política de copias y pausa manual ante fallos ya acordadas. Sin producción/main, invitaciones, nueva publicación de pruebas, borrados, restore, migraciones o deploy adicional. Evidencias inferiores conservan su fecha/alcance; los NO-GO anteriores quedan superados por esta aceptación, no borrados.
 
 ### Integración anterior al RC publicado
 

@@ -1,6 +1,12 @@
 # QRIH — Acuerdos mínimos de operación del piloto
 
-## Corte vigente posterior al RC — 20oct2026
+## Corte vigente — GO CONDICIONADO, aceptación comercial cerrada
+
+[Dictamen](SOFT_LAUNCH_GO_2026-10-20.md) / [aceptación crítica](COMMERCIAL_ACCEPTANCE_2026-10-20.md). AltaUSD/duplicación/revisión completadas con moneda/privacidad correctas en el RC real. Cuatro fixtures conservadas sin publicar; no aprobar el pendingNO COMERCIAL. No otro deploy,052,captura/restore/borrado/main/producción por este cierre. Fabián supervisor, copia cifrada manual por día de uso/antes de cambios, Drive privado/clave separada y pausa manual de altas ante fallo de copia/correo/cuota siguen vigentes. RTO24h/carga/renovación prolongada no medidos; AUD018riesgoaceptado, AUD043MEDIOpermalinkPDFactual200/no canónico pendiente. No scheduler ni operaciones automáticas añadidas; todo en Free, builds detenidos.
+
+### Corte anterior a la aceptación final
+
+## Corte anterior posterior al RC — 20oct2026
 
 [RC nuevo](commercial-deploy-verification-2026-10-20.json) publicado y verificado:157unit/31HTTP/ficha/galería/PDF/filtros PASS. Un único build autorizado, Free/saldo previo268,1/builds detenidos, sin main/producción/pagos. GO técnico del RC, **NO-GO de apertura comercial hasta altaUSD/duplicado completo/revisión monetaria gestionados**, alcance adicional pendiente, no alta/invitación automática. Fabián supervisor, manual cifrado diario/antes de cambios, pausa de altas ante fallos y límites RTO24h/carga/firmas aceptados se conservan. Respaldo20oct local+Drive/tres generaciones son hechos al corte, no cobertura continua de nuevas escrituras. AUD043MEDIOpermalinkPDF funciona200, no prometer enlace canónico permanente. Cortes inferiores históricos.
 

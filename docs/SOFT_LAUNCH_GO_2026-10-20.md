@@ -1,6 +1,32 @@
 # QRIH — Dictamen de Soft Launch
 
-## Dictamen histórico — alcance comercial ampliado todavía NO-GO
+## Dictamen vigente — GO CONDICIONADO, alcance comercial validado
+
+20oct2026 CDMX. **GO CONDICIONADO para Soft Launch supervisado en el QRIH STAGING existente**, con los datos reales ya seleccionados y límites operativos aceptados por el usuario. [Aceptación comercial](COMMERCIAL_ACCEPTANCE_2026-10-20.md) / [recibo](commercial-acceptance-2026-10-20.json). Se cierra el NO-GO por altaUSD/duplicación/revisión; no GO de producción, apertura indiscriminada ni garantía de disponibilidad.
+
+### Evidencia vigente
+
+- RC publicado `5f7b8e2a50c55ea1b4320746f1a7468e8e1ce623`, deploy `6ad82c6afc32e2d1cb980405` READY/SHA/publicación exactos.157unit/31HTTP remotos PASS,0fallos/0skips, lint/tipos/build/preflight/scanner276archivosPASS.187entradas funcionales conservadas; documentos posteriores no requieren otro build. [Recibo remoto](commercial-deploy-verification-2026-10-20.json).
+- Ficha anónima published, galería interactiva/seis WebP privadas autorizadas, PDF real3páginas/precio-totalUSD y filtros comparables MXN/USD comprobados. No cookies de sesión en ficha, no navegación/footer/captación del portal ni contactos no autorizados;404 de no publicadas.
+- AltaUSD7.50/m2/100m² por usuario en el RC real, términos aceptados por él; duplicado guardado una vez independiente, origen pasa a pending manteniendo moneda. Prueba sin foto correctamente rechazada;1JPEG sintética optimizada a WebP privada19.082bytes, portada/galería consistentes. Copia permanece draft0fotos y su hash no cambia al editar/revisar el original.
+- Datos anónimos denegados en tabla/vista; ficha/detalle/PDF de ambos404, firma anónima/URL pública de imagenpending denegadas, sin firmas persistidas. Otra sesión autenticada de propietario distinto recibe404 en edición del draft. Servicio privilegiado sólo para readback/huellas, nunca como prueba de RLS positiva ni suplantación.
+- Cuatro fixtures autorizadas conservadas sin publicar: anteriores rejected/draft7+7fotos, nuevas pending/draft1+0. No aprobar el pending sintético ni eliminar pruebas por inferencia; cero contactos comerciales.052 y respaldo previo local+Drive/tres generaciones ya verificados, no repetidos.
+- **AUD041ALTO**: cinco precios confirmadosUSD reconciliados/verificados sin conversión. **AUD042ALTO**: formatter de unidad heredada corregido/desplegado/verificado. Sin bloqueante crítico/alto confirmado pendiente en el alcance técnico probado de este piloto.
+
+### Condiciones y límites que permanecen
+
+1. Fabián supervisa; copia cifrada verificada por día de uso/antes de cambios, local+Drive privado, clave separada y tres generaciones sin borrado automático. La captura20oct precede a052/nuevos registros, no es respaldo continuo ni scheduler.
+2. Fabián pausa manualmente nuevas altas si falla copia, correo o cuota. Revisar incidente/última copia válida antes de continuar. No monitoreo permanente ni automatismo añadido.
+3. RTO integral24h, carga/concurrencia real, todos los roles/estados gestionados, Safari nuevo y renovación prolongada no medidos en este cierre. Aceptación de riesgos operativos previa se conserva, **AUD018 no totalmente corregido**, sin SLA ni garantía universal.
+4. **AUD043MEDIO/CONFIRMADO/NO CORREGIDO:** linkPDF al permalink actual200, no origen canónico estable; riesgo futuro de retención inferido. Corregir en próximo lote local/RC autorizado. Ficha compartida tiene URL pública estable; firmas existentes duranTTL900s/300sPDF, PDF descargado no revocable.
+5. Presupuestos sin moneda no se comparan económicamente; unidades desconocidas no producen total inventado. No conversiones monetarias implícitas ni nuevos permisos públicos.
+6. Sólo STAGING/Free; stop_builds=true confirmado, sin recargas/overages/pagos. No producción/main, nuevos RC, invitaciones, publicación de pruebas, borrados o exportaciones por este dictamen. Continuar desarrollo localhost+STAGING+GitHub, Netlify sólo con autorización explícita de RC.
+
+Este dictamen habilita planear el piloto dentro del alcance aceptado. No inicia campañas, envía mensajes ni publica registros adicionales. Los NO-GO y contadores inferiores son históricos, no tareas vigentes que deban repetirse.
+
+### Antecedentes — dictamen del artefacto anterior
+
+## Dictamen histórico — corte previo a la aceptación comercial
 
 El usuario añadió después de este dictamen Compartir y MXN/USD como requisitos. [Estado actual y matriz](COMMERCIAL_SHARING_CURRENCY.md): implementado/probado localmente, 052 sin aplicar ni validar en STAGING, sin nuevo RC. **El GO condicionado que sigue corresponde sólo al artefacto anterior; no es el GO del nuevo alcance.** Se preserva su evidencia sin reescribir resultados históricos.
 
