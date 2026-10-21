@@ -1,0 +1,26 @@
+{
+  "status": "LOCALHOST_MANAGED_INTEGRATION_PARTIAL_PASS_RC_PENDING",
+  "projectRef": "mcyxunymhuxyiwklyfpy",
+  "sourceCommit": "77cd6800b37c7ce13463e476eade766de901ea5e",
+  "localBuildId": "5ULX_7OfZmAiera2voFAT",
+  "backupReceipt": "backup-verification-2026-10-20.json",
+  "migrationReceipt": "commercial-staging-migration-2026-10-20.json",
+  "aud041": {
+    "severity": "ALTO", "confirmed": true, "correctedWithExplicitHumanTruth": true,
+    "targetCount": 5, "transactions": 2, "amountsPreserved": true,
+    "noConversion": true, "noStatusDescriptionPhotoChanges": true,
+    "audits": 5, "actorNotImpersonated": true,
+    "independentReadbackUtc": "2026-10-21T02:49:20.973144Z",
+    "checksPassed": 5, "syntheticReplayRejected": true,
+    "publicRowsExamined": 13, "remainingUsdTokenAgainstMxnContradictions": 0,
+    "scopeLimit": "Text-token scan is not business verification of every price; data can change after observation"
+  },
+  "aud042": {"severity":"ALTO","confirmed":true,"localAndGitHubCorrected":true,"netlifyDeployed":false,"legacyUnknownUnitNotBackfilled":true},
+  "localChecks": {"applicationTests":157,"sqlSyntheticTests":109,"failed":0,"skipped":0,"lint":true,"types":true,"build":true,"preflight":true},
+  "managedLocalhost": {"ownerCopyLinkToast":true,"nonpublicShareDisabled":true,"anonymousSheet200":true,"signedWebpByteVerified":6,"rejectedDraftUnknown404":true,"noSessionCookie":true,"privateNoStoreNoReferrerNoindex":true,"noPortalNavFooter":true,"confirmedPiqUsdPriceTotal":true,"legacy114AnnouncementNoGuessedTotal":true},
+  "pdf": {"source":"localhost against QRIH STAGING","http":200,"privateNoStore":true,"bytes":1393172,"pages":3,"embeddedImages":6,"usdAnnouncedAndTotalText":true,"allPagesVisuallyReviewed":true,"netlifyOriginNotYetChecked":true},
+  "advisorsObserved": {"errors":1,"warnings":31,"info":3,"knownPublicDefinerViewException":true,"allWarningsResolved":false},
+  "notVerified": ["new commercial RC", "all actors/states on managed services", "new USD create/edit/duplicate E2E", "Safari new flow", "load/concurrency", "24h full RTO", "prolonged signed URL refresh"],
+  "noNewFixtures":true,"noDeletionsOrRestore":true,"productionTouched":false,"mainTouched":false,"netlifyDeployStarted":false,
+  "verdict":"NO_GO_COMMERCIAL_UNTIL_RC_AND_ACCEPTANCE"
+}

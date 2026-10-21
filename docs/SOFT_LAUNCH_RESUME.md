@@ -1,6 +1,12 @@
 # QRIH — Punto de reanudación de validaciones
 
-## Reanudación vigente — NO-GO comercial / 2026-10-20
+## Reanudación vigente — RC comercial pendiente / 20oct2026
+
+[Estado real y siguientes gates](COMMERCIAL_INTEGRATION_2026-10-20.md): respaldo nuevo local+Drive completo;052 aplicada una vez; cinco correcciones AUD041 confirmadas y verificadas; AUD042 corregido77cd680.157unit/109SQL PASS, lint/tipos/build/preflight; ficha/galería/PDF localhost+STAGING PASS acotados. No repetir capturas/052/restore ni pedir otra vez precios ya confirmados. Preparar manifiesto/documentos/integración develop/cuota y único RC autorizado, sin main/producción. NO-GO comercial hasta aceptación remota. Localhost3107 activo.
+
+### Antecedente comercial anterior a respaldo/052
+
+## Reanudación anterior — NO-GO comercial / 2026-10-20
 
 [Entrega local y matriz nueva](COMMERCIAL_SHARING_CURRENCY.md). Usuario confirmó MXN histórico y sólo compartir published. Ensayo temporal terminado:109SQL/application156PASS, lint/tipos/build/preflight locales PASS. Ahora autorizó continuar hasta deploy; código/pruebas ya en GitHub `715e42a`, rama feature/commercial-sharing-currency. 052 NO aplicada. No reabrir ensayos/restore/AUD040 previos.
 

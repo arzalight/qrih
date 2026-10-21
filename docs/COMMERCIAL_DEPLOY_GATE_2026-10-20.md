@@ -1,5 +1,11 @@
 # QRIH — Gate de entrega comercial a STAGING
 
+## Gate vigente posterior a integración
+
+[Control actualizado](COMMERCIAL_INTEGRATION_2026-10-20.md) y recibos de respaldo/migración/aceptación parcial enlazados allí: copia local+Drive verificada,052 aplicada una vez y cinco precios USD corregidos bajo confirmación humana; AUD042 corregido local+GitHub77cd680. No repetir gates cerrados. Localhost activo contra STAGING. Preparar nuevo manifiesto, integración develop y cuota fresca para el único RC autorizado; nuevo deploy aún NO iniciado. NO-GO comercial hasta aceptación remota, main/producción intactos.
+
+### Control inicial histórico
+
 Control20oct2026,22:07UTC. **NO-GO comercial / detenido antes de052 y RC por nueva copia previa al cambio.**
 
 ## Alcance autorizado y entrega
@@ -22,7 +28,7 @@ Código/pruebas/migración propuesta: commit GitHub `715e42acf27a515721229a7aab7
 
 La última captura terminó20oct02:56:17UTC, antes de051 y de fixtures/pruebas posteriores. Aunque aún tiene menos de24h y su hash coincide, **no refleja el estado actual previo a052**. La política acordada exige copia por día de uso y antes de cambios importantes. No se declara un respaldo actual por antigüedad solamente.
 
-Se solicita confirmar una nueva captura cifrada **BD/Auth/fotos del proyecto mcyxunymhuxyiwklyfpy**, local y segunda copia en la misma carpeta privada Drive, sin borrar generaciones ni restaurar. Si requiere contraseña, sólo prompt oculto del usuario; nunca chat. El capturador anterior/recibos de uso único no se desbloquean ni reutilizan. No exportación/transferencia realizadas en este control.
+**Autorización posterior recibida20oct:** «Sí, nuevo respaldo cifrado local + Drive». No volver a solicitarla. [Preparación](COMMERCIAL_BACKUP_PREPARATION_2026-10-20.md) de captura cifrada BD/Auth/fotos del proyecto mcyxunymhuxyiwklyfpy, local y segunda copia en la misma carpeta privada Drive, sin borrar generaciones ni restaurar. Contraseña sólo en prompt oculto del usuario; nunca chat. El capturador anterior/recibos de uso único permanecen intactos. Captura y transferencia aún pendientes.
 
 ## Continuación después del gate
 

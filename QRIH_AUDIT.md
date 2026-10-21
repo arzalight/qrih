@@ -1,6 +1,17 @@
 # QRIH — Auditoría técnica pre-Soft-Launch
 
-## Dictamen vigente — 2026-10-20 / NO-GO comercial
+## Dictamen vigente — 20oct2026 / integración parcial PASS, RC pendiente
+
+**NO-GO comercial conservado.** [Informe vigente](docs/COMMERCIAL_INTEGRATION_2026-10-20.md) / [recibo](docs/commercial-integration-verification-2026-10-20.json). Respaldo nuevo local+Drive verificado;052 aplicada una vez, controles independientes de historial/datos/catálogos/ACL/RLS/Storage PASS. Ficha/galería/PDF reales desde localhost contra STAGING comprobados con alcance descrito, no toda la matriz gestionada.
+
+- **AUD-041 ALTO / CONFIRMADO / cinco datos corregidos y verificados:** contradicción entre MXN asignado y descripciones USD; verdad comercial confirmada explícitamente por el usuario, sin conversión. Cantidades/estados/descripciones/fotos preservados, auditoría honesta.13filas públicas examinadas,0contradicciones de tokens detectadas tras corregir; no garantía universal del dato comercial.
+- **AUD-042 ALTO / CONFIRMADO / CORREGIDO LOCAL+GITHUB77cd680, RC PENDIENTE:** unidad vacía se mostraba como total mensual; ahora conserva anuncio heredado/moneda y no inventa total.157unit/109SQL PASS, lint/tipos/build/preflight PASS; registro114sin backfill inferido.
+- Advisors1error/31warnings/3info: excepción de vista pública existente, filtro/barrera revisados; no cero hallazgos ni cierre universal. No nueva vulnerabilidad crítica confirmada.
+- Falta nuevo RC/aceptación remota y partes de matriz comercial. AUD018/RTO24h/carga conservan límites operativos aceptados; no producción/main, nuevos fixtures, borrados ni restore.
+
+### Antecedente comercial anterior a respaldo/052
+
+## Dictamen anterior — 2026-10-20 / NO-GO comercial
 
 Nuevo alcance requerido por el usuario: Compartir sólo published y moneda MXN/USD, con históricos MXN confirmados. [Inspección, cambios, matriz de aceptación y riesgos](docs/COMMERCIAL_SHARING_CURRENCY.md). Implementación local lista para integración: **156 pruebas de aplicación y 109 SQL temporales PASS**, sin omisiones; lint/tipos/build/preflight locales PASS. No se ejecutó 052 en STAGING ni se desplegó. El GO condicionado anterior se conserva como evidencia histórica, no habilita este alcance ampliado.
 

@@ -1,10 +1,23 @@
 # NEXT STEPS — QRO INDUSTRIAL HUB / QRIH
 
-## Próximo paso vigente — 2026-10-20 / NO-GO comercial
+## Próximo paso vigente — 20oct2026 / RC comercial pendiente
+
+[Estado comprobado](docs/COMMERCIAL_INTEGRATION_2026-10-20.md). Respaldo local+Drive,052 y cinco correcciones AUD041 ya completados: NO repetir captura/migraciones ni pedir esas confirmaciones de nuevo. AUD042 corregido en GitHub77cd680.157unit/109SQL, lint/tipos/build/preflight y ficha/galería/PDF localhost con datos STAGING PASS acotados.
+
+1. Completar aceptación comercial restante sin tercera fixture, términos por el agente ni uso destructivo de datos reales; documentar límites, no declarar E2E total por pruebas sintéticas.
+2. Manifiesto187entradas listo. Usuario confirmó incluir referencias operativas de respaldos/rutas/Drive en GitHub privado, nunca claves ni bundles; rechazo anterior documentado, sin bypass. Retomar entrega e integración fast-forward develop sin main. Mantener Netlify detenido durante push.
+3. Cuota Free fresca y único RC autorizado, sin reintento automático. Verificar SHA/READY/publicación/HTTP/PDF/origen y matriz remota; no consumir otro build por documentación.
+4. Reemitir GO/NO-GO comercial según evidencias y límites aceptados. Mantener Fabián supervisor, respaldo diario manual/antes de cambios y pausa de altas ante fallos; RTO24h/carga aún no medidos.
+
+Localhost3107 activo contra QRIH STAGING; sin nuevo deploy, producción/main intactos. Queda una unidad históricaNULL: anuncio preservado, sin total inventado ni backfill autorizado.
+
+### Antecedente comercial anterior a respaldo/052
+
+## Próximo paso anterior — 2026-10-20 / NO-GO comercial
 
 [Entrega local y checklist completo](docs/COMMERCIAL_SHARING_CURRENCY.md). Compartir sólo publicadas y MXN/USD implementados localmente; 156 pruebas de aplicación y 109 SQL sintéticas PASS. Prueba temporal de 052 ya autorizada y terminada: no volver a pedirla. STAGING aún sin 052 y sin aceptación nueva.
 
-1. **Intervención vigente:** autorizar y completar una nueva captura cifrada de QRIH STAGING y segunda copia privada Drive, sin borrar generaciones ni restaurar. La anterior es íntegra pero anterior a051 y a cambios posteriores. Continuar hasta deploy ya está autorizado; no volver a pedir ese permiso general. [Gate actual](docs/COMMERCIAL_DEPLOY_GATE_2026-10-20.md). Después, identidad/esquema/historial/cuota/ventana y sólo052; no reenviar001–051 ni reutilizar capturadores consumidos.
+1. **Intervención vigente:** nuevo respaldo cifrado local+Drive ya autorizado; no volver a pedir ese permiso. [Adaptador separado preparado](docs/COMMERCIAL_BACKUP_PREPARATION_2026-10-20.md), pendiente de ejecutarlo en terminal personal con contraseña oculta. Después verificar paquete y segunda copia privada, sin borrar generaciones ni restaurar. Continuar hasta deploy está autorizado; luego identidad/esquema/historial/cuota/ventana y sólo052. No reenviar001–051 ni reutilizar capturadores consumidos.
 2. Comparar huellas antes/después; ninguna cantidad, unidad, estado, perfil, galería o metadato Storage preexistente debe cambiar por la migración, salvo la columna nueva MXN. Detenerse ante discrepancias.
 3. Validar localhost + STAGING con sesión legítima y fixtures autorizados: selector MXN/USD, edición/duplicado, ficha/PDF, copiar/WhatsApp, filtros, privacidad y suspensión/retiro. No publicar USD sobre el Netlify anterior.
 4. Código/pruebas ya entregados en `feature/commercial-sharing-currency`, `715e42a`. Tras aceptación integrada: fast-forward controlado a develop y manifiesto nuevo. No tocar main/producción.

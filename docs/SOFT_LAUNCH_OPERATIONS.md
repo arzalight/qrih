@@ -1,6 +1,12 @@
 # QRIH — Acuerdos mínimos de operación del piloto
 
-## Alcance comercial vigente — NO-GO / 2026-10-20
+## Alcance comercial vigente — integración parcial, RC pendiente /20oct2026
+
+[Control vigente](COMMERCIAL_INTEGRATION_2026-10-20.md). Respaldo nuevo local+Drive verificado/tres generaciones,052 aplicada una vez y cinco precios USD reconciliados por confirmación expresa, sin conversión. No repetir herramientas consumidas ni migraciones. Fuente77cd680,157unit/109SQL y ficha/galería/PDF localhost+STAGING PASS acotados; NO-GO comercial hasta RC/aceptación remota. RTO24h/carga no medidos, manual diario no scheduler, firmas/PDF con límites existentes. Fabián supervisor y pausa manual ante fallos se mantienen. Sin producción/main, restore/borrado ni nuevo deploy aún.
+
+### Antecedente comercial anterior a respaldo/052
+
+## Alcance comercial anterior — NO-GO / 2026-10-20
 
 El GO condicionado previo no cubre Compartir y MXN/USD nuevos. [Entrega y procedimiento](COMMERCIAL_SHARING_CURRENCY.md). Sólo se comparten published; moneda histórica MXN confirmada. 052 probada únicamente en PostgreSQL temporal, no aplicada a servicios. No publicar USD con el artefacto Netlify anterior; requiere integración/RC autorizados y aceptación nueva.
 

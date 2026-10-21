@@ -1,6 +1,22 @@
 # QRIH FUNCTIONAL INDEX — Índice maestro tipo SIGMA
 
-## Trazabilidad vigente — 2026-10-20 / NO-GO comercial
+## Trazabilidad vigente — 20oct2026 / BD integrada, aceptación parcial, RC pendiente
+
+[Informe y hallazgos actuales](docs/COMMERCIAL_INTEGRATION_2026-10-20.md) / [recibo](docs/commercial-integration-verification-2026-10-20.json). IDs estables conservados; los cortes inferiores previos a052 son históricos.
+
+| ID | Trazabilidad y evidencia nueva | Estado |
+| --- | --- | --- |
+| PROP-008 | SharePropertyButton→/ficha/[slug]→cargador público→autorizador vigente; copiar con sesión legítima,200público/6WebP/404draft-rejected-inexistente | LOCALHOST+STAGING PASS ACOTADO; RC pendiente |
+| PRICE-001 / AUD-041 | 052→properties/RPC/vista/catálogos/matching; recibo de migración + cinco correcciones USD confirmadas/audit_logs/readback independiente | BD INTEGRADA; datos corregidos, nueva aceptación parcial |
+| PRICE-001 / AUD-042 | lib/property-price.ts + tests/commercial-properties.test.mjs→77cd680; preserva anuncio de unidad desconocida,157unit/109SQL PASS | CORREGIDO LOCAL+GITHUB; no desplegado aún |
+| PDF-001 | Ruta PDF→cargador comercial→mismo formatter; PDF real3páginas/6fotos/precio-total USD, texto/render revisados | LOCALHOST+STAGING PASS; origen Netlify pendiente |
+| OPS-003 | Respaldo20oct→51tablas/66objetos cifrados→local+Drive owner/readback exacto; tres generaciones | VERIFICADO al corte, no scheduler/RTO24h |
+
+PROP-003/006/007 mantienen pruebas y permisos existentes; las extensiones monetarias conservan cobertura sintética, no E2E gestionado total por inferencia. Producción/main intactos, sin nuevo deploy.
+
+### Antecedente comercial anterior a respaldo/052
+
+## Trazabilidad anterior — 2026-10-20 / NO-GO comercial
 
 [Decisiones, entrega y matriz](docs/COMMERCIAL_SHARING_CURRENCY.md). Compartir sólo published; históricos confirmados MXN. 156 pruebas de aplicación y 109 SQL en memoria PASS. Sin aplicación/validación STAGING ni nuevo deploy/GO.
 

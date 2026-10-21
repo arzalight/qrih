@@ -1,6 +1,21 @@
 ## PROJECT STATUS — QRO INDUSTRIAL HUB / QRIH
 
-## Estado vigente — 2026-10-20 / NO-GO por nuevo alcance comercial
+## Estado vigente — 20oct2026 / integración comercial comprobada, RC pendiente
+
+**NO-GO comercial hasta nuevo RC y aceptación remota.** [Control vigente y hallazgos](docs/COMMERCIAL_INTEGRATION_2026-10-20.md) / [recibo](docs/commercial-integration-verification-2026-10-20.json). Respaldo nuevo local+Drive verificado y tres generaciones conservadas;052 APLICADA UNA VEZ en QRIH STAGING, historial/huellas/ACL/RLS/Storage contrastados. No repetir captura ni migraciones cerradas.
+
+| Función | Estado realmente comprobado | Pendiente |
+| --- | --- | --- |
+| PROP-008 · compartir | Menú/copiar con sesión real; ficha anónima200, seis WebP y rechazo draft/rejected/inexistente404 | RC remoto y resto de matriz |
+| PRICE-001 · moneda | 052 integrada; cinco precios USD confirmados y corregidos sin conversión, cinco auditorías verificadas (AUD-041 ALTO) | RC y aceptación comercial restante |
+| PDF-001 · extensión | PDF real localhost+STAGING,3páginas/6fotos, precio6.50USD y total73,788USD, texto y render revisados | Origen/ejecución Netlify |
+| AUD-042 · unidad heredada | Corregido local+GitHub77cd680;157unit/109SQL PASS, lint/tipos/build/preflight PASS; anuncio original conservado sin inventar total | Despliegue/verificación del nuevo código |
+
+Código en `feature/commercial-sharing-currency`,HEAD77cd680; develop/main todavía sin integrar. Localhost3107 activo contra STAGING. Ningún nuevo deploy iniciado. Advisors conserva excepción de vista pública y avisos documentados; no certificación universal. RTO24h/carga y límites operativos previamente aceptados conservados. Los cortes inferiores son históricos y no tareas pendientes vigentes.
+
+### Antecedente comercial anterior a respaldo/052
+
+## Estado anterior — 2026-10-20 / NO-GO por nuevo alcance comercial
 
 El usuario añadió Compartir y MXN/USD como requisitos del Soft Launch. Confirmó que los importes históricos son MXN y que **sólo se comparten propiedades published**. El GO condicionado del artefacto previo no aprueba estas funciones. [Entrega, matriz y procedimiento](docs/COMMERCIAL_SHARING_CURRENCY.md).
 
@@ -12,6 +27,8 @@ El usuario añadió Compartir y MXN/USD como requisitos del Soft Launch. Confirm
 052 propuesta: columna price_currency limitada a MXN/USD, numeric/importes históricos sin reescribir, RPC/ACL/vista y lecturas exactas compatibles. Prueba en memoria autorizada y realizada. El usuario autorizó continuar hasta deploy el 20oct; aplicación cloud y RC siguen sujetos a controles previos, no son acciones ya realizadas. No publicar USD sobre el Netlify anterior. Presupuestos sin moneda no se comparan; firmas existentes duran su TTL. [Límites y riesgos](docs/COMMERCIAL_SHARING_CURRENCY.md#riesgos-y-límites).
 
 Código y pruebas entregados en GitHub, rama `feature/commercial-sharing-currency`, commit `715e42acf27a515721229a7aab75c8c241640194` (41 archivos funcionales verificados). `develop` y `main` no se integraron. [Control previo al despliegue](docs/COMMERCIAL_DEPLOY_GATE_2026-10-20.md): Netlify Free con 268,5/300 créditos y builds detenidos. Falta respaldo nuevo: la copia íntegra anterior precede a 051 y a cambios posteriores, por lo que no sustituye una captura previa a 052. No nueva captura/transferencia, migración ni deploy en este control. Localhost sigue detenido para no servir código contra un esquema aún incompatible. **NO-GO comercial conservado.**
+
+**Actualización20oct / autorización de respaldo recibida:** usuario confirma nuevo respaldo cifrado BD/Auth/fotos local+misma carpeta privada Drive. Adaptador separado de un uso preparado;15pruebas de controles+39checks sintéticos PASS, clientes PostgreSQL17.11 firmados/verificados. Identidad/QRIH Staging/Free, egreso0,06/5GB y Drive11,25/15GB observados; carpeta de copia sólo owner. [Preparación y siguiente intervención](docs/COMMERCIAL_BACKUP_PREPARATION_2026-10-20.md). Captura real pendiente de contraseña en terminal personal; no pedir secretos en chat. Copia anterior intacta;052/deploy aún no ejecutados.
 
 ### Antecedentes — el siguiente GO corresponde al alcance anterior
 

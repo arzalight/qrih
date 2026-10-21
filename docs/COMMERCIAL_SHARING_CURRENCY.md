@@ -1,6 +1,6 @@
 # QRIH — Compartir y monedas / entrega local
 
-20 de octubre de 2026. **NO-GO para el nuevo alcance comercial del Soft Launch.** Implementación local y SQL sintético aprobados; sin integración/validación de esta entrega en STAGING. El GO condicionado anterior corresponde al artefacto previo, no a estas funcionalidades.
+20 de octubre de 2026. **NO-GO para el nuevo alcance comercial hasta RC y aceptación remota.** [Actualización vigente de integración/AUD041/AUD042](COMMERCIAL_INTEGRATION_2026-10-20.md): respaldo local+Drive verificado,052 aplicada una vez, cinco precios USD confirmados y corregidos,157unit/109SQL PASS y ficha/PDF reales desde localhost contra STAGING revisados. El GO anterior no aprueba automáticamente el alcance nuevo. Las secciones inferiores conservan el diseño/recibo de entrega inicial; sus pendientes de copia/052/locales han sido superados por el informe vigente, no deben repetirse.
 
 ## Decisiones del usuario
 
