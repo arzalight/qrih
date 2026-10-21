@@ -1,6 +1,14 @@
 ## PROJECT STATUS — QRO INDUSTRIAL HUB / QRIH
 
-## Estado vigente — 20oct2026 / integración comercial comprobada, RC pendiente
+## Estado vigente — 20oct2026 / RC comercial PUBLICADO, aceptación final pendiente
+
+**GO técnico del RC en STAGING; NO-GO de apertura comercial hasta la prueba crítica restante.** [Recibo remoto](docs/commercial-deploy-verification-2026-10-20.json). Artefacto `5f7b8e2a50c55ea1b4320746f1a7468e8e1ce623`, deploy `6ad82c6afc32e2d1cb980405` READY/publicación exacta20oct21:08CDMX.157unit remotas/31HTTP remotos PASS,0fallos/0skips; lint/tipos/build/preflight/scanner276archivos PASS.187entradas funcionales congeladas iguales. Un único build autorizado, Free/saldo previo268,1, stop_builds restituido; sin producción/main ni deploy adicional documental.
+
+Ficha/galería interactiva/seis WebP/PDF3páginas-fotos-precio-total/filtros MXN-USD y denegación de fichas draft/rejected/inexistente comprobados en el RC. AUD-041 corregido/verificado; AUD-042 **CORREGIDO, DESPLEGADO Y VERIFICADO**. Borrador existente editado MXN→USD→MXN y precarga de duplicado USD+7fotos comprobados con sesión real/localhost+STAGING; siguen dos fixtures sin publicar, galerías/portadas iguales, sólo updated_at/texto derivado esperados. AltaUSD/guardado completo de duplicado/envío a revisión con moneda nuevos aún pendientes de alcance adicional, no se afirman PASS.
+
+AUD-043 **MEDIO/CONFIRMADO/NO CORREGIDO**: enlace interno PDF usa permalink del artefacto en vez del dominio estable; responde200 ahora, longevidad tras futuros despliegues/retención no medida. No bloquea la validación actual ni justifica consumir otro build; corrección mínima en próximo lote autorizado. Las tablas/cortes siguientes describen integración previa al RC y son antecedentes.
+
+### Integración anterior al RC publicado
 
 **NO-GO comercial hasta nuevo RC y aceptación remota.** [Control vigente y hallazgos](docs/COMMERCIAL_INTEGRATION_2026-10-20.md) / [recibo](docs/commercial-integration-verification-2026-10-20.json). Respaldo nuevo local+Drive verificado y tres generaciones conservadas;052 APLICADA UNA VEZ en QRIH STAGING, historial/huellas/ACL/RLS/Storage contrastados. No repetir captura ni migraciones cerradas.
 

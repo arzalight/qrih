@@ -1,5 +1,11 @@
 # QRIH — Gate de entrega comercial a STAGING
 
+## Gate RC cerrado — aceptación comercial final pendiente
+
+[Recibo](commercial-deploy-verification-2026-10-20.json):5f7b8e2/deploy6ad82c6afc32e2d1cb980405 READY/publicado,20oct21:08CDMX;157unit/31HTTP remotos, ficha/6WebP/PDF/filtros PASS. Un build bajo autorización, saldo previo268,1Free/sin recargas-overages; stop_builds restituido. Manifiesto187entradas conserva fuente77cd680, docs integradas develop/main intacta. No nuevo deploy por documentación ni repetición052/copia. **GO técnico del RC/NO-GO comercial** hasta altaUSD/duplicación guardada/revisión monetaria gestionadas bajo alcance adicional; las lecturas/edición actual no equivalen a ese caso. [Detalle y AUD043](COMMERCIAL_INTEGRATION_2026-10-20.md).
+
+### Controles anteriores al RC — históricos
+
 ## Gate vigente posterior a integración
 
 [Control actualizado](COMMERCIAL_INTEGRATION_2026-10-20.md) y recibos de respaldo/migración/aceptación parcial enlazados allí: copia local+Drive verificada,052 aplicada una vez y cinco precios USD corregidos bajo confirmación humana; AUD042 corregido local+GitHub77cd680. No repetir gates cerrados. Localhost activo contra STAGING. Preparar nuevo manifiesto, integración develop y cuota fresca para el único RC autorizado; nuevo deploy aún NO iniciado. NO-GO comercial hasta aceptación remota, main/producción intactos.

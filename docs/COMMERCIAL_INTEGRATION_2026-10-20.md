@@ -1,6 +1,20 @@
 # QRIH — Integración comercial / control vigente
 
-20oct2026 CDMX; verificación posterior21oct02:49:20UTC. **NO-GO comercial hasta RC y aceptación remota.** Este corte sustituye las afirmaciones inferiores de respaldo/052 pendientes. No sustituye pruebas históricas ni promete disponibilidad.
+## Resultado vigente — RC publicado, aceptación final pendiente
+
+20oct2026,21:08CDMX: RC `5f7b8e2a50c55ea1b4320746f1a7468e8e1ce623` publicado en QRIH STAGING, deploy `6ad82c6afc32e2d1cb980405`. [Recibo remoto](commercial-deploy-verification-2026-10-20.json): un único build, SHA/READY/publicación exactos,157unitCI/31HTTP PASS,0fallos/0skips, lint/tipos/build/preflight/scanner276archivos PASS.187entradas funcionales/huella5f72e610… conservadas; main/producción intactos, Free/saldo previo268,1 y stop_builds restituido. No otro deploy por documentos.
+
+Ficha, seis WebP por bytes, galería interactiva, privacidad/cache/404no públicas y filtros por moneda/rango comprobados en sitio desplegado. PDF real remoto1.393.248bytes,3páginas/6fotos/precio6.50USD y total73,788USD; páginas renderizadas y revisadas. **AUD042 CORREGIDO/DESPLEGADO/VERIFICADO**. AUD041 cinco correcciones confirmadas y verificadas, sin conversión.
+
+Sesión legítima localhost+STAGING: borrador existente1MXN→1USD→1MXN, reabrir conserva selección, precarga de duplicación conservaUSD/m2/7fotos; no se guardó otra copia. Sólo dos fixtures, finales rejected/draft, portada/galerías y otros campos comparados iguales, salvo updated_at y texto derivado esperado `$1 MXN/m²/mes` en el borrador editado. Sin borrados/contactos/publicación nueva.
+
+**GO técnico del RC; NO-GO apertura comercial hasta altaUSD/duplicación guardada/revisión conservando moneda.** El alcance de dos fixtures no permite una tercera por inferencia; permiso adicional acotado solicitado, aún no usado. Las pruebas sintéticas109y el E2E anterior conservan su alcance; no se presentan como altasUSD actuales ni todos los roles/estados/Safari/RTO/carga reales.
+
+**AUD043 MEDIO / CONFIRMADO / NO CORREGIDO:** enlace del PDF deriva de Request.url (route.tsx409), cuyo origen Netlify es el permalink exacto del deploy. Link200 comprobado, sin localhost/secretos, pero no dominio canónico. Posible pérdida de vigencia tras futuros despliegues/retención es riesgo inferido, no caída actual ni ensayo temporal. Corrección propuesta pequeña: origen público canónico allowlisted + regresión de adaptador en próximo lote autorizado; no confiar en Host arbitrario ni consumir otro RC ahora. Ficha compartida usa enlace estable del dominio público, no ese permalink ni Storage como identificador.
+
+### Antecedentes — integración previa al RC
+
+20oct2026 CDMX; verificación posterior21oct02:49:20UTC. El corte siguiente sustituía respaldo/052 pendientes. No sustituye pruebas históricas ni promete disponibilidad.
 
 ## Gates completados
 

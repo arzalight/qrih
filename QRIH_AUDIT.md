@@ -1,6 +1,14 @@
 # QRIH — Auditoría técnica pre-Soft-Launch
 
-## Dictamen vigente — 20oct2026 / integración parcial PASS, RC pendiente
+## Dictamen vigente — 20oct2026 / RC PUBLICADO Y VERIFICADO, NO-GO comercial
+
+[Recibo remoto](docs/commercial-deploy-verification-2026-10-20.json): SHA5f7b8e2/deploy6ad82c6afc32e2d1cb980405 READY/publicación exactos;157unit/31HTTP remotos PASS,0fallos/0skips; ficha/galería/6WebP/PDF real/filtros y404no públicas comprobados. AUD-041 ALTO corregido con verdad humana, AUD-042 ALTO **CORREGIDO/DESPLEGADO/VERIFICADO**. GO técnico de este RC en STAGING, no apertura comercial automática.
+
+**AUD-043 MEDIO / CONFIRMADO / NO CORREGIDO:** `app/api/bodegas/[slug]/pdf/route.tsx:409` usa origen de Request.url; Netlify representa aquí el permalink `6ad82c6afc32e2d1cb980405--qrih-staging.netlify.app`, visible en el enlace del PDF real. Destino actual200, sin localhost/secretos. No es un enlace canónico estable; una eventual retirada por retención después de cambiar artefacto es riesgo inferido de plataforma, no fallo actual observado. Propuesta mínima: origen público canónico allowlisted y regresión del adaptador, en próximo lote/deploy autorizado, sin confiar ciegamente en Host ni desactivar protecciones. No consumir otro build ni declarar corregido.
+
+Aceptación restante bloqueante: altaUSD/guardado completo de duplicación/envío a revisión conservando moneda en servicios. Alcance de dos fixtures agotado; petición adicional acotada, no ejecutada por inferencia. Edición del borrador existente MXN→USD→MXN/precargaUSD7fotos PASS, galerías y resto de campos conservados salvo texto derivado/updated_at. RTO24h/carga y demás límites previos no medidos conservan alcance. Sin main/producción, borrados, restores ni repetición052.
+
+### Integración anterior al RC publicado
 
 **NO-GO comercial conservado.** [Informe vigente](docs/COMMERCIAL_INTEGRATION_2026-10-20.md) / [recibo](docs/commercial-integration-verification-2026-10-20.json). Respaldo nuevo local+Drive verificado;052 aplicada una vez, controles independientes de historial/datos/catálogos/ACL/RLS/Storage PASS. Ficha/galería/PDF reales desde localhost contra STAGING comprobados con alcance descrito, no toda la matriz gestionada.
 

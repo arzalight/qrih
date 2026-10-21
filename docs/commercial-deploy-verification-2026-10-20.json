@@ -1,0 +1,133 @@
+{
+  "status": "READY_PUBLISHED_EXACT_SHA_REMOTE_SMOKE_PASS_COMMERCIAL_ACCEPTANCE_PARTIAL",
+  "project": "qrih-staging",
+  "siteId": "bc0d8fd9-e9a0-4cb1-bd28-5ad053e93859",
+  "artifactCommit": "5f7b8e2a50c55ea1b4320746f1a7468e8e1ce623",
+  "sourceCommit": "77cd6800b37c7ce13463e476eade766de901ea5e",
+  "buildId": "6ad82c6afc32e2d1cb980403",
+  "deployId": "6ad82c6afc32e2d1cb980405",
+  "publishedAtUtc": "2026-10-21T03:08:10.649Z",
+  "publishedAtMexicoCity": "2026-10-20T21:08:10-06:00",
+  "oneBuildPost": true,
+  "additionalBuilds": 0,
+  "stoppedBuildsRestored": true,
+  "free": true,
+  "observedCreditsBefore": 268.1,
+  "autoTopup": false,
+  "overages": false,
+  "inputFiles": 187,
+  "inputSha256": "5f72e61052bcfc6e063deb342fd2103fdd6dca49712d190f23ef45989587fb37",
+  "manifest": "commercial-rc-inputs-2026-10-20.json",
+  "remotePipeline": {
+    "applicationTests": 157,
+    "pass": 157,
+    "fail": 0,
+    "skipped": 0,
+    "lint": true,
+    "typecheck": true,
+    "build": true,
+    "preflightBeforeAfter": true,
+    "netlifySecretsScanFiles": 276,
+    "netlifySecretsFindings": 0
+  },
+  "remoteHttp": {
+    "tests": 31,
+    "pass": 31,
+    "fail": 0,
+    "skipped": 0,
+    "requests": "GET and invalid/unauthenticated requests only; no business writes"
+  },
+  "commercialReadOnly": {
+    "anonymousPublished200": true,
+    "noStoreNoReferrerNoindex": true,
+    "noSessionCookie": true,
+    "noPortalNavFooter": true,
+    "signedWebpBytes": 6,
+    "rejectedDraftUnknown404": true,
+    "legacyUnknownUnitPreservedNoGuessedTotal": true,
+    "piqUsdAnnouncedAndTotal": true,
+    "interactiveGalleryOpenedAndNavigated": true,
+    "usdExactRange": true,
+    "mxnExactRange": true,
+    "noMixedCurrencyForTestedRanges": true,
+    "missingComparableDimensionsRejected": true
+  },
+  "pdf": {
+    "http": 200,
+    "bytes": 1393248,
+    "pages": 3,
+    "embeddedImages": 6,
+    "announcedUsd": true,
+    "totalUsd": true,
+    "allPagesRenderedAndReviewed": true,
+    "noLocalhostLink": true,
+    "linkHost": "6ad82c6afc32e2d1cb980405--qrih-staging.netlify.app",
+    "exactDeployTarget200": true,
+    "canonicalLink": false,
+    "followUp": "AUD-043 MEDIO; current link works, later retention longevity not measured"
+  },
+  "ownerManagedViaLocalhost": {
+    "editedExistingDraftMxnToUsd": true,
+    "usdPersistedOnReopen": true,
+    "duplicatePrefillUsdAndSevenPhotos": true,
+    "duplicateNotSaved": true,
+    "mxnRestored": true,
+    "newFixturesCreated": 0,
+    "finalFixtureEvidence": {
+      "syntheticFixtures": 2,
+      "status": "PASS_READONLY_EXACT_FIXTURE_FINGERPRINTS",
+      "fixtures": [
+        {
+          "propertyId": "0198d9d9-08d4-4749-bc61-5f5563cbaeea",
+          "status": "rejected",
+          "priceUnit": "m2",
+          "priceCurrency": "MXN",
+          "exactPrice": "1",
+          "priceDisplay": "$1/m²",
+          "businessHash": "a1524215a8b4c2cd305d210619d783796d076d70433945826ae6ae43f65ad916",
+          "sameBusinessExceptUpdatedAtAndDerivedDisplay": true,
+          "galleryHash": "2c65b5c9deaeb84f713aaa7102f9fd21846d25dbb44489a53d56e7f6d8a0fd53",
+          "galleryCount": 7,
+          "coverMatchesFirst": true,
+          "noPersistedSignedUrl": true
+        },
+        {
+          "propertyId": "83ab4b58-54b8-4ba3-88e7-c2f990483003",
+          "status": "draft",
+          "priceUnit": "m2",
+          "priceCurrency": "MXN",
+          "exactPrice": "1",
+          "priceDisplay": "$1 MXN/m²/mes",
+          "businessHash": "8354a57d7442622c621b68c832f5ba1a81a94db03267ecb1335d7e23f3ef0b26",
+          "sameBusinessExceptUpdatedAtAndDerivedDisplay": true,
+          "galleryHash": "abfd0e075a01e4ad9b5275a0d9edd813b61ce01c0ee3f37487c2ee1ddb5d436a",
+          "galleryCount": 7,
+          "coverMatchesFirst": true,
+          "noPersistedSignedUrl": true
+        }
+      ],
+      "ignoredPropertyField": "updated_at",
+      "privilegedWrites": 0
+    }
+  },
+  "aud041": "five user-confirmed USD corrections verified, no conversion",
+  "aud042": "deployed and remote legacy-unit behavior verified",
+  "pendingCriticalAcceptance": [
+    "new USD creation with explicit currency on real form",
+    "full managed duplicate save retaining currency",
+    "review transition retaining currency"
+  ],
+  "newFixtureAuthority": "additional scope requested, not yet used",
+  "notMeasured": [
+    "complete RTO24h",
+    "real load/concurrency",
+    "all actors/states managed",
+    "new Safari-specific acceptance",
+    "prolonged signed URL refresh"
+  ],
+  "productionTouched": false,
+  "mainTouched": false,
+  "supabaseMcpUsed": false,
+  "backupOrMigrationRepeated": false,
+  "verdict": "GO_TECHNICAL_STAGING_RC_ONLY_NO_GO_COMMERCIAL_OPENING_UNTIL_CRITICAL_ACCEPTANCE"
+}

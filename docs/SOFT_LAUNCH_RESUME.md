@@ -1,5 +1,11 @@
 # QRIH — Punto de reanudación de validaciones
 
+## Reanudación vigente — RC publicado, falta aceptación comercial acotada
+
+[Recibo remoto](commercial-deploy-verification-2026-10-20.json).5f7b8e2/deploy6ad82c6afc32e2d1cb980405 ya READY/publicado;157unit/31HTTP y ficha/galería/PDF/filtros PASS. No pedir otro deploy ni repetir052/backups/restore. EdiciónUSD del borrador existente/precarga duplicado PASS, finalmenteMXN y dos fixtures sin publicar/fotos intactas. Falta permiso adicional para probar altaUSD/duplicado guardado/revisión; no tercera fixture por inferencia, términos por usuario si aparecen. **NO-GO comercial**, GO técnico del RC. AUD043MEDIOenlacePDFpermalink actual200/no canónico, próximo lote autorizado. Builds detenidos/Free, main/producción intactos. Secciones inferiores históricas.
+
+### Preparación anterior al RC
+
 ## Reanudación vigente — RC comercial pendiente / 20oct2026
 
 [Estado real y siguientes gates](COMMERCIAL_INTEGRATION_2026-10-20.md): respaldo nuevo local+Drive completo;052 aplicada una vez; cinco correcciones AUD041 confirmadas y verificadas; AUD042 corregido77cd680.157unit/109SQL PASS, lint/tipos/build/preflight; ficha/galería/PDF localhost+STAGING PASS acotados. No repetir capturas/052/restore ni pedir otra vez precios ya confirmados. Preparar manifiesto/documentos/integración develop/cuota y único RC autorizado, sin main/producción. NO-GO comercial hasta aceptación remota. Localhost3107 activo.

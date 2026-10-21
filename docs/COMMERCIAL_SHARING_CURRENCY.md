@@ -1,5 +1,11 @@
 # QRIH — Compartir y monedas / entrega local
 
+## Resultado posterior vigente
+
+[RC publicado y aceptación](commercial-deploy-verification-2026-10-20.json) / [informe](COMMERCIAL_INTEGRATION_2026-10-20.md):052 integrada una vez, respaldo verificado, cinco correccionesUSD confirmadas, AUD042 desplegado/verificado. RC5f7b8e2 READY/publicado,157unit/31HTTP remotos y ficha/galería/PDF/filtros PASS. EdiciónUSD y precarga duplicado reales con fixture existente, sin alta nueva. **NO-GO comercial** hasta altaUSD/duplicado completo/revisión monetaria en alcance adicional autorizado. AUD043MEDIO: linkPDF a permalink200, canónico pendiente futuro. Los estados inferiores son el diseño/entrega iniciales, no nuevos gates de backup/migración/deploy.
+
+### Entrega inicial — antecedente
+
 20 de octubre de 2026. **NO-GO para el nuevo alcance comercial hasta RC y aceptación remota.** [Actualización vigente de integración/AUD041/AUD042](COMMERCIAL_INTEGRATION_2026-10-20.md): respaldo local+Drive verificado,052 aplicada una vez, cinco precios USD confirmados y corregidos,157unit/109SQL PASS y ficha/PDF reales desde localhost contra STAGING revisados. El GO anterior no aprueba automáticamente el alcance nuevo. Las secciones inferiores conservan el diseño/recibo de entrega inicial; sus pendientes de copia/052/locales han sido superados por el informe vigente, no deben repetirse.
 
 ## Decisiones del usuario

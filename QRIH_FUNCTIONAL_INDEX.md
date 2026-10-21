@@ -1,6 +1,12 @@
 # QRIH FUNCTIONAL INDEX — Índice maestro tipo SIGMA
 
-## Trazabilidad vigente — 20oct2026 / BD integrada, aceptación parcial, RC pendiente
+## Trazabilidad vigente — 20oct2026 / RC PUBLICADO, aceptación comercial parcial
+
+[Recibo del RC](docs/commercial-deploy-verification-2026-10-20.json). PROP-008/PRICE-001/PDF-001→fuente77cd680→manifiesto187entradas/huella5f72e610…→artefacto5f7b8e2→deploy6ad82c6afc32e2d1cb980405 READY/publicado→157unitCI/31HTTP/6WebP/ficha-galería-PDF-filtros PASS. Sin cambios de IDs ni autorización ampliada de datos. AUD042 cerrado para ese artefacto; AUD041 datos reconciliados por confirmación humana.
+
+PROP-003/PRICE-001: edición de fixture existente MXN→USD→MXN persistida, precarga PROP006 USD7fotos sin guardar nueva copia. AltaUSD/duplicación completa/revisión monetaria gestionadas aún pendientes; no se trasladan PASS sintéticos. PDF001→AUD043MEDIO: enlace de PDF a permalink actual200, no dominio canónico; propuesta futura, no corregido. OPS002→unbuild/Free/buildsdetenidos; documentación posterior no provoca otro deploy. **GO técnico RC / NO-GO apertura comercial.** Cortes inferiores históricos.
+
+### Integración anterior al RC publicado
 
 [Informe y hallazgos actuales](docs/COMMERCIAL_INTEGRATION_2026-10-20.md) / [recibo](docs/commercial-integration-verification-2026-10-20.json). IDs estables conservados; los cortes inferiores previos a052 son históricos.
 

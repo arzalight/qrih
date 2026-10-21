@@ -1,6 +1,15 @@
 # NEXT STEPS — QRO INDUSTRIAL HUB / QRIH
 
-## Próximo paso vigente — 20oct2026 / RC comercial pendiente
+## Próximo paso vigente — 20oct2026 / RC publicado, cierre de aceptación pendiente
+
+[Recibo](docs/commercial-deploy-verification-2026-10-20.json): RC5f7b8e2/deploy6ad82c6afc32e2d1cb980405 ya READY/publicado;157unit/31HTTP y ficha/6WebP/PDF/filtros PASS. No repetir deploy,052,backup/restore ni pedir autorización documental otra vez. Builds detenidos, Free, main/producción intactos.
+
+1. Resolver permiso acotado para hasta dos fixtures adicionales: probar altaUSD/duplicado guardado/revisión con moneda, sin publicación/borrado/contactos. Si hay términos, aceptación por usuario. Mantener NO-GO comercial mientras falte esa prueba crítica; no crear tercer registro por inferencia.
+2. Registrar resultados y reevaluar GO condicionado del piloto bajo límites ya acordados; no confundir cobertura sintética/local con todos los actores/estados gestionados.
+3. AUD043MEDIO: en próximo lote autorizado, origen canónico allowlisted del enlace interno PDF (ahora permalink vigente200). No otro deploy por este cierre ni presentar el detalle como resuelto.
+4. Mantener operación manual cifrada por día de uso/antes de cambios y pausa de altas ante fallos; RTO24h/carga/renovación prolongada siguen sin medirse. Sin producción/main ni nuevos costos.
+
+### Integración anterior al RC publicado
 
 [Estado comprobado](docs/COMMERCIAL_INTEGRATION_2026-10-20.md). Respaldo local+Drive,052 y cinco correcciones AUD041 ya completados: NO repetir captura/migraciones ni pedir esas confirmaciones de nuevo. AUD042 corregido en GitHub77cd680.157unit/109SQL, lint/tipos/build/preflight y ficha/galería/PDF localhost con datos STAGING PASS acotados.
 

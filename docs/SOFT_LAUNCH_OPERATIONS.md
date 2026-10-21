@@ -1,5 +1,11 @@
 # QRIH — Acuerdos mínimos de operación del piloto
 
+## Corte vigente posterior al RC — 20oct2026
+
+[RC nuevo](commercial-deploy-verification-2026-10-20.json) publicado y verificado:157unit/31HTTP/ficha/galería/PDF/filtros PASS. Un único build autorizado, Free/saldo previo268,1/builds detenidos, sin main/producción/pagos. GO técnico del RC, **NO-GO de apertura comercial hasta altaUSD/duplicado completo/revisión monetaria gestionados**, alcance adicional pendiente, no alta/invitación automática. Fabián supervisor, manual cifrado diario/antes de cambios, pausa de altas ante fallos y límites RTO24h/carga/firmas aceptados se conservan. Respaldo20oct local+Drive/tres generaciones son hechos al corte, no cobertura continua de nuevas escrituras. AUD043MEDIOpermalinkPDF funciona200, no prometer enlace canónico permanente. Cortes inferiores históricos.
+
+### Integración anterior al RC
+
 ## Alcance comercial vigente — integración parcial, RC pendiente /20oct2026
 
 [Control vigente](COMMERCIAL_INTEGRATION_2026-10-20.md). Respaldo nuevo local+Drive verificado/tres generaciones,052 aplicada una vez y cinco precios USD reconciliados por confirmación expresa, sin conversión. No repetir herramientas consumidas ni migraciones. Fuente77cd680,157unit/109SQL y ficha/galería/PDF localhost+STAGING PASS acotados; NO-GO comercial hasta RC/aceptación remota. RTO24h/carga no medidos, manual diario no scheduler, firmas/PDF con límites existentes. Fabián supervisor y pausa manual ante fallos se mantienen. Sin producción/main, restore/borrado ni nuevo deploy aún.
