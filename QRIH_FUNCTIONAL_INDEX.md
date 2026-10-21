@@ -1,5 +1,7 @@
 # QRIH FUNCTIONAL INDEX — Índice maestro tipo SIGMA
 
+**Entrega remota 21oct:** SHA8416985 → build6ad9345ad070f6760a151f7e/deploy6ad9345ad070f6760a151f80 READY en qrih-staging. 232 tests remotos y31HTTP PASS;inicio/ficha/PDF con formato común comprobados. Free/builds automáticos detenidos/main intacto. [Trazabilidad](docs/PRELAUNCH_RC_2026-10-21.md). Entrega documental posterior sin redeploy;límites de aceptación conservados.
+
 **RC 21oct autorizado:** [entrega y gates](docs/PRELAUNCH_RC_2026-10-21.md). propertyPrice centraliza visualización; propertyPriceForStorage conserva formato anterior en alta/guardado/admin. Plantilla de descripción sólo en alta; círculos detrás del contenido. 232 pruebas + 31 HTTP locales PASS; publicación remota pendiente de SHA/READY/verificación. No cambios de valores/moneda/unidad/cálculos o main.
 
 **Publicar / PRICE-001 / 21oct:** PublicarForm→PriceCurrencySelect(value=MXN sólo alta); editor compartido mantiene property.price_currency. Municipio/Zona sólo label/ayudas sobre zone_general/zone y catálogos existentes. price-options en globals.css→gap56/3. tests/prelaunch-ui:3 regresiones nuevas,223 totales/59UI PASS;contratos de campos intactos y lectura local732px. Sin API, BD/RLS o migración nueva. [Detalle](docs/PRELAUNCH_UI_IMPLEMENTATION.md).

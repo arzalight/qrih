@@ -1,5 +1,9 @@
 # NEXT STEPS — QRO INDUSTRIAL HUB / QRIH
 
+## Cierre vigente — STAGING publicado 21oct2026
+
+RC `8416985` ya READY en qrih-staging; 232 pruebas remotas/31 HTTP y precios/ficha/PDF PASS. No repetir el deploy ni reactivar builds automáticos. [Resultado y límites](docs/PRELAUNCH_RC_2026-10-21.md). Los pasos de preparación inferiores son históricos. Revisar la versión publicada; cualquier corrección nueva vuelve a localhost y necesita autorización para otro RC. main/producción y datos permanecen fuera del alcance. AUD043/soporte/RTO/carga conservan sus pendientes previos; no declarar GO de producción por este cierre.
+
 ## Paso vigente — RC autorizado 21oct2026
 
 La revisión visual local fue aceptada y el usuario autorizó subir a Netlify. Guardar entregas identificables, integrar sólo develop, comprobar GitHub y solicitar exactamente un build STAGING manteniendo Free y builds automáticos detenidos. Validar SHA/READY/HTTP/precios/ficha/PDF remotos y actualizar el resultado; sin main, nuevas migraciones o datos reales. [Registro](docs/PRELAUNCH_RC_2026-10-21.md). Los «sin autorización de deploy» inferiores describen cortes históricos, no revocan esta autorización concreta.

@@ -1,5 +1,9 @@
 # QRIH — Auditoría técnica pre-Soft-Launch
 
+### RC visual/precios publicado — 21oct2026
+
+RC8416985/deploy6ad9345ad070f6760a151f80 READY en qrih-staging.232pruebas remotas,escaneo de secretos,build y31HTTP anónimas PASS;precios/ficha/PDF comprobados. DEM-001 llega a la versión remota por este RC,sin ampliar su corrección a SQL/RPC/puntuación. No hallazgos nuevos cerrados por inferencia ni GO de producción/carga/RTO. AUD043 y riesgosAUD018 conservan sus estados. Un solo build autorizado,Free y builds automáticos detenidos;sin producción/main/datos/migraciones. [Resultado y límites](docs/PRELAUNCH_RC_2026-10-21.md). Los cortes inferiores «RC remoto pendiente» son históricos.
+
 ### DEM-001 / matching de superficie — MEDIO confirmado,corrección local21oct2026
 
 Puntuación por zona/operación permitía sugerir5440/5511m² y etiquetar90m² como alta coincidencia para234–234m². Se excluye superficie fuera del mínimo/máximo antes del ranking JS en ambos sentidos,sin alterar calculateMatch niSQL/RPC.215tests/31HTTP,lint/tipos/build/preflight y lectura del caso real local PASS. [Registro independiente y límites](docs/MATCHING_SURFACE_REVIEW_2026-10-21.md). No corrección global de matching ni regla nueva de autorización;RC remoto pendiente. Ajustes visuales de requerimientos registrados aparte en seguimientoUI;sin datos/migraciones/deploy.
