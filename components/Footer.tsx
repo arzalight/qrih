@@ -2,10 +2,7 @@ import Link from 'next/link'
 
 export function Footer() {
   return (
-    <footer
-      className="site-footer"
-      style={{ background: '#10222d', color: '#ffffff' }}
-    >
+    <footer className="site-footer">
       <div className="site-footer__content">
         <div>
           <div style={{ fontSize: 18, fontWeight: 800, letterSpacing: '0.04em' }}>

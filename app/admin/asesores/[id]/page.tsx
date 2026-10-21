@@ -1,3 +1,4 @@
+import { Header } from '@/components/Header'
 import Link from 'next/link'
 import { propertyPrice } from '@/lib/property-price'
 import { notFound, redirect } from 'next/navigation'
@@ -227,7 +228,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
     properties?.filter((property) => property.status === 'pending').length ?? 0
 
   return (
-    <main
+    <><Header administration /><main className="admin-page"
       style={{
         padding: '48px 32px',
         maxWidth: '1200px',
@@ -762,6 +763,6 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
           </div>
         )}
       </section>
-    </main>
+    </main></>
   )
 }

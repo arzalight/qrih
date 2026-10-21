@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import { moderationNotificationPath } from '@/lib/safe-navigation'
 
@@ -16,7 +17,11 @@ type Notification = {
   created_at: string
 }
 
-export function Header() {
+// Administration links are opted into by already-authorized server pages only.
+export function Header({ administration = false }: { administration?: boolean }) {
+  const pathname = usePathname()
+  const menuToggleRef = useRef<HTMLButtonElement | null>(null)
+  const profileToggleRef = useRef<HTMLButtonElement | null>(null)
   const [open, setOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [userName, setUserName] = useState('')
@@ -168,349 +173,79 @@ export function Header() {
     (notification) => !notification.read_at
   ).length
 
+  const workspace = administration || ['/mis-propiedades', '/perfil', '/notificaciones', '/publicar']
+    .some(path => pathname === path || pathname.startsWith(path + '/'))
+  const links = administration ? [
+    ['/admin', 'Propiedades'], ['/admin/asesores', 'Asesores'],
+    ['/admin/historial', 'Historial'], ['/admin/configuracion', 'Configuración'],
+    ['/mis-propiedades', 'Mi panel'], ['/inventario', 'Inventario público'],
+  ] : workspace ? [
+    ['/mis-propiedades', 'Mi panel'], ['/publicar', 'Subir propiedad'],
+    ['/notificaciones', 'Notificaciones'], ['/perfil', 'Mi perfil'],
+    ['/inventario', 'Inventario'], ['/busco-bodega', 'Busco una bodega'],
+  ] : [
+    ['/inventario', 'Inventario'], ['/busco-bodega', 'Busco una bodega'],
+    ['/publicar', 'Subir propiedad'], ['/mis-propiedades', 'Mi panel'],
+  ]
+  function isActive(href: string) {
+    if (href === '/admin') return pathname === '/admin' || /^\/admin\/[0-9a-f-]{36}$/i.test(pathname)
+    return pathname === href || pathname.startsWith(href + '/')
+  }
+  function closeNavigation() { setMenuOpen(false); setOpen(false) }
+
   return (
-    <header className={`header ${menuOpen ? 'header--menu-open' : ''}`}>
-      <Link className="brand" href="/">
+    <header className={`header ${workspace ? 'header--workspace' : ''} ${menuOpen ? 'header--menu-open' : ''}`}
+      onKeyDown={event => {
+        if (event.key !== 'Escape') return
+        if (open) { setOpen(false); profileToggleRef.current?.focus() }
+        else if (menuOpen) { setMenuOpen(false); menuToggleRef.current?.focus() }
+      }}>
+      <Link className="brand" href="/" aria-label="QRO Industrial Hub · Inicio">
         QRO INDUSTRIAL HUB <small>Q R I H</small>
       </Link>
-
-      <button
-        type="button"
-        className="mobile-menu-toggle"
-        aria-expanded={menuOpen}
-        aria-controls="site-navigation"
-        onClick={() => setMenuOpen((current) => !current)}
-      >
-        {menuOpen ? 'Cerrar menú' : 'Menú'}
+      <button ref={menuToggleRef} type="button" className="mobile-menu-toggle"
+        aria-expanded={menuOpen} aria-controls="site-navigation"
+        onClick={() => { setMenuOpen(current => !current); setOpen(false) }}>
+        <span aria-hidden="true">{menuOpen ? '×' : '☰'}</span> {menuOpen ? 'Cerrar menú' : 'Menú'}
       </button>
-
-      <nav id="site-navigation" className="site-nav">
-        <Link href="/inventario" onClick={() => setMenuOpen(false)}>
-          Inventario
-        </Link>
-
-        <Link
-          className="demand"
-          href="/busco-bodega"
-          onClick={() => setMenuOpen(false)}
-        >
-          BUSCO UNA BODEGA
-        </Link>
-
-        <Link href="/publicar" onClick={() => setMenuOpen(false)}>
-          Subir propiedad
-        </Link>
-
-        <Link href="/mis-propiedades" onClick={() => setMenuOpen(false)}>
-          Panel
-        </Link>
-
+      <nav id="site-navigation" className="site-nav" aria-label={administration ? 'Administración' : 'Principal'}>
+        {workspace && <span className="site-nav__label">{administration ? 'Administración' : 'Tu espacio de trabajo'}</span>}
+        {links.map(([href, label]) => (
+          <Link key={href} href={href} onClick={closeNavigation}
+            aria-current={isActive(href) ? 'page' : undefined}
+            className={!workspace && href === '/busco-bodega' ? 'demand' : undefined}>
+            {workspace && <span className="site-nav__marker" aria-hidden="true">◇</span>}
+            {label}
+          </Link>
+        ))}
+        {!userEmail && !workspace && <Link className="header-signin" href="/login" onClick={closeNavigation}>Iniciar sesión</Link>}
         {userEmail && (
-          <div
-            ref={profileMenuRef}
-            style={{
-              position: 'relative',
-              display: 'inline-block',
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => setOpen(!open)}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 7,
-                border: 'none',
-                background: 'transparent',
-                padding: 0,
-                font: 'inherit',
-                color: 'inherit',
-                cursor: 'pointer',
-              }}
-            >
-              <span
-                style={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: '50%',
-                  border: '1px solid #d1d5db',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <circle cx="12" cy="8" r="3.5" />
-                  <path d="M5.5 20c.8-3.6 3-5.5 6.5-5.5s5.7 1.9 6.5 5.5" />
-                </svg>
-              </span>
-
-              <span>Mi perfil</span>
-
-              {unreadCount > 0 && (
-                <span
-                  style={{
-                    minWidth: 18,
-                    height: 18,
-                    padding: '0 5px',
-                    borderRadius: 999,
-                    background: '#dc2626',
-                    color: '#ffffff',
-                    fontSize: 11,
-                    fontWeight: 600,
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  {unreadCount}
-                </span>
-              )}
-
-              <span
-                style={{
-                  fontSize: 11,
-                  transform: open ? 'rotate(180deg)' : 'none',
-                  transition: 'transform 0.15s ease',
-                }}
-              >
-                ▾
-              </span>
+          <div ref={profileMenuRef} className="profile-menu">
+            <button ref={profileToggleRef} type="button" className="profile-menu__toggle"
+              aria-expanded={open} aria-controls="profile-options" onClick={() => setOpen(current => !current)}>
+              <span className="profile-menu__avatar" aria-hidden="true">{userName.slice(0, 1).toUpperCase() || 'Q'}</span>
+              <span>Mi cuenta</span>
+              {unreadCount > 0 && <span className="notification-count"><span className="sr-only">Notificaciones sin leer: </span>{unreadCount}</span>}
+              <span aria-hidden="true">{open ? '▴' : '▾'}</span>
             </button>
-
             {open && (
-              <div
-                style={{
-                  position: 'absolute',
-                  top: 'calc(100% + 12px)',
-                  right: 0,
-                  width: 320,
-                  maxWidth: 'calc(100vw - 32px)',
-                  background: '#ffffff',
-                  border: '1px solid #e5e7eb',
-                  borderRadius: 12,
-                  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.10)',
-                  padding: 16,
-                  zIndex: 100,
-                }}
-              >
-                <div
-                  style={{
-                    paddingBottom: 14,
-                    borderBottom: '1px solid #eee',
-                  }}
-                >
-                  <div
-                    style={{
-                      fontWeight: 600,
-                      color: '#111827',
-                    }}
-                  >
-                    {userName || 'Usuario'}
-                  </div>
-
-                  <div
-                    style={{
-                      marginTop: 4,
-                      fontSize: 13,
-                      color: '#6b7280',
-                      wordBreak: 'break-word',
-                    }}
-                  >
-                    {userEmail}
-                  </div>
-                </div>
-
-                <div
-                  style={{
-                    padding: '12px 0',
-                    borderBottom: '1px solid #eee',
-                  }}
-                >
-                  <Link
-                    href="/perfil"
-                    onClick={() => setOpen(false)}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '100%',
-                      boxSizing: 'border-box',
-                      padding: '10px 14px',
-                      border: '1px solid #d1d5db',
-                      borderRadius: 9,
-                      background: '#f9fafb',
-                      color: '#111827',
-                      textDecoration: 'none',
-                      fontSize: 14,
-                      fontWeight: 600,
-                    }}
-                  >
-                    Abrir mi perfil
-                  </Link>
-                </div>
-
-                <div
-                  style={{
-                    padding: '14px 0',
-                    borderBottom: '1px solid #eee',
-                  }}
-                >
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      marginBottom: 10,
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontWeight: 600,
-                        color: '#111827',
-                      }}
-                    >
-                      Notificaciones
-                    </div>
-
-                    {unreadCount > 0 && (
-                      <span
-                        style={{
-                          fontSize: 12,
-                          color: '#6b7280',
-                        }}
-                      >
-                        {unreadCount} sin leer
-                      </span>
-                    )}
-                  </div>
-
-                  {notifications.length === 0 ? (
-                    <div
-                      style={{
-                        fontSize: 13,
-                        color: '#6b7280',
-                        padding: '8px 0',
-                      }}
-                    >
-                      No tienes notificaciones.
-                    </div>
-                  ) : (
-                    <div
-                      style={{
-                        display: 'grid',
-                        gap: 8,
-                      }}
-                    >
-                      {notifications.map((notification) => (
-                        <button
-                          key={notification.id}
-                          type="button"
-                          onClick={() =>
-                            handleNotificationClick(notification)
-                          }
-                          style={{
-                            width: '100%',
-                            border: 'none',
-                            borderRadius: 8,
-                            background: notification.read_at
-                              ? '#ffffff'
-                              : '#f3f4f6',
-                            padding: '10px 10px',
-                            textAlign: 'left',
-                            font: 'inherit',
-                            color: '#111827',
-                            cursor: 'pointer',
-                          }}
-                        >
-                          <div
-                            style={{
-                              display: 'flex',
-                              alignItems: 'flex-start',
-                              gap: 8,
-                            }}
-                          >
-                            {!notification.read_at && (
-                              <span
-                                style={{
-                                  width: 7,
-                                  height: 7,
-                                  borderRadius: '50%',
-                                  background: '#111827',
-                                  marginTop: 5,
-                                  flexShrink: 0,
-                                }}
-                              />
-                            )}
-
-                            <div>
-                              <div
-                                style={{
-                                  fontSize: 13,
-                                  fontWeight: 600,
-                                }}
-                              >
-                                {notification.title}
-                              </div>
-
-                              <div
-                                style={{
-                                  marginTop: 3,
-                                  fontSize: 12,
-                                  lineHeight: 1.4,
-                                  color: '#6b7280',
-                                }}
-                              >
-                                {notification.message}
-                              </div>
-                            </div>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  )}
-
-                  <Link
-                    href="/notificaciones"
-                    onClick={() => setOpen(false)}
-                    style={{
-                      display: 'inline-block',
-                      marginTop: 14,
-                      fontSize: 13,
-                      color: '#374151',
-                    }}
-                  >
-                    Ver todas las notificaciones
-                  </Link>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={handleSignOut}
-                  style={{
-                    width: '100%',
-                    marginTop: 12,
-                    padding: '9px 0',
-                    border: 'none',
-                    background: 'transparent',
-                    textAlign: 'left',
-                    font: 'inherit',
-                    color: '#374151',
-                    cursor: 'pointer',
-                  }}
-                >
-                  Cerrar sesión
-                </button>
+              <div id="profile-options" className="profile-menu__popover">
+                <div className="profile-menu__identity"><strong>{userName || 'Usuario'}</strong><small>{userEmail}</small></div>
+                <Link className="button button--secondary" href="/perfil" onClick={closeNavigation}>Abrir mi perfil</Link>
+                <section aria-label="Notificaciones recientes" className="profile-menu__notifications">
+                  <div className="profile-menu__section-title"><strong>Notificaciones</strong>{unreadCount > 0 && <small>{unreadCount} sin leer</small>}</div>
+                  {notifications.length === 0 ? <p className="ui-help">No tienes notificaciones.</p> :
+                    notifications.map(notification => (
+                      <button key={notification.id} type="button"
+                        className={`profile-notification ${notification.read_at ? '' : 'profile-notification--unread'}`}
+                        onClick={() => handleNotificationClick(notification)}>
+                        {!notification.read_at && <span className="sr-only">Sin leer. </span>}
+                        <strong>{notification.title}</strong><span>{notification.message}</span>
+                      </button>
+                    ))}
+                  <Link href="/notificaciones" onClick={closeNavigation}>Ver todas las notificaciones →</Link>
+                </section>
+                <button type="button" className="profile-menu__signout" onClick={handleSignOut}>Cerrar sesión</button>
               </div>
             )}
           </div>

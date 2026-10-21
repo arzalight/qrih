@@ -17,7 +17,7 @@ Se mantiene el CSS y la arquitectura actuales, con clases reutilizables de panel
 | Bloque | Implementado | Validado localmente | STAGING |
 | --- | --- | --- | --- |
 | 1 · tokens/base/componentes compartidos | SÍ: tipografía, paleta, controles/foco/disabled, estados y tarjetas responsive | 11pruebasUI PASS,lint/tiposPASS; catálogo13precios sin clipping/bodyoverflow en375/768/1024/1440 | PENDIENTE |
-| 2 · navegación/layouts | PENDIENTE | PENDIENTE | PENDIENTE |
+| 2 · navegación/layouts | SÍ: cabecera, disclosure de cuenta, rail de gestión>=1200, menú adaptable y redirect/panel |18UI y12Auth/notificacionesPASS;nav pública y admin375/768/1024/1440,Escape/foco y filtro sin overflowPASS;privadas restantes pendientes | PENDIENTE |
 | 3 · catálogo/detalle/galería | PARCIAL: grid y wrap de precio del bloque1 | Geometría de catálogo PASS; resto PENDIENTE | PENDIENTE |
 | 4 · panel/perfil/formularios | PENDIENTE | PENDIENTE | PENDIENTE |
 | 5 · administración/secundarios | PENDIENTE | PENDIENTE; necesita rol legítimo para aceptación real | PENDIENTE |
@@ -34,6 +34,16 @@ UX-001: corrección local y reproducción de catálogo verificadas; aceptación 
 
 ## Límites y continuación
 
-Revisión actual en localhost:3108 (dev) para conservar la base anterior en3107 durante la comparación. No iniciar correos/callbacks desde3108: no se añadió a la allowlist de Supabase. Para la aceptación Auth se usará un origen local ya autorizado. No realizar nuevos guardados/contactos/moderación o altas reales para comprobar estilos.
+### Bloque 2 — 21oct2026
+
+`Header` conserva sin cambios los handlers de carga/consulta, click de notificaciones y signOut; se extrae presentación a clases, aria-current/expanded/controls y Escape con retorno al disparador. Menú normal hasta1199px, rail224px sólo gestión>=1200. `body:has(.header--workspace)` reserva el espacio sólo cuando esa cabecera se renderiza, sin route groups/layouts nuevos ni cambios de URL. Las seis páginas admin pasan la variante administrativa únicamente en su retorno autorizado, después de los guards activos de servidor; no se concede rol por URL/user_metadata ni se reemplaza su autorización. Footer conserva contenido/rutas y se retiran colores inline duplicados.
+
+`/panel` ahora redirige en servidor a `/mis-propiedades`, preservando marcadores sin enseñar cuatro ceros ficticios. La raíz y la ficha comercial no reciben navegación de gestión. No se cambian los destinos de moderación/notificaciones, el login o las sesiones.
+
+Con la sesión admin introducida por el usuario: `/admin`375/768/1024/1440 sin overflow del body,rail224px sólo a1440; menú de cuenta340px dentro del viewport y Escape devuelve foco al toggle. En catálogo anónimo, menú abierto/cerrado/Escape y ruta activa correctos en375/768/1024,nav normal a1440. No se pulsaron notificaciones ni moderaciones, ni se guardaron datos. Nueva observación confirmada dentro de UX-011: la rejilla fija de filtros admin desbordaba a768px; se ajustó exclusivamente gridTemplateColumns al ancho disponible. Mismos campos/nombres,GET y auto-submit existentes. Tabla ancha conserva scroll interno; el desplazamiento accesible sigue en bloque5.
+
+18pruebasUI y12pruebas Auth/navegación de notificaciones,lint/tiposPASS. La primera ejecución del fixture SSR nuevo falló por resolver React desde un dataURL del propio mock; se corrigió sólo el resolver de la prueba y la suite pasó. No fallo productivo Auth ni bypass. Validación remota,build final y restantes pantallas/estados siguen pendientes. La sesión del navegador anterior ya no estaba disponible al retomar; se reinició el servidor dev3108 y el usuario inició sesión legítima nuevamente, sin copiar tokens/cookies.
+
+Revisión actual en localhost:3108 (dev); las capturas anteriores de3107 conservan la comparación, sin depender de que aquel servidor siga activo. No iniciar correos/callbacks desde3108: no se añadió a la allowlist de Supabase. Para la aceptación Auth se usará un origen local ya autorizado. No realizar nuevos guardados/contactos/moderación o altas reales para comprobar estilos.
 
 Comparar layouts primero, conservar sidebar sólo para gestión en escritorio amplio y navegación adaptable en tableta/móvil. Ficha comercial fuera del dashboard. Administrador se determina en servidor con los permisos existentes; no inferirlo de user_metadata ni concederlo desde la interfaz. Al final: nuevo build/preflight local y regresión completa, después autorización nueva para RC de Netlify. Hasta entonces NO-GO visual.

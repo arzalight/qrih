@@ -55,7 +55,7 @@ export function AdminPropertyFilters({
           display: 'grid',
           width: '100%',
           minWidth: 0,
-          gridTemplateColumns: 'minmax(240px, 1.5fr) repeat(4, minmax(150px, 1fr)) auto',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 160px), 1fr))',
           gap: '14px',
           alignItems: 'end',
         }}

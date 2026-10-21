@@ -1,3 +1,4 @@
+import { Header } from '@/components/Header'
 import Link from 'next/link'
 import { propertyPrice } from '@/lib/property-price'
 import { redirect } from 'next/navigation'
@@ -145,7 +146,7 @@ console.warn('QRIH_APP_ADMIN_PAGE_76_FAILED')
   )
 
 return (
-  <main
+  <><Header administration /><main className="admin-page"
     style={{
       padding: '48px 32px',
       maxWidth: '1200px',
@@ -701,6 +702,6 @@ return (
       />
 
       <AdminPropertiesTable properties={filteredProperties ?? []} />
-    </main>
+    </main></>
   )
 }

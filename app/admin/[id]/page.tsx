@@ -1,3 +1,4 @@
+import { Header } from '@/components/Header'
 import { PriceCurrencySelect } from '@/components/PriceCurrencySelect'
 import { isPriceCurrency, parsePriceInput, propertyPrice } from '@/lib/property-price'
 import Link from 'next/link'
@@ -374,7 +375,7 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
   }
 
   return (
-    <main style={{ padding: '40px', maxWidth: '1000px', margin: '0 auto' }}>
+    <><Header administration /><main className="admin-page" style={{ padding: '40px', maxWidth: '1000px', margin: '0 auto' }}>
       <Link
         href={from === 'historial' ? '/admin/historial' : '/admin'}
         style={{
@@ -1340,6 +1341,6 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
         </form>
       </section>
 
-    </main>
+    </main></>
   )
 }

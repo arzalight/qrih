@@ -2,6 +2,8 @@
 
 ## Actualización vigente — referencia recibida / implementación UX/UI por bloques
 
+**21oct / bloque2:** navegación/layouts implementados y verificados localmente en catálogo y `/admin` con sesión legítima:375/768/1024/1440 sin overflow,Escape/foco y estado activo. Variante admin sólo tras guards existentes; `/panel` redirige al panel real, filtros admin ya no desbordan en tableta.18UI/12regresionesAuth-notificaciones,lint/tiposPASS. No datos cambiados ni nuevoRC. [Registro por bloques](docs/PRELAUNCH_UI_IMPLEMENTATION.md); resto pendiente / NO-GO visual.
+
 [Seguimiento de implementación](docs/PRELAUNCH_UI_IMPLEMENTATION.md): referencia AVIF740×528 recibida/inspeccionada, bloqueo gráfico superado. Bloque1 de tokens/base implementado y validado localmente (11UI,lint/tiposPASS; catálogo13precios sin clipping en375/768/1024/1440). Resto pendiente según tabla; NO-GO visual, sin nuevoRC ni deploy. No tocar Supabase/Auth/RLS/reglas de negocio. Los apartados siguientes conservan el diagnóstico y RC anteriores, no el estado de implementación actual.
 
 ### Corte anterior — diagnóstico inicial antes de recibir la imagen

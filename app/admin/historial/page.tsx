@@ -1,3 +1,4 @@
+import { Header } from '@/components/Header'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
@@ -224,7 +225,7 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
     : logs
 
   return (
-    <main
+    <><Header administration /><main className="admin-page"
       style={{
         padding: '48px 32px',
         maxWidth: '1100px',
@@ -580,6 +581,6 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
           </div>
         )}
       </section>
-    </main>
+    </main></>
   )
 }
