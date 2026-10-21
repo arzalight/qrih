@@ -65,7 +65,7 @@ console.warn('QRIH_APP_ADMIN_CONFIGURACION_PAGE_43_FAILED')
           style={{
             display: 'inline-block',
             marginBottom: '14px',
-            color: '#666',
+            color: "var(--muted)",
             textDecoration: 'none',
             fontSize: '14px',
           }}
@@ -80,7 +80,7 @@ console.warn('QRIH_APP_ADMIN_CONFIGURACION_PAGE_43_FAILED')
             fontWeight: 700,
             letterSpacing: '0.08em',
             textTransform: 'uppercase',
-            color: '#777',
+            color: "var(--muted)",
           }}
         >
           Administración
@@ -100,7 +100,7 @@ console.warn('QRIH_APP_ADMIN_CONFIGURACION_PAGE_43_FAILED')
         <p
           style={{
             margin: '10px 0 0',
-            color: '#666',
+            color: "var(--muted)",
             fontSize: '16px',
           }}
         >
@@ -111,9 +111,9 @@ console.warn('QRIH_APP_ADMIN_CONFIGURACION_PAGE_43_FAILED')
       <section
         style={{
           padding: 24,
-          border: '1px solid #e5e7eb',
+          border: "1px solid var(--line)",
           borderRadius: 14,
-          background: '#fafafa',
+          background: "var(--surface-subtle)",
         }}
       >
         <h2
@@ -128,7 +128,7 @@ console.warn('QRIH_APP_ADMIN_CONFIGURACION_PAGE_43_FAILED')
         <p
           style={{
             margin: '8px 0 0',
-            color: '#6b7280',
+            color: "var(--muted)",
             fontSize: 14,
             lineHeight: 1.5,
           }}

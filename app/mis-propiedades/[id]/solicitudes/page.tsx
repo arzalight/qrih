@@ -150,7 +150,7 @@ export default async function SolicitudesPage({
             style={{
               marginTop: 20,
               padding: 24,
-              border: '1px solid #ddd',
+              border: "1px solid var(--line)",
               borderRadius: 12,
             }}
           >
@@ -176,7 +176,7 @@ export default async function SolicitudesPage({
                   key={contact.id}
                   style={{
                     padding: 24,
-                    border: '1px solid #ddd',
+                    border: "1px solid var(--line)",
                     borderRadius: 12,
                   }}
                 >
@@ -220,7 +220,7 @@ export default async function SolicitudesPage({
                           style={{
                             marginTop: 16,
                             padding: 16,
-                            background: '#f7f7f7',
+                            background: "var(--surface-subtle)",
                             borderRadius: 8,
                           }}
                         >
@@ -236,7 +236,7 @@ export default async function SolicitudesPage({
                         style={{
                           display: 'block',
                           marginTop: 16,
-                          color: '#666',
+                          color: "var(--muted)",
                         }}
                       >
                         Solicitud recibida el{' '}
@@ -323,8 +323,8 @@ export default async function SolicitudesPage({
                           style={{
                             padding: 12,
                             borderRadius: 8,
-                            background: '#f7f7f7',
-                            border: '1px solid #ddd',
+                            background: "var(--surface-subtle)",
+                            border: "1px solid var(--line)",
                           }}
                         >
                           Solicitud anterior a la autorización.

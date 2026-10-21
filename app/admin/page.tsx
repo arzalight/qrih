@@ -171,7 +171,7 @@ return (
             fontWeight: 700,
             letterSpacing: '0.08em',
             textTransform: 'uppercase',
-            color: '#777',
+            color: "var(--muted)",
           }}
         >
           QRO Industrial Hub
@@ -192,7 +192,7 @@ return (
         <p
           style={{
             margin: '12px 0 0',
-            color: '#666',
+            color: "var(--muted)",
             fontSize: '15px',
             lineHeight: 1.5,
           }}
@@ -217,10 +217,10 @@ return (
             padding: '11px 15px',
             border: '1px solid #d9d9d9',
             borderRadius: '10px',
-            color: '#222',
+            color: "var(--ink)",
             textDecoration: 'none',
             fontWeight: 650,
-            background: '#fff',
+            background: "var(--surface)",
             boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
           }}
         >
@@ -232,12 +232,12 @@ return (
           style={{
             display: 'inline-block',
             padding: '12px 16px',
-            border: '1px solid #ddd',
+            border: "1px solid var(--line)",
             borderRadius: '10px',
-            color: '#222',
+            color: "var(--ink)",
             textDecoration: 'none',
             fontWeight: 600,
-            background: '#fff',
+            background: "var(--surface)",
           }}
         >
           Historial
@@ -248,12 +248,12 @@ return (
           style={{
             display: 'inline-block',
             padding: '12px 16px',
-            border: '1px solid #ddd',
+            border: "1px solid var(--line)",
             borderRadius: '10px',
-            color: '#222',
+            color: "var(--ink)",
             textDecoration: 'none',
             fontWeight: 600,
-            background: '#fff',
+            background: "var(--surface)",
           }}
         >
           Configuración
@@ -305,9 +305,9 @@ return (
           key={stat.label}
           style={{
             padding: '20px 20px 18px',
-            border: '1px solid #e7e7e7',
+            border: "1px solid var(--line)",
             borderRadius: '16px',
-            background: '#fff',
+            background: "var(--surface)",
             boxShadow: '0 4px 14px rgba(0,0,0,0.045)',
           }}
         >
@@ -327,7 +327,7 @@ return (
               marginTop: '10px',
               fontSize: '12px',
               lineHeight: 1.35,
-              color: '#666',
+              color: "var(--muted)",
               fontWeight: 650,
               letterSpacing: '0.01em',
             }}
@@ -421,7 +421,7 @@ return (
             <p
               style={{
                 margin: '6px 0 0',
-                color: '#666',
+                color: "var(--muted)",
               }}
             >
               Propiedades que requieren revisión antes de publicarse.
@@ -447,11 +447,11 @@ return (
             <article
               key={property.id}
               style={{
-                border: '1px solid #e7e7e7',
+                border: "1px solid var(--line)",
                 borderRadius: '16px',
                 padding: '24px',
                 marginBottom: '16px',
-                background: '#fff',
+                background: "var(--surface)",
                 boxShadow: '0 4px 14px rgba(0,0,0,0.045)',
               }}
             >
@@ -483,7 +483,7 @@ return (
                       flexWrap: 'wrap',
                       marginTop: '8px',
                       fontSize: '13px',
-                      color: '#666',
+                      color: "var(--muted)",
                     }}
                   >
                     <span>{property.operation}</span>
@@ -519,13 +519,13 @@ return (
                   style={{
                     padding: '14px',
                     borderRadius: '12px',
-                    background: '#f8f8f8',
+                    background: "var(--surface-subtle)",
                   }}
                 >
                   <div
                     style={{
                       fontSize: '11px',
-                      color: '#777',
+                      color: "var(--muted)",
                       fontWeight: 700,
                       textTransform: 'uppercase',
                       letterSpacing: '0.04em',
@@ -549,13 +549,13 @@ return (
                   style={{
                     padding: '14px',
                     borderRadius: '12px',
-                    background: '#f8f8f8',
+                    background: "var(--surface-subtle)",
                   }}
                 >
                   <div
                     style={{
                       fontSize: '11px',
-                      color: '#777',
+                      color: "var(--muted)",
                       fontWeight: 700,
                       textTransform: 'uppercase',
                       letterSpacing: '0.04em',
@@ -579,13 +579,13 @@ return (
                   style={{
                     padding: '14px',
                     borderRadius: '12px',
-                    background: '#f8f8f8',
+                    background: "var(--surface-subtle)",
                   }}
                 >
                   <div
                     style={{
                       fontSize: '11px',
-                      color: '#777',
+                      color: "var(--muted)",
                       fontWeight: 700,
                       textTransform: 'uppercase',
                       letterSpacing: '0.04em',
@@ -613,13 +613,13 @@ return (
                   style={{
                     padding: '14px',
                     borderRadius: '12px',
-                    background: '#f8f8f8',
+                    background: "var(--surface-subtle)",
                   }}
                 >
                   <div
                     style={{
                       fontSize: '11px',
-                      color: '#777',
+                      color: "var(--muted)",
                       fontWeight: 700,
                       textTransform: 'uppercase',
                       letterSpacing: '0.04em',
@@ -656,8 +656,8 @@ return (
                     display: 'inline-block',
                     padding: '11px 18px',
                     borderRadius: '10px',
-                    background: '#111',
-                    color: '#fff',
+                    background: "var(--primary)",
+                    color: "var(--surface)",
                     textDecoration: 'none',
                     fontWeight: 600,
                   }}
@@ -673,8 +673,8 @@ return (
                       padding: '11px 18px',
                       borderRadius: '10px',
                       border: '1px solid #d8d8d8',
-                      background: '#fff',
-                      color: '#111',
+                      background: "var(--surface)",
+                      color: "var(--primary)",
                       textDecoration: 'none',
                       fontWeight: 600,
                     }}

@@ -241,7 +241,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
           style={{
             display: 'inline-block',
             marginBottom: '18px',
-            color: '#666',
+            color: "var(--muted)",
             textDecoration: 'none',
             fontSize: '14px',
           }}
@@ -263,7 +263,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
               height: '76px',
               borderRadius: '50%',
               overflow: 'hidden',
-              border: '1px solid #ddd',
+              border: "1px solid var(--line)",
               background: '#f5f5f5',
               display: 'flex',
               alignItems: 'center',
@@ -271,7 +271,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
               flexShrink: 0,
               fontSize: '28px',
               fontWeight: 700,
-              color: '#666',
+              color: "var(--muted)",
             }}
           >
             {advisor.avatar_url ? (
@@ -297,7 +297,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
                 fontWeight: 700,
                 letterSpacing: '0.08em',
                 textTransform: 'uppercase',
-                color: '#777',
+                color: "var(--muted)",
               }}
             >
               Asesor · {advisor.public_id}
@@ -322,7 +322,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
             <p
               style={{
                 margin: '8px 0 0',
-                color: '#666',
+                color: "var(--muted)",
                 fontSize: '16px',
               }}
             >
@@ -347,9 +347,9 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
                 style={{
                   padding: '9px 14px',
                   borderRadius: '8px',
-                  border: '1px solid #ddd',
-                  background: '#fff',
-                  color: '#222',
+                  border: "1px solid var(--line)",
+                  background: "var(--surface)",
+                  color: "var(--ink)",
                   cursor: 'pointer',
                   fontSize: '13px',
                   fontWeight: 700,
@@ -382,15 +382,15 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
             key={label}
             style={{
               padding: '18px',
-              border: '1px solid #e5e5e5',
+              border: "1px solid var(--line)",
               borderRadius: '12px',
-              background: '#fafafa',
+              background: "var(--surface-subtle)",
             }}
           >
             <div
               style={{
                 fontSize: '13px',
-                color: '#666',
+                color: "var(--muted)",
                 marginBottom: '6px',
               }}
             >
@@ -419,10 +419,10 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
       >
         <div
           style={{
-            border: '1px solid #e5e5e5',
+            border: "1px solid var(--line)",
             borderRadius: '14px',
             padding: '24px',
-            background: '#fff',
+            background: "var(--surface)",
           }}
         >
           <h2 style={{ margin: '0 0 18px', fontSize: '20px' }}>
@@ -438,21 +438,21 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
               fontSize: '14px',
             }}
           >
-            <dt style={{ color: '#777' }}>ID público</dt>
+            <dt style={{ color: "var(--muted)" }}>ID público</dt>
             <dd style={{ margin: 0, fontWeight: 600 }}>{advisor.public_id}</dd>
 
-            <dt style={{ color: '#777' }}>Rol</dt>
+            <dt style={{ color: "var(--muted)" }}>Rol</dt>
             <dd style={{ margin: 0 }}>{advisor.role}</dd>
 
-            <dt style={{ color: '#777' }}>Plan</dt>
+            <dt style={{ color: "var(--muted)" }}>Plan</dt>
             <dd style={{ margin: 0 }}>{advisor.plan}</dd>
 
-            <dt style={{ color: '#777' }}>Verificación</dt>
+            <dt style={{ color: "var(--muted)" }}>Verificación</dt>
             <dd style={{ margin: 0 }}>
               {advisor.is_verified ? '✓ Verificado' : 'No verificado'}
             </dd>
 
-            <dt style={{ color: '#777' }}>Estado</dt>
+            <dt style={{ color: "var(--muted)" }}>Estado</dt>
             <dd style={{ margin: 0, fontWeight: 700 }}>
               {advisor.account_status === 'suspended'
                 ? '🔴 Suspendido'
@@ -461,12 +461,12 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
 
             {advisor.account_status === 'suspended' && (
               <>
-                <dt style={{ color: '#777' }}>Motivo</dt>
+                <dt style={{ color: "var(--muted)" }}>Motivo</dt>
                 <dd style={{ margin: 0 }}>
                   {advisor.suspension_reason || 'Sin motivo registrado'}
                 </dd>
 
-                <dt style={{ color: '#777' }}>Suspendido</dt>
+                <dt style={{ color: "var(--muted)" }}>Suspendido</dt>
                 <dd style={{ margin: 0 }}>
                   {advisor.suspended_at
                     ? new Date(advisor.suspended_at).toLocaleDateString(
@@ -477,12 +477,12 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
               </>
             )}
 
-            <dt style={{ color: '#777' }}>Registro</dt>
+            <dt style={{ color: "var(--muted)" }}>Registro</dt>
             <dd style={{ margin: 0 }}>
               {new Date(advisor.created_at).toLocaleDateString('es-MX')}
             </dd>
 
-            <dt style={{ color: '#777' }}>Trial termina</dt>
+            <dt style={{ color: "var(--muted)" }}>Trial termina</dt>
             <dd style={{ margin: 0 }}>
               {advisor.trial_ends_at
                 ? new Date(advisor.trial_ends_at).toLocaleDateString('es-MX')
@@ -494,7 +494,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
             style={{
               marginTop: '24px',
               paddingTop: '20px',
-              borderTop: '1px solid #eee',
+              borderTop: "1px solid var(--line)",
             }}
           >
             {advisor.account_status === 'suspended' ? (
@@ -509,7 +509,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
                     borderRadius: '8px',
                     padding: '10px 16px',
                     background: '#027a48',
-                    color: '#fff',
+                    color: "var(--surface)",
                     fontWeight: 700,
                     cursor: 'pointer',
                   }}
@@ -545,7 +545,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
                     maxWidth: '620px',
                     boxSizing: 'border-box',
                     padding: '10px 12px',
-                    border: '1px solid #ccc',
+                    border: "1px solid var(--line)",
                     borderRadius: '8px',
                     resize: 'vertical',
                     font: 'inherit',
@@ -561,7 +561,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
                       borderRadius: '8px',
                       padding: '10px 16px',
                       background: '#b42318',
-                      color: '#fff',
+                      color: "var(--surface)",
                       fontWeight: 700,
                       cursor: 'pointer',
                     }}
@@ -576,10 +576,10 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
 
         <div
           style={{
-            border: '1px solid #e5e5e5',
+            border: "1px solid var(--line)",
             borderRadius: '14px',
             padding: '24px',
-            background: '#fff',
+            background: "var(--surface)",
           }}
         >
           <h2 style={{ margin: '0 0 18px', fontSize: '20px' }}>
@@ -595,22 +595,22 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
               fontSize: '14px',
             }}
           >
-            <dt style={{ color: '#777' }}>Teléfono</dt>
+            <dt style={{ color: "var(--muted)" }}>Teléfono</dt>
             <dd style={{ margin: 0 }}>{advisor.phone || '—'}</dd>
 
-            <dt style={{ color: '#777' }}>WhatsApp</dt>
+            <dt style={{ color: "var(--muted)" }}>WhatsApp</dt>
             <dd style={{ margin: 0 }}>{advisor.whatsapp || '—'}</dd>
 
-            <dt style={{ color: '#777' }}>Sitio web</dt>
+            <dt style={{ color: "var(--muted)" }}>Sitio web</dt>
             <dd style={{ margin: 0 }}>{advisor.website || '—'}</dd>
 
-            <dt style={{ color: '#777' }}>Instagram</dt>
+            <dt style={{ color: "var(--muted)" }}>Instagram</dt>
             <dd style={{ margin: 0 }}>{advisor.instagram_url || '—'}</dd>
 
-            <dt style={{ color: '#777' }}>Facebook</dt>
+            <dt style={{ color: "var(--muted)" }}>Facebook</dt>
             <dd style={{ margin: 0 }}>{advisor.facebook_url || '—'}</dd>
 
-            <dt style={{ color: '#777' }}>LinkedIn</dt>
+            <dt style={{ color: "var(--muted)" }}>LinkedIn</dt>
             <dd style={{ margin: 0 }}>{advisor.linkedin_url || '—'}</dd>
           </dl>
         </div>
@@ -618,16 +618,16 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
 
       <section
         style={{
-          border: '1px solid #e5e5e5',
+          border: "1px solid var(--line)",
           borderRadius: '14px',
           overflow: 'hidden',
-          background: '#fff',
+          background: "var(--surface)",
         }}
       >
         <div
           style={{
             padding: '20px 24px',
-            borderBottom: '1px solid #e5e5e5',
+            borderBottom: "1px solid var(--line)",
           }}
         >
           <h2 style={{ margin: 0, fontSize: '20px' }}>
@@ -645,7 +645,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
               }}
             >
               <thead>
-                <tr style={{ background: '#fafafa' }}>
+                <tr style={{ background: "var(--surface-subtle)" }}>
                   {[
                     'Propiedad',
                     'Operación',
@@ -658,10 +658,10 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
                       key={label}
                       style={{
                         padding: '13px 16px',
-                        borderBottom: '1px solid #e5e5e5',
+                        borderBottom: "1px solid var(--line)",
                         textAlign: 'left',
                         fontSize: '12px',
-                        color: '#666',
+                        color: "var(--muted)",
                         textTransform: 'uppercase',
                         letterSpacing: '0.05em',
                       }}
@@ -678,7 +678,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
                     <td
                       style={{
                         padding: '16px',
-                        borderBottom: '1px solid #eee',
+                        borderBottom: "1px solid var(--line)",
                       }}
                     >
                       <div style={{ fontWeight: 700 }}>{property.title}</div>
@@ -686,7 +686,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
                         style={{
                           marginTop: '4px',
                           fontSize: '12px',
-                          color: '#777',
+                          color: "var(--muted)",
                         }}
                       >
                         {property.slug}
@@ -696,7 +696,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
                     <td
                       style={{
                         padding: '16px',
-                        borderBottom: '1px solid #eee',
+                        borderBottom: "1px solid var(--line)",
                       }}
                     >
                       {property.operation}
@@ -705,7 +705,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
                     <td
                       style={{
                         padding: '16px',
-                        borderBottom: '1px solid #eee',
+                        borderBottom: "1px solid var(--line)",
                       }}
                     >
                       {property.zone}
@@ -714,7 +714,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
                     <td
                       style={{
                         padding: '16px',
-                        borderBottom: '1px solid #eee',
+                        borderBottom: "1px solid var(--line)",
                       }}
                     >
                       {propertyPrice(property)}
@@ -723,7 +723,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
                     <td
                       style={{
                         padding: '16px',
-                        borderBottom: '1px solid #eee',
+                        borderBottom: "1px solid var(--line)",
                       }}
                     >
                       {property.status}
@@ -732,7 +732,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
                     <td
                       style={{
                         padding: '16px',
-                        borderBottom: '1px solid #eee',
+                        borderBottom: "1px solid var(--line)",
                         textAlign: 'right',
                       }}
                     >
@@ -741,9 +741,9 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
                         style={{
                           display: 'inline-block',
                           padding: '8px 12px',
-                          border: '1px solid #ddd',
+                          border: "1px solid var(--line)",
                           borderRadius: '8px',
-                          color: '#222',
+                          color: "var(--ink)",
                           textDecoration: 'none',
                           fontSize: '13px',
                           fontWeight: 600,
@@ -758,7 +758,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
             </table>
           </div>
         ) : (
-          <div style={{ padding: '24px', color: '#666' }}>
+          <div style={{ padding: '24px', color: "var(--muted)" }}>
             Este asesor todavía no tiene propiedades registradas.
           </div>
         )}

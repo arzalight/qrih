@@ -165,14 +165,14 @@ export default async function NotificationsPage() {
         <div style={{ marginBottom: 32 }}>
           <Link href="/mis-propiedades">← Volver al panel</Link>
           <h1 style={{ marginBottom: 8 }}>Notificaciones</h1>
-          <p style={{ color: '#6b7280' }}>
+          <p style={{ color: "var(--muted)" }}>
             Aquí puedes consultar tus avisos y los contactos autorizados.
           </p>
         </div>
 
         {notifications.length === 0 ? (
           <section
-            style={{ padding: 24, border: '1px solid #ddd', borderRadius: 12 }}
+            style={{ padding: 24, border: "1px solid var(--line)", borderRadius: 12 }}
           >
             No tienes notificaciones todavía.
           </section>
@@ -191,9 +191,9 @@ export default async function NotificationsPage() {
                   key={notification.id}
                   style={{
                     padding: 24,
-                    border: '1px solid #ddd',
+                    border: "1px solid var(--line)",
                     borderRadius: 12,
-                    background: notification.read_at ? '#fff' : '#f8fafc',
+                    background: notification.read_at ? "var(--surface)" : '#f8fafc',
                   }}
                 >
                   <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
@@ -204,7 +204,7 @@ export default async function NotificationsPage() {
                           width: 8,
                           height: 8,
                           borderRadius: '50%',
-                          background: '#111827',
+                          background: "var(--ink)",
                           flexShrink: 0,
                         }}
                       />
@@ -215,7 +215,7 @@ export default async function NotificationsPage() {
                   </div>
 
                   <p style={{ lineHeight: 1.5 }}>{notification.message}</p>
-                  <small style={{ color: '#6b7280' }}>
+                  <small style={{ color: "var(--muted)" }}>
                     {new Date(notification.created_at).toLocaleString('es-MX')}
                   </small>
 

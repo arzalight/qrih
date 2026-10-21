@@ -124,6 +124,7 @@ registerHooks({
     if (specifier === '@/lib/supabase') return { url: 'data:text/javascript,export const createClient=()=>{throw Error("No network in UI fixture")}', shortCircuit: true }
     if (specifier === '@/lib/safe-navigation') return next(new URL('../lib/safe-navigation.ts', import.meta.url).href, context)
     if (specifier === '@/lib/property-price') return next(new URL('../lib/property-price.ts', import.meta.url).href, context)
+    if (specifier === '@/components/PropertyStatusBadge') return next(new URL('../components/PropertyStatusBadge.tsx', import.meta.url).href, context)
     return next(specifier, context)
   },
   load(url, context, next) {
@@ -134,6 +135,24 @@ registerHooks({
   },
 })
 const { Header } = await import('../components/Header.tsx')
+test('tabla administrativa real: región enfocable, cabeceras, moneda, estados legibles y paginación existente', async () => {
+  const { AdminPropertiesTable } = await import('../components/AdminPropertiesTable.tsx')
+  const states = ['draft', 'pending', 'published', 'paused', 'rejected', 'expired', 'pending_update']
+  const properties = Array.from({ length: 36 }, (_, index) => ({ id: `test-${index}`, slug: `test-${index}`,
+    title: `Propiedad sintética ${index}`, status: states[index % states.length], price_currency: 'USD',
+    price_value: '7.50', price_unit: 'm2', operation: 'Renta', total_area: 100, zone: 'Zona sintética' }))
+  const html = renderToStaticMarkup(createElement(AdminPropertiesTable, { properties }))
+  assert.match(html, /role="region"[^>]*aria-label="Tabla de propiedades[^>]*tabindex="0"/)
+  assert.equal((html.match(/scope="col"/g) || []).length, 8)
+  assert.match(html, /<caption[^>]*>Propiedades y acciones administrativas<\/caption>/)
+  for (const label of ['Borrador', 'En revisión', 'Publicada', 'Pausada', 'Rechazada', 'Expirada', 'Actualización en revisión']) assert.ok(html.includes(label))
+  assert.match(html, /US\$7.50 USD\/m²\/mes/)
+  assert.match(html, /Mostrando 1–35 de 36/)
+  assert.match(html, /aria-label="Página 1" aria-current="page"/)
+  assert.doesNotMatch(html, /Propiedad sintética 35<\/strong>/)
+  const source = readFileSync(new URL('components/AdminPropertiesTable.tsx', root), 'utf8')
+  assert.match(source, /PAGE_SIZE_OPTIONS = \[20, 35, 50, 60, 100\]/)
+})
 for (const path of ['/inventario', '/mis-propiedades', '/perfil', '/admin']) {
   test(`Header real: navegación ${path}, sin enlaces administrativos por URL o metadata`, () => {
     globalThis.__uiPath = path

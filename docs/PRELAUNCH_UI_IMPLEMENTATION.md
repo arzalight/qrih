@@ -20,7 +20,7 @@ Se mantiene el CSS y la arquitectura actuales, con clases reutilizables de panel
 | 2 · navegación/layouts | SÍ: cabecera, disclosure de cuenta, rail de gestión>=1200, menú adaptable y redirect/panel |18UI y12Auth/notificacionesPASS;nav pública y admin375/768/1024/1440,Escape/foco y filtro sin overflowPASS;privadas restantes pendientes | PENDIENTE |
 | 3 · catálogo/detalle/galería | SÍ: tarjetas semánticas, filtros, detalle agrupado y visor accesible |21UI/157aplicación,lint/tipos PASS; visor real móvil/teclado PASS. Nueva pasada completa de cuatro anchos PENDIENTE | PENDIENTE |
 | 4 · panel/perfil/formularios | SÍ: etiquetas asociadas, tokens, panel y confirmación/carga |32UI/157aplicación,lint/tipos PASS; publicación real1440 sin overflow ni campos sin label; resto responsive/éxito real PENDIENTE | PENDIENTE |
-| 5 · administración/secundarios | PENDIENTE | PENDIENTE; necesita rol legítimo para aceptación real | PENDIENTE |
+| 5 · administración/secundarios | SÍ: tablas, estados, etiquetas y tokens |33UI/157aplicación,lint/tipos PASS; render de36filas/paginación. Nueva pasada visual admin real PENDIENTE por herramienta | PENDIENTE |
 | 6 · ficha/Auth | PENDIENTE; recibe únicamente tokens globales por ahora | PENDIENTE | PENDIENTE |
 | 7 · cierre responsive/accesibilidad/performance | PENDIENTE | Pruebas por bloque no equivalen a cierre | PENDIENTE |
 
@@ -47,6 +47,14 @@ Componente FormField sin estado ni dependencias: etiqueta visible asociada por i
 Panel conserva consultas, cifras calculadas, tarjetas, portadas, Editar/Duplicar/Compartir/eliminar y condiciones por estado/cuenta. Saludo fijo Fabián sustituido por neutro (UX-007). Perfil y formularios adoptan tokens, sin cambiar permisos ni bloqueo de identidad. Publicación deja de devolver pantalla en blanco al cargar (UX-013 parcial) y muestra confirmación en página con foco/live, formulario oculto y el mismo redirect de3segundos, sin overlay modal inaccesible (UX-009 parcial).
 
 32UI y157aplicación PASS,lint/tipos/diff-check PASS. En navegador real local1440: publicación cargó la sesión legítima, ningún control sin label y body1440. Revisión visual detectó zonas comprimidas por grid anidado; se separó el bloque de ubicación para dar el ancho completo a sus dos zonas. No se declara aceptación de guardado/éxito real, mobile, Safari o STAGING. La primera prueba nueva falló por orden de atributos SSR y por buscar return null también en el parser numérico legítimo; se acotaron las aserciones, sin alterar ese parser.
+
+### Bloque 5 — 21oct2026
+
+Tablas de propiedades/asesores con región de scroll enfoc able y descrita, caption, scope de columnas y enlaces44px. PropertyStatusBadge sólo presenta los siete estados existentes con texto español/clases semánticas; no concede permisos. Paginación conserva20/35/50/60/100, cálculo/handlers; indica página actual. Render real con36fixtures sintéticas muestra1–35, segunda página disponible y precioUSD exacto. Filtros no cambian GET, campos ni opciones.
+
+Seis páginas admin, filtros/configuración y solicitudes/notificaciones adoptan tokens en estilos existentes. Formularios admin con labels previos ahora vinculados por htmlFor/id; selectores de zonas etiquetados. Historial permite wrap de filtros. No nuevas acciones/consultas ni cambio de moderación, verificación, suspensión, notificaciones leídas o autorización de contactos. Rutas admin siguen bajo los guards originales (prueba positiva sólo sesión legítima anterior, no rol fabricado).
+
+33UI y157aplicación PASS,lint/tipos PASS. La herramienta también agotó tiempo al retomar/recargar admin; no se afirma haber visto el nuevo interior completo ni tener sesión nueva verificada por ese intento. Aceptación visual admin real, cuatro anchos, contacto/avisos con todos sus estados y Safari siguen pendientes. No confundir render sintético con prueba E2E del servicio.
 
 ## Límites y continuación
 

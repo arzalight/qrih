@@ -194,6 +194,17 @@ button:disabled, input:disabled, select:disabled, textarea:disabled {
 .publish-success { max-width: 680px; margin: 24px auto 64px; text-align: center; }
 .publish-success__icon { display: inline-grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: var(--success-soft); color: var(--success); font-size: 32px; }
 .workspace-page { width: 100%; min-width: 0; overflow-wrap: anywhere; }
+.admin-page { min-width: 0; overflow-wrap: anywhere; }
+.ui-table-scroll { width: 100%; max-width: 100%; overflow-x: auto; background: var(--surface); border-radius: var(--radius-md); }
+.ui-table-scroll:focus-visible { outline-offset: -3px; }
+.ui-table-scroll caption { text-align: left; }
+.ui-table-scroll tbody tr:hover, .ui-table-scroll tbody tr:focus-within { background: var(--primary-soft); }
+.ui-table-scroll :is(a, button) { min-height: 44px; align-content: center; }
+.ui-table-scroll th { vertical-align: middle; }
+.ui-table-scroll td { vertical-align: top; }
+.admin-page section { min-width: 0; }
+.admin-page form { min-width: 0; }
+.admin-page :is(input, select, textarea) { max-width: 100%; }
 .own-property-card { background: var(--surface); box-shadow: var(--shadow); }
 .own-property-card h2 { font-size: 22px; line-height: 1.3; }
 .workspace-page a[aria-current="page"] { color: var(--primary); }

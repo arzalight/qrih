@@ -382,7 +382,7 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
           display: 'inline-flex',
           alignItems: 'center',
           gap: '6px',
-          color: '#555',
+          color: "var(--muted)",
           textDecoration: 'none',
           fontSize: '14px',
           fontWeight: 600,
@@ -396,9 +396,9 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
           marginTop: '24px',
           marginBottom: '32px',
           padding: '28px',
-          border: '1px solid #e7e7e7',
+          border: "1px solid var(--line)",
           borderRadius: '18px',
-          background: '#fff',
+          background: "var(--surface)",
           boxShadow: '0 4px 14px rgba(0,0,0,0.045)',
         }}
       >
@@ -415,7 +415,7 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
             <p
               style={{
                 margin: '0 0 8px',
-                color: '#777',
+                color: "var(--muted)",
                 fontSize: '12px',
                 fontWeight: 700,
                 textTransform: 'uppercase',
@@ -439,7 +439,7 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
             <p
               style={{
                 margin: '10px 0 0',
-                color: '#666',
+                color: "var(--muted)",
                 fontSize: '14px',
               }}
             >
@@ -486,7 +486,7 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
       padding: '24px',
       borderRadius: '12px',
       border: '1px solid #d8d8d8',
-      background: '#fafafa',
+      background: "var(--surface-subtle)",
     }}
   >
     <h2 style={{ marginTop: 0 }}>
@@ -505,8 +505,8 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
             style={{
               padding: '16px',
               borderRadius: '8px',
-              background: '#fff',
-              border: '1px solid #e5e5e5',
+              background: "var(--surface)",
+              border: "1px solid var(--line)",
             }}
           >
             <strong>{field.label}</strong>
@@ -559,9 +559,9 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
         style={{
           marginBottom: '32px',
           padding: '24px',
-          border: '1px solid #e7e7e7',
+          border: "1px solid var(--line)",
           borderRadius: '16px',
-          background: '#fff',
+          background: "var(--surface)",
           boxShadow: '0 2px 8px rgba(0,0,0,0.035)',
         }}
       >
@@ -595,7 +595,7 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
             >
               <div
                 style={{
-                  color: '#777',
+                  color: "var(--muted)",
                   fontSize: '11px',
                   fontWeight: 700,
                   textTransform: 'uppercase',
@@ -624,9 +624,9 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
         style={{
           marginBottom: '32px',
           padding: '24px',
-          border: '1px solid #e7e7e7',
+          border: "1px solid var(--line)",
           borderRadius: '16px',
-          background: '#fff',
+          background: "var(--surface)",
           boxShadow: '0 2px 8px rgba(0,0,0,0.035)',
         }}
       >
@@ -658,7 +658,7 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
             >
               <div
                 style={{
-                  color: '#777',
+                  color: "var(--muted)",
                   fontSize: '11px',
                   fontWeight: 700,
                   textTransform: 'uppercase',
@@ -687,9 +687,9 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
         style={{
           marginBottom: '32px',
           padding: '24px',
-          border: '1px solid #e7e7e7',
+          border: "1px solid var(--line)",
           borderRadius: '16px',
-          background: '#fff',
+          background: "var(--surface)",
           boxShadow: '0 2px 8px rgba(0,0,0,0.035)',
         }}
       >
@@ -722,7 +722,7 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
             >
               <div
                 style={{
-                  color: '#777',
+                  color: "var(--muted)",
                   fontSize: '11px',
                   fontWeight: 700,
                   textTransform: 'uppercase',
@@ -751,9 +751,9 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
         style={{
           marginBottom: '32px',
           padding: '24px',
-          border: '1px solid #e7e7e7',
+          border: "1px solid var(--line)",
           borderRadius: '16px',
-          background: '#fff',
+          background: "var(--surface)",
           boxShadow: '0 2px 8px rgba(0,0,0,0.035)',
         }}
       >
@@ -762,7 +762,7 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
           style={{
             padding: '18px',
             borderRadius: '12px',
-            background: '#fafafa',
+            background: "var(--surface-subtle)",
             color: '#444',
             lineHeight: 1.7,
             whiteSpace: 'pre-wrap',
@@ -778,7 +778,7 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
           padding: '24px',
           border: '1px solid #e1e1e1',
           borderRadius: '16px',
-          background: '#fff',
+          background: "var(--surface)",
           boxShadow: '0 2px 8px rgba(0,0,0,0.035)',
         }}
       >
@@ -806,8 +806,8 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
     padding: '12px 20px',
     borderRadius: '8px',
     border: 'none',
-    background: '#111',
-    color: '#fff',
+    background: "var(--primary)",
+    color: "var(--surface)",
     fontWeight: 600,
     cursor: 'pointer',
   }}
@@ -847,7 +847,7 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
     padding: '12px 20px',
     borderRadius: '8px',
     border: '1px solid #c62828',
-    background: '#fff',
+    background: "var(--surface)",
     color: '#c62828',
     fontWeight: 600,
     cursor: 'pointer',
@@ -898,7 +898,7 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
     borderRadius: '8px',
     border: '1px solid #c62828',
     background: '#c62828',
-    color: '#fff',
+    color: "var(--surface)",
     fontWeight: 600,
     cursor: 'pointer',
   }}
@@ -915,9 +915,9 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
         style={{
           marginBottom: '32px',
           padding: '24px',
-          border: '1px solid #e7e7e7',
+          border: "1px solid var(--line)",
           borderRadius: '16px',
-          background: '#fff',
+          background: "var(--surface)",
           boxShadow: '0 2px 8px rgba(0,0,0,0.035)',
         }}
       >
@@ -952,7 +952,7 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
             >
               <div
                 style={{
-                  color: '#777',
+                  color: "var(--muted)",
                   fontSize: '11px',
                   fontWeight: 700,
                   textTransform: 'uppercase',
@@ -982,9 +982,9 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
         style={{
           marginBottom: '40px',
           padding: '24px',
-          border: '1px solid #e7e7e7',
+          border: "1px solid var(--line)",
           borderRadius: '16px',
-          background: '#fff',
+          background: "var(--surface)",
           boxShadow: '0 2px 8px rgba(0,0,0,0.035)',
         }}
       >
@@ -1014,14 +1014,14 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
                     padding: '18px',
                     border: '1px solid #eeeeee',
                     borderRadius: '12px',
-                    background: '#fafafa',
+                    background: "var(--surface-subtle)",
                   }}
                 >
                   <p style={{ margin: 0, fontWeight: 600 }}>
                     {actionLabels[log.action] || log.action}
                   </p>
 
-                  <p style={{ margin: '6px 0 0', color: '#666' }}>
+                  <p style={{ margin: '6px 0 0', color: "var(--muted)" }}>
                     {showDate(log.created_at)}
                   </p>
 
@@ -1044,7 +1044,7 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
             })}
           </div>
         ) : (
-          <p style={{ color: '#666' }}>
+          <p style={{ color: "var(--muted)" }}>
             No hay actividad registrada para esta propiedad.
           </p>
         )}
@@ -1055,13 +1055,13 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
           marginBottom: '40px',
           padding: '24px',
           borderRadius: '16px',
-          border: '1px solid #e7e7e7',
-          background: '#fff',
+          border: "1px solid var(--line)",
+          background: "var(--surface)",
           boxShadow: '0 2px 8px rgba(0,0,0,0.035)',
         }}
       >
         <h2 style={{ margin: '0 0 8px' }}>Editar propiedad</h2>
-        <p style={{ margin: '0 0 28px', color: '#666', lineHeight: 1.5 }}>
+        <p style={{ margin: '0 0 28px', color: "var(--muted)", lineHeight: 1.5 }}>
           Puedes corregir la información sin modificar el estado actual de la propiedad.
         </p>
 
@@ -1073,8 +1073,8 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
           }}
         >
           <div>
-            <label><strong>Título</strong></label>
-            <input
+            <label htmlFor="admin-field-0-0"><strong>Título</strong></label>
+            <input id="admin-field-0-0"
               name="title"
               defaultValue={property.title}
               required
@@ -1083,8 +1083,8 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
           </div>
 
           <div>
-            <label><strong>Operación</strong></label>
-            <select
+            <label htmlFor="admin-field-0-1"><strong>Operación</strong></label>
+            <select id="admin-field-0-1"
               name="operation"
               defaultValue={property.operation}
               required
@@ -1096,7 +1096,7 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
           </div>
 
           <div>
-            <label><strong>Zona</strong></label>
+            <p><strong>Zona</strong></p>
             <div style={{ marginTop: '6px' }}>
               <ZoneSelectors
                 initialGeneral={property.zone_general || ''}
@@ -1106,8 +1106,8 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
           </div>
 
           <div>
-            <label><strong>Dirección</strong></label>
-            <input
+            <label htmlFor="admin-field-0-2"><strong>Dirección</strong></label>
+            <input id="admin-field-0-2"
               name="address"
               defaultValue={property.address || ''}
               style={{ width: '100%', padding: '10px', marginTop: '6px' }}
@@ -1115,8 +1115,8 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
           </div>
 
           <div>
-            <label><strong>Visibilidad de ubicación</strong></label>
-            <select
+            <label htmlFor="admin-field-0-3"><strong>Visibilidad de ubicación</strong></label>
+            <select id="admin-field-0-3"
               name="location_visibility"
               defaultValue={property.location_visibility}
               style={{ width: '100%', padding: '10px', marginTop: '6px' }}
@@ -1127,8 +1127,8 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
           </div>
 
           <div>
-            <label><strong>Precio mostrado (calculado al guardar)</strong></label>
-            <input
+            <label htmlFor="admin-field-0-4"><strong>Precio mostrado (calculado al guardar)</strong></label>
+            <input id="admin-field-0-4"
               name="price_display"
               defaultValue={property.price_display}
               readOnly
@@ -1138,8 +1138,8 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
           </div>
 
           <div>
-            <label><strong>Precio numérico</strong></label>
-            <input
+            <label htmlFor="admin-field-0-5"><strong>Precio numérico</strong></label>
+            <input id="admin-field-0-5"
               name="price_value"
               type="number"
               min="0.01"
@@ -1152,8 +1152,8 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
 
           <PriceCurrencySelect value={property.price_currency} />
           <div>
-            <label><strong>Unidad del precio</strong></label>
-            <select
+            <label htmlFor="admin-field-0-6"><strong>Unidad del precio</strong></label>
+            <select id="admin-field-0-6"
               name="price_unit"
               defaultValue={property.price_unit === 'm²' ? 'm2' : property.price_unit || ''}
               style={{ width: '100%', padding: '10px', marginTop: '6px' }}
@@ -1213,8 +1213,8 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
           </div>
 
           <div>
-            <label><strong>Superficie total (m²)</strong></label>
-            <input
+            <label htmlFor="admin-field-0-7"><strong>Superficie total (m²)</strong></label>
+            <input id="admin-field-0-7"
               name="total_area"
               type="number"
               step="any"
@@ -1224,8 +1224,8 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
           </div>
 
           <div>
-            <label><strong>Superficie techada (m²)</strong></label>
-            <input
+            <label htmlFor="admin-field-0-8"><strong>Superficie techada (m²)</strong></label>
+            <input id="admin-field-0-8"
               name="covered_area"
               type="number"
               step="any"
@@ -1235,8 +1235,8 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
           </div>
 
           <div>
-            <label><strong>Superficie exterior (m²)</strong></label>
-            <input
+            <label htmlFor="admin-field-0-9"><strong>Superficie exterior (m²)</strong></label>
+            <input id="admin-field-0-9"
               name="exterior_area"
               type="number"
               step="any"
@@ -1246,8 +1246,8 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
           </div>
 
           <div>
-            <label><strong>Altura máxima</strong></label>
-            <input
+            <label htmlFor="admin-field-0-10"><strong>Altura máxima</strong></label>
+            <input id="admin-field-0-10"
               name="max_height"
               defaultValue={property.max_height || ''}
               style={{ width: '100%', padding: '10px', marginTop: '6px' }}
@@ -1255,8 +1255,8 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
           </div>
 
           <div>
-            <label><strong>Área de oficinas (m²)</strong></label>
-            <input
+            <label htmlFor="admin-field-0-11"><strong>Área de oficinas (m²)</strong></label>
+            <input id="admin-field-0-11"
               name="offices_area"
               type="number"
               step="any"
@@ -1266,8 +1266,8 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
           </div>
 
           <div>
-            <label><strong>Estacionamientos</strong></label>
-            <input
+            <label htmlFor="admin-field-0-12"><strong>Estacionamientos</strong></label>
+            <input id="admin-field-0-12"
               name="parking"
               type="number"
               step="1"
@@ -1277,8 +1277,8 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
           </div>
 
           <div>
-            <label><strong>Andenes</strong></label>
-            <input
+            <label htmlFor="admin-field-0-13"><strong>Andenes</strong></label>
+            <input id="admin-field-0-13"
               name="docks"
               type="number"
               step="1"
@@ -1288,8 +1288,8 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
           </div>
 
           <div>
-            <label><strong>Descripción</strong></label>
-            <textarea
+            <label htmlFor="admin-field-0-14"><strong>Descripción</strong></label>
+            <textarea id="admin-field-0-14"
               name="description"
               defaultValue={property.description || ''}
               rows={8}
@@ -1298,8 +1298,8 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
           </div>
 
           <div>
-            <label><strong>Fotografía principal</strong></label>
-            <select
+            <label htmlFor="admin-field-0-15"><strong>Fotografía principal</strong></label>
+            <select id="admin-field-0-15"
               name="main_image_path"
               defaultValue={property.main_image_path || ''}
               style={{ width: '100%', padding: '10px', marginTop: '6px' }}
@@ -1314,8 +1314,8 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
           </div>
 
           <div>
-            <label><strong>Prioridad destacada</strong></label>
-            <input
+            <label htmlFor="admin-field-0-16"><strong>Prioridad destacada</strong></label>
+            <input id="admin-field-0-16"
               name="featured_priority"
               type="number"
               step="1"
@@ -1330,8 +1330,8 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
               padding: '14px 20px',
               borderRadius: '8px',
               border: 'none',
-              background: '#111',
-              color: '#fff',
+              background: "var(--primary)",
+              color: "var(--surface)",
               fontWeight: 600,
               cursor: 'pointer',
             }}

@@ -32,7 +32,7 @@ export function ZoneSelectors({
 
   return (
     <div className="zone-selectors" style={{ display: 'grid', gap: '12px' }}>
-      <select
+      <label className="ui-field">Zona general<select
         required
         name="zone_general"
         value={zonaGeneral}
@@ -51,9 +51,9 @@ export function ZoneSelectors({
             {zona}
           </option>
         ))}
-      </select>
+      </select></label>
 
-      <select
+      <label className="ui-field">Zona industrial<select
         required
         name="zone"
         value={zonaIndustrial}
@@ -72,7 +72,7 @@ export function ZoneSelectors({
             {zona}
           </option>
         ))}
-      </select>
+      </select></label>
     </div>
   )
 }

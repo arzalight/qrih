@@ -78,9 +78,9 @@ export function PlatformSettingsForm({
       style={{
         marginTop: 24,
         padding: 24,
-        border: '1px solid #e5e7eb',
+        border: "1px solid var(--line)",
         borderRadius: 14,
-        background: '#fff',
+        background: "var(--surface)",
       }}
     >
       <div style={{ marginBottom: 18 }}>
@@ -99,7 +99,7 @@ export function PlatformSettingsForm({
         <p
           style={{
             margin: '0 0 12px',
-            color: '#6b7280',
+            color: "var(--muted)",
             fontSize: 14,
             lineHeight: 1.5,
           }}
@@ -135,8 +135,8 @@ export function PlatformSettingsForm({
           padding: '11px 16px',
           border: 'none',
           borderRadius: 10,
-          background: '#111827',
-          color: '#fff',
+          background: "var(--ink)",
+          color: "var(--surface)",
           fontWeight: 700,
           cursor: saving ? 'wait' : 'pointer',
           opacity: saving ? 0.7 : 1,
@@ -151,7 +151,7 @@ export function PlatformSettingsForm({
           style={{
             margin: '14px 0 0',
             fontSize: 13,
-            color: '#6b7280',
+            color: "var(--muted)",
           }}
         >
           {message}

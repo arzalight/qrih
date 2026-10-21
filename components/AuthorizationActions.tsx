@@ -76,8 +76,8 @@ export function AuthorizationActions({
             padding: '10px 14px',
             borderRadius: 8,
             border: 'none',
-            background: '#111827',
-            color: '#fff',
+            background: "var(--ink)",
+            color: "var(--surface)",
             cursor: loading ? 'not-allowed' : 'pointer',
             opacity: loading ? 0.6 : 1,
           }}
@@ -92,8 +92,8 @@ export function AuthorizationActions({
           style={{
             padding: '10px 14px',
             borderRadius: 8,
-            border: '1px solid #ccc',
-            background: '#fff',
+            border: "1px solid var(--line)",
+            background: "var(--surface)",
             color: '#333',
             cursor: loading ? 'not-allowed' : 'pointer',
             opacity: loading ? 0.6 : 1,

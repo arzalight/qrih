@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { propertyPrice } from '@/lib/property-price'
+import { PropertyStatusBadge } from '@/components/PropertyStatusBadge'
 
 type AdminProperty = {
   id: string
@@ -84,12 +85,16 @@ export function AdminPropertiesTable({
   return (
     <>
       <div
+        className="ui-table-scroll"
+        role="region"
+        aria-label="Tabla de propiedades; desplázate horizontalmente para ver todas las columnas"
+        tabIndex={0}
         style={{
           width: '100%',
           overflowX: 'auto',
-          border: '1px solid #e5e5e5',
+          border: "1px solid var(--line)",
           borderRadius: '12px',
-          background: '#fff',
+          background: "var(--surface)",
         }}
       >
         <table
@@ -100,35 +105,36 @@ export function AdminPropertiesTable({
             fontSize: '14px',
           }}
         >
+          <caption className="sr-only">Propiedades y acciones administrativas</caption>
           <thead>
             <tr
               style={{
                 borderBottom: '1px solid #dcdcdc',
-                background: '#fafafa',
+                background: "var(--surface-subtle)",
               }}
             >
-              <th style={{ padding: '12px 14px', textAlign: 'left' }}>
+              <th scope="col" style={{ padding: '12px 14px', textAlign: 'left' }}>
                 Propiedad
               </th>
-              <th style={{ padding: '12px 14px', textAlign: 'left' }}>
+              <th scope="col" style={{ padding: '12px 14px', textAlign: 'left' }}>
                 Asesor
               </th>
-              <th style={{ padding: '12px 14px', textAlign: 'left' }}>
+              <th scope="col" style={{ padding: '12px 14px', textAlign: 'left' }}>
                 Zona
               </th>
-              <th style={{ padding: '12px 14px', textAlign: 'left' }}>
+              <th scope="col" style={{ padding: '12px 14px', textAlign: 'left' }}>
                 Operación
               </th>
-              <th style={{ padding: '12px 14px', textAlign: 'left' }}>
+              <th scope="col" style={{ padding: '12px 14px', textAlign: 'left' }}>
                 Estado
               </th>
-              <th style={{ padding: '12px 14px', textAlign: 'left' }}>
+              <th scope="col" style={{ padding: '12px 14px', textAlign: 'left' }}>
                 Precio
               </th>
-              <th style={{ padding: '12px 14px', textAlign: 'left' }}>
+              <th scope="col" style={{ padding: '12px 14px', textAlign: 'left' }}>
                 Superficie
               </th>
-              <th style={{ padding: '12px 14px', textAlign: 'right' }}>
+              <th scope="col" style={{ padding: '12px 14px', textAlign: 'right' }}>
                 Acciones
               </th>
             </tr>
@@ -139,20 +145,20 @@ export function AdminPropertiesTable({
               <tr
                 key={property.id}
                 style={{
-                  borderBottom: '1px solid #e5e5e5',
+                  borderBottom: "1px solid var(--line)",
                 }}
               >
                 <td style={{ padding: '14px' }}>
                   <strong>{property.title}</strong>
                 </td>
 
-                <td style={{ padding: '14px', color: '#555' }}>
+                <td style={{ padding: '14px', color: "var(--muted)" }}>
                   {property.profiles?.full_name ||
                     property.profiles?.company_name ||
                     'Sin asesor'}
                 </td>
 
-                <td style={{ padding: '14px', color: '#666' }}>
+                <td style={{ padding: '14px', color: "var(--muted)" }}>
                   {property.zone_general || 'Zona no especificada'}
                   {property.zone ? ` · ${property.zone}` : ''}
                 </td>
@@ -180,49 +186,7 @@ export function AdminPropertiesTable({
                 </td>
 
                 <td style={{ padding: '14px' }}>
-                  <span
-                    style={{
-                      display: 'inline-block',
-                      padding: '5px 9px',
-                      borderRadius: '999px',
-                      background:
-                        property.status === 'published'
-                          ? '#e8f5e9'
-                          : property.status === 'pending'
-                            ? '#fff3e0'
-                            : property.status === 'draft'
-                              ? '#f5f5f5'
-                              : property.status === 'rejected'
-                                ? '#ffebee'
-                                : property.status === 'pending_update'
-                                  ? '#fff8e1'
-                                  : property.status === 'paused'
-                                    ? '#e3f2fd'
-                                    : property.status === 'expired'
-                                      ? '#f3e5f5'
-                                      : '#f5f5f5',
-                      color:
-                        property.status === 'published'
-                          ? '#2e7d32'
-                          : property.status === 'pending'
-                            ? '#ef6c00'
-                            : property.status === 'draft'
-                              ? '#666'
-                              : property.status === 'rejected'
-                                ? '#c62828'
-                                : property.status === 'pending_update'
-                                  ? '#f9a825'
-                                  : property.status === 'paused'
-                                    ? '#1565c0'
-                                    : property.status === 'expired'
-                                      ? '#7b1fa2'
-                                      : '#555',
-                      fontSize: '11px',
-                      fontWeight: 700,
-                    }}
-                  >
-                    {property.status}
-                  </span>
+                  <PropertyStatusBadge status={property.status} />
                 </td>
 
                 <td
@@ -238,7 +202,7 @@ export function AdminPropertiesTable({
                 <td
                   style={{
                     padding: '14px',
-                    color: '#555',
+                    color: "var(--muted)",
                     whiteSpace: 'nowrap',
                   }}
                 >
@@ -265,8 +229,8 @@ export function AdminPropertiesTable({
                         display: 'inline-block',
                         padding: '8px 12px',
                         borderRadius: '7px',
-                        background: '#111',
-                        color: '#fff',
+                        background: "var(--primary)",
+                        color: "var(--surface)",
                         textDecoration: 'none',
                         fontSize: '12px',
                         fontWeight: 600,
@@ -283,8 +247,8 @@ export function AdminPropertiesTable({
                           padding: '8px 12px',
                           borderRadius: '7px',
                           border: '1px solid #111',
-                          background: '#fff',
-                          color: '#111',
+                          background: "var(--surface)",
+                          color: "var(--primary)",
                           textDecoration: 'none',
                           fontSize: '12px',
                           fontWeight: 600,
@@ -316,7 +280,7 @@ export function AdminPropertiesTable({
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
-            color: '#666',
+            color: "var(--muted)",
             fontSize: '13px',
           }}
         >
@@ -342,7 +306,7 @@ export function AdminPropertiesTable({
                 padding: '7px 10px',
                 border: '1px solid #d5d5d5',
                 borderRadius: '8px',
-                background: '#fff',
+                background: "var(--surface)",
                 fontSize: '13px',
               }}
             >
@@ -374,8 +338,8 @@ export function AdminPropertiesTable({
                 padding: '8px 11px',
                 border: '1px solid #d5d5d5',
                 borderRadius: '8px',
-                background: '#fff',
-                color: currentPage === 1 ? '#aaa' : '#222',
+                background: "var(--surface)",
+                color: currentPage === 1 ? '#aaa' : "var(--ink)",
                 cursor: currentPage === 1 ? 'default' : 'pointer',
                 fontSize: '13px',
               }}
@@ -390,7 +354,7 @@ export function AdminPropertiesTable({
                   style={{
                     minWidth: '34px',
                     textAlign: 'center',
-                    color: '#888',
+                    color: "var(--muted)",
                     fontSize: '13px',
                   }}
                 >
@@ -400,6 +364,8 @@ export function AdminPropertiesTable({
                 <button
                   key={page}
                   type="button"
+                  aria-label={`Página ${page}`}
+                  aria-current={currentPage === page ? 'page' : undefined}
                   onClick={() => setCurrentPage(page)}
                   style={{
                     minWidth: '34px',
@@ -407,9 +373,9 @@ export function AdminPropertiesTable({
                     border: '1px solid #d5d5d5',
                     borderRadius: '8px',
                     background:
-                      currentPage === page ? '#111' : '#fff',
+                      currentPage === page ? "var(--primary)" : "var(--surface)",
                     color:
-                      currentPage === page ? '#fff' : '#222',
+                      currentPage === page ? "var(--surface)" : "var(--ink)",
                     cursor: 'pointer',
                     fontSize: '13px',
                     fontWeight: currentPage === page ? 700 : 500,
@@ -432,9 +398,9 @@ export function AdminPropertiesTable({
                 padding: '8px 11px',
                 border: '1px solid #d5d5d5',
                 borderRadius: '8px',
-                background: '#fff',
+                background: "var(--surface)",
                 color:
-                  currentPage === totalPages ? '#aaa' : '#222',
+                  currentPage === totalPages ? '#aaa' : "var(--ink)",
                 cursor:
                   currentPage === totalPages
                     ? 'default'

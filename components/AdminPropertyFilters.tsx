@@ -43,9 +43,9 @@ export function AdminPropertyFilters({
         marginTop: '24px',
         marginBottom: '36px',
         padding: '22px',
-        border: '1px solid #e7e7e7',
+        border: "1px solid var(--line)",
         borderRadius: '16px',
-        background: '#fafafa',
+        background: "var(--surface-subtle)",
         boxShadow: '0 4px 14px rgba(0,0,0,0.035)',
       }}
     >
@@ -68,7 +68,7 @@ export function AdminPropertyFilters({
               marginBottom: '8px',
               fontSize: '11px',
               fontWeight: 700,
-              color: '#666',
+              color: "var(--muted)",
               textTransform: 'uppercase',
               letterSpacing: '0.04em',
             }}
@@ -88,7 +88,7 @@ export function AdminPropertyFilters({
               padding: '11px 13px',
               borderRadius: '10px',
               border: '1px solid #d5d5d5',
-              background: '#fff',
+              background: "var(--surface)",
               fontSize: '14px',
               minHeight: '43px',
             }}
@@ -103,7 +103,7 @@ export function AdminPropertyFilters({
               marginBottom: '8px',
               fontSize: '11px',
               fontWeight: 700,
-              color: '#666',
+              color: "var(--muted)",
               textTransform: 'uppercase',
               letterSpacing: '0.04em',
             }}
@@ -121,7 +121,7 @@ export function AdminPropertyFilters({
               padding: '11px 13px',
               borderRadius: '10px',
               border: '1px solid #d5d5d5',
-              background: '#fff',
+              background: "var(--surface)",
               fontSize: '14px',
               minHeight: '43px',
             }}
@@ -144,7 +144,7 @@ export function AdminPropertyFilters({
               marginBottom: '8px',
               fontSize: '11px',
               fontWeight: 700,
-              color: '#666',
+              color: "var(--muted)",
               textTransform: 'uppercase',
               letterSpacing: '0.04em',
             }}
@@ -162,7 +162,7 @@ export function AdminPropertyFilters({
               padding: '11px 13px',
               borderRadius: '10px',
               border: '1px solid #d5d5d5',
-              background: '#fff',
+              background: "var(--surface)",
               fontSize: '14px',
               minHeight: '43px',
             }}
@@ -181,7 +181,7 @@ export function AdminPropertyFilters({
               marginBottom: '8px',
               fontSize: '11px',
               fontWeight: 700,
-              color: '#666',
+              color: "var(--muted)",
               textTransform: 'uppercase',
               letterSpacing: '0.04em',
             }}
@@ -200,7 +200,7 @@ export function AdminPropertyFilters({
               padding: '11px 13px',
               borderRadius: '10px',
               border: '1px solid #d5d5d5',
-              background: '#fff',
+              background: "var(--surface)",
               fontSize: '14px',
               minHeight: '43px',
             }}
@@ -223,7 +223,7 @@ export function AdminPropertyFilters({
               marginBottom: '8px',
               fontSize: '11px',
               fontWeight: 700,
-              color: '#666',
+              color: "var(--muted)",
               textTransform: 'uppercase',
               letterSpacing: '0.04em',
             }}
@@ -248,7 +248,7 @@ export function AdminPropertyFilters({
               padding: '11px 13px',
               borderRadius: '10px',
               border: '1px solid #d5d5d5',
-              background: '#fff',
+              background: "var(--surface)",
               fontSize: '14px',
               minHeight: '43px',
             }}
@@ -270,8 +270,8 @@ export function AdminPropertyFilters({
             minHeight: '43px',
             borderRadius: '10px',
             border: '1px solid #111',
-            background: '#111',
-            color: '#fff',
+            background: "var(--primary)",
+            color: "var(--surface)",
             cursor: 'pointer',
             fontSize: '14px',
             fontWeight: 600,

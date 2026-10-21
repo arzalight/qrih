@@ -238,7 +238,7 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
           style={{
             display: 'inline-block',
             marginBottom: '14px',
-            color: '#666',
+            color: "var(--muted)",
             textDecoration: 'none',
             fontSize: '14px',
           }}
@@ -253,7 +253,7 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
             fontWeight: 700,
             letterSpacing: '0.08em',
             textTransform: 'uppercase',
-            color: '#777',
+            color: "var(--muted)",
           }}
         >
           Administración
@@ -273,7 +273,7 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
         <p
           style={{
             margin: '10px 0 0',
-            color: '#666',
+            color: "var(--muted)",
             fontSize: '16px',
           }}
         >
@@ -289,10 +289,10 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
           display: 'flex',
           alignItems: 'center',
           gap: '8px',
-          flexWrap: 'nowrap',
-          border: '1px solid #e7e7e7',
+          flexWrap: "wrap",
+          border: "1px solid var(--line)",
           borderRadius: '12px',
-          background: '#fafafa',
+          background: "var(--surface-subtle)",
         }}
       >
         <label
@@ -300,7 +300,7 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
           style={{
             fontSize: '13px',
             fontWeight: 600,
-            color: '#555',
+            color: "var(--muted)",
           }}
         >
           Mostrar:
@@ -314,7 +314,7 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
             padding: '9px 12px',
             border: '1px solid #d5d5d5',
             borderRadius: '9px',
-            background: '#fff',
+            background: "var(--surface)",
             fontSize: '13px',
           }}
         >
@@ -332,7 +332,7 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
             padding: '9px 12px',
             border: '1px solid #d5d5d5',
             borderRadius: '9px',
-            background: '#fff',
+            background: "var(--surface)",
             fontSize: '13px',
           }}
         />
@@ -346,7 +346,7 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
             padding: '9px 12px',
             border: '1px solid #d5d5d5',
             borderRadius: '9px',
-            background: '#fff',
+            background: "var(--surface)",
             fontSize: '13px',
           }}
         />
@@ -361,7 +361,7 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
             padding: '9px 12px',
             border: '1px solid #d5d5d5',
             borderRadius: '9px',
-            background: '#fff',
+            background: "var(--surface)",
             fontSize: '13px',
           }}
         />
@@ -374,7 +374,7 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
             padding: '9px 12px',
             border: '1px solid #d5d5d5',
             borderRadius: '9px',
-            background: '#fff',
+            background: "var(--surface)",
             fontSize: '13px',
           }}
         >
@@ -396,8 +396,8 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
             padding: '9px 14px',
             border: '1px solid #222',
             borderRadius: '9px',
-            background: '#222',
-            color: '#fff',
+            background: "var(--ink)",
+            color: "var(--surface)",
             fontSize: '13px',
             fontWeight: 600,
             cursor: 'pointer',
@@ -409,10 +409,10 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
 
       <section
         style={{
-          border: '1px solid #e5e5e5',
+          border: "1px solid var(--line)",
           borderRadius: '14px',
           overflow: 'hidden',
-          background: '#fff',
+          background: "var(--surface)",
         }}
       >
         {filteredLogs.length === 0 ? (
@@ -420,7 +420,7 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
             style={{
               padding: '48px 24px',
               textAlign: 'center',
-              color: '#666',
+              color: "var(--muted)",
             }}
           >
             No hay eventos que coincidan con los filtros.
@@ -452,7 +452,7 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
                     borderBottom:
                       index === filteredLogs.length - 1
                         ? 'none'
-                        : '1px solid #eee',
+                        : "1px solid var(--line)",
                   }}
                 >
                   <div
@@ -469,7 +469,7 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
                         style={{
                           fontSize: '16px',
                           fontWeight: 700,
-                          color: '#222',
+                          color: "var(--ink)",
                         }}
                       >
                         {actionLabel(log.action, log.metadata)}
@@ -479,7 +479,7 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
                         style={{
                           marginTop: '6px',
                           fontSize: '13px',
-                          color: '#666',
+                          color: "var(--muted)",
                         }}
                       >
                         {entityLabel(log.entity_type)}
@@ -492,7 +492,7 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
                       dateTime={log.created_at}
                       style={{
                         fontSize: '13px',
-                        color: '#777',
+                        color: "var(--muted)",
                         whiteSpace: 'nowrap',
                       }}
                     >
@@ -504,11 +504,11 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
                     style={{
                       marginTop: '10px',
                       fontSize: '12px',
-                      color: '#777',
+                      color: "var(--muted)",
                     }}
                   >
                     Realizado por{' '}
-                    <span style={{ fontWeight: 600, color: '#555' }}>
+                    <span style={{ fontWeight: 600, color: "var(--muted)" }}>
                       {actor?.full_name ||
                         actor?.company_name ||
                         'Usuario no disponible'}
@@ -518,7 +518,7 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
                       <Link
                         href={`/admin/${property.id}?from=historial`}
                         style={{
-                          color: '#555',
+                          color: "var(--muted)",
                           textDecoration: 'none',
                           fontWeight: 600,
                         }}
@@ -529,7 +529,7 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
                       <Link
                         href={`/admin/asesores/${profile.id}`}
                         style={{
-                          color: '#555',
+                          color: "var(--muted)",
                           textDecoration: 'none',
                           fontWeight: 600,
                         }}

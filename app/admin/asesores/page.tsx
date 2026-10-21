@@ -134,7 +134,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
             style={{
               display: 'inline-block',
               marginBottom: '14px',
-              color: '#666',
+              color: "var(--muted)",
               textDecoration: 'none',
               fontSize: '14px',
             }}
@@ -149,7 +149,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
               fontWeight: 700,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
-              color: '#777',
+              color: "var(--muted)",
             }}
           >
             Administración
@@ -169,7 +169,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
           <p
             style={{
               margin: '10px 0 0',
-              color: '#666',
+              color: "var(--muted)",
               fontSize: '16px',
             }}
           >
@@ -181,9 +181,9 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
           style={{
             minWidth: '150px',
             padding: '16px 20px',
-            border: '1px solid #e5e5e5',
+            border: "1px solid var(--line)",
             borderRadius: '12px',
-            background: '#fafafa',
+            background: "var(--surface-subtle)",
           }}
         >
           <div
@@ -200,7 +200,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
             style={{
               marginTop: '6px',
               fontSize: '13px',
-              color: '#666',
+              color: "var(--muted)",
             }}
           >
             Perfiles registrados
@@ -217,9 +217,9 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
           alignItems: 'center',
           gap: '10px',
           flexWrap: 'wrap',
-          border: '1px solid #e7e7e7',
+          border: "1px solid var(--line)",
           borderRadius: '12px',
-          background: '#fafafa',
+          background: "var(--surface-subtle)",
         }}
       >
         <label
@@ -227,7 +227,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
           style={{
             fontSize: '13px',
             fontWeight: 700,
-            color: '#555',
+            color: "var(--muted)",
           }}
         >
           Buscar:
@@ -245,7 +245,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
             padding: '10px 12px',
             border: '1px solid #d5d5d5',
             borderRadius: '9px',
-            background: '#fff',
+            background: "var(--surface)",
             fontSize: '13px',
           }}
         />
@@ -256,8 +256,8 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
             padding: '10px 16px',
             border: '1px solid #222',
             borderRadius: '9px',
-            background: '#222',
-            color: '#fff',
+            background: "var(--ink)",
+            color: "var(--surface)",
             fontSize: '13px',
             fontWeight: 700,
             cursor: 'pointer',
@@ -270,7 +270,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
           <Link
             href="/admin/asesores"
             style={{
-              color: '#666',
+              color: "var(--muted)",
               textDecoration: 'none',
               fontSize: '13px',
               fontWeight: 600,
@@ -283,13 +283,13 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
 
       <section
         style={{
-          border: '1px solid #e5e5e5',
+          border: "1px solid var(--line)",
           borderRadius: '14px',
           overflow: 'hidden',
-          background: '#fff',
+          background: "var(--surface)",
         }}
       >
-        <div style={{ overflowX: 'auto' }}>
+        <div className="ui-table-scroll" role="region" aria-label="Tabla de asesores; desplázate horizontalmente para ver todas las columnas" tabIndex={0} style={{ overflowX: 'auto' }}>
           <table
             style={{
               width: '100%',
@@ -297,8 +297,9 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
               minWidth: '900px',
             }}
           >
+            <caption className="sr-only">Asesores y estado de sus cuentas</caption>
             <thead>
-              <tr style={{ background: '#fafafa' }}>
+              <tr style={{ background: "var(--surface-subtle)" }}>
                 {[
                   'Asesor',
                   'ID público',
@@ -308,17 +309,17 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
                   'Verificación',
                   'Estado',
                   'Registro',
-                  '',
+                  'Acciones',
                 ].map((label) => (
-                  <th
+                  <th scope="col"
                     key={label}
                     style={{
                       padding: '14px 16px',
-                      borderBottom: '1px solid #e5e5e5',
+                      borderBottom: "1px solid var(--line)",
                       textAlign: 'left',
                       fontSize: '12px',
                       fontWeight: 700,
-                      color: '#666',
+                      color: "var(--muted)",
                       textTransform: 'uppercase',
                       letterSpacing: '0.05em',
                     }}
@@ -342,7 +343,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
                     <td
                       style={{
                         padding: '16px',
-                        borderBottom: '1px solid #eee',
+                        borderBottom: "1px solid var(--line)",
                       }}
                     >
                       <div
@@ -358,14 +359,14 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
                             height: '42px',
                             borderRadius: '50%',
                             overflow: 'hidden',
-                            border: '1px solid #ddd',
+                            border: "1px solid var(--line)",
                             background: '#f5f5f5',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             flexShrink: 0,
                             fontWeight: 700,
-                            color: '#666',
+                            color: "var(--muted)",
                           }}
                         >
                           {advisor.avatar_url ? (
@@ -404,7 +405,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
                             style={{
                               marginTop: '3px',
                               fontSize: '13px',
-                              color: '#777',
+                              color: "var(--muted)",
                             }}
                           >
                             {advisor.company_name || 'Sin empresa'}
@@ -416,7 +417,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
                     <td
                       style={{
                         padding: '16px',
-                        borderBottom: '1px solid #eee',
+                        borderBottom: "1px solid var(--line)",
                         fontWeight: 600,
                       }}
                     >
@@ -426,7 +427,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
                     <td
                       style={{
                         padding: '16px',
-                        borderBottom: '1px solid #eee',
+                        borderBottom: "1px solid var(--line)",
                       }}
                     >
                       {advisor.role}
@@ -435,7 +436,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
                     <td
                       style={{
                         padding: '16px',
-                        borderBottom: '1px solid #eee',
+                        borderBottom: "1px solid var(--line)",
                         textTransform: 'capitalize',
                       }}
                     >
@@ -445,7 +446,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
                     <td
                       style={{
                         padding: '16px',
-                        borderBottom: '1px solid #eee',
+                        borderBottom: "1px solid var(--line)",
                       }}
                     >
                       <strong>{counts.total}</strong>
@@ -453,7 +454,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
                         style={{
                           marginTop: '3px',
                           fontSize: '12px',
-                          color: '#777',
+                          color: "var(--muted)",
                         }}
                       >
                         {counts.published} publicadas · {counts.pending} pendientes
@@ -463,20 +464,20 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
                     <td
                       style={{
                         padding: '16px',
-                        borderBottom: '1px solid #eee',
+                        borderBottom: "1px solid var(--line)",
                       }}
                     >
                       {advisor.is_verified ? (
                         <span style={{ fontWeight: 700 }}>✓ Verificado</span>
                       ) : (
-                        <span style={{ color: '#777' }}>No verificado</span>
+                        <span style={{ color: "var(--muted)" }}>No verificado</span>
                       )}
                     </td>
 
                     <td
                       style={{
                         padding: '16px',
-                        borderBottom: '1px solid #eee',
+                        borderBottom: "1px solid var(--line)",
                       }}
                     >
                       {advisor.account_status === 'suspended' ? (
@@ -503,8 +504,8 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
                     <td
                       style={{
                         padding: '16px',
-                        borderBottom: '1px solid #eee',
-                        color: '#666',
+                        borderBottom: "1px solid var(--line)",
+                        color: "var(--muted)",
                         fontSize: '13px',
                       }}
                     >
@@ -514,7 +515,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
                     <td
                       style={{
                         padding: '16px',
-                        borderBottom: '1px solid #eee',
+                        borderBottom: "1px solid var(--line)",
                         textAlign: 'right',
                       }}
                     >
@@ -523,9 +524,9 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
                         style={{
                           display: 'inline-block',
                           padding: '8px 12px',
-                          border: '1px solid #ddd',
+                          border: "1px solid var(--line)",
                           borderRadius: '8px',
-                          color: '#222',
+                          color: "var(--ink)",
                           textDecoration: 'none',
                           fontSize: '13px',
                           fontWeight: 600,
