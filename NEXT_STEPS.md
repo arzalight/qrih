@@ -1,5 +1,35 @@
 # NEXT STEPS — QRO INDUSTRIAL HUB / QRIH
 
+## Paso vigente — RC autorizado 21oct2026
+
+La revisión visual local fue aceptada y el usuario autorizó subir a Netlify. Guardar entregas identificables, integrar sólo develop, comprobar GitHub y solicitar exactamente un build STAGING manteniendo Free y builds automáticos detenidos. Validar SHA/READY/HTTP/precios/ficha/PDF remotos y actualizar el resultado; sin main, nuevas migraciones o datos reales. [Registro](docs/PRELAUNCH_RC_2026-10-21.md). Los «sin autorización de deploy» inferiores describen cortes históricos, no revocan esta autorización concreta.
+
+Publicar actualizado: MXN inicial sólo en alta, etiquetas Municipio/Zona sin cambiar variables y separación de condiciones a un tercio. 223 pruebas/build PASS. Revisar esta versión local; no repetir cambios geográficos, backfill de moneda ni envíos por estética. Conservar moneda original al editar/duplicar y autorización explícita antes de cualquier deploy.
+
+Menú vigente simplificado:sin marcadores y sin duplicar perfil/notificaciones;ambos accesibles en Mi cuenta.220tests/build PASS;revisar versión local,sin repetir este ajuste ni desplegar automáticamente.
+
+Últimos comentarios de inicio aplicados(6propiedades,alineación yCTA inferior retirada):219tests/build PASS;revisar la pestaña local independiente. Responsive final leído a1280/732px;emulación de los cuatro anchos no obedeció en esa pestaña,no declarar PASS por ancho solicitado. [Evidencia](docs/PRELAUNCH_UI_IMPLEMENTATION.md). No nuevas altas,datos,commit,push o deploy por este ajuste.
+
+Último comentario de Requerimientos aplicado:sin título duplicado ni marco exterior en móvil/escritorio;217tests y build PASS. Revisar versión local vigente,no repetir ese ajuste ni desplegar sin autorización.
+
+## Última revisión local — navegación/cuenta21oct
+
+Puntos grises y acceso de perfil junto al menú ya implementados/verificados(217tests/31HTTP,build y cinco anchos). Revisar visualmente esta cabecera en localhost;contenido/handlers de cuenta preservados,no volver a probar salir o marcar avisos por estética. [Evidencia y límites](docs/PRELAUNCH_UI_IMPLEMENTATION.md). Continuar ajustes pendientes del MVP en lotes pequeños,sin commit/push/main/deploy automático.
+
+## Paso vigente — aceptar Requerimientos/matching local21oct
+
+1. Revisar localhost:3107/mis-propiedades?view=requirements:interiores diferenciados,marco móvil retirado sin ocultar contenido,tag Nuevo de28px y ausencia de candidatas fuera de superficie.215tests/31HTTP y build PASS;no repetir requerimiento o fixtures.
+2. [Corrección DEM-001 y límites](docs/MATCHING_SURFACE_REVIEW_2026-10-21.md):sólo sugerencias por superficie;puntuación de otros criterios/SQL/RPC no modificados. Una futura regla obligatoria al postular o cambios de presupuesto/moneda necesitan lote propio,no inferencias ni migración automática.
+3. Aceptación visual restante del sitio,nuevoRC sólo bajo autorización explícita,sin push/deploy/main automático. No trasladar el GO del RC anterior al código local.
+
+## Siguiente paso vigente — refinamiento del panel 21oct2026
+
+Siete comentarios posteriores ya aplicados y probados localmente(207tests/31HTTP);revisar esta versión más breve,sin repetir los ajustes anteriores. [Registro vigente](docs/PRELAUNCH_UI_IMPLEMENTATION.md).
+
+1. Revisar visualmente Mis propiedades en localhost:3107: propiedades primero, acciones contextuales/Más, rendimiento y preferencias plegables. Implementación y pruebas locales terminadas; [mediciones/límites](docs/PRELAUNCH_UI_IMPLEMENTATION.md). No repetir fixtures, respaldos o migraciones por este cambio.
+2. Tras esa aceptación, continuar en lotes pequeños con jerarquía de filtros de Inventario móvil, orden de ficha y agrupación de Publicar; todavía no corregidos por este lote. No ampliar funciones ni permisos.
+3. Entrega GitHub/integración y nuevoRC de Netlify sólo con autorización explícita vigente; este lote no hizo commit,push ni deploy. Mantener NO-GO visual,soporte por definir,AUD043 y límites operativosAUD018.
+
 ## Actualización vigente — continuar bloques UX/UI, referencia ya recibida
 
 Siete bloques implementados;196tests/31HTTP,lint/tipos/build/preflight y112mediciones locales PASS con límites. No repetir diagnóstico,imagen,036/052,fixtures,backups o contraseñas ya comprobados. [Cierre y evidencias](docs/PRELAUNCH_UI_IMPLEMENTATION.md). NO-GO del nuevo alcance hasta aceptación;los pasos inferiores son históricos.

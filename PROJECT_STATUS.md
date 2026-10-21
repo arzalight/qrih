@@ -1,5 +1,37 @@
 ## PROJECT STATUS — QRO INDUSTRIAL HUB / QRIH
 
+**Entrega RC autorizada — 21oct2026:** usuario acepta versión local y solicita subir a Netlify. Preparación de GitHub/develop y un único build del sitio existente qrih-staging, Free verificado, 251 créditos observados y builds automáticos detenidos. 232 pruebas + 31 HTTP locales PASS; aplicación remota todavía PENDIENTE, no declarada publicada. main/producción/Supabase intactos. [Gate y trazabilidad](docs/PRELAUNCH_RC_2026-10-21.md).
+
+**Formato visual de precios — 21oct2026:** centralizado en propertyPrice: `$6.5 USD m²/mes`, `$121 MXN m²/mes`, `$32,500 USD/mes`, `$605,000 MXN/mes`. Sin US$, diagonal antes de m² ni ceros decimales sobrantes; precisión completa/separadores preservados. Tarjetas, catálogo/perfil, panel, sugerencias, detalle, administración y ficha/PDF consumen el mismo formato. Escrituras separadas con propertyPriceForStorage para mantener idéntico price_display persistido; ningún dato modificado. 232 pruebas, lint/tipos/build/preflight PASS. PDF local PIQ verificado: `$6.5 USD m²/mes` y `$73,788 USD/mes`, primera página renderizada sin recortes de precio. Sin migraciones, commit/push ni deploy. Detalle y límites en registro UX.
+
+**Capas decorativas de inicio — 21oct2026:** círculos de las tres tarjetas detrás del contenido mediante contexto aislado y pseudo-elemento con z-index -1, sin interceptar clics. Sólo CSS, sin cambios de contenido ni destinos. 225 pruebas (61 UI), lint/build PASS; estilos calculados de las tres tarjetas comprobados en localhost. Sin datos, commit/push ni deploy.
+
+**Plantilla de descripción — 21oct2026:** alta nueva con las 26 líneas solicitadas como texto inicial editable (`defaultValue`), no placeholder. No se borra al enfocar ni al cambiar otro campo; edición y duplicación conservan su descripción original. Sin autocalcular importes ni inferir características. 224 pruebas (60 UI), lint/tipos/build/preflight PASS; navegador local verifica persistencia al clic y tras cambiar operación. Sin guardado de propiedades, aceptación legal, datos, migraciones, commit/push ni deploy.
+
+**Último ajuste de Publicar — 21oct2026:** MXN por defecto sólo en alta nueva. Edición y duplicación conservan la moneda recibida, incluida USD; NULL no se convierte por inferencia. Etiquetas y ayudas de ubicación ahora Municipio/Zona en los formularios de propiedad, sin cambiar ids, names, variables, opciones, vinculaciones ni tablas. Separación entre condiciones de precio 56→18.664px (un tercio). 223 pruebas (59 UI), lint/tipos/build/preflight PASS; comprobación local de MXN inicial, USD conservado tras cambiar municipio y opciones dependientes correctas. Sin envío, aceptación legal, datos, commit/push o deploy. [Registro](docs/PRELAUNCH_UI_IMPLEMENTATION.md).
+
+**Último ajuste de navegación21oct:** retirados todos los puntos grises y los enlaces duplicados Notificaciones/Mi perfil de la lista de trabajo. Quedan Mi panel,Subir propiedad,Inventario yBusco una bodega;perfil/avisos permanecen en Mi cuenta y no se eliminan rutas ni funciones.220tests(56UI),lint/tipos/build/preflight PASS;menú real con4enlaces/0marcadores y accesos de cuenta verificados enlocalhost732px,sin overflow. Sin datos,commit,push o deploy.
+
+**Último ajuste de inicio21oct:** selección ampliada de3 a6 propiedades publicadas,prioridad existente conservada;rejilla3columnas escritorio/2tableta/1móvil. Título/enlace alineados y CTA redundante Buscas algo más específico retirada;otros accesos a requerimientos intactos.219tests(55UI),lint/tipos/build/preflight PASS. Home local devuelve6 tarjetas/6imágenes cargadas;captura y límites de responsive en [registro](docs/PRELAUNCH_UI_IMPLEMENTATION.md). Consulta pública y firmas existentes conservadas,sin datos,migraciones,commit,push o deploy.
+
+**Último ajuste visual21oct:** Requerimientos sin segundo título ni marco/padding exterior en ningún ancho;tarjetas directamente bajo pestañas,región semántica accesible conservada.217tests,lint/tipos/build PASS;375/962/1440 con un solo título,contenido intacto y sin overflow. Sin datos,commit,push o deploy. [Registro](docs/PRELAUNCH_UI_IMPLEMENTATION.md).
+
+### Último ajuste — navegación y cuenta / 21oct2026
+
+Rombos sustituidos por puntos grises decorativos de5px. Cuenta extraída de site-navigation a header-controls junto a Menú en móvil/tableta,con icono de perfil44×44;en rail>=1200 queda arriba de la lista(no al pie). Mismo contenido de identidad/perfil/notificaciones/salir;handlers de carga,avisos ysignOut idénticos por huellaAST.217tests(53UI)/31HTTP,lint/tipos/build/preflight PASS;cinco anchos320–1440 y popover dentro de viewport,Escape/foco,exclusión mutua y cabecera pública375/1440 comprobados. [Registro](docs/PRELAUNCH_UI_IMPLEMENTATION.md). Sin clic en avisos/signOut,datos,commit,push o deploy. Aceptación visual y nuevoRC pendientes.
+
+### Último avance — Requerimientos y matching de superficie / 21oct2026
+
+**IMPLEMENTADO Y VALIDADO LOCAL / RC REMOTO PENDIENTE.** Requerimientos sin etiqueta redundante;interiores con tono suave,marco/título duplicado retirados sólo en móvil(contenido visible);tag Nuevo de28px sin stretch. Corrección funcional separada DEM-001: sugerencias respetan rango de superficie antes de ordenar,sin tolerancias nuevas.234–234m² ya no muestra90/5440/5511;sin candidatas válidas muestra vacío honesto.215tests(51UI incluidas)/31HTTP,lint/tipos/build/preflight PASS. [Causa,consumidores,pruebas y límites](docs/MATCHING_SURFACE_REVIEW_2026-10-21.md). Puntuación,SQL/RPC/permisos/datos intactos;no afirmar corregidos todos los criterios del matching. Sin commit/push/deploy;NO-GO del nuevoRC conservado.
+
+### Último ajuste — siete comentarios visuales del panel / 21oct2026
+
+Aplicados localmente: sin subtítulo descriptivo de la cabecera en las tres pestañas ni descripción de Preferencias; botón sólo con tres puntos (nombre accesible,tooltip y44×44px); tarjetas con Visto y Solicitudes,sin fecha ni periodo visible. El periodo de28días sigue indicado en Rendimiento y en etiquetas accesibles;no cambia el cálculo ni se borra created_at.207tests(50UI incluidas),31HTTP,lint/tipos/build/preflight PASS;cuatro anchos sin overflow y Escape/foco del disclosure verificados. Documentación de detalle en [registro UX](docs/PRELAUNCH_UI_IMPLEMENTATION.md). Sin commit/push/deploy ni cambios de datos;aceptación visual pendiente.
+
+### Último avance — 21oct2026 / refinamiento UX de Mis propiedades
+
+**IMPLEMENTADO LOCAL / REVISIÓN VISUAL HUMANA PENDIENTE / SIN DEPLOY.** Propiedades primero, resumen compacto, rendimiento y preferencias plegables, tarjetas más anchas y barra contextual con Más; se conservan notificaciones, funciones y permisos. A375px primera tarjeta1947→451px y ancho277→343px; principales en una fila en375/768/1024/1440.206tests (49UI incluidas),31HTTP,lint/tipos/build/preflight PASS. [Evidencia,archivos y límites](docs/PRELAUNCH_UI_IMPLEMENTATION.md). Sin escrituras de datos,commit,push,migraciones ni cambios en main/develop. Resto de ajustes UX y aceptación del nuevoRC siguen pendientes;NO-GO del rediseño conservado.
+
 ## Actualización vigente — referencia recibida / implementación UX/UI por bloques
 
 ### Cierre local21oct2026 — siete bloques de interfaz

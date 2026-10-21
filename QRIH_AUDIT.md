@@ -1,5 +1,13 @@
 # QRIH — Auditoría técnica pre-Soft-Launch
 
+### DEM-001 / matching de superficie — MEDIO confirmado,corrección local21oct2026
+
+Puntuación por zona/operación permitía sugerir5440/5511m² y etiquetar90m² como alta coincidencia para234–234m². Se excluye superficie fuera del mínimo/máximo antes del ranking JS en ambos sentidos,sin alterar calculateMatch niSQL/RPC.215tests/31HTTP,lint/tipos/build/preflight y lectura del caso real local PASS. [Registro independiente y límites](docs/MATCHING_SURFACE_REVIEW_2026-10-21.md). No corrección global de matching ni regla nueva de autorización;RC remoto pendiente. Ajustes visuales de requerimientos registrados aparte en seguimientoUI;sin datos/migraciones/deploy.
+
+### Actualización posterior — UX del panel 21oct2026
+
+Confirmada fricción de prioridad alta de UX (no nueva vulnerabilidad de seguridad): propiedades desplazadas por gráfica/configuración y acciones en cuatro filas. Corregido localmente mediante reorganización de Mis propiedades; primera tarjeta móvil1947→451px,ancho277→343px.206tests/31HTTP,lint/tipos/build/preflight PASS;servidor/consultas/firma preservados por huella y edición compacta probada en siete estados/cuenta deshabilitada. [Registro y límites](docs/PRELAUNCH_UI_IMPLEMENTATION.md). Sin ejecutar acciones comerciales ni tocar datos,API,RLS,Storage,migraciones,producción o Netlify. Aceptación visual humana/remota pendiente;no cierre global UX ni traslado del GO anterior. Inventario/ficha/formulario conservan hallazgos de jerarquía por atender en otro lote.
+
 ## Actualización vigente — implementación UX/UI parcial / NO-GO
 
 ### Dictamen local21oct2026 — interfaz implementada, NO-GO hasta aceptación RC

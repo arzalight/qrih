@@ -1,5 +1,19 @@
 # QRIH FUNCTIONAL INDEX — Índice maestro tipo SIGMA
 
+**RC 21oct autorizado:** [entrega y gates](docs/PRELAUNCH_RC_2026-10-21.md). propertyPrice centraliza visualización; propertyPriceForStorage conserva formato anterior en alta/guardado/admin. Plantilla de descripción sólo en alta; círculos detrás del contenido. 232 pruebas + 31 HTTP locales PASS; publicación remota pendiente de SHA/READY/verificación. No cambios de valores/moneda/unidad/cálculos o main.
+
+**Publicar / PRICE-001 / 21oct:** PublicarForm→PriceCurrencySelect(value=MXN sólo alta); editor compartido mantiene property.price_currency. Municipio/Zona sólo label/ayudas sobre zone_general/zone y catálogos existentes. price-options en globals.css→gap56/3. tests/prelaunch-ui:3 regresiones nuevas,223 totales/59UI PASS;contratos de campos intactos y lectura local732px. Sin API, BD/RLS o migración nueva. [Detalle](docs/PRELAUNCH_UI_IMPLEMENTATION.md).
+
+**Inicio21oct:** app/page.tsx→properties_public(published,prioridad existente,limit6)→firma/PropertyCard existentes→home-selection__heading/cards en globals.css→2regresiones nuevas prelaunch-ui.test.219tests(55UI)/build/preflight PASS;6tarjetas/6imágenes reales enlocalhost. Sin API/BD/RLS/migración nueva. [Detalle y límites](docs/PRELAUNCH_UI_IMPLEMENTATION.md).
+
+### DEM-001 — corrección local de sugerencias por superficie / 21oct2026
+
+lib/matching.ts(rankPropertiesForDemand/rankDemandsForProperty) → panel requerimientos/oportunidades,alta busco-bodega y ranking admin → tests/opportunities.test.mjs(7nuevas)/synthetic-test-environment(contador48). calculateMatch y SQL/RPC/migraciones/permisos sin cambios.215tests(51UI)/31HTTP PASS,caso234–234 sin falsas sugerencias comprobado en localhost. [Trazabilidad y límites](docs/MATCHING_SURFACE_REVIEW_2026-10-21.md). UI requerimientos → requirements-panel/requirement-card en globals.css → prelaunch-ui.test. Sin renumerarID,deploy o validación remota nueva.
+
+### Refinamiento de panel — 21oct2026 / IDs funcionales conservados
+
+PROP-003/006/007/008 y presentación de panel: app/mis-propiedades/page.tsx → PropertyActionDisclosure(nuevo componente sólo visual),ManagePropertyActions(compact),DeletePropertyButton(compact),SharePropertyButton/OwnPropertyCover existentes → mismas APIs/BD/RLS/migraciones,sin cambios. tests/prelaunch-ui.test.mjs agrega10pruebas;206totales/49UI y31HTTP PASS. [Trazabilidad,mediciones y aceptación pendiente](docs/PRELAUNCH_UI_IMPLEMENTATION.md). Sin función de negocio nueva ni renumeración;sin commit/push/deploy por este lote.
+
 ## Actualización vigente — UX/UI en implementación incremental
 
 ### Cierre local21oct — IDs existentes conservados

@@ -2,6 +2,73 @@
 
 ## Estado actual
 
+### Publicar — cuatro comentarios / 21oct2026
+
+- Alta nueva: PublicarForm pasa value=MXN a PriceCurrencySelect. El componente compartido y EditarPropiedadForm siguen recibiendo el valor original; no se cambia el default global ni se asigna moneda a históricos NULL. SSR real del selector cubre MXN/USD/NULL/undefined/vacío. No conversión de importes ni tablas.
+- Etiquetas visibles Municipio/Zona y ayudas de selección coherentes en alta y editor compartido por edición/duplicación. Se mantienen zone_general/zone, ids, estado, callbacks, required/disabled, ZONAS_GENERALES/ZONAS_INDUSTRIALES_POR_ZONA y todos los valores. El cambio de nombre no transforma el catálogo geográfico ni introduce un padrón municipal.
+- Precio y condiciones: medición previa real 56px entre etiquetas (gap28 + márgenes14+14). Se eliminan sólo esos márgenes dentro de price-options y se usa gap calc(56px/3); medición posterior 18.664px en ambos huecos. Checkboxes, nombres, estado y tamaño18px preservados.
+- 223 pruebas (59 UI), lint/tipos/build/preflight/diff-check PASS; contratos AST de los campos originales intactos. Navegador local732px: MXN inicial, elección USD permanece tras cambiar Municipio a El Marqués, Zona se habilita con el catálogo original, sin overflow. Prueba sólo en formulario de revisión aparte; no guardar, enviar, aceptar términos ni cargar imágenes. No nuevo E2E de guardado/duplicación declarado por comprobar selector/contratos.
+
+Captura publish-mxn-municipio-zone-spacing.png fuera de Git. Sin migración, RLS, API, datos, commit, push o deploy. Actualiza la presentación y el default autorizado del alta, no la arquitectura ni el dictamen de aceptación del nuevoRC.
+
+### Navegación simplificada — comentario posterior21oct
+
+Se elimina site-nav__marker de Header.tsx/CSS y se retiran sólo Notificaciones/Mi perfil del arreglo de navegación de trabajo;Mi cuenta conserva Abrir mi perfil,avisos,Ver todas las notificaciones yCerrar sesión. No rutas,permisos,handlers o funcionalidad eliminados. Navegación pública/admin conserva sus destinos y queda sin marcadores decorativos.220tests(56UI incluidas),lint/tipos/build/preflight/diff-check PASS. Navegador real732px:4destinos(Mi panel,Subir propiedad,Inventario,Busco una bodega),0marcadores,sin overflow;ambos enlaces de cuenta verificados sin pulsar avisos ni salir. Captura navigation-four-links-no-markers.png fuera de Git. Sin datos,commit/push/deploy;aceptación del nuevoRC pendiente.
+
+### Inicio — tres comentarios21oct2026
+
+app/page.tsx mantiene createPublicServerSupabaseClient/properties_public,published,orden featured→featured_priority→created_at y firma autorizada por lote/TTLpublic;única modificación de consulta limit3→6. No datos,RLS,Storage o políticas modificados. La guía Supabase delimitó revisión documental,lectura pública y verificación;[referencia oficial de limit](https://supabase.com/docs/reference/javascript/limit) consultada. Changelog markdown no pudo leerse por content-type de herramienta;fallback al HTML oficial,sin actualizar SDK ni cambiar APIs.
+
+Eyebrow SELECCIÓN fuera de la fila;título/enlace como hermanos centrados en escritorio y apilados/alineados a izquierda en móvil. Clase de rejilla sólo de inicio:3columnas,2entre761–1023 y1hasta760. Se retira sección band completa y suCSS sin consumidores;permanecen tres capacidades,Busco una bodega en navegación/capacidad/footer y formularios existentes.
+
+219tests(55UI incluidas),lint/tipos/build/preflight/diff-check PASS;0fallos/0skips. La consulta real de Home ejecutada por Next contra QRIH STAGING devolvió6 tarjetas y6imágenes cargadas,sin crear fixtures ni escribir. Verificado en pestaña independiente a1280px:3columnas y centros de título/enlace coinciden;732px:1columna y ambos alineados a izquierda;sin overflow y banda ausente. La emulación375/768/1024/1440 de la pestaña independiente no obedeció los tamaños solicitados:esas iteraciones devolvieron1280o732,no contarlas como cuatro PASS. La pasada anterior en la pestaña original verificó375/768/1024/1440 antes de fijar la rejilla3/2/1;no sustituye verificación final de cada breakpoint. Overrides restaurados;formulario que el usuario abrió en su otra pestaña no fue enviado ni modificado.
+
+Durante recompilación,el servidor local anterior emitió errores de manifiestoRSC;se reinició y la página final se verificó sin ese error. No atribuirlo a producción ni aplicar un refactor para ocultarlo. Captura home-selection-final-viewport.png fuera de Git;captura por clip de selección muestra zonas no pintadas fuera de viewport y no se usa como prueba de imágenes faltantes. Sin commit/push/deploy o cambio de dependencias. NO-GO del nuevoRC hasta aceptación/autorización conservado;no afirmar mejora de rendimiento por incrementar tarjetas.
+
+### Requerimientos sin envoltorio visual — comentario posterior21oct
+
+Retirado h2 duplicado Mis requerimientos y eliminado borde/padding exterior también en escritorio,ampliando el ajuste móvil anterior. Se conserva únicamente section con aria-label como agrupación accesible,sin marco visible;tarjetas,contenido y matching intactos.217tests,lint/tipos/build/diff-check PASS.375/962/1440:un solo título,borde0/padding0,tarjeta presente y sin overflow. Captura requirements-no-outer-frame.png fuera de Git. Sin acciones comerciales,datos,commit,push/deploy;aceptación visual/remota pendiente.
+
+### Navegación y cuenta — dos comentarios21oct2026
+
+Header.tsx mueve profile-menu completo fuera de nav y lo sitúa junto al disparador de menú en header-controls. Botón de perfilSVG44×44,aria-label/title Mi cuenta;contador de avisos conservado. Cuenta y navegación se cierran mutuamente;Escape devuelve foco al disparador correspondiente. En escritorio de gestión>=1200,el menú de navegación ya es rail:cuenta queda arriba de la lista,con popover hacia el contenido,no al pie. Sin convertir la navegación en un nuevo layout ni añadir permisos.
+
+site-nav__marker deja de contener◇ y usa círculo gris#9ca3af5×5px,decorativo/aria-hidden. Perfil mantiene identidad,Abrir mi perfil,últimos avisos,Ver todas las notificaciones yCerrar sesión. HuellaAST de loadUserAndNotifications/handleNotificationClick/handleSignOut idéntica al corte anterior;sin cambios de consultas,frecuencia,marcado de avisos o signOut. No se pulsaron avisos/salir para verificar estilos.
+
+217tests(53UI incluidas),31HTTP,lint/tipos/build/preflight/diff-check PASS. Sesión legítima en localhost3107:320/375/768/1024/1440 sin overflow,perfil44×44,popover dentro de los cinco viewports;375 menú abierto con6puntos grises y cuenta fuera de nav. Cuenta abre sin desplegar lista;al abrirla cierra menú,Escape cierra/devuelve foco. Menú público de Inventario375/1440 sin overflow y con cuenta accesible. Captura header-profile-menu-mobile.png fuera de Git,sin identidad expuesta. No testnuevo real de signOut/lectura de aviso ni certificaciónglobal de roles/accesibilidad. Sin datos,commit,push/deploy;NO-GO del nuevoRC conservado.
+
+### Requerimientos — cuatro ajustes visuales / 21oct2026
+
+Retirada etiqueta REQUERIMIENTOS redundante;tarjeta interior con primary-soft y sugerencias blancas separadas por12px. Wrapper requirements-panel conserva contenido y navegación;en<=680px se elimina sólo marco/padding/título repetido,no la lista. Nuevo traduce exclusivamente estado new y deja de estirarse:altura28px y align-self:flex-start.375/768/1024/1440 sin overflow;tarjeta/estado/ausencia de etiqueta verificados en build local con sesión legítima.51UI incluidas en215tests,31HTTP,lint/tipos/build/preflight PASS. Sin escrituras de datos ni deploy.
+
+El comentario sobre coincidencias se trató como corrección funcional independiente en lib/matching.ts,no como CSS ni ajuste de cifras. [Registro DEM-001](MATCHING_SURFACE_REVIEW_2026-10-21.md). Sus límites sustituyen cualquier afirmación anterior de lib sin cambios para este nuevo lote;API/SQL/RLS sí permanecen intactos. Aceptación humana/remota pendiente.
+
+### Siete comentarios visuales aplicados — 21oct2026
+
+Eliminados el texto Administra… de cabecera (compartida por las tres pestañas),Revisa cómo… de preferencias,fecha y periodo visible de las tarjetas. Periodo también retirado del resumen superior para indicarlo visualmente sólo en Rendimiento;etiquetas accesibles conservan28días y los cálculos no se convierten en totales históricos. Visto sustituye Visualizaciones sólo en tarjetas;Solicitudes sustituye Ver solicitudes sin cambiar destino. Tres puntos sin texto visible,con aria-label por propiedad,title Más acciones y superficie44×44px. Fecha sigue en datos/consulta y demás pantallas no intervenidas;no se agregan campos a detalle por esta petición.
+
+207tests(50UI incluidas)/31HTTP,lint/tipos/build/preflight/diff-check PASS.375/768/1024/1440 sin overflow;disparador44×44 sin texto,ausencia de fecha/periodo visible en tarjetas y menú/Escape/retorno de foco comprobados con sesión legítima,sin ejecutar acciones comerciales. Captura panel-seven-comments.png fuera de Git. Sin commit/push/deploy ni cambios de datos. Mantener aceptación visual pendiente y NO-GO del nuevoRC;resto del sitio no modificado por estos comentarios.
+
+### Refinamiento UX del panel — 21oct2026, posterior al cierre de siete bloques
+
+Usuario autoriza reorganizar primero Mis propiedades tras señalar espacio desperdiciado y acciones amontonadas. Implementado sólo en la rama local existente; sin commit/push/deploy ni cambios de datos. Esta revisión sustituye la aceptación visual pendiente del panel, no declara aceptado todo el sitio.
+
+- Cabecera directa con Publicar propiedad y Mis notificaciones; pestañas existentes conservadas. Resumen compacto; propiedades fuera del contenedor de rendimiento. Gráfica/conversión/mayor interés conservados tras las tarjetas en un disclosure nativo cerrado; preferencias de contacto al final de las tres vistas, también plegables. Se compacta únicamente el pie de esta pantalla, conservando enlaces legales/navegación.
+- Tarjetas sin padding anidado ni altura igualada que agregaba huecos. Precio, superficie y métricas existentes; periodo de 28 días explícito. Editar visible sólo donde ya se permitía, solicitudes disponibles y Más agrupa duplicación, compartir cuando corresponde, ficha/edición publicada y eliminar separado. No se añaden permisos ni vista privada nueva. Se conserva la confirmación de retirada al editar published y la confirmación de eliminación.
+- Trazabilidad: app/mis-propiedades/page.tsx → PropertyActionDisclosure, ManagePropertyActions(compact), DeletePropertyButton(compact), SharePropertyButton/OwnPropertyCover sin cambios → mismas APIs/BD/RLS. CSS acotado a property-workspace/own-property-*; sin dependencia nueva. Prueba de huella confirma idéntico el bloque servidor de identidad/consultas/cálculos/firma; render sintético cubre edición compacta en siete estados y cuenta inhabilitada.
+- 206 pruebas PASS (incluyen 49 UI),31 HTTP anónimas PASS,lint/tipos/build/preflight/diff-check PASS;0fallos/0skips. El build es local de producción conectado exclusivamente al QRIH STAGING configurado, no un deploy. Warnings Node preexistentes no se silenciaron.
+
+| Ancho | Primera tarjeta desde inicio | Ancho tarjeta | Filas de acciones principales por tarjeta | Overflow body |
+| --- | --- | --- | --- | --- |
+| 375 | 451px (antes1947) | 343px (antes277) | 1 / 1 | No |
+| 768 | 435px | 340px | 1 / 1 | No |
+| 1024 | 379px | 468px | 1 / 1 | No |
+| 1440 | 310px (antes1122) | 546px | 1 / 1 | No |
+
+Mediciones sobre las mismas dos propiedades sintéticas existentes y sesión legítima; títulos largos/no extrapolar alturas a todo registro. A375px alturas553/661px frente a863/1061 anteriores. A320px comprobación adicional sin overflow, con wrap permitido. Más abre/cierra,Tab llega a Duplicar y Escape cierra/devuelve foco; rendimiento/preferencias abren con teclado sin activar el toggle ni guardar. Pestañas de requerimientos/oportunidades revisadas en lectura. Capturas escritorio/móvil fuera de Git. No se ejecutaron eliminar,duplicar,retirar,compartir,guardados ni nuevas aceptaciones legales.
+
+**IMPLEMENTADO / VALIDADO LOCAL ACOTADO / ACEPTACIÓN HUMANA Y RC PENDIENTES.** Inventario,ficha y formulario mantienen los hallazgos de jerarquía identificados en la revisión UX posterior; no se afirma corregido todo el sitio ni se cambian los límites de NO-GO del rediseño, AUD043 y AUD018.
+
 Referencia gráfica recibida e inspeccionada el20oct2026: archivo AVIF aportado por el usuario,740×528. Se decodificó localmente aPNG únicamente para inspección; no se incorpora el diseño ajeno como imagen del producto. Sustituye el bloqueo por referencia ausente del [diagnóstico inicial](PRELAUNCH_UI_AUDIT.md), que conserva su fecha/evidencia.
 
 **SIETE BLOQUES IMPLEMENTADOS / VALIDACIÓN LOCAL ACOTADA / NO-GO hasta aceptación del nuevoRC.** Rama `feature/prelaunch-ui-review`; base del diagnóstico `a558807`. Sin push, deploy, migraciones, cambiosRLS/permisos/propiedades ni producción/main. Única escritura STAGING: fila de configuración AUD-044 expresamente autorizada, descrita debajo. El GO comercial anterior no valida este código.
@@ -104,3 +171,25 @@ Con la sesión admin introducida por el usuario: `/admin`375/768/1024/1440 sin o
 Revisión actual en localhost:3108 (dev); las capturas anteriores de3107 conservan la comparación, sin depender de que aquel servidor siga activo. No iniciar correos/callbacks desde3108: no se añadió a la allowlist de Supabase. Para la aceptación Auth se usará un origen local ya autorizado. No realizar nuevos guardados/contactos/moderación o altas reales para comprobar estilos.
 
 Comparar layouts primero, conservar sidebar sólo para gestión en escritorio amplio y navegación adaptable en tableta/móvil. Ficha comercial fuera del dashboard. Administrador se determina en servidor con los permisos existentes; no inferirlo de user_metadata ni concederlo desde la interfaz. Al final: nuevo build/preflight local y regresión completa, después autorización nueva para RC de Netlify. Hasta entonces NO-GO visual.
+
+### Formato visual centralizado de precios — 21oct2026
+
+Única salida visual en lib/property-price.ts: símbolo $ para MXN/USD, código una sola vez, espacio antes de m², /mes para Renta y sin ceros decimales innecesarios. Miles con coma; se mantiene toda precisión significativa, sin Number/redondeo/conversión. Venta conserva ausencia de mensualidad. Cálculo decimal BigInt, filtros, matching, valores/monedas/unidades permanecen iguales.
+
+Consumidores existentes: PropertyCard (inicio/inventario/catálogo de asesor), Mis propiedades/requerimientos/oportunidades/solicitudes, busco-bodega, detalle público, AdminPropertiesTable/admin/asesor administrativo, CommercialPropertySheet (ficha compartida) y PDF. Admin detalle usa ahora el formato común también en su campo de precio mostrado readonly y en el antes/después de Precio; comparación de cambios sigue usando valores originales. No se reescribe el registro histórico.
+
+Separación explícita de persistencia: propertyPriceForStorage conserva exactamente salida previa de price_display en PublicarForm, property-save-server y actualización administrativa. Esas rutas cambian sólo import/función de formato, no validación, payload numérico, unidad o moneda. No se ejecutó ninguna escritura real. No se editan descripciones libres ni textos históricos arbitrarios para sustituir cifras que podrían no ser precios estructurados.
+
+Anuncios heredados con unidad ausente mantienen la protección de no calcular total. Si su texto tiene estructura monetaria reconocible se normaliza sólo visualmente, conservando unidad explícita y convención Renta/mes; no se deduce unidad de superficie ni se escribe en BD. Textos arbitrarios o separadores inválidos conservan fallback anterior; moneda ausente continúa Moneda no definida. No afirmar saneados datos incompletos ni inferirlos.
+
+232 pruebas PASS (incluidos los cuatro ejemplos exactos, precisión larga, ceros finales, multiplicación decimal, ventas, moneda/unidad faltante, render real de tarjeta/tabla/ficha y persistencia previa intacta). Lint, tipos, build y preflight PASS. Navegador local: seis precios de tarjetas, todos con nueva sintaxis; seis fotos cargadas. PDF público leído desde localhost: precio anunciado `$6.5 USD m²/mes`, total `$73,788 USD/mes`; texto extraído y primera página renderizada/inspeccionada sin solapamiento en precios. El primer intento de Poppler falló por fontconfig del runtime; se usó la configuración local existente y render pasó, sin cambiar PDF ni dependencias. Resto de páginas sin cambios de layout; no nueva certificación integral de todas las pantallas/roles. Capturas prices-final-cards.png y prices-final-pdf-page1.png y copia de lectura prices-final-piq.pdf fuera de Git. Sin datos, migraciones, configuración, commit/push ni deploy; NO-GO del nuevo RC hasta aceptación y autorización conservado.
+
+### Círculos decorativos detrás del texto — 21oct2026
+
+Corrección acotada en globals.css: cada home-capability-card crea contexto aislado; su ::after usa z-index -1 y pointer-events none. La decoración sigue sobre el fondo pero detrás de títulos, párrafos, iconos y enlaces. Sin cambios de geometría, contenido ni destinos. Prueba de regresión CSS añadida: 225 pruebas (61 UI), lint y build PASS. Navegador local confirma los estilos calculados en las tres tarjetas; captura home-circles-behind-text.png fuera de Git. Sin datos, commit/push ni deploy.
+
+### Plantilla editable de descripción — 21oct2026
+
+PublicarForm inicializa únicamente el textarea de alta nueva con la plantilla solicitada (26 líneas no vacías, agrupadas por condiciones, superficies, servicios y contrato). `defaultValue` permite completar o borrar libremente; no existen handlers de foco/clic que repongan o vacíen el texto. Edición/duplicación no se modifican y siguen mostrando la descripción persistida. No hay autocompletado por valores de otros campos ni afirmación automática de características: el usuario debe revisar el contenido antes de enviarlo.
+
+224 pruebas (60 UI), lint/tipos/build/preflight PASS. Contrato del formulario actualizado sólo por el nuevo defaultValue autorizado; prueba dedicada del literal, textarea editable y descripción original de edición. Revisión independiente en localhost: contenido permanece al clicar y texto modificado permanece al cambiar operación; prueba descartada sin enviar formulario. Sin cambios de datos, SQL, permisos, configuración, commit/push o deploy. Servidor local reiniciado con build nuevo. Captura `publish-description-template.png` fuera de Git. Aceptación visual y nuevo RC remoto pendientes.
