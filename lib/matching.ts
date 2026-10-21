@@ -134,6 +134,7 @@ export function rankDemandsForProperty<T extends MatchingDemand>(
   demands: T[]
 ): RankedDemand<T>[] {
   return demands
+    .filter((demand) => isSurfaceInDemandRange(property, demand))
     .map((demand) => ({
       demand,
       result: calculateMatch(property, demand),
@@ -146,9 +147,23 @@ export function rankPropertiesForDemand<T extends MatchingProperty>(
   properties: T[]
 ): RankedProperty<T>[] {
   return properties
+    .filter((property) => isSurfaceInDemandRange(property, demand))
     .map((property) => ({
       property,
       result: calculateMatch(property, demand),
     }))
     .sort((a, b) => b.result.total - a.result.total)
+}
+
+// A declared surface range is an eligibility constraint, not a scoring bonus.
+// Leave the existing score intact for ordering eligible suggestions and SQL parity.
+function isSurfaceInDemandRange(property: MatchingProperty, demand: MatchingDemand) {
+  const { area_min: min, area_max: max } = demand
+  if (min == null && max == null) return true
+  if ((min != null && (!Number.isFinite(min) || min < 0))
+    || (max != null && (!Number.isFinite(max) || max < 0))
+    || (min != null && max != null && min > max)) return false
+  const area = property.surface_m2
+  if (area == null || !Number.isFinite(area) || area < 0) return false
+  return (min == null || area >= min) && (max == null || area <= max)
 }

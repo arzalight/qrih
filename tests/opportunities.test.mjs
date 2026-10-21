@@ -3,6 +3,49 @@ import { readFileSync } from 'node:fs'
 import { registerHooks, stripTypeScriptTypes } from 'node:module'
 import { after, test } from 'node:test'
 import babel from '@babel/core'
+import { calculateMatch, rankDemandsForProperty, rankPropertiesForDemand } from '../lib/matching.ts'
+
+const matchingDemand = { operation: 'Renta', zone_general: 'El Marqués', zone: 'El Marqués', area_min: 234, area_max: 234 }
+const matchingProperty = { operation: 'Renta', zone_general: 'El Marqués', zone: 'El Marqués' }
+test('matching: reproduce falsos positivos 90/5440/5511m² y los excluye antes del top3 para 234m²', () => {
+  assert.equal(calculateMatch({ ...matchingProperty, surface_m2: 5440 }, matchingDemand).total, 70)
+  assert.ok(calculateMatch({ ...matchingProperty, surface_m2: 90 }, matchingDemand).total >= 75)
+  const candidates = [90, 5440, 5511, 234].map(surface_m2 => ({ ...matchingProperty, surface_m2 }))
+  const ranked = rankPropertiesForDemand(matchingDemand, candidates)
+  assert.deepEqual(ranked.map(entry => entry.property.surface_m2), [234])
+  assert.equal(ranked[0].result.total, calculateMatch(candidates[3], matchingDemand).total)
+  assert.deepEqual(rankPropertiesForDemand(matchingDemand, candidates.slice(0, 3)), [])
+})
+for (const [bounds, expected] of [
+  [{ area_min: 200, area_max: 300 }, [200, 234, 300]],
+  [{ area_min: 234, area_max: null }, [234, 300, 5440]],
+  [{ area_min: null, area_max: 234 }, [90, 200, 234]],
+]) {
+  test(`matching: extremos inclusivos y rango abierto ${JSON.stringify(bounds)}`, () => {
+    const areas = [90, 200, 234, 300, 5440]
+    const ranked = rankPropertiesForDemand({ ...matchingDemand, ...bounds }, areas.map(surface_m2 => ({ ...matchingProperty, surface_m2 })))
+    assert.deepEqual(ranked.map(entry => entry.property.surface_m2).sort((a, b) => a - b), expected)
+  })
+}
+test('matching: con rango no fabrica compatibilidad para superficie ausente o no finita', () => {
+  for (const surface_m2 of [null, undefined, NaN, Infinity, -1]) {
+    assert.deepEqual(rankPropertiesForDemand(matchingDemand, [{ ...matchingProperty, surface_m2 }]), [])
+  }
+  for (const bounds of [{ area_min: 300, area_max: 200 }, { area_min: NaN }, { area_max: Infinity }, { area_min: -1 }]) {
+    assert.deepEqual(rankPropertiesForDemand({ ...matchingDemand, ...bounds }, [{ ...matchingProperty, surface_m2: 234 }]), [])
+  }
+})
+test('matching: sin rango conserva clasificación y puntuaciones previas, sin tolerancia o moneda inventadas', () => {
+  const demand = { ...matchingDemand, area_min: null, area_max: null }
+  const properties = [90, 5440, null].map(surface_m2 => ({ ...matchingProperty, surface_m2 }))
+  const expected = properties.map(property => ({ property, result: calculateMatch(property, demand) }))
+    .sort((a, b) => b.result.total - a.result.total)
+  assert.deepEqual(rankPropertiesForDemand(demand, properties), expected)
+})
+test('matching: ranking inverso de administración respeta el mismo rango de superficie', () => {
+  const demands = [matchingDemand, { ...matchingDemand, area_min: 5000, area_max: 6000 }]
+  assert.deepEqual(rankDemandsForProperty({ ...matchingProperty, surface_m2: 5440 }, demands).map(entry => entry.demand), [demands[1]])
+})
 
 registerHooks({ resolve(specifier, context, nextResolve) {
   if (specifier === '@/lib/supabase-server') return {
