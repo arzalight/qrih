@@ -42,7 +42,7 @@ export default async function Home() {
       .order('featured', { ascending: false })
       .order('featured_priority', { ascending: true, nullsFirst: false })
       .order('created_at', { ascending: false })
-      .limit(3)
+      .limit(6)
 
     if (error) {
       console.warn('QRIH_APP_PAGE_45_FAILED')
@@ -104,16 +104,14 @@ export default async function Home() {
       </section>
 
       <main>
-        <div className="head">
-          <div>
-            <small>SELECCIÓN QRIH</small>
-            <h2>Espacios que mueven industria</h2>
-          </div>
+        <small>SELECCIÓN QRIH</small>
+        <div className="head home-selection__heading">
+          <h2>Espacios que mueven industria</h2>
           <Link href="/inventario">Ver inventario completo →</Link>
         </div>
 
         {properties.length > 0 ? (
-          <div className="cards">
+          <div className="cards home-selection__cards">
             {properties.map((property) => (
               <PropertyCard
                 key={property.id}
@@ -160,17 +158,6 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="band">
-        <div>
-          <small>NO TE CONFORMES CON LO DISPONIBLE</small>
-          <h2>¿Buscas algo más específico?</h2>
-          <p>
-            Comparte tu requerimiento. Nuestro equipo industrial lo convierte
-            en oportunidades concretas.
-          </p>
-        </div>
-        <Link href="/busco-bodega">BUSCO UNA BODEGA →</Link>
-      </section>
     </>
   )
 }

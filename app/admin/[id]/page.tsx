@@ -1,6 +1,6 @@
 import { Header } from '@/components/Header'
 import { PriceCurrencySelect } from '@/components/PriceCurrencySelect'
-import { isPriceCurrency, parsePriceInput, propertyPrice } from '@/lib/property-price'
+import { isPriceCurrency, parsePriceInput, propertyPrice, propertyPriceForStorage, type PricedProperty } from '@/lib/property-price'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
@@ -104,8 +104,8 @@ function getChangedFields(
     .map(({ key, label }) => ({
       key,
       label,
-      before: formatComparisonValue(previousData[key]),
-      after: formatComparisonValue(currentData[key]),
+      before: key === 'price_display' ? propertyPrice(previousData as PricedProperty) : formatComparisonValue(previousData[key]),
+      after: key === 'price_display' ? propertyPrice(currentData as PricedProperty) : formatComparisonValue(currentData[key]),
     }))
 }
 
@@ -221,7 +221,7 @@ async function updateProperty(formData: FormData) {
 
   if (!formData.has('price_unit')) throw new Error('Selecciona una unidad antes de guardar; no se eliminará la unidad heredada automáticamente.')
   if (!isPriceCurrency(updates.price_currency)) throw new Error('Selecciona MXN o USD.')
-  updates.price_display = propertyPrice(updates)
+  updates.price_display = propertyPriceForStorage(updates)
   if (!updates.title || !updates.operation || !updates.zone_general || !updates.zone) {
     throw new Error('Faltan campos obligatorios para guardar la propiedad.')
   }
@@ -1130,7 +1130,7 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
             <label htmlFor="admin-field-0-4"><strong>Precio mostrado (calculado al guardar)</strong></label>
             <input id="admin-field-0-4"
               name="price_display"
-              defaultValue={property.price_display}
+              defaultValue={propertyPrice(property)}
               readOnly
               required
               style={{ width: '100%', padding: '10px', marginTop: '6px' }}

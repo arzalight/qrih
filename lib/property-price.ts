@@ -28,31 +28,52 @@ export function parsePriceInput(value: unknown): string | null {
   if (!d || d.n <= BigInt(0) || d.n > BigInt('1000000000000') * power(d.scale)) return null
   return decimalText(d.n, d.scale)
 }
-function money(value: string, currency: PriceCurrency) {
+function money(value: string, currency: PriceCurrency, storedFormat: boolean) {
   const [integer, fraction = ''] = value.split('.')
   const grouped = integer.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-  const cents = fraction ? `.${fraction.padEnd(2, '0')}` : ''
-  return `${currency === 'USD' ? 'US$' : '$'}${grouped}${cents} ${currency}`
+  const cents = fraction ? `.${storedFormat ? fraction.padEnd(2, '0') : fraction}` : ''
+  return `${storedFormat && currency === 'USD' ? 'US$' : '$'}${grouped}${cents} ${currency}`
 }
-export function propertyPrice(property: PricedProperty, total = false): string {
+// Normalize recognizable legacy announcements for display only, preserving their
+// explicit unit and existing Renta/month convention. Unknown units are never
+// inferred from operation or area.
+function legacyAnnouncement(property: PricedProperty, storedFormat: boolean): string {
+  const text = property.price_display || ''
+  if (storedFormat) return `${text} (${property.price_currency})`
+  const match = /^(?:US\$|\$)?\s*((?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?)\s*(?:MXN|USD)?\s*(\/?m[²2])?(\/mes)?\s*(?:\(?\s*(?:MXN|USD)\s*\)?)?$/i.exec(text.trim())
+  const d = match && decimal(match[1].replaceAll(',', ''))
+  if (!match || !d || !isPriceCurrency(property.price_currency)) return `${text} (${property.price_currency})`
+  return money(decimalText(d.n, d.scale), property.price_currency, false)
+    + (match[2] ? ' m²' : '') + (match[3] || (property.operation?.toLowerCase() === 'renta' ? '/mes' : ''))
+}
+function formatPropertyPrice(property: PricedProperty, total: boolean, storedFormat: boolean): string {
   if (!isPriceCurrency(property.price_currency)) return 'Moneda no definida'
   const d = decimal(property.price_value_text ?? property.price_value)
-  if (!d) return property.price_display ? `${property.price_display} (${property.price_currency})` : 'Consultar'
+  if (!d) return property.price_display ? legacyAnnouncement(property, storedFormat) : 'Consultar'
   const normalizedUnit = (property.price_unit || '').trim().toLowerCase()
   if (!['m2', 'm²', 'total'].includes(normalizedUnit)) {
     // Missing legacy units are unknown, not an implicit total/month amount.
     // Preserve the original announcement; never label it as a calculated total.
     if (total) return 'Consultar unidad de precio'
-    return property.price_display ? `${property.price_display} (${property.price_currency})` : 'Consultar unidad de precio'
+    return property.price_display ? legacyAnnouncement(property, storedFormat) : 'Consultar unidad de precio'
   }
   const perArea = ['m2', 'm²'].includes(normalizedUnit)
   const area = total && perArea ? decimal(property.total_area) : null
   if (total && perArea && !area) return 'Consultar'
   const amount = area ? decimalText(d.n * area.n, d.scale + area.scale) : decimalText(d.n, d.scale)
-  const unit = perArea && !total ? '/m²' : ''
+  const unit = perArea && !total ? (storedFormat ? '/m²' : ' m²') : ''
   // Preserve the portal's existing Renta/month convention; Venta has no period.
   const period = property.operation?.toLowerCase() === 'renta' ? '/mes' : ''
-  return money(amount, property.price_currency) + unit + period
+  return money(amount, property.price_currency, storedFormat) + unit + period
+}
+
+export function propertyPrice(property: PricedProperty, total = false): string {
+  return formatPropertyPrice(property, total, false)
+}
+
+// Visual changes must not alter price_display produced by existing writes.
+export function propertyPriceForStorage(property: PricedProperty): string {
+  return formatPropertyPrice(property, false, true)
 }
 
 export function inventoryPriceFilters(query: { currency?: string; price_min?: string; price_max?: string; price_unit?: string; operation?: string }) {

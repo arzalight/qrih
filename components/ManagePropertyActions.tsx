@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-export function ManagePropertyActions({ propertyId, status, disabled }: { propertyId: string; status: string; disabled: boolean }) {
+export function ManagePropertyActions({ propertyId, status, disabled, compact = false }: { propertyId: string; status: string; disabled: boolean; compact?: boolean }) {
   const router = useRouter()
   const [confirming, setConfirming] = useState(false)
   const [error, setError] = useState('')
@@ -30,11 +30,12 @@ export function ManagePropertyActions({ propertyId, status, disabled }: { proper
     } catch { setError('No pudimos confirmar el retiro. Recarga Mis propiedades antes de reintentar.') }
     finally { busy.current = false; setLoading(false) }
   }
-  return <div className="property-management-actions">
+  if (compact && (disabled || (!editable && status !== 'published'))) return null
+  return <div className={`property-management-actions${compact ? ' property-management-actions--compact' : ''}`}>
     {editable && !disabled ? <Link className="property-action" href={`/mis-propiedades/${propertyId}/editar`}>Editar</Link>
       : <button type="button" disabled={disabled || status !== 'published' || loading} onClick={() => setConfirming(true)}>Editar</button>}
-    {!disabled && <Link className="property-action" href={`/publicar?duplicar=${propertyId}`}>Duplicar</Link>}
-    {!editable && status !== 'published' && <small>La edición no está disponible en este estado.</small>}
+    {!disabled && !compact && <Link className="property-action" href={`/publicar?duplicar=${propertyId}`}>Duplicar</Link>}
+    {!compact && !editable && status !== 'published' && <small>La edición no está disponible en este estado.</small>}
     <dialog ref={dialog} onCancel={event => { if (loading) event.preventDefault(); else setConfirming(false) }}
       onClose={() => setConfirming(false)} aria-labelledby={`edit-title-${propertyId}`} className="property-edit-confirmation">
       <h3 id={`edit-title-${propertyId}`}>Editar propiedad publicada</h3>

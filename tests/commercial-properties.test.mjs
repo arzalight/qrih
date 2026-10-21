@@ -36,7 +36,7 @@ registerHooks({
     return next(url, context)
   },
 })
-const { propertyPrice, parsePriceInput, inventoryPriceFilters } = await import('../lib/property-price.ts')
+const { propertyPrice, propertyPriceForStorage, parsePriceInput, inventoryPriceFilters } = await import('../lib/property-price.ts')
 const { canShareProperty, presentationLinks } = await import('../lib/property-sharing.ts')
 const { loadCommercialProperty, COMMERCIAL_PROPERTY_COLUMNS } = await import('../lib/commercial-property-server.ts')
 const { CommercialPropertySheet } = await import('../components/CommercialPropertySheet.tsx')
@@ -46,27 +46,65 @@ const base = { slug: 'synthetic-property', title: 'Propiedad sintética', zone: 
   location_visibility: 'zone', operation: 'Renta', price_value: '7.50', price_currency: 'USD', price_unit: 'm2', total_area: '5000' }
 
 for (const [value, currency, unit, expected] of [
-  ['135', 'MXN', 'm2', '$135 MXN/m²/mes'], ['7.50', 'USD', 'm2', 'US$7.50 USD/m²/mes'],
-  ['675000', 'MXN', 'total', '$675,000 MXN/mes'], ['37500', 'USD', 'total', 'US$37,500 USD/mes'],
+  ['135', 'MXN', 'm2', '$135 MXN m²/mes'], ['7.50', 'USD', 'm2', '$7.5 USD m²/mes'],
+  ['675000', 'MXN', 'total', '$675,000 MXN/mes'], ['37500', 'USD', 'total', '$37,500 USD/mes'],
+  ['6.50', 'USD', 'm2', '$6.5 USD m²/mes'], ['121.00', 'MXN', 'm2', '$121 MXN m²/mes'],
+  ['32500.00', 'USD', 'total', '$32,500 USD/mes'], ['605000.00', 'MXN', 'total', '$605,000 MXN/mes'],
 ]) test(`moneda/formato exacto ${expected}`, () => {
   assert.equal(propertyPrice({ ...base, price_value: value, price_currency: currency, price_unit: unit }), expected)
 })
 test('decimal: multiplicación exacta, venta sin mensualidad y moneda desconocida sin inferir', () => {
-  assert.equal(propertyPrice({ ...base, price_value: '0.10', total_area: '0.2' }, true), 'US$0.02 USD/mes')
-  assert.equal(propertyPrice({ ...base, operation: 'Venta', price_unit: 'total' }), 'US$7.50 USD')
+  assert.equal(propertyPrice({ ...base, price_value: '0.10', total_area: '0.2' }, true), '$0.02 USD/mes')
+  assert.equal(propertyPrice({ ...base, operation: 'Venta', price_unit: 'total' }), '$7.5 USD')
   assert.equal(propertyPrice({ ...base, price_currency: null }), 'Moneda no definida')
   assert.equal(propertyPrice({ ...base, price_value: null, price_display: 'Consultar precio' }), 'Consultar precio (USD)')
-  assert.equal(propertyPrice(base, true), 'US$37,500 USD/mes')
+  assert.equal(propertyPrice(base, true), '$37,500 USD/mes')
   assert.equal(propertyPrice({ ...base, price_value: 999999999999.1, price_value_text: '999999999999.1234567', price_unit: 'total' }),
-    'US$999,999,999,999.1234567 USD/mes', 'Priorizar decimal textual de PostgreSQL sobre JSON number')
+    '$999,999,999,999.1234567 USD/mes', 'Priorizar decimal textual de PostgreSQL sobre JSON number')
 })
 test('unidad heredada vacía/desconocida conserva anuncio y no inventa un total', () => {
   for (const unit of [null, undefined, '', 'desconocida']) {
     const property = { ...base, price_unit: unit, price_display: '$7.50/m²' }
-    assert.equal(propertyPrice(property), '$7.50/m² (USD)')
+    assert.equal(propertyPrice(property), '$7.5 USD m²/mes')
     assert.equal(propertyPrice(property, true), 'Consultar unidad de precio')
     assert.equal(propertyPrice({ ...property, price_display: null }), 'Consultar unidad de precio')
   }
+})
+test('formato visual no cambia persistencia, entradas ni cálculo decimal', () => {
+  const property = Object.freeze({ ...base, price_value: '6.5000', total_area: '5000' })
+  assert.equal(propertyPrice(property), '$6.5 USD m²/mes')
+  assert.equal(propertyPrice(property, true), '$32,500 USD/mes')
+  assert.equal(propertyPriceForStorage(property), 'US$6.50 USD/m²/mes')
+  assert.equal(property.price_value, '6.5000')
+  assert.equal(propertyPrice({ ...base, price_value: '121', total_area: '5000', price_currency: 'MXN' }, true), '$605,000 MXN/mes')
+  assert.equal(propertyPrice({ ...base, price_value: '1.2300400' }), '$1.23004 USD m²/mes')
+  assert.equal(propertyPrice({ ...base, operation: 'Venta' }), '$7.5 USD m²')
+})
+test('anuncios heredados reconocibles: moneda una vez, renta mensual sin inferir unidad', () => {
+  for (const text of ['US$6.50 USD/m²/mes', '$6.50/m²/mes (USD)', '$6.50 USD m²/mes']) {
+    // Structured units remain authoritative when present.
+    assert.equal(propertyPrice({ ...base, price_value: '6.50', price_display: text }), '$6.5 USD m²/mes')
+  }
+  assert.equal(propertyPrice({ ...base, price_value: null, price_display: 'US$32,500.00 USD/mes' }), '$32,500 USD/mes')
+  assert.equal(propertyPrice({ ...base, price_value: null, price_display: '$6.50 USD m²/mes' }), '$6.5 USD m²/mes')
+  assert.equal(propertyPrice({ ...base, price_value: null, price_display: '$1,2/m²' }), '$1,2/m² (USD)', 'No reinterpretar separadores inválidos')
+})
+test('precio centralizado en todas las presentaciones; escritura separada del formato visual', () => {
+  for (const file of ['components/PropertyCard.tsx', 'components/AdminPropertiesTable.tsx',
+    'components/CommercialPropertySheet.tsx', 'app/mis-propiedades/page.tsx',
+    'app/mis-propiedades/[id]/solicitudes/page.tsx', 'app/busco-bodega/page.tsx',
+    'app/bodegas/[slug]/page.tsx', 'app/admin/page.tsx', 'app/admin/[id]/page.tsx',
+    'app/admin/asesores/[id]/page.tsx', 'app/api/bodegas/[slug]/pdf/route.tsx']) {
+    const source = readFileSync(new URL(file, root), 'utf8')
+    assert.match(source, /import \{[^}]*\bpropertyPrice\b[^}]*\} from '@\/lib\/property-price'/, file)
+    assert.match(source, /propertyPrice\(/, file)
+  }
+  for (const file of ['app/publicar/PublicarForm.tsx', 'lib/property-save-server.ts']) {
+    assert.match(readFileSync(new URL(file, root), 'utf8'), /propertyPriceForStorage as propertyPrice/)
+  }
+  const admin = readFileSync(new URL('app/admin/[id]/page.tsx', root), 'utf8')
+  assert.match(admin, /updates.price_display = propertyPriceForStorage\(updates\)/)
+  assert.match(admin, /name="price_display"\s+defaultValue=\{propertyPrice\(property\)\}/)
 })
 test('precio de escritura: string decimal, límite y rechazo de floats implícitos', () => {
   assert.equal(parsePriceInput('007.50'), '7.5')
@@ -127,8 +165,8 @@ test('no publicada/suspendida por frontera BD: ninguna firma; errores sin fallba
 })
 test('HTML real: precio compartido, dirección sólo autorizada y sin contacto/captación/admin', () => {
   const html = renderToStaticMarkup(createElement(CommercialPropertySheet, { property: base, images: [] }))
-  assert.match(html, /US\$7.50 USD\/m²\/mes/)
-  assert.match(html, /US\$37,500 USD\/mes/)
+  assert.match(html, /\$7\.5 USD m²\/mes/)
+  assert.match(html, /\$37,500 USD\/mes/)
   assert.doesNotMatch(html, /PRIVATE ADDRESS|<footer|<nav|<form|mailto:|tel:|\/admin|solicitar contacto/i)
   const visible = renderToStaticMarkup(createElement(CommercialPropertySheet, { property: { ...base, location_visibility: 'address', title: '<script>bad</script>' }, images: [] }))
   assert.match(visible, /PRIVATE ADDRESS/); assert.doesNotMatch(visible, /<script>bad/)

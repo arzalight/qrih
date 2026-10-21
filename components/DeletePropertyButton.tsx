@@ -5,8 +5,10 @@ import { useRouter } from 'next/navigation'
 
 export function DeletePropertyButton({
   propertyId,
+  compact = false,
 }: {
   propertyId: string
+  compact?: boolean
 }) {
   const router = useRouter()
   const [deleting, setDeleting] = useState(false)
@@ -58,15 +60,15 @@ export function DeletePropertyButton({
         onClick={handleDelete}
         disabled={deleting}
         style={{
-          width: '180px',
+          width: compact ? 'auto' : '180px',
           minHeight: '44px',
           borderRadius: '10px',
-          border: '1px solid #d1d5db',
+          border: compact ? '1px solid transparent' : '1px solid #d1d5db',
           background: deleting ? '#f3f4f6' : "var(--surface)",
           color: "var(--danger)",
           fontWeight: 700,
           cursor: deleting ? 'not-allowed' : 'pointer',
-          padding: '10px 16px',
+          padding: compact ? '10px 0' : '10px 16px',
         }}
       >
         {deleting ? 'Eliminando...' : 'Eliminar'}

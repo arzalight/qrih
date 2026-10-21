@@ -181,7 +181,6 @@ export function Header({ administration = false }: { administration?: boolean })
     ['/mis-propiedades', 'Mi panel'], ['/inventario', 'Inventario público'],
   ] : workspace ? [
     ['/mis-propiedades', 'Mi panel'], ['/publicar', 'Subir propiedad'],
-    ['/notificaciones', 'Notificaciones'], ['/perfil', 'Mi perfil'],
     ['/inventario', 'Inventario'], ['/busco-bodega', 'Busco una bodega'],
   ] : [
     ['/inventario', 'Inventario'], ['/busco-bodega', 'Busco una bodega'],
@@ -203,30 +202,22 @@ export function Header({ administration = false }: { administration?: boolean })
       <Link className="brand" href="/" aria-label="QRO Industrial Hub · Inicio">
         QRO INDUSTRIAL HUB <small>Q R I H</small>
       </Link>
-      <button ref={menuToggleRef} type="button" className="mobile-menu-toggle"
-        aria-expanded={menuOpen} aria-controls="site-navigation"
-        onClick={() => { setMenuOpen(current => !current); setOpen(false) }}>
-        <span aria-hidden="true">{menuOpen ? '×' : '☰'}</span> {menuOpen ? 'Cerrar menú' : 'Menú'}
-      </button>
-      <nav id="site-navigation" className="site-nav" aria-label={administration ? 'Administración' : 'Principal'}>
-        {workspace && <span className="site-nav__label">{administration ? 'Administración' : 'Tu espacio de trabajo'}</span>}
-        {links.map(([href, label]) => (
-          <Link key={href} href={href} onClick={closeNavigation}
-            aria-current={isActive(href) ? 'page' : undefined}
-            className={!workspace && href === '/busco-bodega' ? 'demand' : undefined}>
-            {workspace && <span className="site-nav__marker" aria-hidden="true">◇</span>}
-            {label}
-          </Link>
-        ))}
-        {!userEmail && !workspace && <Link className="header-signin" href="/login" onClick={closeNavigation}>Iniciar sesión</Link>}
+      <div className="header-controls">
+        <button ref={menuToggleRef} type="button" className="mobile-menu-toggle"
+          aria-expanded={menuOpen} aria-controls="site-navigation" aria-label={menuOpen ? 'Cerrar menú' : 'Menú'}
+          title={menuOpen ? 'Cerrar menú' : 'Menú'}
+          onClick={() => { setMenuOpen(current => !current); setOpen(false) }}>
+          <span aria-hidden="true">{menuOpen ? '×' : '☰'}</span><span aria-hidden="true">Menú</span>
+        </button>
         {userEmail && (
           <div ref={profileMenuRef} className="profile-menu">
             <button ref={profileToggleRef} type="button" className="profile-menu__toggle"
-              aria-expanded={open} aria-controls="profile-options" onClick={() => setOpen(current => !current)}>
-              <span className="profile-menu__avatar" aria-hidden="true">{userName.slice(0, 1).toUpperCase() || 'Q'}</span>
-              <span>Mi cuenta</span>
+              aria-expanded={open} aria-controls="profile-options" aria-label="Mi cuenta" title="Mi cuenta"
+              onClick={() => { setOpen(current => !current); setMenuOpen(false) }}>
+              <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <circle cx="12" cy="8" r="4" /><path d="M4 21v-2a8 8 0 0 1 16 0v2" />
+              </svg>
               {unreadCount > 0 && <span className="notification-count"><span className="sr-only">Notificaciones sin leer: </span>{unreadCount}</span>}
-              <span aria-hidden="true">{open ? '▴' : '▾'}</span>
             </button>
             {open && (
               <div id="profile-options" className="profile-menu__popover">
@@ -250,6 +241,18 @@ export function Header({ administration = false }: { administration?: boolean })
             )}
           </div>
         )}
+      </div>
+      <nav id="site-navigation" className="site-nav" aria-label={administration ? 'Administración' : 'Principal'}>
+        {workspace && <span className="site-nav__label">{administration ? 'Administración' : 'Tu espacio de trabajo'}</span>}
+        {links.map(([href, label]) => (
+          <Link key={href} href={href} onClick={closeNavigation}
+            aria-current={isActive(href) ? 'page' : undefined}
+            className={!workspace && href === '/busco-bodega' ? 'demand' : undefined}>
+            {label}
+          </Link>
+        ))}
+        {!userEmail && !workspace && <Link className="header-signin" href="/login" onClick={closeNavigation}>Iniciar sesión</Link>}
+
       </nav>
     </header>
   )

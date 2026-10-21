@@ -19,7 +19,8 @@ function contractAst(value) {
   return value
 }
 const formContracts = {
-  "app/publicar/PublicarForm.tsx": "05e3f3413a04c62ac5a132bacadbaea45b2f9e30bb85151c9ef04740df9e2930",
+  // Authorized change: initial editable description template, all other controls unchanged.
+  "app/publicar/PublicarForm.tsx": "6ee610ca1819905ea43be53edbc4e81925fcabd85a5c194629a684ba78ff6e1a",
   "app/mis-propiedades/[id]/editar/EditarPropiedadForm.tsx": "ec8cc447078d9ac64a79f7a52bcfc631e92bfdff3f0b7c5f917c3d270d519582",
   "app/busco-bodega/page.tsx": "d864701dbf57355dd9cd8e39c0bd872206d5b7adf99611a8a5bfa5b912b6fba1",
   "components/PropertyContactForm.tsx": "83051941b5ff19a86a319349c6ae504d2c2692b014ff834242d9660893cd5e29",
@@ -42,6 +43,35 @@ for (const [file, expected] of Object.entries(formContracts)) {
       'Mismos campos, validaciones, opciones, valores, disabled y handlers; sólo presentación autorizada')
   })
 }
+test('publicar: plantilla como valor inicial editable, no placeholder ni reinicio al enfocar', () => {
+  const source = readFileSync(new URL('app/publicar/PublicarForm.tsx', root), 'utf8')
+  const ast = astBabel.parseSync(source, { configFile: false, babelrc: false, parserOpts: { plugins: ['jsx', 'typescript'] } })
+  let template
+  let description
+  astBabel.traverse(ast, {
+    VariableDeclarator(path) {
+      if (path.node.id.name === 'INITIAL_PROPERTY_DESCRIPTION') {
+        assert.equal(path.node.init.type, 'TemplateLiteral')
+        assert.equal(path.node.init.expressions.length, 0)
+        template = path.node.init.quasis[0].value.cooked
+      }
+    },
+    JSXOpeningElement(path) {
+      if (path.node.name.name === 'textarea' && path.node.attributes.some(attr => attr.name?.name === 'name' && attr.value.value === 'description')) description = path.node
+    },
+  })
+  assert.ok(template)
+  assert.equal(template.split('\n').filter(Boolean).length, 26)
+  assert.ok(template.startsWith('Tipo de operación\nRenta $ x m2'))
+  assert.ok(template.endsWith('Tipo de contrato\nCondiciones de contrato'))
+  assert.equal(description.attributes.find(attr => attr.name?.name === 'defaultValue').value.expression.name, 'INITIAL_PROPERTY_DESCRIPTION')
+  assert.ok(!description.attributes.some(attr => ['value', 'onFocus', 'onClick', 'onBlur', 'onChange', 'readOnly'].includes(attr.name?.name)))
+  const html = renderToStaticMarkup(createElement('textarea', { name: 'description', defaultValue: template }))
+  assert.ok(html.includes('Tipo de operación\nRenta $ x m2'))
+  const edit = readFileSync(new URL('app/mis-propiedades/[id]/editar/EditarPropiedadForm.tsx', root), 'utf8')
+  assert.match(edit, /defaultValue=\{property.description \|\| ''\}/)
+  assert.doesNotMatch(edit, /INITIAL_PROPERTY_DESCRIPTION/)
+})
 test('FormField real: etiqueta persistente asociada, obligatorio sólo informativo', async () => {
   const { FormField } = await import('../components/FormField.tsx')
   const html = renderToStaticMarkup(createElement(FormField, { id: 'synthetic-price', label: 'Precio', required: true },
@@ -75,6 +105,31 @@ test('panel sin saludo personal fijo y éxito de publicación no modal ni formul
   assert.match(publish, /successNotice.current\?\.focus\(\)/)
   assert.match(publish, /role="status" aria-live="polite"/)
   assert.doesNotMatch(publish, /if \(!ready\)\s*\{\s*return null|position: 'fixed'/)
+})
+test('inicio: círculos decorativos detrás del contenido sin interceptar enlaces', () => {
+  assert.match(css, /\.home-capability-card\s*\{[^}]*isolation: isolate;/)
+  assert.match(css, /\.home-capability-card::after\s*\{[^}]*z-index: -1;[^}]*pointer-events: none;/)
+})
+test('inicio: seis propiedades conservando proyección pública, filtros, prioridad y firma autorizada', () => {
+  const source = readFileSync(new URL('app/page.tsx', root), 'utf8')
+  assert.match(source, /\.from\('properties_public'\)/)
+  assert.match(source, /\.eq\('status', 'published'\)/)
+  assert.match(source, /\.order\('featured', \{ ascending: false \}\)/)
+  assert.match(source, /\.order\('featured_priority', \{ ascending: true, nullsFirst: false \}\)/)
+  assert.match(source, /\.order\('created_at', \{ ascending: false \}\)\s*\.limit\(6\)/)
+  assert.match(source, /properties.map\(\(property\) => property.main_image_path\),\s*PROPERTY_IMAGE_TTL_SECONDS.public/)
+  assert.doesNotMatch(source, /getPublicUrl|SUPABASE_SERVICE_ROLE_KEY|createServerSupabaseClient|\.limit\(3\)/)
+})
+test('inicio: título y enlace comparten fila, CTA redundante retirada sin perder acceso a requerimientos', () => {
+  const source = readFileSync(new URL('app/page.tsx', root), 'utf8')
+  assert.match(source, /className="head home-selection__heading">\s*<h2>Espacios que mueven industria<\/h2>\s*<Link href="\/inventario">/)
+  assert.doesNotMatch(source, /className="band"|NO TE CONFORMES CON LO DISPONIBLE|¿Buscas algo más específico\?/)
+  assert.match(source, /<h3>Comparte tu requerimiento<\/h3>/)
+  assert.match(source, /href="\/busco-bodega">Busco una bodega →/)
+  assert.match(css, /\.home-selection__heading\s*\{ align-items: center;/)
+  assert.match(css, /\.home-selection__heading\s*\{ flex-direction: column; align-items: flex-start;/)
+  assert.match(source, /className="cards home-selection__cards"/)
+  assert.match(css, /\.home-selection__cards\s*\{ grid-template-columns: repeat\(3, minmax\(0, 1fr\)\);/)
 })
 test('historial administrativo: filtros visibles y asociados sin cambiar sus nombres', () => {
   const source = readFileSync(new URL('app/admin/historial/page.tsx', root), 'utf8')
@@ -125,7 +180,7 @@ const root = new URL('../', import.meta.url)
 registerHooks({
   resolve(specifier, context, next) {
     if (specifier === 'react' && context.parentURL?.startsWith('data:')) return next(new URL('../node_modules/react/index.js', import.meta.url).href, context)
-    if (specifier === 'next/navigation') return { url: 'data:text/javascript,export const usePathname=()=>globalThis.__uiPath', shortCircuit: true }
+    if (specifier === 'next/navigation') return { url: 'data:text/javascript,export const usePathname=()=>globalThis.__uiPath;export const useRouter=()=>({push(){throw Error("No navigation in SSR fixture")},refresh(){throw Error("No mutation in SSR fixture")}})', shortCircuit: true }
     if (specifier === 'next/link') return { url: 'data:text/javascript,import{createElement}from"react";export default function Link({href,children,...props}){return createElement("a",{...props,href},children)}', shortCircuit: true }
     if (specifier === '@/lib/supabase') return { url: 'data:text/javascript,export const createClient=()=>{throw Error("No network in UI fixture")}', shortCircuit: true }
     if (specifier === '@/lib/safe-navigation') return next(new URL('../lib/safe-navigation.ts', import.meta.url).href, context)
@@ -143,6 +198,137 @@ registerHooks({
   },
 })
 const { Header } = await import('../components/Header.tsx')
+const { PriceCurrencySelect } = await import('../components/PriceCurrencySelect.tsx')
+test('publicar: MXN inicial sólo en alta nueva; USD/NULL originales de edición y duplicación conservados', () => {
+  const publish = readFileSync(new URL('app/publicar/PublicarForm.tsx', root), 'utf8')
+  const edit = readFileSync(new URL('app/mis-propiedades/[id]/editar/EditarPropiedadForm.tsx', root), 'utf8')
+  assert.match(publish, /<PriceCurrencySelect value="MXN" \/>/)
+  assert.match(edit, /<PriceCurrencySelect value=\{property.price_currency\} \/>/)
+  for (const [value, expected] of [['MXN', 'MXN'], ['USD', 'USD'], [null, ''], [undefined, ''], ['', '']]) {
+    const html = renderToStaticMarkup(createElement(PriceCurrencySelect, { value }))
+    const option = [...html.matchAll(/<option\b([^>]*)>/g)].find(match => /selected=""/.test(match[1]))
+    assert.ok(option)
+    assert.equal(option[1].match(/value="([^"]*)"/)[1], expected)
+  }
+})
+test('formularios de propiedad: Municipio/Zona son etiquetas, nombres/opciones/variables siguen intactos', () => {
+  for (const [file, prefix] of [['app/publicar/PublicarForm.tsx', 'field-0'], ['app/mis-propiedades/[id]/editar/EditarPropiedadForm.tsx', 'field-1']]) {
+    const source = readFileSync(new URL(file, root), 'utf8')
+    assert.ok(source.includes(`id="${prefix}-zone_general" label="Municipio"`))
+    assert.ok(source.includes(`id="${prefix}-zone" label="Zona"`))
+    assert.match(source, /name="zone_general"/)
+    assert.match(source, /name="zone"/)
+    assert.match(source, /ZONAS_GENERALES.map/)
+    assert.match(source, /ZONAS_INDUSTRIALES_POR_ZONA\[zonaGeneral\]/)
+    assert.doesNotMatch(source, /name="municipio"|name="zona"/)
+  }
+})
+test('precio y condiciones: separación visible de56px a un tercio sin comprimir los checkboxes', () => {
+  assert.match(css, /\.price-options\s*\{[^}]*gap: calc\(56px \/ 3\);/)
+  assert.match(css, /\.price-options > \.inline-check\s*\{ margin: 0; \}/)
+  assert.match(css, /\.inline-check input\s*\{[^}]*width: 18px;[^}]*height: 18px;/)
+})
+test('Header: carga de identidad/notificaciones, lectura y signOut conservan sus handlers', () => {
+  const source = readFileSync(new URL('components/Header.tsx', root), 'utf8')
+  const ast = astBabel.parseSync(source, { configFile: false, babelrc: false, parserOpts: { plugins: ['jsx', 'typescript'] } })
+  const handlers = []
+  astBabel.traverse(ast, { FunctionDeclaration(path) {
+    if (['loadUserAndNotifications', 'handleNotificationClick', 'handleSignOut'].includes(path.node.id?.name))
+      handlers.push(contractAst(path.node))
+  } })
+  assert.equal(createHash('sha256').update(JSON.stringify(handlers)).digest('hex'), 'f34466629f6c08ca714eacccab0d9241d532ae61e61270900c637ca2f03ce42b')
+})
+test('Header: cuenta fuera de navegación, junto al control de menú, icono accesible y sin marcadores', () => {
+  const source = readFileSync(new URL('components/Header.tsx', root), 'utf8')
+  const ast = astBabel.parseSync(source, { configFile: false, babelrc: false, parserOpts: { plugins: ['jsx', 'typescript'] } })
+  let accounts = 0
+  astBabel.traverse(ast, { JSXElement(path) {
+    const className = path.node.openingElement.attributes.find(attr => attr.name?.name === 'className')?.value?.value
+    if (className !== 'profile-menu') return
+    accounts++
+    assert.equal(path.findParent(p => p.isJSXElement() && p.node.openingElement.name.name === 'nav'), null)
+    assert.ok(path.findParent(p => p.isJSXElement() && p.node.openingElement.attributes.some(attr => attr.name?.name === 'className' && attr.value?.value === 'header-controls')))
+  } })
+  assert.equal(accounts, 1)
+  assert.match(source, /aria-label="Mi cuenta" title="Mi cuenta"/)
+  assert.match(source, /<circle cx="12" cy="8" r="4"/)
+  assert.doesNotMatch(source, /◇|profile-menu__avatar/)
+  assert.doesNotMatch(source, /site-nav__marker/)
+  assert.doesNotMatch(css, /\.site-nav__marker/)
+  assert.match(css, /\.profile-menu__toggle\s*\{[^}]*width: 44px; height: 44px;/)
+})
+const { ManagePropertyActions } = await import('../components/ManagePropertyActions.tsx')
+const { PropertyActionDisclosure } = await import('../components/PropertyActionDisclosure.tsx')
+const { DeletePropertyButton } = await import('../components/DeletePropertyButton.tsx')
+
+test('panel: consultas, identidad, cálculo de métricas y firma de portadas anteriores intactos', () => {
+  const source = readFileSync(new URL('app/mis-propiedades/page.tsx', root), 'utf8')
+  const logic = source.slice(source.indexOf('  const supabase ='), source.indexOf('return (\n  <>'))
+  assert.equal(createHash('sha256').update(logic).digest('hex'), '50b26308fac424659474dd2bfb4eeb43c68ce5f381db691016914e4e5ea9f94d')
+  assert.ok(source.indexOf('own-properties__grid') < source.indexOf('Rendimiento de tus propiedades'))
+  assert.ok(source.indexOf('Preferencias de contacto') > source.indexOf("activeView === 'requirements' &&"))
+  assert.doesNotMatch(source, /width: '180px'/)
+})
+for (const status of ['draft', 'pending', 'published', 'paused', 'rejected', 'expired', 'pending_update']) {
+  test(`panel: edición compacta respeta estado ${status} y cuenta deshabilitada`, () => {
+    const props = { propertyId: 'synthetic-property', status, disabled: false, compact: true }
+    const html = renderToStaticMarkup(createElement(ManagePropertyActions, props))
+    if (['draft', 'rejected'].includes(status)) {
+      assert.match(html, /href="\/mis-propiedades\/synthetic-property\/editar"/)
+    } else if (status === 'published') {
+      assert.match(html, /<button type="button">Editar<\/button>/)
+      assert.match(html, /dejará de estar visible/)
+      assert.match(html, /Continuar editando/)
+    } else assert.equal(html, '')
+    assert.doesNotMatch(html, /Duplicar/)
+    assert.equal(renderToStaticMarkup(createElement(ManagePropertyActions, { ...props, disabled: true })), '')
+  })
+}
+test('panel: Más empieza cerrado, con controles asociados y acciones presentes pero ocultas', () => {
+  const html = renderToStaticMarkup(createElement(PropertyActionDisclosure, {
+    id: 'synthetic', title: 'Título de prueba',
+    primary: createElement('a', { href: '/solicitudes' }, 'Solicitudes'),
+  }, createElement('a', { href: '/duplicar' }, 'Duplicar')))
+  assert.match(html, /aria-expanded="false" aria-controls="property-actions-synthetic"/)
+  assert.match(html, /aria-label="Más acciones para Título de prueba"/)
+  assert.match(html, /id="property-actions-synthetic"[^>]*hidden=""/)
+  assert.match(html, /href="\/duplicar"/)
+  assert.doesNotMatch(html, /<span>Más<\/span>/)
+  assert.match(html, /title="Más acciones"/)
+})
+test('panel: siete ajustes de texto conservan acciones, datos y periodo sólo visible en rendimiento', () => {
+  const source = readFileSync(new URL('app/mis-propiedades/page.tsx', root), 'utf8')
+  assert.doesNotMatch(source, /Administra tus publicaciones|Revisa cómo autorizas|own-property-card__date|own-property-card__period|Registrada el|Ver solicitudes|· 28 días/)
+  assert.match(source, /<dt>Visto<\/dt><dd>\{viewCounts\[property.id\] \|\| 0\}/)
+  assert.ok(source.includes('href={`/mis-propiedades/${property.id}/solicitudes`}>Solicitudes</Link>'))
+  assert.match(source, /Visualizaciones, solicitudes y conversión de los últimos 28 días/)
+  assert.match(source, /<summary><span>Preferencias de contacto<\/span><\/summary>/)
+  assert.match(source, /created_at, rejection_reason/)
+  assert.match(css, /\.own-property-more-trigger\s*\{[^}]*width: 44px/)
+})
+test('panel: eliminar compacto no se ejecuta al renderizar ni cambia la confirmación existente', () => {
+  const html = renderToStaticMarkup(createElement(DeletePropertyButton, { propertyId: 'synthetic', compact: true }))
+  assert.match(html, /width:auto/)
+  assert.match(html, /type="button"/)
+  assert.match(html, />Eliminar<\/button>/)
+  const source = readFileSync(new URL('components/DeletePropertyButton.tsx', root), 'utf8')
+  assert.match(source, /window.confirm\(/)
+  assert.match(source, /if \(!confirmed\)/)
+  assert.match(source, /fetch\('\/api\/eliminar-propiedad'/)
+})
+test('requerimientos: sin título repetido ni marco exterior en ningún ancho, contenido y tag conservados', () => {
+  const source = readFileSync(new URL('app/mis-propiedades/page.tsx', root), 'utf8')
+  assert.doesNotMatch(source, /<small>REQUERIMIENTOS<\/small>/)
+  assert.doesNotMatch(source, /requirements-panel__title/)
+  assert.match(source, /className="requirements-panel" aria-label="Mis requerimientos"/)
+  assert.match(source, /className="requirement-card"/)
+  assert.match(source, /className="requirement-card__status"/)
+  assert.match(source, /request.status === 'new' \? 'Nuevo'/)
+  assert.match(css, /\.requirement-card\s*\{[^}]*background: var\(--primary-soft\)/)
+  assert.match(css, /\.requirement-card__status\s*\{[^}]*align-self: flex-start/)
+  assert.match(css, /\.requirements-panel\s*\{[^}]*padding: 0; border: 0;/)
+  assert.doesNotMatch(css, /\.requirements-panel\s*\{[^}]*display: none/)
+})
 
 const authenticationHandlers = {
   "app/login/page.tsx": {
@@ -191,8 +377,8 @@ test('ficha real independiente: sólo datos autorizados, precio exacto y galerí
   const html = renderToStaticMarkup(createElement(CommercialPropertySheet, { property,
     images: [{ url: 'https://synthetic.invalid/authorized-ephemeral-image', title: 'Portada sintética' }] }))
   assert.doesNotMatch(html, /<header|<footer|<nav|<form|Dirección privada sintética/)
-  assert.match(html, /US\$7.50 USD\/m²\/mes/)
-  assert.match(html, /US\$750 USD\/mes/)
+  assert.match(html, /\$7\.5 USD m²\/mes/)
+  assert.match(html, /\$750 USD\/mes/)
   assert.match(html, /href="\/api\/bodegas\/synthetic-sheet\/pdf"/)
   assert.match(html, /width="1200" height="800" decoding="async"/)
   assert.match(html, /Ampliar Portada sintética/)
@@ -209,7 +395,7 @@ test('tabla administrativa real: región enfocable, cabeceras, moneda, estados l
   assert.equal((html.match(/scope="col"/g) || []).length, 8)
   assert.match(html, /<caption[^>]*>Propiedades y acciones administrativas<\/caption>/)
   for (const label of ['Borrador', 'En revisión', 'Publicada', 'Pausada', 'Rechazada', 'Expirada', 'Actualización en revisión']) assert.ok(html.includes(label))
-  assert.match(html, /US\$7.50 USD\/m²\/mes/)
+  assert.match(html, /\$7\.5 USD m²\/mes/)
   assert.match(html, /Mostrando 1–35 de 36/)
   assert.match(html, /aria-label="Página 1" aria-current="page"/)
   assert.doesNotMatch(html, /Propiedad sintética 35<\/strong>/)
@@ -222,9 +408,20 @@ for (const path of ['/inventario', '/mis-propiedades', '/perfil', '/admin']) {
     const html = renderToStaticMarkup(createElement(Header))
     assert.doesNotMatch(html, /href="\/admin/)
     assert.match(html, /aria-label="Principal"/)
-    if (path !== '/admin') assert.match(html, new RegExp(`href="${path}"[^>]*aria-current="page"|aria-current="page"[^>]*href="${path}"`))
+    if (!['/admin', '/perfil'].includes(path)) assert.match(html, new RegExp(`href="${path}"[^>]*aria-current="page"|aria-current="page"[^>]*href="${path}"`))
   })
 }
+test('Header: navegación de trabajo con cuatro destinos, perfil y notificaciones permanecen en cuenta', () => {
+  globalThis.__uiPath = '/mis-propiedades'
+  const html = renderToStaticMarkup(createElement(Header))
+  const nav = html.match(/<nav\b[^>]*>[\s\S]*?<\/nav>/)?.[0]
+  assert.ok(nav)
+  for (const path of ['/mis-propiedades', '/publicar', '/inventario', '/busco-bodega']) assert.ok(nav.includes(`href="${path}"`))
+  assert.doesNotMatch(nav, /href="\/perfil"|href="\/notificaciones"|site-nav__marker/)
+  const source = readFileSync(new URL('components/Header.tsx', root), 'utf8')
+  assert.match(source, /href="\/perfil" onClick=\{closeNavigation\}>Abrir mi perfil/)
+  assert.match(source, /href="\/notificaciones" onClick=\{closeNavigation\}>Ver todas las notificaciones/)
+})
 test('Header administrativo sólo opt-in de las seis páginas tras sus guards existentes', () => {
   globalThis.__uiPath = '/admin/asesores'
   const html = renderToStaticMarkup(createElement(Header, { administration: true }))
@@ -256,7 +453,7 @@ test('tarjeta real: imagen semántica diferida, moneda/unidad y destino intactos
     price_value: '7.50', price_unit: 'm2', price_currency: 'USD', total_area: 5000, covered_area: 4000,
     main_image: 'https://synthetic.invalid/ephemeral-image', max_height: '9m', share_commission: true }
   const html = renderToStaticMarkup(createElement(PropertyCard, { property }))
-  assert.match(html, /US\$7.50 USD\/m²\/mes/)
+  assert.match(html, /\$7\.5 USD m²\/mes/)
   assert.match(html, /href="\/bodegas\/synthetic-property"/)
   assert.match(html, /<img[^>]*alt="Bodega de prueba"[^>]*loading="lazy"/)
   assert.match(html, /width="640" height="400"/)

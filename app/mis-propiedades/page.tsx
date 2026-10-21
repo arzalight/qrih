@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { PropertyActionDisclosure } from '@/components/PropertyActionDisclosure'
 import { SharePropertyButton } from '@/components/SharePropertyButton'
 import { propertyPrice } from '@/lib/property-price'
 import { Header } from '@/components/Header'
@@ -363,240 +364,108 @@ if (totalViews > 0) {
 return (
   <>
     <Header />
-    <main className="workspace-page" style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 24px' }}>
-      <div style={{ marginBottom: 32 }}>
-        <div
-          style={{
-            fontSize: 16,
-            fontWeight: 600,
-            letterSpacing: '0.04em',
-            marginBottom: 8,
-          }}
-        >
-          TU ESPACIO EN QRIH
+    <main className="workspace-page property-workspace">
+      <header className="property-workspace__heading">
+        <div>
+          <p className="property-workspace__eyebrow">MI PANEL</p>
+          <h1>{activeView === 'requirements' ? 'Mis requerimientos' : activeView === 'opportunities' ? 'Mis oportunidades' : 'Mis propiedades'}</h1>
         </div>
-        <h1>Aquí están tus publicaciones</h1>
-        <p>
-          Aquí puedes consultar y administrar lo que has publicado en QRO INDUSTRIAL HUB.
-        </p>
-
-        <div style={{ marginTop: 16, marginBottom: 24 }}>
-          <Link
-            href="/notificaciones"
-            className="button"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              padding: '12px 20px',
-              border: "1px solid var(--primary)",
-              borderRadius: 8,
-              background: "var(--ink)",
-              color: "var(--surface)",
-              fontWeight: 600,
-              textDecoration: 'none',
-            }}
-          >
+        <div className="property-workspace__heading-actions">
+          <Link href="/notificaciones" className="property-workspace__notifications">
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" /></svg>
             Mis notificaciones
           </Link>
-        </div>
-
-        {profile?.account_status === 'suspended' && <AccountSuspensionNotice />}
-
-        <AutoApproveContactsToggle
-          initialValue={autoApproveContactRequests}
-        />
-
-        <div
-          style={{
-            display: 'flex',
-            gap: 24,
-            marginTop: 24,
-            borderBottom: "1px solid var(--line)",
-          }}
-        >
-          <Link
-            href="/mis-propiedades?view=properties"
-            aria-current={activeView === 'properties' ? 'page' : undefined}
-            style={{
-              paddingBottom: 12,
-              borderBottom:
-                activeView === 'properties'
-                  ? "2px solid var(--primary)"
-                  : '2px solid transparent',
-              fontWeight:
-                activeView === 'properties' ? 600 : 400,
-              color:
-                activeView === 'properties'
-                  ? "var(--ink)"
-                  : "var(--muted)",
-              textDecoration: 'none',
-            }}
-          >
-            Propiedades
-          </Link>
-
-          <Link
-            href="/mis-propiedades?view=requirements"
-            aria-current={activeView === 'requirements' ? 'page' : undefined}
-            style={{
-              paddingBottom: 12,
-              borderBottom:
-                activeView === 'requirements'
-                  ? "2px solid var(--primary)"
-                  : '2px solid transparent',
-              fontWeight:
-                activeView === 'requirements' ? 600 : 400,
-              color:
-                activeView === 'requirements'
-                  ? "var(--ink)"
-                  : "var(--muted)",
-              textDecoration: 'none',
-            }}
-          >
-            Requerimientos
-          </Link>
-
-          <Link
-            href="/mis-propiedades?view=opportunities"
-            aria-current={activeView === 'opportunities' ? 'page' : undefined}
-            style={{
-              paddingBottom: 12,
-              borderBottom:
-                activeView === 'opportunities'
-                  ? "2px solid var(--primary)"
-                  : '2px solid transparent',
-              fontWeight:
-                activeView === 'opportunities' ? 600 : 400,
-              color:
-                activeView === 'opportunities'
-                  ? "var(--ink)"
-                  : "var(--muted)",
-              textDecoration: 'none',
-            }}
-          >
-            Oportunidades
+          <Link href="/publicar" className="property-workspace__publish">
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14M5 12h14" /></svg>
+            Publicar propiedad
           </Link>
         </div>
-      </div>
-{activeView === 'properties' && (
-<section
-  style={{
-    marginBottom: 40,
-    padding: 24,
-    border: "1px solid var(--line)",
-    borderRadius: 16,
-  }}
->
-  <small>RENDIMIENTO</small>
-  <h2 style={{ margin: '8px 0 24px' }}>
-    Actividad de tus propiedades
-  </h2>
-<div
-  style={{
-    display: 'grid',
-    gridTemplateColumns:
-      'repeat(auto-fit, minmax(200px, 1fr))',
-    gap: 16,
-    marginBottom: 32,
-  }}
->
-  <div
-  style={{
-    padding: 24,
-    border: "1px solid var(--line)",
-    borderRadius: 16,
-    background: "var(--surface)",
-    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.06)',
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%',
-  }}
->
-    <small>VISUALIZACIONES</small>
-    <div
-  style={{
-    fontSize: 34,
-    fontWeight: 700,
-    marginTop: 10,
-    letterSpacing: '-0.03em',
-      }}
-    >
-      {totalViews}
-    </div>
-    <small>Últimos 28 días</small>
-  </div>
-  <div
-    style={{
-      padding: 24,
-border: "1px solid var(--line)",
-borderRadius: 16,
-background: "var(--surface)",
-boxShadow: '0 8px 24px rgba(0, 0, 0, 0.06)',
-    }}
-  >
-    <small>SOLICITUDES</small>
-    <div
-  style={{
-    fontSize: 34,
-    fontWeight: 700,
-    marginTop: 10,
-    letterSpacing: '-0.03em',
-      }}
-    >
-      {totalContacts}
-    </div>
-    <small>Últimos 28 días</small>
-  </div>
-  <div
-    style={{
-      padding: 24,
-border: "1px solid var(--line)",
-borderRadius: 16,
-background: "var(--surface)",
-boxShadow: '0 8px 24px rgba(0, 0, 0, 0.06)',
-    }}
-  >
-    <small>CONVERSIÓN</small>
-    <div
-        style={{
-    fontSize: 34,
-    fontWeight: 700,
-    marginTop: 10,
-    letterSpacing: '-0.03em',
-      }}
-    >
-      {conversionRate.toFixed(1)}%
-    </div>
-    <small>Solicitudes / Visualizaciones</small>
-  </div>
-  <div
-    style={{
-      padding: 24,
-border: "1px solid var(--line)",
-borderRadius: 16,
-background: "var(--surface)",
-boxShadow: '0 8px 24px rgba(0, 0, 0, 0.06)',
-display: 'flex',
-flexDirection: 'column',
-height: '100%',
-    }}
-  >
-    <small>MAYOR INTERÉS</small>
-    <div
-      style={{
-        fontSize: 18,
-        fontWeight: 700,
-        marginTop: 8,
-      }}
-    >
-      {topPropertyTitle}
-    </div>
-    <small>
-      {topPropertyContacts} solicitud
-      {topPropertyContacts === 1 ? '' : 'es'}
-    </small>
-  </div>
-</div>
+      </header>
+      {profile?.account_status === 'suspended' && <AccountSuspensionNotice />}
+      <nav className="property-workspace__tabs" aria-label="Secciones de mi panel">
+        {[
+          { view: 'properties', label: 'Propiedades' },
+          { view: 'requirements', label: 'Requerimientos' },
+          { view: 'opportunities', label: 'Oportunidades' },
+        ].map(tab => <Link key={tab.view} href={`/mis-propiedades?view=${tab.view}`}
+          aria-current={activeView === tab.view ? 'page' : undefined}>{tab.label}</Link>)}
+      </nav>
+      {activeView === 'properties' && (
+        <section aria-label="Tus propiedades" className="own-properties">
+          <div className="property-workspace__summary" aria-label="Resumen de los últimos 28 días">
+            <div><strong>{properties.length}</strong><span>Propiedades</span></div>
+            <div><strong>{totalViews}</strong><span>Visualizaciones</span></div>
+            <div><strong>{totalContacts}</strong><span>Solicitudes</span></div>
+          </div>
+          {properties.length === 0 ? (
+            <div className="own-properties__empty">
+              <h2>Aún no tienes propiedades cargadas</h2>
+              <p>Cuando publiques una propiedad aparecerá aquí.</p>
+              <Link href="/publicar">Publicar una propiedad</Link>
+            </div>
+          ) : (
+            <div className="own-properties__grid">
+              {properties.map(property => (
+                <article key={property.id} className="own-property-card own-property-card--managed">
+                  <div className="own-property-card__cover">
+                    <OwnPropertyCover key={`${property.id}:${coverUrls.get(property.main_image_path) || ''}`} propertyId={property.id}
+                      initialUrl={coverUrls.get(property.main_image_path) || null} title={property.title} />
+                    <span className={getStatusClass(property.status)}>{getStatusLabel(property.status)}</span>
+                  </div>
+                  <div className="own-property-card__content">
+                    <small className="own-property-card__zone">{property.zone}</small>
+                    <h2>{property.title}</h2>
+                    <p className="own-property-card__price">{propertyPrice(property)}</p>
+                    <p className="own-property-card__specs">{property.operation}<span aria-hidden="true"> · </span>{property.total_area != null ? `${Number(property.total_area).toLocaleString('es-MX')} m²` : 'Superficie no especificada'}</p>
+                    <dl className="own-property-card__activity" aria-label="Actividad de los últimos 28 días">
+                      <div><dt>Visto</dt><dd>{viewCounts[property.id] || 0}</dd></div>
+                      <div><dt>Solicitudes</dt><dd>{contactCounts[property.id] || 0}</dd></div>
+                    </dl>
+                    {property.status === 'rejected' && property.rejection_reason && (
+                      <div className="own-property-card__notice own-property-card__notice--rejected">
+                        <strong>Motivo del rechazo</strong><p>{property.rejection_reason}</p>
+                      </div>
+                    )}
+                    {property.status === 'pending' && (
+                      <p className="own-property-card__notice">En revisión. Aparecerá en el inventario cuando sea aprobada.</p>
+                    )}
+                    {['pending', 'pending_update', 'paused', 'expired'].includes(property.status) && (
+                      <small className="own-property-card__restriction">La edición no está disponible en este estado.</small>
+                    )}
+                    <PropertyActionDisclosure id={property.id} title={property.title}
+                      primary={<>
+                        {['draft', 'rejected'].includes(property.status) && (
+                          <ManagePropertyActions propertyId={property.id} status={property.status} disabled={profile?.account_status !== 'active'} compact />
+                        )}
+                        <Link className={property.status === 'published' ? 'own-property-action own-property-action--primary' : 'own-property-action'}
+                          href={`/mis-propiedades/${property.id}/solicitudes`}>Solicitudes</Link>
+                      </>}>
+                      {property.status === 'published' && (
+                        <>
+                          <Link className="own-property-action" href={`/bodegas/${property.slug}`}>Ver propiedad</Link>
+                          <ManagePropertyActions propertyId={property.id} status={property.status} disabled={profile?.account_status !== 'active'} compact />
+                        </>
+                      )}
+                      {profile?.account_status === 'active' && (
+                        <Link className="own-property-action" href={`/publicar?duplicar=${property.id}`}>Duplicar</Link>
+                      )}
+                      {property.status === 'published' && profile?.account_status === 'active' && profile?.publications_enabled === true ? (
+                        <SharePropertyButton slug={property.slug} title={property.title} status={property.status} disabled={false} />
+                      ) : <small className="own-property-card__restriction">Compartir sólo está disponible para propiedades publicadas con una cuenta habilitada.</small>}
+                      <div className="own-property-actions__danger"><DeletePropertyButton propertyId={property.id} compact /></div>
+                    </PropertyActionDisclosure>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
+          <details className="property-workspace__disclosure">
+            <summary><span>Rendimiento de tus propiedades<small>Visualizaciones, solicitudes y conversión de los últimos 28 días</small></span></summary>
+            <div className="property-workspace__performance">
+              <dl className="property-workspace__performance-summary">
+                <div><dt>Conversión</dt><dd>{conversionRate.toFixed(1)}%</dd></div>
+                <div><dt>Mayor interés</dt><dd>{topPropertyTitle}</dd><small>{topPropertyContacts} solicitud{topPropertyContacts === 1 ? '' : 'es'}</small></div>
+              </dl>
  <div
   style={{
     marginTop: 24,
@@ -744,238 +613,11 @@ height: '100%',
 </span>
   </div>
 </div>
-      {properties.length === 0 ? (
-        <section
-          style={{
-            padding: 32,
-            border: "1px solid var(--line)",
-            borderRadius: 12,
-          }}
-        >
-          <h2>Aún no tienes propiedades cargadas</h2>
-          <p>Cuando publiques una propiedad aparecerá aquí.</p>
-          <Link href="/publicar">Publicar una propiedad</Link>
-        </section>
-      ) : (
-        <section
-  style={{
-    display: 'grid',
-    gridTemplateColumns:
-      'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
-    gap: 20,
-alignItems: 'stretch',
-  }}
->
-          {properties.map((property) => (
-            <article
-              key={property.id}
-              className="own-property-card"
-              style={{
-                border: "1px solid var(--line)",
-                borderRadius: 12,
-                padding: 24,
-                minWidth: 0,
-                overflow: 'hidden',
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%',
-              }}
-            >
-              <div style={{ position: 'relative', margin: '-24px -24px 20px' }}>
-                <OwnPropertyCover key={`${property.id}:${coverUrls.get(property.main_image_path) || ''}`} propertyId={property.id}
-                  initialUrl={coverUrls.get(property.main_image_path) || null} title={property.title} />
-                <span className={getStatusClass(property.status)} style={{ position: 'absolute', top: 12, left: 12 }}>
-                  {getStatusLabel(property.status)}
-                </span>
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  gap: 20,
-                  alignItems: 'flex-start',
-                }}
-              >
-                <div>
-                  <small>{property.zone}</small>
-                  <h2 style={{ margin: '8px 0' }}>
-                    {property.title}
-                  </h2>
-                  <p>
-                    {property.operation} · {propertyPrice(property)}
-                  </p>
-                  <p>{property.total_area != null ? `${Number(property.total_area).toLocaleString('es-MX')} m²` : 'Superficie no especificada'}</p>
-                  <p>
-                    Registrada el{' '}
-                    {new Date(property.created_at).toLocaleDateString(
-                      'es-MX'
-                    )}
-                  </p>
-<div
-  style={{
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: 12,
-    marginTop: 20,
-  }}
->
-  <div
-    style={{
-      padding: 14,
-      borderRadius: 12,
-      background: "var(--surface-subtle)",
-    }}
-  >
-    <small
-      style={{
-        display: 'block',
-        color: "var(--muted)",
-        marginBottom: 4,
-      }}
-    >
-      Visualizaciones
-    </small>
-    <strong
-      style={{
-        fontSize: 24,
-      }}
-    >
-      {viewCounts[property.id] || 0}
-    </strong>
-    <small
-      style={{
-        display: 'block',
-        color: "var(--muted)",
-        marginTop: 2,
-      }}
-    >
-      Últimos 28 días
-    </small>
-  </div>
-  <div
-    style={{
-      padding: 14,
-      borderRadius: 12,
-      background: "var(--surface-subtle)",
-    }}
-  >
-    <small
-      style={{
-        display: 'block',
-        color: "var(--muted)",
-        marginBottom: 4,
-      }}
-    >
-      Solicitudes
-    </small>
-    <strong
-      style={{
-        fontSize: 24,
-      }}
-    >
-      {contactCounts[property.id] || 0}
-    </strong>
-  </div>
-</div>
-                </div>
-              </div>
-              {property.status === 'rejected' &&
-                property.rejection_reason && (
-                  <div
-                    style={{
-                      marginTop: 20,
-                      padding: 16,
-                      borderRadius: 8,
-                      background: "var(--surface-subtle)",
-                    }}
-                  >
-                    <strong>Motivo del rechazo</strong>
-                    <p>{property.rejection_reason}</p>
-                  </div>
-                )}
-{property.status === 'pending' && (
-  <div
-    style={{
-      marginTop: '16px',
-      padding: '14px 16px',
-      borderRadius: '10px',
-      background: "var(--surface-subtle)",
-      border: "1px solid var(--line)",
-      fontSize: '14px',
-      lineHeight: 1.5,
-    }}
-  >
-    <strong>En revisión</strong>
-    <p style={{ margin: '6px 0 0' }}>
-      Tu propiedad fue enviada correctamente y está siendo
-      revisada por nuestro equipo. Una vez aprobada,
-      aparecerá publicada en el inventario.
-    </p>
-  </div>
-)}
-        <div
-  style={{
-    display: 'flex',
-    gap: '12px',
-    flexWrap: 'wrap',
-    marginTop: 'auto',
-    paddingTop: 20,
-alignItems: 'center',
-width: '100%',
-marginBottom: 4,
-  }}
->
-<Link
-  href={`/mis-propiedades/${property.id}/solicitudes`}
-  style={{
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '10px 16px',
-    borderRadius: 10,
-    background: "var(--ink)",
-    color: "var(--surface)",
-    textDecoration: 'none',
-    fontSize: 14,
-    fontWeight: 600,
-width: '180px',
-  }}
->
-  Ver solicitudes
-</Link>
-  {property.status === 'published' && (
-<Link
-  href={`/bodegas/${property.slug}`}
-  style={{
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '10px 16px',
-    borderRadius: 10,
-    border: '1px solid #c9a227',
-    background: "var(--surface)",
-    color: "var(--warning)",
-    textDecoration: 'none',
-    fontSize: 14,
-    fontWeight: 600,
-width: '180px',
-  }}
->
-  Ver propiedad
-</Link>
-  )}
-  <ManagePropertyActions propertyId={property.id} status={property.status} disabled={profile?.account_status !== 'active'} />
-  <SharePropertyButton slug={property.slug} title={property.title} status={property.status} disabled={profile?.account_status !== 'active' || profile?.publications_enabled !== true} />
 
-  <DeletePropertyButton propertyId={property.id} />
-</div>
-            </article>
-          ))}
+            </div>
+          </details>
         </section>
       )}
-
-</section>
-)}
 
       {activeView === 'opportunities' && (
         <section
@@ -1198,19 +840,7 @@ width: '180px',
       )}
 
       {activeView === 'requirements' && (
-      <section
-        style={{
-          marginTop: 40,
-          padding: 24,
-          border: "1px solid var(--line)",
-          borderRadius: 16,
-        }}
-      >
-        <small>REQUERIMIENTOS</small>
-        <h2 style={{ margin: '8px 0 20px' }}>
-          Mis requerimientos
-        </h2>
-
+      <section className="requirements-panel" aria-label="Mis requerimientos">
         {demandRequests && demandRequests.length > 0 ? (
           <div
             style={{
@@ -1221,16 +851,13 @@ width: '180px',
             {demandMatches.map(({ request, matches }) => (
               <article
                 key={request.id}
-                style={{
-                  padding: 20,
-                  border: "1px solid var(--line)",
-                  borderRadius: 12,
-                }}
+                className="requirement-card"
               >
                 <div
                   style={{
                     display: 'flex',
                     justifyContent: 'space-between',
+                    alignItems: 'flex-start',
                     gap: 16,
                     flexWrap: 'wrap',
                   }}
@@ -1251,19 +878,11 @@ width: '180px',
                   </div>
 
                   <span
-                    style={{
-                      padding: '6px 10px',
-                      borderRadius: 999,
-                      background:
-                        request.status === 'active'
-                          ? '#f3f4f6'
-                          : "var(--line)",
-                      fontSize: 13,
-                      fontWeight: 600,
-                    }}
+                    className="requirement-card__status"
                   >
                     {request.status === 'active'
                       ? 'Activo'
+                      : request.status === 'new' ? 'Nuevo'
                       : request.status}
                   </span>
                 </div>
@@ -1317,12 +936,7 @@ width: '180px',
 
                   {matches.length > 0 ? (
                     <div
-                      style={{
-                        marginTop: 12,
-                        border: "1px solid var(--line)",
-                        borderRadius: 12,
-                        overflow: 'hidden',
-                      }}
+                      className="requirement-card__matches"
                     >
                       {matches.map(({ property, result }) => {
                         const isHighMatch = result.total >= 75
@@ -1566,6 +1180,10 @@ width: '180px',
         )}
       </section>
       )}
+      <details className="property-workspace__disclosure property-workspace__preferences">
+        <summary><span>Preferencias de contacto</span></summary>
+        <AutoApproveContactsToggle initialValue={autoApproveContactRequests} />
+      </details>
     </main>
   </>
   )

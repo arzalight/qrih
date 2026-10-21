@@ -209,14 +209,14 @@ const [images, setImages] = useState<PropertyImageEditorItem[]>([])
           </label>
 
           <div className="two">
-           <FormField id="field-1-zone_general" label="Zona general" required><select id="field-1-zone_general"
+           <FormField id="field-1-zone_general" label="Municipio" required><select id="field-1-zone_general"
   required
   name="zone_general"
   value={zonaGeneral}
   onChange={(e) => setZonaGeneral(e.target.value)}
 >
   <option value="" disabled>
-    Selecciona una zona general
+    Selecciona un municipio
   </option>
 
   {ZONAS_GENERALES.map((zona) => (
@@ -226,13 +226,13 @@ const [images, setImages] = useState<PropertyImageEditorItem[]>([])
   ))}
 </select></FormField>
 
-<FormField id="field-1-zone" label="Zona industrial" required><select id="field-1-zone"
+<FormField id="field-1-zone" label="Zona" required><select id="field-1-zone"
   required
   name="zone"
   defaultValue={property.zone}
 >
   <option value="" disabled>
-    Selecciona una zona industrial
+    Selecciona una zona
   </option>
 
   {(ZONAS_INDUSTRIALES_POR_ZONA[zonaGeneral] || []).map((zona) => (

@@ -3,7 +3,7 @@
 import { FormField } from '@/components/FormField'
 
 import { PriceCurrencySelect } from '@/components/PriceCurrencySelect'
-import { isPriceCurrency, parsePriceInput, propertyPrice } from '@/lib/property-price'
+import { isPriceCurrency, parsePriceInput, propertyPriceForStorage as propertyPrice } from '@/lib/property-price'
 
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -17,6 +17,36 @@ import {
   ZONAS_GENERALES,
   ZONAS_INDUSTRIALES_POR_ZONA,
 } from '@/lib/zonas'
+
+export const INITIAL_PROPERTY_DESCRIPTION = `Tipo de operación
+Renta $ x m2
+Renta total $ +IVA
+Mantenimiento $ x m2 + IVA
+Disponibilidad Inmediata
+
+Área de bodega
+Total de construcción
+Área de maniobra
+Área de estacionamiento
+Dimensiones totales
+Altura mínima
+Altura máxima
+Rampa a nivel de piso
+Andenes
+Tipo de portón
+Parque industrial con seguridad
+Sistema contra incendios
+
+Luz trifásica
+Transformador propios
+KVAS
+Acceso a trailer
+Servicio de agua
+Fosa o drenaje
+Resistencia de piso
+
+Tipo de contrato
+Condiciones de contrato`
 
 function createSlug(title: string) {
   return title
@@ -412,7 +442,7 @@ export default function Publish() {
                 : 'El precio se registrará como precio total de venta.'}
             </p>
 
-            <PriceCurrencySelect />
+            <PriceCurrencySelect value="MXN" />
             <label className="inline-check">
               <input
                 name="commission"
@@ -424,7 +454,7 @@ export default function Publish() {
 
             <div className="form-location-grid">
               <div className="two">
-                <FormField id="field-0-zone_general" label="Zona general" required><select id="field-0-zone_general"
+                <FormField id="field-0-zone_general" label="Municipio" required><select id="field-0-zone_general"
                   required
                   name="zone_general"
                   value={zonaGeneral}
@@ -434,7 +464,7 @@ export default function Publish() {
                   }}
                 >
                   <option value="" disabled>
-                    Selecciona una zona general
+                    Selecciona un municipio
                   </option>
 
                   {ZONAS_GENERALES.map((zona) => (
@@ -444,7 +474,7 @@ export default function Publish() {
                   ))}
                 </select></FormField>
 
-                <FormField id="field-0-zone" label="Zona industrial" required><select id="field-0-zone"
+                <FormField id="field-0-zone" label="Zona" required><select id="field-0-zone"
                   required
                   name="zone"
                   value={zonaIndustrial}
@@ -455,8 +485,8 @@ export default function Publish() {
                 >
                   <option value="" disabled>
                     {zonaGeneral
-                      ? 'Selecciona una zona industrial'
-                      : 'Selecciona primero una zona general'}
+                      ? 'Selecciona una zona'
+                      : 'Selecciona primero un municipio'}
                   </option>
 
                   {zonasIndustriales.map((zona) => (
@@ -583,6 +613,7 @@ export default function Publish() {
             <FormField id="field-0-description" label="Descripción de la propiedad"><textarea id="field-0-description"
               name="description"
               placeholder="Descripción de la propiedad"
+              defaultValue={INITIAL_PROPERTY_DESCRIPTION}
               rows={8}
             /></FormField>
           </fieldset>

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { isPriceCurrency, parsePriceInput, propertyPrice } from './property-price'
+import { isPriceCurrency, parsePriceInput, propertyPriceForStorage as propertyPrice } from './property-price'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 import { uploadVerifiedImage } from '@/lib/verified-media-server'
 import { assertSameOrigin, readForm, validUuid } from '@/lib/request-security'
