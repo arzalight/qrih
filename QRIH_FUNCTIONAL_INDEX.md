@@ -1,5 +1,22 @@
 # QRIH FUNCTIONAL INDEX — Índice maestro tipo SIGMA
 
+## Trazabilidad vigente — auditoría UX/UI previa, NO-GO del nuevo alcance visual
+
+[Inventario UI-001–028 / hallazgos UX-001–014 / matriz y plan](docs/PRELAUNCH_UI_AUDIT.md).25archivos de página, vistas/variantes separadas;19vistas/76mediciones locales de la base1992ca8. Nuevo diseño NO implementado, NO validado en STAGING. Rama local `feature/prelaunch-ui-review`; referencia gráfica pendiente de reenvío. IDs funcionales existentes conservados, sin migraciones ni APIs nuevas.
+
+| ID / familia existente | Trazabilidad verificada para preservar | Estado de revisión visual |
+| --- | --- | --- |
+| PROP-003/006 | ManagePropertyActions→retirar/editar; publicar?duplicar→editor→duplicar | Código/render de borrador y precarga revisados; ninguna nueva escritura real |
+| PROP-007 | OwnPropertyCover/PropertyImageEditor→portada/firmador/ingesta existentes | Portada/límite7 presentes; mantener seguridad, renovación y WebP |
+| PROP-008 | SharePropertyButton→ficha/cargador comercial | Compartir sólo published; ficha local sin cabecera/footer/formulario confirmada |
+| PRICE-001 / PDF-001 | property-price→tarjetas/filtros/panel/editor/ficha/PDF | Moneda implementada; UX-001 recorta texto en tableta, no cambia dato; PDF no revalidado aquí |
+| UI-001–028 | app/**/page.tsx + componentes/CSS descritos en inventario | Diagnóstico inicial con vistas admin/legales/asesor pendientes según tabla; no certificar toda la UI |
+| UX-001–014 | Evidencias de código/DOM/capturas/contrastes en informe | ABIERTOS / NO CORREGIDOS; severidades UX, no nuevas vulnerabilidades por inferencia |
+
+157unit/31HTTP locales PASS,lint/tiposPASS; no build nuevo/RC/deploy. Los PASS comerciales inferiores corresponden al alcance y artefacto anterior, no aceptan el rediseño solicitado.
+
+### Corte previo — trazabilidad del RC comercial
+
 ## Trazabilidad vigente — 20oct2026 / GO CONDICIONADO del piloto
 
 [Dictamen](docs/SOFT_LAUNCH_GO_2026-10-20.md) / [aceptación y límites](docs/COMMERCIAL_ACCEPTANCE_2026-10-20.md) / [recibo](docs/commercial-acceptance-2026-10-20.json). IDs estables conservados. Código fuente77cd680→manifiesto187/huella5f72e610…→artefacto5f7b8e2→deploy6ad82c6afc32e2d1cb980405 READY/publicado→157unitCI/31HTTP y aceptación comercial gestionada PASS acotados.

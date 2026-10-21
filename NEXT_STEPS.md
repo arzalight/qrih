@@ -1,5 +1,15 @@
 # NEXT STEPS — QRO INDUSTRIAL HUB / QRIH
 
+## Acciones vigentes — nuevo alcance visual / NO-GO hasta aceptación
+
+1. Recibir la imagen de referencia mencionada (el adjunto disponible sólo contiene texto), o indicación explícita de usar exclusivamente la paleta/criterios escritos. [Auditoría inicial, inventario y secuencia](docs/PRELAUNCH_UI_AUDIT.md). Diagnóstico terminado; interfaz no modificada todavía.
+2. Implementar los siete bloques visuales delimitados en `feature/prelaunch-ui-review`, corrigiendo UX-001–014 según severidad. No nuevas funciones de negocio, bibliotecas UI, cambios Auth/RLS/Storage/estados o migraciones por estética. Validar y registrar cada bloque antes de continuar.
+3. Repetir regresión/teclado/responsive/contraste/errores y build local tras los cambios; no trasladar los PASS del RC anterior. Más adelante solicitar sesión legítima de administrador para su aceptación visual, sin cambiar roles ni datos reales.
+4. Actualizar los cuatro documentos maestros y gate de entrega con estados código/local/STAGING separados. No integrar main ni desplegar automáticamente; RC de Netlify sólo bajo nueva autorización explícita y cuotasFree verificadas. Mantener NO-GO visual mientras falten verificaciones.
+5. Conservar los pendientes operativos/AUD043 y el GO condicionado acotado al RC comercial anterior; no repetir respaldos/migraciones/fixtures ya cerrados ni afirmar SLA/certificación por esta revisión.
+
+### Corte previo — operación del RC comercial sin rediseño
+
 ## Acciones posteriores — 20oct2026 / GO CONDICIONADO del piloto supervisado
 
 **Alcance de entrega autorizado:** el usuario autorizó explícitamente subir a `arzalight/qrih` privado documentación con rutas locales de respaldos, referencias/IDs/enlaces de Drive y referencias de custodia, visibles a sus colaboradores, sin claves, contraseñas ni archivos de respaldo. Se reanuda la entrega documental por el mismo canal tras la detención preventiva; no se eluden controles. El cierre no cambia código funcional, `main` ni el RC `5f7b8e2`, y no requiere ni autoriza otro deploy.

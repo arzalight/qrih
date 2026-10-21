@@ -1,5 +1,24 @@
 # QRIH — Gate de entrega comercial a STAGING
 
+## Gate adicional vigente — rediseño UX/UI solicitado después del RC comercial
+
+**NO-GO del nuevo alcance visual.** El gate comercial inferior permanece cerrado para5f7b8e2, pero no aprueba cambios visuales posteriores. [Auditoría inicial y matriz](PRELAUNCH_UI_AUDIT.md). Rama local `feature/prelaunch-ui-review`,base1992ca8, sin código visual nuevo ni deploy. Referencia gráfica pendiente;25páginas inventariadas/19vistas/76mediciones de base.157unit/31HTTP locales PASS,lint/tiposPASS; no build/aceptación del rediseño.
+
+- [x] Estado Git inicial limpio y rama específica; inventario/código y diagnóstico responsive inicial.
+- [x] Funciones Editar/Duplicar/portada/Compartir/MXN-USD verificadas en fuentes; no reemplazarlas por marcadores.
+- [x] Hallazgos clasificados UX-001–014, límites de evidencia y riesgos documentados.
+- [ ] Imagen de referencia visible o decisión explícita de prescindir de ella.
+- [ ] Sistema de diseño/controles y siete bloques implementados/revisados con commits separados.
+- [ ] Catálogo sin precio recortado a375/768/1024/1440, labels y foco modal corregidos; contrastes medidos.
+- [ ] Pruebas nuevas/regresión/lint/tipos/build/preflight locales del nuevo código y comparación visual.
+- [ ] Administración con sesión legítima, permisos/estados y flujos críticos de matriz visual aceptados.
+- [ ] Autorización explícita de nuevoRC, cuotaFree vigente, sin pagos/producción/main.
+- [ ] SHA exacto del nuevoRC/STAGING, adaptador/headers/Storage/PDF/acciones críticas validados; dictamen actualizado.
+
+No ejecutar automáticamente los pasos de deploy de cortes históricos ni reutilizar su autorización para este alcance visual.
+
+### Corte previo — cierre del gate comercial del artefacto anterior
+
 ## Gate técnico y aceptación comercial cerrados
 
 **GO CONDICIONADO del piloto STAGING supervisado.** [Dictamen](SOFT_LAUNCH_GO_2026-10-20.md) / [aceptación](COMMERCIAL_ACCEPTANCE_2026-10-20.md). AltaUSD/duplicado guardado/revisión y privacidad gestionadas PASS. RC5f7b8e2/deploy6ad82c6afc32e2d1cb980405 ya publicado/verificado y sin cambios funcionales187fuentes. No otro deploy por cierre documental. Mantener builds detenidos/Free y permisos separados para producción/main/nuevoRC. No repetir052/backups/restore/fixtures/aceptación legal. AUD043MEDIO/riesgos operativos aceptados permanecen, no SLA.

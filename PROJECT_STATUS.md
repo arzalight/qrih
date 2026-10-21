@@ -1,5 +1,18 @@
 ## PROJECT STATUS — QRO INDUSTRIAL HUB / QRIH
 
+## Estado vigente — 20oct2026 / auditoría UX/UI inicial, NO-GO del rediseño
+
+[Inventario, hallazgos y plan visual](docs/PRELAUNCH_UI_AUDIT.md). Rama local `feature/prelaunch-ui-review`, base1992ca8/develop inicialmente limpio.25archivos de página inventariados/28entradas visuales;19vistas×4anchos=76mediciones locales.157pruebas de aplicación y31HTTP locales PASS,0fallos/0skips;lint/tiposPASS. Recorte de precio en tableta, labels/foco de galería, contraste y panel antiguo con métricas fijas identificados, NO corregidos todavía. Referencia gráfica mencionada en la solicitud aún no recibida; sólo llegó texto.
+
+| Alcance | Implementado en código | Validado localmente | Pendiente de STAGING | Validado en STAGING |
+| --- | --- | --- | --- | --- |
+| Nuevo rediseño UX/UI | NO; sólo auditoría/documentación | Diagnóstico de base y pruebas existentes, no UI nueva | Todos los bloques y aceptación remota, sin deploy autorizado | NO |
+| Editar/Duplicar/portada/Compartir/MXN-USD existentes | SÍ, confirmado en fuentes; no reconstruir | Render representativo y suite base; sin nuevo guardado | Regresión tras rediseño | RC anterior según dictamen comercial inferior, no transferible al rediseño |
+
+**NO-GO para presentar el nuevo alcance visual como terminado/listo para Soft Launch.** El GO condicionado inferior sigue acotado al artefacto anterior5f7b8e2, no a un rediseño aún inexistente. Sin cambios funcionales, Supabase, RLS, migraciones, datos de negocio, producción/main o Netlify. Administración sólo mostró acceso restringido con la sesión local: interior pendiente de rol legítimo. No afirmar WCAGAA ni métricas de rendimiento certificadas.
+
+### Corte previo — RC comercial anterior al nuevo alcance visual
+
 ## Estado vigente — 20oct2026 / GO CONDICIONADO del Soft Launch supervisado
 
 **Estado de entrega:** autorización humana explícita recibida para subir a `arzalight/qrih` privado documentación con rutas locales de respaldos, referencias/IDs/enlaces de Drive y referencias de custodia, visibles a sus colaboradores; quedan excluidos claves, contraseñas y archivos de respaldo. Se reanuda el cierre documental tras la detención preventiva, sin eludir controles. La entrega no cambia fuentes funcionales, `main` ni el RC publicado `5f7b8e2`, y no autoriza otro deploy.

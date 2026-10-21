@@ -1,5 +1,20 @@
 # QRIH — Auditoría técnica pre-Soft-Launch
 
+## Dictamen vigente — auditoría UX/UI inicial / NO-GO del nuevo alcance visual
+
+[Informe e inventario visual](docs/PRELAUNCH_UI_AUDIT.md), base1992ca8/rama local `feature/prelaunch-ui-review`. Nuevo alcance de rediseño solicitado después del GO comercial: NO implementado ni aceptado.25páginas inventariadas,19vistas×4anchos/76mediciones. Sólo auditoría/documentación, sin modificar fuentes funcionales/Auth/RLS/Storage/BD/producción/main o Netlify.
+
+- **UX-001 ALTO / CONFIRMADO / NO CORREGIDO:** catálogo768px, tres columnas/tarjetas≈134px, precio/moneda recortados; ningún overflow del body no equivale a reflow correcto.
+- **UX-002 ALTO / CONFIRMADO / NO CORREGIDO:** labels persistentes/asociaciones faltantes en login/registro/alta/editor/requerimiento/contacto/títulos de fotos; alcances concretos en informe.
+- **UX-003 ALTO / CONFIRMADO / NO CORREGIDO:** visor role=dialog abre con foco fuera; no contención/restauración de foco. No requiere tocar permisos ni firmador.
+- **UX-004–011 MEDIO, UX-012–013 BAJO, UX-014 riesgo MEDIO:** contraste, navegación/estados, `/panel` con cifras literales, saludo fijo, consistencia/carga/tabla/performance; distinguir reproducción y riesgos no medidos en matriz.
+
+Severidades de usabilidad/accesibilidad, no nuevas vulnerabilidades de seguridad por inferencia. No se reabre ni se declara corregido AUD043/AUD018.157unit/31HTTP locales PASS,0fallos/0skips;lint/tiposPASS. HTTP primero bloqueado por sandboxEPERM y luego completado con red local permitida; no31defectos de QRIH. Build no reejecutado, WCAGglobal/Safari/admin legítimo/rendimiento de campo/nuevoRC NO verificados. Referencia gráfica aún no recibida, se detiene antes de implementar diseño final.
+
+**NO-GO del alcance visual ampliado** hasta corrección/validación de los bloques y RC expresamente autorizado. GO condicionado inferior conserva su artefacto/condiciones anteriores; no sirve como aceptación del rediseño ni se borra su evidencia.
+
+### Corte previo — dictamen del RC comercial
+
 ## Dictamen vigente — 20oct2026 / GO CONDICIONADO del piloto supervisado
 
 [Dictamen y condiciones](docs/SOFT_LAUNCH_GO_2026-10-20.md) / [aceptación comercial crítica](docs/COMMERCIAL_ACCEPTANCE_2026-10-20.md) / [recibo](docs/commercial-acceptance-2026-10-20.json). Cerrado el gate de altaUSD/duplicación guardada/revisión: el RC publicado5f7b8e2 conservaUSD7.50/m2, copia independiente, originalpending/copia draft, fotografía sintética WebP privada y denegaciones de lectura/firma anónimas. El término `draft` corresponde al estado real de la copia. Cuatro fixtures autorizadas conservadas sin publicar.
