@@ -2,6 +2,9 @@ import { notFound } from 'next/navigation'
 import { propertyPrice } from '@/lib/property-price'
 import { Header } from '@/components/Header'
 import { PropertyContactForm } from '@/components/PropertyContactForm'
+import { ResponsiveContactPanel } from '@/components/ResponsiveContactPanel'
+import { PropertyCard } from '@/components/PropertyCard'
+import { rankSimilarProperties, similarPropertyRange } from '@/lib/matching'
 import { PropertyImageGallery } from '@/components/PropertyImageGallery'
 import { createPublicServerSupabaseClient } from '@/lib/supabase-public-server'
 import { createPrivilegedServerSupabaseClient } from '@/lib/supabase-privileged-server'
@@ -46,6 +49,7 @@ export default async function PropertyPage({ params }: PageProps) {
       title,
       operation,
       status,
+      zone_general,
       zone,
       address,
       location_visibility,
@@ -107,6 +111,41 @@ export default async function PropertyPage({ params }: PageProps) {
 
   const formattedPricePerM2 = ['m2', 'm²'].includes(property.price_unit || '') ? propertyPrice(property) : null
   const formattedTotalPrice = propertyPrice(property, true)
+  const similaritySource = { ...property, surface_m2: property.total_area }
+  const similarRange = similarPropertyRange(similaritySource)
+  type SimilarProperty = Parameters<typeof PropertyCard>[0]['property']
+  let similarProperties: SimilarProperty[] = []
+  let similarUnavailable = false
+  if (similarRange) {
+    try {
+      const { data: candidates, error: similarError } = await supabase
+        .from('properties_public')
+        .select('id,slug,title,operation,zone_general,zone,price_display,price_value,price_value_text:price_value::text,price_currency,price_unit,total_area,covered_area,max_height,share_commission,main_image_path')
+        .eq('status', 'published')
+        .neq('id', property.id)
+        .eq('operation', property.operation)
+        .eq('zone_general', property.zone_general)
+        .gte('total_area', similarRange.area_min)
+        .lte('total_area', similarRange.area_max)
+        .order('created_at', { ascending: false })
+        .limit(1000)
+      if (similarError) throw new Error('Similar properties unavailable')
+      const ranked = rankSimilarProperties(similaritySource,
+        (candidates || []).map(candidate => ({ ...candidate, surface_m2: candidate.total_area })))
+        .map(entry => entry.property)
+      let similarUrls = new Map<string, string>()
+      try {
+        similarUrls = await createSignedPropertyImageUrlMap(supabase,
+          ranked.map(candidate => candidate.main_image_path), PROPERTY_IMAGE_TTL_SECONDS.public)
+      } catch { console.warn('QRIH_SIMILAR_COVERS_UNAVAILABLE') }
+      similarProperties = ranked.map(candidate => ({ ...candidate,
+        main_image: similarUrls.get(candidate.main_image_path) || null,
+      }))
+    } catch {
+      similarUnavailable = true
+      console.warn('QRIH_SIMILAR_PROPERTIES_UNAVAILABLE')
+    }
+  }
 
   return (
     <>
@@ -133,9 +172,14 @@ export default async function PropertyPage({ params }: PageProps) {
               </div>
             </section>
             <a className="button property-pdf" href={`/api/bodegas/${slug}/pdf`} download>Descargar PDF</a>
-            <section className="ui-panel property-contact">
-              <h2>Solicitar información</h2>
+            <ResponsiveContactPanel>
               <PropertyContactForm key={property.id} propertyId={property.id} />
+            </ResponsiveContactPanel>
+            <section className="ui-panel property-detail-section">
+              <h2>Ubicación</h2>
+              <p><strong>Zona:</strong> {property.zone}</p>
+              {visibleAddress ? <p><strong>Dirección:</strong> {visibleAddress}</p>
+                : <p>La dirección exacta se proporciona únicamente al solicitar información.</p>}
             </section>
           </div>
         </section>
@@ -154,11 +198,11 @@ export default async function PropertyPage({ params }: PageProps) {
           <h2>Descripción</h2>
           <p className="property-description">{showValue(property.description)}</p>
         </section>
-        <section className="ui-panel property-detail-section">
-          <h2>Ubicación</h2>
-          <p><strong>Zona:</strong> {property.zone}</p>
-          {visibleAddress ? <p><strong>Dirección:</strong> {visibleAddress}</p>
-            : <p>La dirección exacta se proporciona únicamente al solicitar información.</p>}
+        <section className="property-detail-section property-similar" aria-labelledby="property-similar-heading">
+          <h2 id="property-similar-heading">Propiedades similares</h2>
+          {similarProperties.length > 0
+            ? <div className="cards">{similarProperties.map(candidate => <PropertyCard key={candidate.id} property={candidate} />)}</div>
+            : <p>{similarUnavailable ? 'No fue posible cargar las propiedades similares.' : 'No hay propiedades similares disponibles con estos criterios.'}</p>}
         </section>
       </main>
     </>

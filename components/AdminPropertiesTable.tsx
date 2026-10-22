@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { propertyPrice } from '@/lib/property-price'
 import { PropertyStatusBadge } from '@/components/PropertyStatusBadge'
+import { AdminPropertyThumbnail } from '@/components/AdminPropertyThumbnail'
 
 type AdminProperty = {
   id: string
@@ -18,6 +19,7 @@ type AdminProperty = {
   price_unit?: string | null
   total_area: number | null
   slug: string | null
+  coverUrl?: string | null
   profiles?: {
     full_name?: string | null
     company_name?: string | null
@@ -98,6 +100,7 @@ export function AdminPropertiesTable({
         }}
       >
         <table
+          className="admin-properties-table"
           style={{
             width: '100%',
             minWidth: '1000px',
@@ -149,7 +152,10 @@ export function AdminPropertiesTable({
                 }}
               >
                 <td style={{ padding: '14px' }}>
-                  <strong>{property.title}</strong>
+                  <div className="admin-property-identity">
+                    <AdminPropertyThumbnail key={property.coverUrl || 'empty'} url={property.coverUrl} />
+                    <strong>{property.title}</strong>
+                  </div>
                 </td>
 
                 <td style={{ padding: '14px', color: "var(--muted)" }}>
@@ -163,7 +169,7 @@ export function AdminPropertiesTable({
                   {property.zone ? ` · ${property.zone}` : ''}
                 </td>
 
-                <td style={{ padding: '14px' }}>
+                <td className="admin-properties-table__tag" style={{ padding: '14px' }}>
                   <span
                     style={{
                       display: 'inline-block',
@@ -185,7 +191,7 @@ export function AdminPropertiesTable({
                   </span>
                 </td>
 
-                <td style={{ padding: '14px' }}>
+                <td className="admin-properties-table__tag" style={{ padding: '14px' }}>
                   <PropertyStatusBadge status={property.status} />
                 </td>
 

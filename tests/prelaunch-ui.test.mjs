@@ -9,6 +9,7 @@ import reactPreset from 'next/dist/compiled/babel/preset-react.js'
 import typescriptPreset from 'next/dist/compiled/babel/preset-typescript.js'
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
+import { calculateMatch, rankSimilarProperties, similarPropertyRange } from '../lib/matching.ts'
 
 
 function contractAst(value) {
@@ -27,7 +28,8 @@ const formContracts = {
   "components/ImageUploader.tsx": "15df5a8f52492b39d169f338ecab18b2f31d1b7c5ef2ce1e132d83ddb7b02be0",
   "components/PropertyImageEditor.tsx": "5b185ed0c6e6d74cea83f2d8ba65050b6ae371a500aaeecfd711f02c801e9e76",
   "components/ProfileInfoForm.tsx": "9892c551ddbc6157aac960aca124e7c31460f85f9c0b9bb540d70ad60eff1f2c",
-  "components/ProfileSocialForm.tsx": "cf3a78bb626a91d4022fe2fbdacda8beea8a9f92c4f80e45f522635eb6421df2"
+  "components/ProfileSocialForm.tsx": "cf3a78bb626a91d4022fe2fbdacda8beea8a9f92c4f80e45f522635eb6421df2",
+  "components/InventoryFilters.tsx": "59169f6576c1a314087006bed9a88c8258e25204f85f2b5c7eefb7467aaf0b08"
 }
 for (const [file, expected] of Object.entries(formContracts)) {
   test(`formularios: contrato previo intacto en ${file}`, () => {
@@ -185,6 +187,8 @@ registerHooks({
     if (specifier === '@/lib/supabase') return { url: 'data:text/javascript,export const createClient=()=>{throw Error("No network in UI fixture")}', shortCircuit: true }
     if (specifier === '@/lib/safe-navigation') return next(new URL('../lib/safe-navigation.ts', import.meta.url).href, context)
     if (specifier === '@/lib/property-price') return next(new URL('../lib/property-price.ts', import.meta.url).href, context)
+    if (specifier === '@/lib/zonas') return next(new URL('../lib/zonas.ts', import.meta.url).href, context)
+    if (specifier === '@/components/AdminPropertyThumbnail') return next(new URL('../components/AdminPropertyThumbnail.tsx', import.meta.url).href, context)
     if (specifier === '@/components/PropertyStatusBadge') return next(new URL('../components/PropertyStatusBadge.tsx', import.meta.url).href, context)
     if (specifier === './PropertyImageGallery' && context.parentURL === new URL('../components/CommercialPropertySheet.tsx', import.meta.url).href)
       return next(new URL('../components/PropertyImageGallery.tsx', import.meta.url).href, context)
@@ -198,7 +202,33 @@ registerHooks({
   },
 })
 const { Header } = await import('../components/Header.tsx')
+test('menú: Subir requerimiento conserva destino en navegación pública y de trabajo', () => {
+  for (const path of ['/', '/mis-propiedades']) {
+    globalThis.__uiPath = path
+    const html = renderToStaticMarkup(createElement(Header))
+    assert.match(html, /href="\/busco-bodega"[^>]*>Subir requerimiento<\/a>/)
+  }
+})
 const { PriceCurrencySelect } = await import('../components/PriceCurrencySelect.tsx')
+test('inventario: un solo formulario persistente, móvil cerrado y contador de criterios aplicados', async () => {
+  const { InventoryFilters } = await import('../components/InventoryFilters.tsx')
+  const empty = renderToStaticMarkup(createElement(InventoryFilters))
+  const filtered = renderToStaticMarkup(createElement(InventoryFilters, { operation: 'Renta', currency: 'USD', price_min: '100' }))
+  assert.equal((empty.match(/<form /g) || []).length, 1)
+  assert.match(empty, /data-expanded="false"/)
+  assert.match(empty, /type="button"[^>]*aria-expanded="false"[^>]*aria-controls=/)
+  assert.doesNotMatch(empty, /activos/)
+  assert.match(filtered, /Filtros · 3 activos/)
+  assert.match(filtered, /value="Renta" selected=""/)
+  assert.match(filtered, /name="price_min"[^>]*value="100"/)
+  const source = readFileSync(new URL('components/InventoryFilters.tsx', root), 'utf8')
+  assert.doesNotMatch(source, /expanded\s*&&\s*<|expanded\s*\?\s*</)
+  assert.match(source, /event.key === 'Escape'/)
+  assert.match(source, /triggerRef.current\?\.focus\(\)/)
+  assert.match(css, /\.inventory-filter-panel__toggle \{ display: none; \}/)
+  assert.match(css, /@media \(max-width: 760px\)\s*\{\s*\.inventory aside/)
+  assert.match(css, /\.inventory-filter-panel\[data-expanded="false"\] \.inventory-filter-panel__content \{ display: none; \}/)
+})
 test('publicar: MXN inicial sólo en alta nueva; USD/NULL originales de edición y duplicación conservados', () => {
   const publish = readFileSync(new URL('app/publicar/PublicarForm.tsx', root), 'utf8')
   const edit = readFileSync(new URL('app/mis-propiedades/[id]/editar/EditarPropiedadForm.tsx', root), 'utf8')
@@ -384,6 +414,92 @@ test('ficha real independiente: sólo datos autorizados, precio exacto y galerí
   assert.match(html, /Ampliar Portada sintética/)
 })
 
+test('similares: misma operación/municipio y ±25% inclusivo, sin incluir la propiedad consultada', () => {
+  const current = { id: 'current', operation: 'Renta', zone_general: 'El Marqués', zone: 'Conín', surface_m2: 1000 }
+  const candidate = { ...current, id: 'candidate' }
+  const candidates = [749, 750, 1000, 1250, 1251].map(surface_m2 => ({ ...candidate, id: `area-${surface_m2}`, surface_m2 }))
+  candidates.push(current, { ...candidate, id: 'sale', operation: 'Venta' }, { ...candidate, id: 'other-municipality', zone_general: 'Colón' })
+  const result = rankSimilarProperties(current, candidates)
+  assert.deepEqual(result.map(entry => entry.property.surface_m2), [750, 1000, 1250])
+  assert.ok(result.every(entry => entry.property.id !== current.id))
+  assert.deepEqual(similarPropertyRange(current), { area_min: 750, area_max: 1250 })
+  assert.deepEqual(rankSimilarProperties(current, candidates.filter(entry => entry.surface_m2 > 1250)), [])
+})
+test('similares: máximo tres y puntuación existente, sin moneda ni presupuesto inventados', () => {
+  const current = { id: 'current', operation: 'Renta', zone_general: 'Colón', zone: 'Conín', surface_m2: 1000 }
+  const candidates = [0, 1, 2, 3].map(index => ({ ...current, id: `candidate-${index}`, zone: index === 3 ? 'Conín' : 'Otra zona', price_currency: index % 2 ? 'USD' : 'MXN', price_value: 20 }))
+  const result = rankSimilarProperties(current, candidates)
+  assert.equal(result.length, 3)
+  assert.equal(result[0].property.id, 'candidate-3')
+  assert.equal(result[0].result.total, calculateMatch(candidates[3], { ...current, area_min: 750, area_max: 1250 }).total)
+  assert.equal(result[0].result.budget, 0)
+  assert.equal(candidates[0].price_currency, 'MXN')
+})
+test('similares: datos base ausentes/no finitos o sin candidatas no generan resultados de relleno', () => {
+  const current = { id: 'current', operation: 'Renta', zone_general: 'Colón', surface_m2: 1000 }
+  for (const change of [{ surface_m2: null }, { surface_m2: 0 }, { surface_m2: Infinity }, { surface_m2: -1 }, { operation: '' }, { zone_general: null }]) {
+    assert.equal(similarPropertyRange({ ...current, ...change }), null)
+    assert.deepEqual(rankSimilarProperties({ ...current, ...change }, [{ ...current, id: 'candidate' }]), [])
+  }
+})
+test('similares: lectura pública limitada, estado published, portada firmada y ubicación después de similares', () => {
+  const source = readFileSync(new URL('app/bodegas/[slug]/page.tsx', root), 'utf8')
+  assert.match(source, /createPublicServerSupabaseClient\(\)/)
+  assert.match(source, /\.neq\('id', property.id\)/)
+  assert.match(source, /\.eq\('zone_general', property.zone_general\)/)
+  assert.match(source, /\.eq\('operation', property.operation\)/)
+  assert.match(source, /\.gte\('total_area', similarRange.area_min\)/)
+  assert.match(source, /\.lte\('total_area', similarRange.area_max\)/)
+  assert.match(source, /ranked.map\(candidate => candidate.main_image_path\), PROPERTY_IMAGE_TTL_SECONDS.public/)
+  assert.ok(source.indexOf('property.description') < source.indexOf('id="property-similar-heading"'))
+  assert.ok(source.indexOf('<h2>Ubicación</h2>') < source.indexOf('<h2>Características</h2>'))
+  assert.doesNotMatch(source, /getPublicUrl|\.from\('profiles'\)|\.from\('properties'\)/)
+})
+test('detalle: ubicación única justo después de contacto, conservando privacidad y zona', () => {
+  const source = readFileSync(new URL('app/bodegas/[slug]/page.tsx', root), 'utf8')
+  assert.match(source, /<\/ResponsiveContactPanel>\s*<section className="ui-panel property-detail-section">\s*<h2>Ubicación<\/h2>/)
+  assert.equal((source.match(/<h2>Ubicación<\/h2>/g) || []).length, 1)
+  assert.match(source, /<strong>Zona:<\/strong> \{property.zone\}/)
+  assert.match(source, /\{visibleAddress \? <p><strong>Dirección:<\/strong> \{visibleAddress\}<\/p>\s*: <p>La dirección exacta se proporciona únicamente al solicitar información.<\/p>\}/)
+})
+test('contacto responsive: un solo formulario montado, cerrado sólo en móvil y disparador accesible', async () => {
+  const { ResponsiveContactPanel } = await import('../components/ResponsiveContactPanel.tsx')
+  const html = renderToStaticMarkup(createElement(ResponsiveContactPanel, null,
+    createElement('form', null, createElement('input', { name: 'synthetic-contact' }))))
+  assert.equal((html.match(/<form/g) || []).length, 1)
+  assert.match(html, /type="button"[^>]*aria-expanded="false" aria-controls="[^"]+"/)
+  assert.match(html, /property-contact__body" data-expanded="false"/)
+  assert.match(css, /@media \(max-width: 760px\)\s*\{\s*\.property-contact__heading/)
+  assert.match(css, /\.property-contact__body\[data-expanded="false"\] \{ display: none; \}/)
+  const source = readFileSync(new URL('components/ResponsiveContactPanel.tsx', root), 'utf8')
+  assert.doesNotMatch(source, /fetch\(|supabase|localStorage|children\s*&&|expanded\s*&&/)
+  assert.match(source, /trigger.current\?\.focus\(\)/)
+})
+test('oportunidades: se retiran dos títulos redundantes pero se conserva la descripción', () => {
+  const source = readFileSync(new URL('app/mis-propiedades/page.tsx', root), 'utf8')
+  assert.doesNotMatch(source, /<small>OPORTUNIDADES<\/small>|Oportunidades para tus propiedades/)
+  assert.match(source, /Requerimientos de clientes que coinciden con alguna de tus propiedades publicadas/)
+})
+test('admin: portadas autorizadas sólo tras guard y sin rutas persistentes nuevas al cliente', () => {
+  const source = readFileSync(new URL('app/admin/page.tsx', root), 'utf8')
+  assert.ok(source.indexOf("profile?.role !== 'admin'") < source.indexOf('coverUrls = await createSignedPropertyImageUrlMap'))
+  assert.match(source, /\(filteredProperties \|\| \[\]\).map\(property => property.main_image_path\), PROPERTY_IMAGE_TTL_SECONDS.admin/)
+  assert.match(source, /<AdminPropertiesTable properties=\{tableProperties\}/)
+  assert.doesNotMatch(source, /getPublicUrl|\.storage\.from/)
+  assert.match(css, /\.admin-properties-table__tag \{ white-space: nowrap; overflow-wrap: normal; \}/)
+  assert.match(css, /\.admin-properties-table td \{ vertical-align: middle; \}/)
+})
+test('miniatura administrativa real: proporción fija y ausencia de imagen con fallback', async () => {
+  const { AdminPropertyThumbnail } = await import('../components/AdminPropertyThumbnail.tsx')
+  const html = renderToStaticMarkup(createElement(AdminPropertyThumbnail, { url: 'https://synthetic.invalid/ephemeral' }))
+  assert.match(html, /width="56" height="56" loading="lazy" decoding="async"/)
+  assert.match(html, /alt=""/)
+  const empty = renderToStaticMarkup(createElement(AdminPropertyThumbnail, { url: null }))
+  assert.doesNotMatch(empty, /<img/)
+  assert.match(empty, /aria-label="Sin fotografía"/)
+  const source = readFileSync(new URL('components/AdminPropertyThumbnail.tsx', root), 'utf8')
+  assert.doesNotMatch(source, /fetch\(|supabase|getPublicUrl/)
+})
 test('tabla administrativa real: región enfocable, cabeceras, moneda, estados legibles y paginación existente', async () => {
   const { AdminPropertiesTable } = await import('../components/AdminPropertiesTable.tsx')
   const states = ['draft', 'pending', 'published', 'paused', 'rejected', 'expired', 'pending_update']

@@ -628,10 +628,6 @@ return (
             borderRadius: 16,
           }}
         >
-          <small>OPORTUNIDADES</small>
-          <h2 style={{ margin: '8px 0 8px' }}>
-            Oportunidades para tus propiedades
-          </h2>
           <p
             style={{
               margin: '0 0 24px',

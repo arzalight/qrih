@@ -1,5 +1,11 @@
 # QRIH FUNCTIONAL INDEX — Índice maestro tipo SIGMA
 
+**Ubicación21oct:** PropertyPage mueve bloque único de ubicación después de ResponsiveContactPanel;zona/visibleAddress intactos.243tests/31HTTP/build PASS,sin deploy.
+
+**Inventario móvil21oct:** InventoryFilters responsive accesible,contador aplicado,Escape/foco y formulario único persistente;GET/campos/handlers intactos.242tests/31HTTP/build PASS. Sin deploy;ver registro post-RC.
+
+**Post-RC local21oct:** PropertyPage→ResponsiveContactPanel(formulario único)/rankSimilarProperties→PropertyCard público,misma operación/municipio±25%;AdminPage→firma autorizadaTTLadmin→AdminPropertiesTable/AdminPropertyThumbnail;CSS tags30px/foto56px;MisPropiedades sólo títulos interiores retirados.240tests/31HTTP/build PASS. [Trazabilidad](docs/POST_RC_UX_2026-10-21.md). Tablero redactado45días sólo propuesta,sin nuevaAPI/migración/pestaña. Sin push/deploy o main/develop.
+
 **Entrega remota 21oct:** SHA8416985 → build6ad9345ad070f6760a151f7e/deploy6ad9345ad070f6760a151f80 READY en qrih-staging. 232 tests remotos y31HTTP PASS;inicio/ficha/PDF con formato común comprobados. Free/builds automáticos detenidos/main intacto. [Trazabilidad](docs/PRELAUNCH_RC_2026-10-21.md). Entrega documental posterior sin redeploy;límites de aceptación conservados.
 
 **RC 21oct autorizado:** [entrega y gates](docs/PRELAUNCH_RC_2026-10-21.md). propertyPrice centraliza visualización; propertyPriceForStorage conserva formato anterior en alta/guardado/admin. Plantilla de descripción sólo en alta; círculos detrás del contenido. 232 pruebas + 31 HTTP locales PASS; publicación remota pendiente de SHA/READY/verificación. No cambios de valores/moneda/unidad/cálculos o main.

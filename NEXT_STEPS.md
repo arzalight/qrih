@@ -1,5 +1,13 @@
 # NEXT STEPS — QRO INDUSTRIAL HUB / QRIH
 
+**Ubicación21oct:** revisión local debajo de Solicitar información,móvil/escritorio;243tests/31HTTP/build PASS,privacidad intacta. Sin despliegue.
+
+**Inventario móvil21oct:** revisar Filtros plegable en localhost,cerrado inicialmente,70px a375px,contador aplicado y escritorio sin cambios.242pruebas/31HTTP/build PASS. Sin deploy;tablero pendiente de autorización separada.
+
+## Paso vigente — ajustes locales post-RC
+
+Cinco comentarios listos enlocalhost3107 y240pruebas/31HTTP/build PASS. [Registro](docs/POST_RC_UX_2026-10-21.md). Revisar el cambio local;no repetir el deploy anterior ni aplicar SQL automáticamente. Tablero necesita revisar/autorizar la [propuesta de lectura redactada](docs/REQUIREMENT_BOARD_PROPOSAL_2026-10-21.md);todavía no existe migración ni pestaña activa. Conservar rama local separada;main/develop y STAGINGRC8416985 intactos. Futura entrega requiere su propia autorización.
+
 ## Cierre vigente — STAGING publicado 21oct2026
 
 RC `8416985` ya READY en qrih-staging; 232 pruebas remotas/31 HTTP y precios/ficha/PDF PASS. No repetir el deploy ni reactivar builds automáticos. [Resultado y límites](docs/PRELAUNCH_RC_2026-10-21.md). Los pasos de preparación inferiores son históricos. Revisar la versión publicada; cualquier corrección nueva vuelve a localhost y necesita autorización para otro RC. main/producción y datos permanecen fuera del alcance. AUD043/soporte/RTO/carga conservan sus pendientes previos; no declarar GO de producción por este cierre.

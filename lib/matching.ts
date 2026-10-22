@@ -155,6 +155,28 @@ export function rankPropertiesForDemand<T extends MatchingProperty>(
     .sort((a, b) => b.result.total - a.result.total)
 }
 
+// Approved detail-page similarity: same operation/municipality and ±25% area.
+// No currency conversion or fabricated demand budget; existing scoring orders candidates.
+export function similarPropertyRange(property: MatchingProperty) {
+  const area = property.surface_m2
+  if (area == null || !Number.isFinite(area) || area <= 0
+    || !normalize(property.operation) || !normalize(property.zone_general)) return null
+  return { area_min: area * 0.75, area_max: area * 1.25 }
+}
+
+export function rankSimilarProperties<T extends MatchingProperty & { id: string }>(
+  property: MatchingProperty & { id: string }, candidates: T[],
+): RankedProperty<T>[] {
+  const range = similarPropertyRange(property)
+  if (!range) return []
+  return rankPropertiesForDemand({
+    ...range, operation: property.operation, zone_general: property.zone_general, zone: property.zone,
+  }, candidates.filter(candidate => candidate.id !== property.id
+    && normalize(candidate.operation) === normalize(property.operation)
+    && normalize(candidate.zone_general) === normalize(property.zone_general)))
+    .slice(0, 3)
+}
+
 // A declared surface range is an eligibility constraint, not a scoring bonus.
 // Leave the existing score intact for ordering eligible suggestions and SQL parity.
 function isSurfaceInDemandRange(property: MatchingProperty, demand: MatchingDemand) {

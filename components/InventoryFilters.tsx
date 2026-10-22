@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useId, useRef, useState } from 'react'
 import {
   ZONAS_GENERALES,
   ZONAS_INDUSTRIALES_POR_ZONA,
@@ -25,11 +25,31 @@ export function InventoryFilters({
   currency = '', price_min = '', price_max = '', price_unit = '',
 }: InventoryFiltersProps) {
   const [zonaGeneral, setZonaGeneral] = useState(zone_general)
+  const [expanded, setExpanded] = useState(false)
+  const contentId = useId()
+  const triggerRef = useRef<HTMLButtonElement>(null)
+  const appliedCount = [operation, zone_general, zone, area, currency, price_min, price_max, price_unit]
+    .filter(Boolean).length
 
   const zonasIndustriales =
     ZONAS_INDUSTRIALES_POR_ZONA[zonaGeneral] || []
 
   return (
+    <div className="inventory-filter-panel" data-expanded={expanded}
+      onKeyDown={(event) => {
+        if (event.key === 'Escape' && expanded) {
+          setExpanded(false)
+          triggerRef.current?.focus()
+        }
+      }}>
+      <b className="inventory-filter-panel__heading">Filtros</b>
+      <button ref={triggerRef} type="button" className="inventory-filter-panel__toggle"
+        aria-expanded={expanded} aria-controls={contentId}
+        onClick={() => setExpanded((value) => !value)}>
+        <span>Filtros{appliedCount > 0 ? ` · ${appliedCount} activos` : ''}</span>
+        <span aria-hidden="true">{expanded ? '−' : '+'}</span>
+      </button>
+      <div id={contentId} className="inventory-filter-panel__content">
     <form method="get" className="inventory-filters">
 
       {/* OPERACIÓN */}
@@ -159,5 +179,7 @@ export function InventoryFilters({
       </a>
 
     </form>
+      </div>
+    </div>
   )
 }

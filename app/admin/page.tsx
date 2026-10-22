@@ -6,6 +6,7 @@ import { createServerSupabaseClient } from '@/lib/supabase-server'
 import { rankDemandsForProperty } from '@/lib/matching'
 import { AdminPropertyFilters } from '@/components/AdminPropertyFilters'
 import { AdminPropertiesTable } from '@/components/AdminPropertiesTable'
+import { createSignedPropertyImageUrlMap, PROPERTY_IMAGE_TTL_SECONDS } from '@/lib/property-image-urls'
 
 export default async function AdminPage({
   searchParams,
@@ -125,6 +126,15 @@ console.warn('QRIH_APP_ADMIN_PAGE_76_FAILED')
       matchesZone
     )
   })
+
+  let coverUrls = new Map<string, string>()
+  try {
+    coverUrls = await createSignedPropertyImageUrlMap(supabase,
+      (filteredProperties || []).map(property => property.main_image_path), PROPERTY_IMAGE_TTL_SECONDS.admin)
+  } catch { console.warn('QRIH_ADMIN_COVERS_UNAVAILABLE') }
+  const tableProperties = (filteredProperties || []).map(property => ({
+    ...property, coverUrl: coverUrls.get(property.main_image_path) || null,
+  }))
 
   const propertyStats = {
     total: properties?.length ?? 0,
@@ -701,7 +711,7 @@ return (
         zone={zone || 'all'}
       />
 
-      <AdminPropertiesTable properties={filteredProperties ?? []} />
+      <AdminPropertiesTable properties={tableProperties} />
     </main></>
   )
 }

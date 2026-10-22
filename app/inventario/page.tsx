@@ -115,7 +115,6 @@ export default async function Inventory({
 
       <main className="inventory">
         <aside>
-          <b>Filtros</b>
 
 <InventoryFilters
   operation={q.operation}

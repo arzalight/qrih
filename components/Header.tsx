@@ -181,9 +181,9 @@ export function Header({ administration = false }: { administration?: boolean })
     ['/mis-propiedades', 'Mi panel'], ['/inventario', 'Inventario público'],
   ] : workspace ? [
     ['/mis-propiedades', 'Mi panel'], ['/publicar', 'Subir propiedad'],
-    ['/inventario', 'Inventario'], ['/busco-bodega', 'Busco una bodega'],
+    ['/inventario', 'Inventario'], ['/busco-bodega', 'Subir requerimiento'],
   ] : [
-    ['/inventario', 'Inventario'], ['/busco-bodega', 'Busco una bodega'],
+    ['/inventario', 'Inventario'], ['/busco-bodega', 'Subir requerimiento'],
     ['/publicar', 'Subir propiedad'], ['/mis-propiedades', 'Mi panel'],
   ]
   function isActive(href: string) {
