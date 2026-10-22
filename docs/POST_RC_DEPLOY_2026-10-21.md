@@ -5,3 +5,5 @@ Usuario autoriza «sube a netlify». Destino exclusivo: sitio existente qrih-sta
 Gate: Free,sin recargas/sobrecostos,builds detenidos y0activos verificados por API;panel muestra234.8créditos,advierte retrasos de contabilidad. Una solicitud de build Git,sin reintento automático,restaurando stop_builds inmediatamente. Nunca desactivar escaneo de secretos.
 
 Verificación local:244pruebas,lint/tipos/build/preflight PASS. Evidencia visual y límites en POST_RC_UX_2026-10-21.md. Publicación remota pendiente hasta verificar estado READY/SHA y página servida. No afirmar coste cero ni aceptación global de flujos autenticados.
+
+Integración funcional87b0560 por fast-forward a develop,sin conflictos;escaneo del índice293archivos,sin hallazgos. Se conserva main55b7737. Commit de preparación sin skip para la solicitud manual única;los builds automáticos permanecen detenidos durante el push.
