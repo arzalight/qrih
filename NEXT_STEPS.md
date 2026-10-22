@@ -1,5 +1,7 @@
 # NEXT STEPS — QRO INDUSTRIAL HUB / QRIH
 
+**Estado vigente21oct19:32CDMX:** lote post-RC publicado enSTAGING124958b,244tests/31HTTP remotasPASS;builds automáticos detenidos. Revisar [entrega](docs/POST_RC_DEPLOY_2026-10-21.md). Tablero permanece pendiente de autorización separada,no nuevo despliegue ni producción implícitos.
+
 **Ubicación21oct:** revisión local debajo de Solicitar información,móvil/escritorio;243tests/31HTTP/build PASS,privacidad intacta. Sin despliegue.
 
 **Inventario móvil21oct:** revisar Filtros plegable en localhost,cerrado inicialmente,70px a375px,contador aplicado y escritorio sin cambios.242pruebas/31HTTP/build PASS. Sin deploy;tablero pendiente de autorización separada.

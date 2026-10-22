@@ -1,5 +1,7 @@
 ## PROJECT STATUS — QRO INDUSTRIAL HUB / QRIH
 
+**Post-RC PUBLICADO — 21oct2026,19:32 CDMX:** qrih-staging READY con SHA124958b,deploy6ad967713b5200c92ab03f0b.244pruebas/build remotos,escaneo293archivos y31HTTP remotasPASS;filtros móviles,menú,contacto/Ubicación/similares comprobados en dominio remoto. Un build;automáticos detenidos de nuevo;Free sin recargas/sobrecostos. Main/producción/SQL intactos,tablero sólo propuesta. [Entrega y límites](docs/POST_RC_DEPLOY_2026-10-21.md).
+
 **Entrega post-RC autorizada — 21oct2026:** usuario solicita subir a Netlify;se prepara una única publicación del lote UX local en qrih-staging/develop,Free234.8créditos observados,sin recargas/sobrecostos. Tablero sólo propuesta,sin SQL/main/producción. Resultado remoto pendiente:[registro](docs/POST_RC_DEPLOY_2026-10-21.md).
 
 **Texto de menú — 21oct2026:** Busco una bodega pasa a Subir requerimiento en las dos variantes de Header;destino /busco-bodega y comportamiento intactos.244tests,lint/build/preflight PASS. Sin commit/push/deploy.

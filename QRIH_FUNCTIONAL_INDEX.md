@@ -1,5 +1,7 @@
 # QRIH FUNCTIONAL INDEX — Índice maestro tipo SIGMA
 
+**Entrega post-RC21oct:** componentes UX locales publicados enSTAGING124958b;244tests/build/escaneo293archivos/31HTTP remotasPASS. Tablero sólo propuesta;sin SQL/main/producción. [Trazabilidad](docs/POST_RC_DEPLOY_2026-10-21.md).
+
 **Ubicación21oct:** PropertyPage mueve bloque único de ubicación después de ResponsiveContactPanel;zona/visibleAddress intactos.243tests/31HTTP/build PASS,sin deploy.
 
 **Inventario móvil21oct:** InventoryFilters responsive accesible,contador aplicado,Escape/foco y formulario único persistente;GET/campos/handlers intactos.242tests/31HTTP/build PASS. Sin deploy;ver registro post-RC.
