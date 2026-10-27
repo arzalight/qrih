@@ -182,7 +182,7 @@ const root = new URL('../', import.meta.url)
 registerHooks({
   resolve(specifier, context, next) {
     if (specifier === 'react' && context.parentURL?.startsWith('data:')) return next(new URL('../node_modules/react/index.js', import.meta.url).href, context)
-    if (specifier === 'next/navigation') return { url: 'data:text/javascript,export const usePathname=()=>globalThis.__uiPath;export const useRouter=()=>({push(){throw Error("No navigation in SSR fixture")},refresh(){throw Error("No mutation in SSR fixture")}})', shortCircuit: true }
+    if (specifier === 'next/navigation') return { url: 'data:text/javascript,export const redirect=(path)=>{throw Error("REDIRECT:"+path)};export const usePathname=()=>globalThis.__uiPath;export const useRouter=()=>({push(){throw Error("No navigation in SSR fixture")},refresh(){throw Error("No mutation in SSR fixture")}})', shortCircuit: true }
     if (specifier === 'next/link') return { url: 'data:text/javascript,import{createElement}from"react";export default function Link({href,children,...props}){return createElement("a",{...props,href},children)}', shortCircuit: true }
     if (specifier === '@/lib/supabase') return { url: 'data:text/javascript,export const createClient=()=>{throw Error("No network in UI fixture")}', shortCircuit: true }
     if (specifier === '@/lib/supabase-server') return { url: 'data:text/javascript,export const createServerSupabaseClient=async()=>globalThis.__sprintProfileClient', shortCircuit: true }
@@ -220,6 +220,7 @@ test('Sprint1 perfil real:Admin únicamente roleadmin activo;publisher/suspendid
       from(table) { assert.equal(table, 'profiles'); return { select() { return this }, eq(key, value) { assert.equal(key, 'id'); assert.equal(value, 'synthetic-owner'); return this },
         single: async () => ({ data: { role, account_status }, error: null }) } },
     }
+    if (!signedIn) { await assert.rejects(Profile(), /REDIRECT:\/login\?next=%2Fperfil/); continue }
     const html = renderToStaticMarkup(await Profile())
     assert.equal(html.includes('href="/admin"'), signedIn && role === 'admin' && account_status === 'active')
   }
@@ -324,8 +325,10 @@ const { DeletePropertyButton } = await import('../components/DeletePropertyButto
 
 test('panel: consultas, identidad, cálculo de métricas y firma de portadas anteriores intactos', () => {
   const source = readFileSync(new URL('app/mis-propiedades/page.tsx', root), 'utf8')
-  const logic = source.slice(source.indexOf('  const supabase ='), source.indexOf('return (\n  <>'))
-  assert.equal(createHash('sha256').update(logic).digest('hex'), '50b26308fac424659474dd2bfb4eeb43c68ce5f381db691016914e4e5ea9f94d')
+  // Sprint2 deliberately replaces only the anonymous notice with a safe login return.
+  // Retain an exact fingerprint of every subsequent authenticated query/calculation.
+  const logic = source.slice(source.indexOf('  let viewCounts:'), source.indexOf('return (\n  <>'))
+  assert.equal(createHash('sha256').update(logic).digest('hex'), 'fc9bb6c1f29ffa1f7aeea533b09d46dbef96fe8a2c3849d32e063c3f9541ecf0')
   assert.ok(source.indexOf('own-properties__grid') < source.indexOf('Rendimiento de tus propiedades'))
   assert.ok(source.indexOf('Preferencias de contacto') > source.indexOf("activeView === 'requirements' &&"))
   assert.doesNotMatch(source, /width: '180px'/)
@@ -396,7 +399,8 @@ const authenticationHandlers = {
     "names": [
       "signIn"
     ],
-    "hash": "3e55ef13ba2f163b0f8d440c0b4bdc6566ad6d42b0d633a8378e51bab12f6089"
+    // Sprint2: double-submit guard, Spanish Auth errors, explicit safe next before role default.
+    "hash": "b41f6784735cbc2a16fd59a547c97d369e031f0ebc2cd25605c6db2189f17639"
   },
   "app/registro/page.tsx": {
     "names": [
@@ -445,22 +449,22 @@ test('ficha real independiente: sólo datos autorizados, precio exacto y galerí
   assert.match(html, /Ampliar Portada sintética/)
 })
 
-test('similares: misma operación/municipio y ±25% inclusivo, sin incluir la propiedad consultada', () => {
+test('similares Sprint2: misma operación/municipio,prioridad ±25% y ampliación limitada,excluye actual', () => {
   const current = { id: 'current', operation: 'Renta', zone_general: 'El Marqués', zone: 'Conín', surface_m2: 1000 }
   const candidate = { ...current, id: 'candidate' }
   const candidates = [749, 750, 1000, 1250, 1251].map(surface_m2 => ({ ...candidate, id: `area-${surface_m2}`, surface_m2 }))
   candidates.push(current, { ...candidate, id: 'sale', operation: 'Venta' }, { ...candidate, id: 'other-municipality', zone_general: 'Colón' })
   const result = rankSimilarProperties(current, candidates)
-  assert.deepEqual(result.map(entry => entry.property.surface_m2), [750, 1000, 1250])
+  assert.deepEqual(result.map(entry => entry.property.surface_m2), [1000, 1250, 750, 1251, 749])
   assert.ok(result.every(entry => entry.property.id !== current.id))
-  assert.deepEqual(similarPropertyRange(current), { area_min: 750, area_max: 1250 })
-  assert.deepEqual(rankSimilarProperties(current, candidates.filter(entry => entry.surface_m2 > 1250)), [])
+  assert.deepEqual(similarPropertyRange(current), { area_min: 500, area_max: 2000 })
+  assert.deepEqual(rankSimilarProperties(current, candidates.filter(entry => entry.surface_m2 > 2000)), [])
 })
-test('similares: máximo tres y puntuación existente, sin moneda ni presupuesto inventados', () => {
+test('similares: hasta seis y puntuación existente, sin moneda ni presupuesto inventados', () => {
   const current = { id: 'current', operation: 'Renta', zone_general: 'Colón', zone: 'Conín', surface_m2: 1000 }
   const candidates = [0, 1, 2, 3].map(index => ({ ...current, id: `candidate-${index}`, zone: index === 3 ? 'Conín' : 'Otra zona', price_currency: index % 2 ? 'USD' : 'MXN', price_value: 20 }))
   const result = rankSimilarProperties(current, candidates)
-  assert.equal(result.length, 3)
+  assert.equal(result.length, 4)
   assert.equal(result[0].property.id, 'candidate-3')
   assert.equal(result[0].result.total, calculateMatch(candidates[3], { ...current, area_min: 750, area_max: 1250 }).total)
   assert.equal(result[0].result.budget, 0)
@@ -515,7 +519,7 @@ test('admin: portadas autorizadas sólo tras guard y sin rutas persistentes nuev
   const source = readFileSync(new URL('app/admin/page.tsx', root), 'utf8')
   assert.ok(source.indexOf("profile?.role !== 'admin'") < source.indexOf('coverUrls = await createSignedPropertyImageUrlMap'))
   assert.match(source, /\(filteredProperties \|\| \[\]\).map\(property => property.main_image_path\), PROPERTY_IMAGE_TTL_SECONDS.admin/)
-  assert.match(source, /<AdminPropertiesTable properties=\{tableProperties\}/)
+  assert.match(source, /<AdminPropertiesTable key=\{JSON.stringify\(\{ status, operation, zone_general, zone, search \}\)\} properties=\{tableProperties\}/)
   assert.doesNotMatch(source, /getPublicUrl|\.storage\.from/)
   assert.match(css, /\.admin-properties-table__tag \{ white-space: nowrap; overflow-wrap: normal; \}/)
   assert.match(css, /\.admin-properties-table td \{ vertical-align: middle; \}/)

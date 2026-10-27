@@ -2,10 +2,12 @@ import { Header } from '@/components/Header'
 import Link from 'next/link'
 import { propertyPrice } from '@/lib/property-price'
 import { redirect } from 'next/navigation'
+import { loginPath } from '@/lib/safe-navigation'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 import { rankDemandsForProperty } from '@/lib/matching'
 import { AdminPropertyFilters } from '@/components/AdminPropertyFilters'
 import { AdminPropertiesTable } from '@/components/AdminPropertiesTable'
+import { AdminAutoRefresh } from '@/components/AdminAutoRefresh'
 import { createSignedPropertyImageUrlMap, PROPERTY_IMAGE_TTL_SECONDS } from '@/lib/property-image-urls'
 
 export default async function AdminPage({
@@ -33,7 +35,9 @@ export default async function AdminPage({
   } = await supabase.auth.getUser()
 
   if (!user) {
-    redirect('/login')
+    const query = new URLSearchParams()
+    for (const [key, value] of Object.entries({ status, operation, zone_general, zone, search })) if (value) query.set(key, value)
+    redirect(loginPath(`/admin${query.size ? '?' + query.toString() : ''}`))
   }
 
   const { data: profile, error: profileError } = await supabase
@@ -163,6 +167,7 @@ return (
       margin: '0 auto',
     }}
   >
+    <AdminAutoRefresh scopeKey={JSON.stringify({ status, operation, zone_general, zone, search })} />
     <header
       style={{
         marginBottom: '28px',
@@ -711,7 +716,7 @@ return (
         zone={zone || 'all'}
       />
 
-      <AdminPropertiesTable properties={tableProperties} />
+      <AdminPropertiesTable key={JSON.stringify({ status, operation, zone_general, zone, search })} properties={tableProperties} />
     </main></>
   )
 }

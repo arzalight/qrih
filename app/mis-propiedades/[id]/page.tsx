@@ -6,6 +6,7 @@ import { createServerSupabaseClient } from '@/lib/supabase-server'
 import { createSignedPropertyImageUrlMap, PROPERTY_IMAGE_TTL_SECONDS } from '@/lib/property-image-urls'
 import { propertyPrice } from '@/lib/property-price'
 import { validUuid } from '@/lib/request-security'
+import { loginPath } from '@/lib/safe-navigation'
 
 // Private owner preview. No publication, contact request or shared/PDF route is enabled here.
 export default async function OwnPropertyPage({ params }: { params: Promise<{ id: string }> }) {
@@ -14,7 +15,7 @@ export default async function OwnPropertyPage({ params }: { params: Promise<{ id
   const client = await createServerSupabaseClient()
   if (!client) return <main><p>Servicio no disponible.</p></main>
   const { data: { user } } = await client.auth.getUser()
-  if (!user) redirect('/login')
+  if (!user) redirect(loginPath(`/mis-propiedades/${id}`))
   const { data: profile } = await client.from('profiles').select('account_status').eq('id', user.id).single()
   if (profile?.account_status !== 'active') return <main><p>Necesitas una cuenta activa para abrir esta vista.</p></main>
   const { data: property, error } = await client.from('properties')

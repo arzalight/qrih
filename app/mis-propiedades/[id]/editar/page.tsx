@@ -1,5 +1,6 @@
 import { notFound, redirect } from 'next/navigation'
 import { Header } from '@/components/Header'
+import { loginPath } from '@/lib/safe-navigation'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 import { createSignedPropertyImageUrlMap, PROPERTY_IMAGE_TTL_SECONDS } from '@/lib/property-image-urls'
 import { EditarPropiedadForm } from './EditarPropiedadForm'
@@ -29,7 +30,7 @@ export default async function EditarPropiedadPage({
   } = await supabase.auth.getUser()
 
   if (!user) {
-    redirect('/login')
+    redirect(loginPath(`/mis-propiedades/${encodeURIComponent(id)}/editar`))
   }
 
   const { data: property, error } = await supabase

@@ -46,11 +46,11 @@ function loginFixture({ error = null, user = { id: 'synthetic' }, unavailable = 
     calls.push(value); return { data: { user }, error }
   } } }
   const login = new Function('loading', 'setLoading', 'setMessage', 'createClient', 'email', 'password',
-    'ensureOwnProfile', 'router', 'next', `${loginSource}\nreturn signIn`)(false, () => {},
+    'ensureOwnProfile', 'router', 'next', 'busy', 'searchParams', `${loginSource}\nreturn signIn`)(false, () => {},
     value => messages.push(value), () => unavailable ? null : client,
     'synthetic@example.invalid', 'Synthetic!123', async () => ({ ok: profileOk,
       profile: { role, account_status: status } }),
-    { replace: value => redirects.push(value), refresh() {} }, next)
+    { replace: value => redirects.push(value), refresh() {} }, next, { current: false }, { has: () => next !== '/mis-propiedades' })
   return { login: () => login({ preventDefault() {} }), redirects, messages, calls }
 }
 
@@ -100,7 +100,8 @@ test('registro real: error/cliente ausente/perfil fallido no muestran éxito; se
 test('login real: panel default, next explícito y administrador activo preservados', async () => {
   for (const [options, target] of [[{}, '/mis-propiedades'],
     [{ next: '/bodegas/prueba' }, '/bodegas/prueba'],
-    [{ role: 'admin', next: '/bodegas/prueba' }, '/admin']]) {
+    [{ role: 'admin' }, '/admin'],
+    [{ role: 'admin', next: '/bodegas/prueba' }, '/bodegas/prueba']]) {
     const f = loginFixture(options); await f.login()
     assert.deepEqual(f.redirects, [target])
     assert.equal(f.calls.length, 1)

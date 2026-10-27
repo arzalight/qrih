@@ -120,14 +120,15 @@ export default async function PropertyPage({ params }: PageProps) {
     try {
       const { data: candidates, error: similarError } = await supabase
         .from('properties_public')
-        .select('id,slug,title,operation,zone_general,zone,price_display,price_value,price_value_text:price_value::text,price_currency,price_unit,total_area,covered_area,max_height,share_commission,main_image_path')
+        .select('id,slug,title,operation,status,zone_general,zone,price_display,price_value,price_value_text:price_value::text,price_currency,price_unit,total_area,covered_area,max_height,docks,share_commission,main_image_path')
         .eq('status', 'published')
         .neq('id', property.id)
         .eq('operation', property.operation)
         .eq('zone_general', property.zone_general)
         .gte('total_area', similarRange.area_min)
         .lte('total_area', similarRange.area_max)
-        .order('created_at', { ascending: false })
+        .order('total_area', { ascending: true })
+        .order('id', { ascending: true })
         .limit(1000)
       if (similarError) throw new Error('Similar properties unavailable')
       const ranked = rankSimilarProperties(similaritySource,
@@ -200,6 +201,7 @@ export default async function PropertyPage({ params }: PageProps) {
         </section>
         <section className="property-detail-section property-similar" aria-labelledby="property-similar-heading">
           <h2 id="property-similar-heading">Propiedades similares</h2>
+          <p className="ui-help">Misma operación y municipio. Priorizamos tu zona y ampliamos gradualmente el rango de superficie.</p>
           {similarProperties.length > 0
             ? <div className="cards">{similarProperties.map(candidate => <PropertyCard key={candidate.id} property={candidate} />)}</div>
             : <p>{similarUnavailable ? 'No fue posible cargar las propiedades similares.' : 'No hay propiedades similares disponibles con estos criterios.'}</p>}

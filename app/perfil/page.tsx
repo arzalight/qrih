@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { Header } from '@/components/Header'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 import { ProfileSocialForm } from '@/components/ProfileSocialForm'
@@ -22,13 +23,7 @@ export default async function PerfilPage() {
   } = await supabase.auth.getUser()
 
   if (!user) {
-    return (
-      <main style={{ padding: 40 }}>
-        <h1>Mi perfil</h1>
-        <p>Necesitas iniciar sesión para ver tu perfil.</p>
-        <Link href="/login">Iniciar sesión</Link>
-      </main>
-    )
+    redirect('/login?next=%2Fperfil')
   }
 
   const { data: profile, error } = await supabase

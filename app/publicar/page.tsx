@@ -2,6 +2,7 @@ import { notFound, redirect } from 'next/navigation'
 import { Header } from '@/components/Header'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 import { validUuid } from '@/lib/request-security'
+import { loginPath } from '@/lib/safe-navigation'
 import { createSignedPropertyImageUrlMap, PROPERTY_IMAGE_TTL_SECONDS } from '@/lib/property-image-urls'
 import { EditarPropiedadForm } from '@/app/mis-propiedades/[id]/editar/EditarPropiedadForm'
 import Publish from './PublicarForm'
@@ -15,7 +16,7 @@ export default async function PublicarPage({ searchParams }: {
   const supabase = await createServerSupabaseClient()
   if (!supabase) return <main className="form"><p>El servicio no está disponible.</p></main>
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  if (!user) redirect(loginPath(`/publicar?duplicar=${duplicar}`))
   const { data: profile } = await supabase.from('profiles').select('account_status').eq('id', user.id).single()
   if (profile?.account_status !== 'active') return <main className="form"><p>No puedes crear propiedades con esta cuenta.</p></main>
   // Explicit commercial projection; never send contacts, approvals or audit to the form.

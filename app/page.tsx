@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Header } from '@/components/Header'
 import { PropertyCard } from '@/components/PropertyCard'
+import { PublicIndicators } from '@/components/PublicIndicators'
 import { createPublicServerSupabaseClient } from '@/lib/supabase-public-server'
 import {
   createSignedPropertyImageUrlMap,
@@ -104,6 +105,7 @@ export default async function Home() {
       </section>
 
       <main>
+        <PublicIndicators />
         <small>SELECCIÓN QRIH</small>
         <div className="head home-selection__heading">
           <h2>Espacios que mueven industria</h2>

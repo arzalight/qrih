@@ -1,4 +1,5 @@
 import { Header } from '@/components/Header'
+import { loginPath } from '@/lib/safe-navigation'
 import Link from 'next/link'
 import { propertyPrice } from '@/lib/property-price'
 import { notFound, redirect } from 'next/navigation'
@@ -179,7 +180,7 @@ export default async function AdminAdvisorDetailPage({ params }: Props) {
   } = await supabase.auth.getUser()
 
   if (!user) {
-    redirect('/login')
+    redirect(loginPath(`/admin/asesores/${encodeURIComponent(id)}`))
   }
 
   const { data: adminProfile, error: adminError } = await supabase

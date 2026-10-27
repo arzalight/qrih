@@ -1,5 +1,7 @@
 # NEXT STEPS — QRO INDUSTRIAL HUB / QRIH
 
+**Paso vigenteSprint2 —26oct:**revisar ramaindependiente y [diagnóstico/entrega](docs/SPRINT_2_EXPERIENCE_2026-10-26.md).267+111+33PASS/build,datosintactos;no publicar automáticamente. Autorizar porseparado UXstaging(con«Registro por habilitar»)y/o revisiónconversión/ejecuciónpropuesta ledger;no backfill ni autoaprobaciones. Adminremoto/touchfísicoS1siguenpendientes. Sincommit/push/deploy/SQLremoto,nadaenmain/producción.
+
 **Estado vigente26oct19:17CDMX:** Sprint1 publicado enSTAGING41061a0 y validado con dos cuentas sintéticas,fuente draft/copia pending,sin publicar fixtures ni tocar24propiedades previas.32HTTP remotas PASS;duplicación y avisos aislados PASS. Revisar [entrega](docs/SPRINT_1_STAGING_2026-10-26.md);no repetir build. Pendientes:touch físico,visual Admin con cuenta existente autorizada,definición covered_area/almacenamiento y requisito de foto del editor. No nuevos roles,SQL,otros sprints ni producción implícitos. Los pasos inferiores son históricos.
 
 **Paso vigente26oct:** revisar Sprint1 en feature/sprint-1-stability(nuevacopialocal),257+110+32PASS/build. Solicitar autorización para validar enSTAGING con fixtures/cuentas sintéticas;sin deploy/mutacionesremotas implícitas. Confirmar equivalencia covered_area/almacenamiento yrequisito1fotoeleditor. Touchfísico pendiente. [Informe](docs/SPRINT_1_STABILITY_2026-10-26.md). No iniciarotrosprints/producción.

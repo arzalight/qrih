@@ -52,7 +52,7 @@ test('051 retiro con confirmación pero sin sesión: 401, ninguna transición', 
 for(const [path,method,status,notice] of [
   ['/login','GET',200],['/registro','GET',200],['/admin','GET',307],['/admin/asesores','GET',307],
   ['/recuperar-contrasena','GET',200],['/restablecer-contrasena','GET',200],
-  ['/perfil','GET',200,true],['/mis-propiedades','GET',200,true],['/notificaciones','GET',200,true],
+  ['/perfil','GET',307,true],['/mis-propiedades','GET',307,true],['/notificaciones','GET',307,true],
   ['/api/imagenes','POST',401],['/api/contactar-propiedad','POST',401],['/api/interes-propiedad','POST',401],
   ['/api/registrar-oportunidad','POST',401],['/api/contactar-propiedad/autorizacion','POST',401],
   ['/api/eliminar-propiedad','POST',401],['/api/editar-propiedad','POST',401],['/api/requerimientos','POST',400],
@@ -60,7 +60,13 @@ for(const [path,method,status,notice] of [
   test(`${method} ${path}: sin sesión no entrega datos privados ni crea registros`,async()=>{
     const response=await fetch(base+path,{method,redirect:'manual',...(method==='POST'?{body:'malformed',headers:{'Content-Type':'application/json'}}:{})})
     assert.equal(response.status,status)
-    if(notice) assert.match(await response.text(),/Necesitas iniciar sesión/)
+    if(notice) {
+      const destination=new URL(response.headers.get('location'),base)
+      assert.equal(destination.pathname,'/login')
+      const next=destination.searchParams.get('next')
+      assert.ok(next===path || (path==='/mis-propiedades'&&next==='/mis-propiedades?view=properties'))
+      assert.ok(!(await response.text()).includes('/storage/v1/object/sign/'))
+    }
     if(status===307) assert.equal(new URL(response.headers.get('location'),base).pathname,'/login')
   })
 }
@@ -80,8 +86,21 @@ test('bandera visual de registro no entrega sesión ni abre el panel privado', a
   assert.equal(response.status, 200)
   assert.ok(!response.headers.get('set-cookie')?.includes('auth-token'))
   const panel = await fetch(base + '/mis-propiedades?registro=pendiente', { redirect: 'manual' })
-  assert.equal(panel.status, 200)
-  assert.match(await panel.text(), /Necesitas iniciar sesión/)
+  assert.equal(panel.status, 307)
+  const destination=new URL(panel.headers.get('location'),base)
+  assert.equal(destination.pathname,'/login')
+  assert.equal(destination.searchParams.get('next'),'/mis-propiedades?view=properties')
+})
+
+test('Sprint2 indicadores públicos:sólo agregado numérico/estado,sin datos privados ni cookies',async()=>{
+  const response=await fetch(base+'/api/indicadores-publicos',{redirect:'manual'})
+  assert.equal(response.status,200)
+  assert.match(response.headers.get('cache-control'),/s-maxage=60/)
+  assert.ok(!response.headers.get('set-cookie'))
+  const data=await response.json()
+  assert.deepEqual(Object.keys(data).sort(),['connections','connectionsStatus','properties'])
+  for(const key of ['connections','properties']) assert.ok(data[key]===null||Number.isSafeInteger(data[key])&&data[key]>=0)
+  assert.ok(['confirmed','not_enabled','unavailable'].includes(data.connectionsStatus))
 })
 
 for (const query of ['?type=recovery&next=https://invalid.test', '?code=synthetic&sb_flow_id=invalid']) {

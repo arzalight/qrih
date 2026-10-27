@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
+import { loginPath } from '@/lib/safe-navigation'
 import { Header } from '@/components/Header'
 import { NotificationReadButton } from '@/components/NotificationReadButton'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
@@ -46,16 +48,7 @@ export default async function NotificationsPage() {
   } = await supabase.auth.getUser()
 
   if (!user) {
-    return (
-      <>
-        <Header />
-        <main style={{ padding: 40 }}>
-          <h1>Notificaciones</h1>
-          <p>Necesitas iniciar sesión para ver tus notificaciones.</p>
-          <Link href="/login">Iniciar sesión</Link>
-        </main>
-      </>
-    )
+    redirect(loginPath('/notificaciones'))
   }
 
   const { data: notificationData, error: notificationsError } =

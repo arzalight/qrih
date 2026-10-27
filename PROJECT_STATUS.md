@@ -1,5 +1,7 @@
 ## PROJECT STATUS — QRO INDUSTRIAL HUB / QRIH
 
+**Sprint2 LOCAL —26oct2026:**rama `feature/sprint-2-experience` desdeff89d57(Sprint1funcional41061a0). Login/retornosseguros,indicadorpúblico22enlectura,similaresprogresivos,hasta6,Admincontraíble/refresh30sconpágina/filtros conservados.267aplicación+111PGlite+33HTTP,lint/tipos/build/preflightPASS.26filas(24originales+2fixturesSprint1)idénticasporhuella,0escriturasremotas. Vinculaciones:sóloaceptaciónmanualconfirmadaporusuario;ledger propuesto,no aplicado,UI«Registro por habilitar». GOcondicionadoUXstaging,NO-GOactivacióncompleta/producción. Sincommit/push/deploy/migración. [Diagnóstico,entrega ylímites](docs/SPRINT_2_EXPERIENCE_2026-10-26.md).
+
 **Sprint1 PUBLICADO —26oct2026,19:10CDMX:** STAGING READY con `41061a0`,deploy `6adff9c952c0d443c02f7840`.257tests/110PGlite/build locales y32HTTP remotas PASS;duplicar→editar→draft→pending y avisos8→7→0 con aislamiento B=1 comprobados.24propiedades previas y fuente sintética intactas;ningún fixture publicado. Un build,Free,automáticos detenidos;sin main/producción/SQL/roles/RLS. Touchfísico y visual Admin positivo pendientes. [Entrega y límites](docs/SPRINT_1_STAGING_2026-10-26.md). Los cortes inferiores son históricos.
 
 **Sprint1 STAGING autorizado —26oct2026:** usuario confirma despliegue y validación con fixtures sintéticos;se preparaunbuild enqrih-staging/develop,Free212.1créditos,sin recargas/sobrecostos.257tests/build localPASS;sinSQL/roles/RLS/producción. Resultado remoto pendiente:[registro](docs/SPRINT_1_STAGING_2026-10-26.md).

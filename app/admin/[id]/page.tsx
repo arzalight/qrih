@@ -1,4 +1,5 @@
 import { Header } from '@/components/Header'
+import { loginPath } from '@/lib/safe-navigation'
 import { PriceCurrencySelect } from '@/components/PriceCurrencySelect'
 import { isPriceCurrency, parsePriceInput, propertyPrice, propertyPriceForStorage, type PricedProperty } from '@/lib/property-price'
 import Link from 'next/link'
@@ -126,7 +127,7 @@ export default async function AdminPropertyPage({
   } = await supabase.auth.getUser()
 
   if (!user) {
-    redirect('/login')
+    redirect(loginPath(`/admin/${encodeURIComponent(id)}`))
   }
 
   const { data: profile, error: profileError } = await supabase

@@ -1,7 +1,7 @@
 'use client'
 
 import { createClient } from '@/lib/supabase'
-import { Suspense, useState } from 'react'
+import { Suspense, useRef, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Header } from '@/components/Header'
@@ -13,6 +13,7 @@ function LoginForm() {
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
+  const busy = useRef(false)
   const router = useRouter()
   const searchParams = useSearchParams()
   const next = safeInternalPath(searchParams.get('next'))
@@ -26,7 +27,8 @@ function LoginForm() {
 
   async function signIn(e: React.FormEvent) {
     e.preventDefault()
-    if (loading) return
+    if (busy.current) return
+    busy.current = true
     setLoading(true)
     setMessage('')
     try {
@@ -34,8 +36,11 @@ function LoginForm() {
       if (!supabase) {
         return setMessage('El servicio de acceso no está disponible.')
       }
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-      if (error) return setMessage(error.message)
+      const { data, error } = await supabase.auth.signInWithPassword({ email: email.trim(), password })
+      if (error) return setMessage(error.code === 'email_not_confirmed'
+        ? 'Confirma tu correo antes de iniciar sesión. Revisa también Spam o Correo no deseado.'
+        : error.status === 429 ? 'Has realizado varios intentos. Espera unos minutos antes de volver a intentar.'
+          : 'No fue posible iniciar sesión. Revisa tu correo y contraseña e intenta nuevamente.')
       if (!data.user) return setMessage('No fue posible iniciar sesión.')
 
       const result = await ensureOwnProfile(supabase)
@@ -43,7 +48,7 @@ function LoginForm() {
         return setMessage('Tu sesión está iniciada, pero no se pudo preparar tu perfil. No puedes publicar todavía. Intenta iniciar sesión de nuevo o contacta a soporte.')
       }
       router.replace(
-        result.profile.role === 'admin' && result.profile.account_status === 'active'
+        !searchParams.has('next') && result.profile.role === 'admin' && result.profile.account_status === 'active'
           ? '/admin'
           : next
       )
@@ -51,6 +56,7 @@ function LoginForm() {
     } catch {
       setMessage('No fue posible completar el acceso. Intenta nuevamente.')
     } finally {
+      busy.current = false
       setLoading(false)
     }
   }
@@ -59,10 +65,14 @@ function LoginForm() {
     <>
       <Header />
 
-      <main className="form">
-        <small>ACCESO A TU PANEL</small>
-
-        <h1>Inicia sesión</h1>
+      <main className="form auth-access">
+        <div className="auth-access__intro">
+          <span className="auth-access__mark" aria-hidden="true">Q</span>
+          <small>TU ESPACIO INDUSTRIAL</small>
+          <h1>Bienvenido a QRIH</h1>
+          <p>Accede a tu espacio para administrar propiedades, conectar con asesores y descubrir nuevas oportunidades industriales.</p>
+        </div>
+        <section className="auth-access__card" aria-label="Inicio de sesión">
 
         {pendingConfirmation && (
           <section className="email-confirmation-notice" role="status" aria-labelledby="email-confirmation-title">
@@ -78,11 +88,12 @@ function LoginForm() {
           </section>
         )}
 
-        <form onSubmit={signIn}>
+        <form onSubmit={signIn} aria-busy={loading}>
           <label htmlFor="login-email">Correo electrónico</label>
           <input id="login-email" autoComplete="email"
             type="email"
             required
+            disabled={loading}
             placeholder="Correo electrónico"
             onChange={(e) =>
               setEmail(e.target.value)
@@ -93,6 +104,7 @@ function LoginForm() {
           <input id="login-password" autoComplete="current-password"
             type="password"
             required
+            disabled={loading}
             placeholder="Contraseña"
             onChange={(e) =>
               setPassword(e.target.value)
@@ -110,7 +122,7 @@ function LoginForm() {
           )}
         </form>
 
-        <p><Link href="/recuperar-contrasena" prefetch={false}>Olvidé mi contraseña</Link></p>
+        <p className="auth-access__recovery"><Link href="/recuperar-contrasena" prefetch={false}>Olvidé mi contraseña</Link></p>
 
         <p
           style={{
@@ -129,6 +141,7 @@ function LoginForm() {
             Regístrate
           </Link>
         </p>
+        </section>
       </main>
     </>
   )

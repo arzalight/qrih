@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
+import { loginPath } from '@/lib/safe-navigation'
 import { PropertyActionDisclosure } from '@/components/PropertyActionDisclosure'
 import { SharePropertyButton } from '@/components/SharePropertyButton'
 import { propertyPrice } from '@/lib/property-price'
@@ -84,13 +86,7 @@ export default async function MisPropiedadesPage({
     data: { user },
   } = await supabase.auth.getUser()
   if (!user) {
-    return (
-      <main style={{ padding: 40 }}>
-        <h1>Mis propiedades</h1>
-        <p>Necesitas iniciar sesión para ver tus propiedades.</p>
-        <Link href="/login">Iniciar sesión</Link>
-      </main>
-    )
+    redirect(loginPath(`/mis-propiedades?view=${activeView}`))
   }
   let viewCounts: Record<string, number> = {}
 let weeklyViews = [0, 0, 0, 0]
