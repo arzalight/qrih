@@ -1,6 +1,8 @@
 'use client'
 
 import { FormField } from '@/components/FormField'
+import { PrivatePropertyFields } from '@/components/PrivateOwnerFields'
+import { privatePropertyInput, type PropertyPrivateDetails } from '@/lib/private-commercial'
 
 import { PriceCurrencySelect } from '@/components/PriceCurrencySelect'
 
@@ -44,6 +46,7 @@ export function EditarPropiedadForm({
   property,
   initialImages,
   duplicate = false,
+  initialPrivate,
 }: {
   property: Property
   initialImages: {
@@ -53,6 +56,7 @@ export function EditarPropiedadForm({
     position: number
   }[]
   duplicate?: boolean
+  initialPrivate?: PropertyPrivateDetails | null
 }) {
   const router = useRouter()
   const busy = useRef(false)
@@ -101,6 +105,7 @@ const [uploadStates, setUploadStates] = useState<ImageUploadState[]>([])
     let saveAttempted = false
     setUploadStates(images.map(image => image.kind === 'existing' ? 'completed' : 'pending'))
     try {
+      privatePropertyInput(formData)
       const gallery = []
       for (const [index, image] of images.entries()) {
         if (image.kind === 'existing') {
@@ -168,6 +173,7 @@ const [uploadStates, setUploadStates] = useState<ImageUploadState[]>([])
     }
   }}
 >
+  <PrivatePropertyFields initial={initialPrivate} disabled={loading || imagesProcessing} />
         <input
           type="hidden"
           name="id"

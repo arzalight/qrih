@@ -1,6 +1,8 @@
 'use client'
 
 import { FormField } from '@/components/FormField'
+import { PrivatePropertyFields } from '@/components/PrivateOwnerFields'
+import { privatePropertyInput, ownerSaveError } from '@/lib/private-commercial'
 
 import { PriceCurrencySelect } from '@/components/PriceCurrencySelect'
 import { isPriceCurrency, parsePriceInput, propertyPriceForStorage as propertyPrice } from '@/lib/property-price'
@@ -86,6 +88,7 @@ export default function Publish() {
   const [imagesProcessing, setImagesProcessing] = useState(false)
   const [uploadStates, setUploadStates] = useState<ImageUploadState[]>([])
   const submitBusy = useRef(false)
+  const privateCreateId = useRef<string | null>(null)
   const successNotice = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -151,6 +154,7 @@ export default function Publish() {
         ? submitter.value
         : 'pending'
     try {
+    const privateDetails = privatePropertyInput(form)
     const supabase = createClient()
 
     if (!supabase) {
@@ -273,6 +277,31 @@ export default function Publish() {
       '-' +
       String(Date.now())
 
+    if (privateDetails) {
+      privateCreateId.current ||= crypto.randomUUID()
+      const { data: savedId, error: privateError } = await supabase.rpc('qrih_create_property_with_owner', {
+        p_id: privateCreateId.current,
+        p_changes: { title, slug, operation: currentOperation, zone_general: zoneGeneral, zone,
+          address: address || null, location_visibility: visibility, price_display: priceDisplay,
+          price_value: priceValue, price_currency: currency, price_unit: priceUnit,
+          price_plus_vat: pricePlusVat, price_plus_maintenance: pricePlusMaintenance, negotiable,
+          total_area: totalArea, covered_area: coveredArea, exterior_area: exteriorArea,
+          max_height: maxHeight || null, offices_area: officesArea, parking, docks, description,
+          share_commission: shareCommission },
+        p_images: uploadedImages.map((image, index) => ({ storage_path: image.path, title: images[index]?.title || '' })),
+        p_private: privateDetails, p_status: submissionAction, p_consents: publicationAuthorized && termsAccepted,
+      })
+      // Unknown network result may already be committed. Never remove potentially referenced images.
+      if (privateError) { setMsg(ownerSaveError(privateError)); return }
+      // A retry may refer to an already committed draft, even if another submit button was clicked.
+      const confirmation = await supabase.from('properties').select('id,status').eq('id', savedId).eq('owner_id', user.id).single()
+      if (confirmation.error || !confirmation.data || !['draft', 'pending'].includes(confirmation.data.status)) {
+        throw Error('Revisa el estado actual en Mis propiedades antes de reintentar.')
+      }
+      setSuccessAction(confirmation.data.status === 'draft' ? 'draft' : 'pending'); setShowSuccess(true)
+      formElement.reset(); setZonaGeneral(''); setZonaIndustrial(''); setOperation('Renta'); setImages([])
+      return
+    }
     const { data: property, error } = await supabase
       .from('properties')
       .insert({
@@ -402,6 +431,7 @@ export default function Publish() {
           onSubmit={submit}
           encType="multipart/form-data"
         >
+          <PrivatePropertyFields disabled={loading || imagesProcessing} />
           <fieldset>
             <legend>Información general</legend>
 

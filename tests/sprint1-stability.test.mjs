@@ -22,7 +22,7 @@ function editorFixture({ duplicate = false, imagesProcessing = false, files = fa
     images: files ? [{ kind: 'new', id: 'new1', file: new File(['x'], 'synthetic.webp'), title: '' }] : [],
     setLoading() {}, setError(value) { errors.push(value) },
     setUploadStates(value) { progress.push(typeof value === 'function' ? value(progress.at(-1) || []) : value) },
-    FormData: FixtureFormData, crypto,
+    FormData: FixtureFormData, crypto, privatePropertyInput: form => { assert.equal(form.get('private_fields_present'), null);return null },
     fetch: async (url, options) => { calls.push({ url, action: options.body.get('submission_action') });
       if (url === '/api/imagenes') return { ok: !failUpload, json: async () => failUpload ? {} : { path: 'synthetic/1.webp' } }
       return { ok: true, json: async () => ({ id: resultId }) }

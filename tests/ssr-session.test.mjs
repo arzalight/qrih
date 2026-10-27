@@ -208,7 +208,7 @@ test('AUD-036 proxy: configuración ausente/excepción sin secretos en logs ni s
 test('AUD-036 matcher: privadas SSR y ficha no-store; resto de públicos/APIs/assets excluidos', () => {
   // La API de testing de Next16.3 instalado conserva este nombre legacy.
   const matches = path => unstable_doesMiddlewareMatch({ config, nextConfig: {}, url: 'http://localhost:3107' + path })
-  for (const path of ['/perfil', '/notificaciones', '/mis-propiedades', '/mis-propiedades/x/editar',
+  for (const path of ['/perfil', '/perfil/propietarios', '/notificaciones', '/mis-propiedades', '/mis-propiedades/x/editar',
     '/mis-propiedades/x/solicitudes', '/admin', '/admin/x', '/admin/asesores/x', '/admin/configuracion', '/ficha/x']) assert.equal(matches(path), true, path)
   for (const path of ['/', '/inventario', '/bodegas/x', '/asesor/x', '/login', '/publicar', '/registro',
     '/auth/callback?code=synthetic', '/restablecer-contrasena', '/recuperar-contrasena', '/api/auth/restablecer',

@@ -86,6 +86,10 @@ export default async function PerfilPage() {
           </p>
         </div>
 
+        <section className="ui-panel" style={{ marginBottom: 24 }}>
+          <h2>Mis propietarios</h2><p>Administra tu directorio privado y las propiedades asociadas. Estos datos nunca se muestran en fichas comerciales.</p>
+          <Link className="button button--secondary" href="/perfil/propietarios">Abrir Mis propietarios</Link>
+        </section>
         <section
           style={{
             marginBottom: 20,

@@ -330,6 +330,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
               {advisor.company_name || 'Sin empresa'}
             </p>
 
+            <Link href={`/perfil/propietarios?advisor=${advisor.id}`}>Consultar propietarios privados de este asesor</Link>
             <form
               action={toggleAdvisorVerification}
               style={{

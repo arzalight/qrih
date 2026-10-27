@@ -16,6 +16,12 @@ assert.ok(['127.0.0.1','localhost'].includes(origin.hostname) ||
 // Nuevas superficies de051: sin sesión no se retira/duplica ni firma una portada.
 // UUID ficticio fijo; ningún ID de propiedad real ni request autenticado.
 const syntheticPropertyId = '11111111-1111-4111-8111-111111111111'
+test('Sprint3 directorio requiere sesión, no-store y no entrega datos privados',async()=>{
+  const response=await fetch(base+'/perfil/propietarios',{redirect:'manual'})
+  assert.equal(response.status,307);assert.match(response.headers.get('cache-control'),/private.*no-store/)
+  assert.match(response.headers.get('location'),/login\?next=%2Fperfil%2Fpropietarios/)
+  assert.doesNotMatch(await response.text(),/owner_contact_id|PRIVATE_CANARY|storage\/v1\/object\/sign/)
+})
 test('Sprint1 preview privado requiere sesión y UUID válido;sin datos ni firmas públicas', async () => {
   for (const [id, status] of [[syntheticPropertyId, 307], ['invalid', 404]]) {
     const response = await fetch(base + '/mis-propiedades/' + id, { redirect: 'manual' })
@@ -25,6 +31,11 @@ test('Sprint1 preview privado requiere sesión y UUID válido;sin datos ni firma
   }
 })
 for (const [path, method, status] of [
+  ['/api/propietarios', 'GET', 401],
+  ['/api/propietarios', 'POST', 401],
+  ['/api/propietarios', 'DELETE', 405],
+  ['/api/requerimientos/urgencia', 'POST', 401],
+  ['/api/requerimientos/urgencia', 'GET', 405],
   ['/api/duplicar-propiedad', 'POST', 401],
   ['/api/duplicar-propiedad', 'GET', 405],
   ['/api/retirar-propiedad', 'GET', 405],

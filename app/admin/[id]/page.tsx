@@ -7,6 +7,7 @@ import { notFound, redirect } from 'next/navigation'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 import { ZoneSelectors } from '@/components/ZoneSelectors'
 import { PropertyImageGallery } from '@/components/PropertyImageGallery'
+import { PrivatePropertySummary } from '@/components/PrivatePropertySummary'
 import { createSignedPropertyImageUrlMap, PROPERTY_IMAGE_TTL_SECONDS } from '@/lib/property-image-urls'
 
 type AdminPropertyPageProps = {
@@ -528,6 +529,7 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
   </section>
 )}
 
+      <PrivatePropertySummary propertyId={property.id} />
       {mainImageUrl && (
         <img
           src={mainImageUrl}

@@ -11,10 +11,13 @@ import { AutoApproveContactsToggle } from '@/components/AutoApproveContactsToggl
 import { DeletePropertyButton } from '@/components/DeletePropertyButton'
 import { AccountSuspensionNotice } from '@/components/AccountSuspensionNotice'
 import { RegisterOpportunityButton } from '@/components/RegisterOpportunityButton'
+import { loadPrivateIdentities, loadUrgencies } from '@/lib/private-commercial-server'
+import { prioritizeUrgencies } from '@/lib/private-commercial'
+import { DemandUrgency } from '@/components/DemandUrgency'
 import { OwnPropertyCover } from '@/components/OwnPropertyCover'
 import { ManagePropertyActions } from '@/components/ManagePropertyActions'
 import { createSignedPropertyImageUrlMap, PROPERTY_IMAGE_TTL_SECONDS } from '@/lib/property-image-urls'
-type Opportunity = MatchingDemand & { id: string; status: string; created_at: string }
+type Opportunity = MatchingDemand & { id: string; status: string; created_at: string; urgency_expires_at?: string | null }
 type OpportunityRegistration = {
   demand_request_id: string
   property_id: string
@@ -160,7 +163,10 @@ let topPropertyContacts = 0
     console.warn('QRIH_APP_MIS_PROPIEDADES_PAGE_148_FAILED')
   }
 
-  const demandMatches = (demandRequests || []).map((request) => ({
+  const urgencies = await loadUrgencies(supabase)
+  const urgencyDates = new Map(urgencies.rows.map(row => [row.demand_request_id, row.expires_at]))
+  const ownDemands = prioritizeUrgencies((demandRequests || []).map(request => ({ ...request, urgency_expires_at: urgencyDates.get(request.id) || null })))
+  const demandMatches = ownDemands.map((request) => ({
     request,
     matches: rankPropertiesForDemand(
       {
@@ -203,7 +209,7 @@ let topPropertyContacts = 0
   const userPublishedProperties = (properties || [])
     .filter((property) => property.status === 'published')
 
-  const opportunityMatches = safeActiveOpportunities
+  const opportunityMatches = prioritizeUrgencies(safeActiveOpportunities)
     .map((opportunity) => ({
       opportunity,
       matches: rankPropertiesForDemand(
@@ -352,6 +358,7 @@ if (totalViews > 0) {
       </main>
     )
   }
+  const privateNames = await loadPrivateIdentities(supabase, (properties || []).map(property => property.id))
   let coverUrls = new Map<string, string>()
   try {
     coverUrls = await createSignedPropertyImageUrlMap(supabase,
@@ -385,6 +392,7 @@ return (
           { view: 'opportunities', label: 'Oportunidades' },
         ].map(tab => <Link key={tab.view} href={`/mis-propiedades?view=${tab.view}`}
           aria-current={activeView === tab.view ? 'page' : undefined}>{tab.label}</Link>)}
+        <Link href="/perfil/propietarios" prefetch={false}>Mis propietarios</Link>
       </nav>
       {activeView === 'properties' && (
         <section aria-label="Tus propiedades" className="own-properties">
@@ -413,6 +421,7 @@ return (
                     <h2><Link className="own-property-card__detail-link"
                       href={property.status === 'published' && profile?.account_status === 'active' && profile?.publications_enabled === true && property.slug
                         ? `/bodegas/${property.slug}` : `/mis-propiedades/${property.id}`}>{property.title}</Link></h2>
+                      {privateNames.get(property.id) && <p className="ui-help">Nombre interno: {privateNames.get(property.id)}</p>}
                     <p className="own-property-card__price">{propertyPrice(property)}</p>
                     <p className="own-property-card__specs">{property.operation}<span aria-hidden="true"> · </span>{property.total_area != null ? `${Number(property.total_area).toLocaleString('es-MX')} m²` : 'Superficie no especificada'}</p>
                     <dl className="own-property-card__activity" aria-label="Actividad de los últimos 28 días">
@@ -651,6 +660,7 @@ return (
                     borderRadius: 12,
                   }}
                 >
+                  <DemandUrgency demand={opportunity} />
                   <div
                     style={{
                       display: 'flex',
@@ -847,6 +857,7 @@ return (
                 key={request.id}
                 className="requirement-card"
               >
+                <DemandUrgency demand={request} editable={urgencies.available} />
                 <div
                   style={{
                     display: 'flex',

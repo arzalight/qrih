@@ -6,6 +6,7 @@ import { loginPath } from '@/lib/safe-navigation'
 import { createSignedPropertyImageUrlMap, PROPERTY_IMAGE_TTL_SECONDS } from '@/lib/property-image-urls'
 import { EditarPropiedadForm } from '@/app/mis-propiedades/[id]/editar/EditarPropiedadForm'
 import Publish from './PublicarForm'
+import { loadPropertyPrivateDetails } from '@/lib/private-commercial-server'
 
 export default async function PublicarPage({ searchParams }: {
   searchParams: Promise<{ duplicar?: string }>
@@ -39,7 +40,7 @@ export default async function PublicarPage({ searchParams }: {
   return <><Header /><main className="form">
     <small>SUBIR TU BODEGA · NUEVA PROPIEDAD</small><h1>Duplicar propiedad</h1>
     <p className="notice">Estás creando una propiedad independiente. Primero crea el borrador; se abrirá su editor para guardar cambios o enviarla a revisión. La original no se modifica.</p>
-    <EditarPropiedadForm duplicate property={{ ...property, status: 'draft', rejection_reason: null }}
+    <EditarPropiedadForm duplicate initialPrivate={await loadPropertyPrivateDetails(supabase, property.id)} property={{ ...property, status: 'draft', rejection_reason: null }}
       initialImages={ordered.map((image, position) => ({ storagePath: image.storage_path,
         url: urls.get(image.storage_path)!, title: image.title || '', position }))} />
   </main></>

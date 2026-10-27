@@ -33,7 +33,9 @@ const formContracts = {
 }
 for (const [file, expected] of Object.entries(formContracts)) {
   test(`formularios: contrato previo intacto en ${file}`, () => {
-    const source = readFileSync(new URL(file, root), 'utf8')
+    // Sprint3 adds only the tested private-field readiness check to this handler.
+    // Compare all pre-existing commercial controls/handlers after removing that one addition.
+    const source = readFileSync(new URL(file, root), 'utf8').replace('      privatePropertyInput(formData)\n', '')
     const ast = astBabel.parseSync(source, { configFile: false, babelrc: false, parserOpts: { plugins: ['jsx', 'typescript'] } })
     const controls = []
     astBabel.traverse(ast, { JSXOpeningElement(path) {
@@ -327,7 +329,12 @@ test('panel: consultas, identidad, cálculo de métricas y firma de portadas ant
   const source = readFileSync(new URL('app/mis-propiedades/page.tsx', root), 'utf8')
   // Sprint2 deliberately replaces only the anonymous notice with a safe login return.
   // Retain an exact fingerprint of every subsequent authenticated query/calculation.
+  // Remove only explicitly authorized Sprint3 enrichments; keep the Sprint2 fingerprint.
   const logic = source.slice(source.indexOf('  let viewCounts:'), source.indexOf('return (\n  <>'))
+    .replace(/  const urgencies = await loadUrgencies\(supabase\)\n  const urgencyDates = [^\n]+\n  const ownDemands = [^\n]+\n/, '')
+    .replace('const demandMatches = ownDemands.map', 'const demandMatches = (demandRequests || []).map')
+    .replace('const opportunityMatches = prioritizeUrgencies(safeActiveOpportunities)', 'const opportunityMatches = safeActiveOpportunities')
+    .replace(/  const privateNames = await loadPrivateIdentities[^\n]+\n/, '')
   assert.equal(createHash('sha256').update(logic).digest('hex'), 'fc9bb6c1f29ffa1f7aeea533b09d46dbef96fe8a2c3849d32e063c3f9541ecf0')
   assert.ok(source.indexOf('own-properties__grid') < source.indexOf('Rendimiento de tus propiedades'))
   assert.ok(source.indexOf('Preferencias de contacto') > source.indexOf("activeView === 'requirements' &&"))
