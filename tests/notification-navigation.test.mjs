@@ -4,6 +4,7 @@ import { stripTypeScriptTypes } from 'node:module'
 import { test } from 'node:test'
 import babel from '@babel/core'
 import { moderationNotificationPath } from '../lib/safe-navigation.ts'
+import { markNotificationsRead, NOTIFICATIONS_CHANGED } from '../lib/notification-read.ts'
 
 // Ejecuta el handler real con cliente/estado/window sintéticos, sin sesión ni red.
 const source = readFileSync(new URL('../components/Header.tsx', import.meta.url), 'utf8')
@@ -21,32 +22,35 @@ function fixture({ error = null, unavailable = false } = {}) {
   const notices = [{ id: 'synthetic-notice', read_at: null }]
   const updates = []
   let state = notices
-  const window = { location: { href: '' } }
+  const window = { location: { href: '' }, dispatchEvent() {} }
   const client = {
+    auth: { getUser: async () => ({ data: { user: { id: 'synthetic-owner' } }, error: null }) },
     from(table) {
       assert.equal(table, 'notifications')
       return {
         update(values) {
           assert.deepEqual(Object.keys(values), ['read_at'])
           assert.ok(Number.isFinite(Date.parse(values.read_at)))
-          return {
-            async eq(field, id) {
-              assert.equal(field, 'id')
-              assert.equal(id, 'synthetic-notice')
-              updates.push(values)
-              return { error }
+          const q = {
+            eq(field, id) {
+              assert.ok((field === 'id' && id === 'synthetic-notice') || (field === 'user_id' && id === 'synthetic-owner'))
+              return q
             },
+            is() { return q },
+            async select() { updates.push(values); return { error, data: error ? null : [{ id: 'synthetic-notice' }] } },
           }
+          return q
         },
       }
     },
   }
-  const click = new Function('createClient', 'setNotifications', 'window', 'moderationNotificationPath',
+  const click = new Function('createClient', 'setNotifications', 'window', 'moderationNotificationPath', 'markNotificationsRead', 'setUnreadCount', 'NOTIFICATIONS_CHANGED',
     `${javascript}\nreturn handleNotificationClick`)(
     () => unavailable ? null : client,
     update => { state = update(state) },
     window,
     moderationNotificationPath,
+    markNotificationsRead, () => {}, NOTIFICATIONS_CHANGED,
   )
   return { click, window, updates, state: () => state }
 }

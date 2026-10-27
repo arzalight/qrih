@@ -1,5 +1,9 @@
 # QRIH — Auditoría técnica pre-Soft-Launch
 
+### Sprint1 — auditoría acotada26oct2026 / validación local,remota pendiente
+
+Confirmado:contador calculado sobre5avisos,duplicado draft sincontinuación,dobleregreso,tarjeta sinenlace,galería sintouch niestadosportransferencia,perfil sinaccesoAdmin,contacto sólopliegamóvil. Corregidos según [informe](docs/SPRINT_1_STABILITY_2026-10-26.md),sinRLS/permisos/SQLnuevos.257aplicación+110SQLaislado+32HTTP,lint/tipos/buildPASS. Cuentaajena nolee/marcaavisos porRLS. Etiqueta covered_area no equivalente demostrada aalmacenamiento,seconserva. Noafirmar pruebasremotas/touchfísico ni cierre deAUD043/AUD018;no nueva vulnerabilidadalta confirmada. Sinproducción/datos/deploy.
+
 ### RC visual/precios publicado — 21oct2026
 
 RC8416985/deploy6ad9345ad070f6760a151f80 READY en qrih-staging.232pruebas remotas,escaneo de secretos,build y31HTTP anónimas PASS;precios/ficha/PDF comprobados. DEM-001 llega a la versión remota por este RC,sin ampliar su corrección a SQL/RPC/puntuación. No hallazgos nuevos cerrados por inferencia ni GO de producción/carga/RTO. AUD043 y riesgosAUD018 conservan sus estados. Un solo build autorizado,Free y builds automáticos detenidos;sin producción/main/datos/migraciones. [Resultado y límites](docs/PRELAUNCH_RC_2026-10-21.md). Los cortes inferiores «RC remoto pendiente» son históricos.

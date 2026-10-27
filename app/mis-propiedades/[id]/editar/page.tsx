@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { Header } from '@/components/Header'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
@@ -128,11 +127,6 @@ zone_general,
           initialImages={initialImages}
         />
 
-        <div style={{ marginTop: 24 }}>
-          <Link href="/mis-propiedades">
-            ← Volver a mis propiedades
-          </Link>
-        </div>
       </main>
     </>
   )

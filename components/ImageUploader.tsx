@@ -11,6 +11,8 @@ import {
 type ImageUploaderProps = {
   onChange: (images: SelectedImage[]) => void
   maxImages?: number
+  locked?: boolean
+  onProcessingChange?: (processing: boolean) => void
 }
 
 export type SelectedImage = {
@@ -21,6 +23,8 @@ export type SelectedImage = {
 export function ImageUploader({
   onChange,
   maxImages = MAX_PROPERTY_IMAGES,
+  locked = false,
+  onProcessingChange,
 }: ImageUploaderProps) {
   const [images, setImages] = useState<OptimizedImage[]>([])
   const imagesRef = useRef<OptimizedImage[]>([])
@@ -52,7 +56,7 @@ export function ImageUploader({
     const selectedFiles = Array.from(event.target.files || [])
     event.target.value = ''
 
-    if (!selectedFiles.length || selectionInFlight.current || !mountedRef.current) return
+    if (!selectedFiles.length || locked || selectionInFlight.current || !mountedRef.current) return
 
     const availableSlots = maxImages - imagesRef.current.length
 
@@ -80,6 +84,7 @@ export function ImageUploader({
 
     selectionInFlight.current = true
     setProcessing(true)
+    onProcessingChange?.(true)
     setStatus('Optimizando imágenes…')
     const optimizedImages: OptimizedImage[] = []
 
@@ -104,6 +109,7 @@ export function ImageUploader({
       return
     }
     setProcessing(false)
+    onProcessingChange?.(false)
 
     // Durante await el usuario puede quitar fotos/cambiar títulos. No revivir
     // el snapshot antiguo ni conservar previews que ya no tienen lugar.
@@ -145,7 +151,7 @@ export function ImageUploader({
   }
 
   return (
-    <div className="image-uploader">
+    <fieldset className="image-uploader" disabled={locked}>
       <label className="image-uploader__input">
         <span>Seleccionar fotografías</span>
         <input
@@ -186,6 +192,6 @@ export function ImageUploader({
           })}
         </div>
       )}
-    </div>
+    </fieldset>
   )
 }

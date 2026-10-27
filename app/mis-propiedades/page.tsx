@@ -414,7 +414,9 @@ return (
                   </div>
                   <div className="own-property-card__content">
                     <small className="own-property-card__zone">{property.zone}</small>
-                    <h2>{property.title}</h2>
+                    <h2><Link className="own-property-card__detail-link"
+                      href={property.status === 'published' && profile?.account_status === 'active' && profile?.publications_enabled === true && property.slug
+                        ? `/bodegas/${property.slug}` : `/mis-propiedades/${property.id}`}>{property.title}</Link></h2>
                     <p className="own-property-card__price">{propertyPrice(property)}</p>
                     <p className="own-property-card__specs">{property.operation}<span aria-hidden="true"> · </span>{property.total_area != null ? `${Number(property.total_area).toLocaleString('es-MX')} m²` : 'Superficie no especificada'}</p>
                     <dl className="own-property-card__activity" aria-label="Actividad de los últimos 28 días">

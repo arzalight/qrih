@@ -34,12 +34,16 @@ type PropertyImageEditorProps = {
   initialImages: ExistingPropertyImage[]
   onChange: (images: PropertyImageEditorItem[]) => void
   maxImages?: number
+  locked?: boolean
+  onProcessingChange?: (processing: boolean) => void
 }
 
 export function PropertyImageEditor({
   initialImages,
   onChange,
   maxImages = MAX_PROPERTY_IMAGES,
+  locked = false,
+  onProcessingChange,
 }: PropertyImageEditorProps) {
   const initialItems: PropertyImageEditorItem[] = initialImages
     .sort((a, b) => a.position - b.position)
@@ -86,7 +90,7 @@ export function PropertyImageEditor({
     const selectedFiles = Array.from(event.target.files || [])
     event.target.value = ''
 
-    if (!selectedFiles.length || selectionInFlight.current || !mountedRef.current) return
+    if (!selectedFiles.length || locked || selectionInFlight.current || !mountedRef.current) return
 
     const availableSlots = maxImages - imagesRef.current.length
 
@@ -121,6 +125,7 @@ export function PropertyImageEditor({
 
     selectionInFlight.current = true
     setProcessing(true)
+    onProcessingChange?.(true)
     setStatus('Optimizando imágenes…')
 
     const optimizedItems: PropertyImageEditorItem[] = []
@@ -157,6 +162,7 @@ export function PropertyImageEditor({
       return
     }
     setProcessing(false)
+    onProcessingChange?.(false)
 
     // Reconciliar contra el estado actual, no contra images previo al await.
     const currentImages = imagesRef.current
@@ -227,7 +233,7 @@ export function PropertyImageEditor({
   }
 
   return (
-    <div className="property-image-editor">
+    <fieldset className="property-image-editor" disabled={locked}>
       <label className="image-uploader__input">
         <span>
           {processing
@@ -386,6 +392,6 @@ export function PropertyImageEditor({
           ))}
         </div>
       )}
-    </div>
+    </fieldset>
   )
 }

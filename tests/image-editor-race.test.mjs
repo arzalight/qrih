@@ -37,6 +37,7 @@ function fixture(module, options = {}) {
   const pending = [], revoked = [], notifications = [], writes = []
   const refs = { imagesRef: { current: state.images }, selectionInFlight: { current: false }, mountedRef: { current: true } }
   const bindings = () => ({ ...refs, images: state.images, maxImages: 7, processing: state.processing,
+    locked: options.locked || false, onProcessingChange() {},
     setImages(value) { writes.push('images'); state.images = value },
     setProcessing(value) { writes.push('processing'); state.processing = value },
     setStatus(value) { writes.push('status'); state.status = value },

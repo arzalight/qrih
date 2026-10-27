@@ -16,6 +16,14 @@ assert.ok(['127.0.0.1','localhost'].includes(origin.hostname) ||
 // Nuevas superficies de051: sin sesión no se retira/duplica ni firma una portada.
 // UUID ficticio fijo; ningún ID de propiedad real ni request autenticado.
 const syntheticPropertyId = '11111111-1111-4111-8111-111111111111'
+test('Sprint1 preview privado requiere sesión y UUID válido;sin datos ni firmas públicas', async () => {
+  for (const [id, status] of [[syntheticPropertyId, 307], ['invalid', 404]]) {
+    const response = await fetch(base + '/mis-propiedades/' + id, { redirect: 'manual' })
+    assert.equal(response.status, status)
+    assert.match(response.headers.get('cache-control'), /private.*no-store/)
+    assert.ok(!(await response.text()).includes('/storage/v1/object/sign/'))
+  }
+})
 for (const [path, method, status] of [
   ['/api/duplicar-propiedad', 'POST', 401],
   ['/api/duplicar-propiedad', 'GET', 405],

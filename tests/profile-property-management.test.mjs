@@ -238,7 +238,7 @@ test('URLs de edición/duplicación son lectura; formulario conserva estado y pr
   const publish = readFileSync(new URL('../app/publicar/page.tsx', import.meta.url), 'utf8')
   const form = readFileSync(new URL('../app/mis-propiedades/[id]/editar/EditarPropiedadForm.tsx', import.meta.url), 'utf8')
   for (const source of [edit, publish]) assert.doesNotMatch(source, /\.insert\(|\.update\(|\.remove\(|uploadVerifiedImage/)
-  assert.match(form, /if \(busy\.current\) return/)
+  assert.match(form, /if \(busy\.current \|\| imagesProcessing\) return/)
   assert.match(form, /requestId\.current \|\|= crypto\.randomUUID/)
   assert.match(form, /uploadedForAttempt/)
   assert.match(form, /!duplicate && <button/)

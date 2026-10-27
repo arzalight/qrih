@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Header } from '@/components/Header'
 import { ImageUploader, SelectedImage } from '@/components/ImageUploader'
+import { ImageUploadProgress, type ImageUploadState } from '@/components/ImageUploadProgress'
 import { createClient } from '@/lib/supabase'
 import { AccountSuspensionNotice } from '@/components/AccountSuspensionNotice'
 import Link from 'next/link'
@@ -82,6 +83,9 @@ export default function Publish() {
   const [successAction, setSuccessAction] = useState<'draft' | 'pending'>('pending')
   const [accountStatus, setAccountStatus] = useState<'active' | 'suspended'>('active')
   const [images, setImages] = useState<SelectedImage[]>([])
+  const [imagesProcessing, setImagesProcessing] = useState(false)
+  const [uploadStates, setUploadStates] = useState<ImageUploadState[]>([])
+  const submitBusy = useRef(false)
   const successNotice = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -132,10 +136,12 @@ export default function Publish() {
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    if (loading) return
+    if (submitBusy.current || loading || imagesProcessing) return
+    submitBusy.current = true
     const formElement = e.currentTarget
     setMsg('')
     setLoading(true)
+    setUploadStates(images.map(() => 'pending'))
 
     const form = new FormData(formElement)
     const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null
@@ -240,9 +246,11 @@ export default function Publish() {
         const uploadForm = new FormData()
         uploadForm.set('image', image.file)
         uploadForm.set('kind', 'property')
+        setUploadStates(current => current.map((state, i) => i === index ? 'uploading' : state))
         const response = await fetch('/api/imagenes', { method: 'POST', body: uploadForm })
         const result = await response.json()
         if (!response.ok || !result.path) {
+          setUploadStates(current => current.map((state, i) => i === index ? 'error' : state))
           if (uploadedImages.length) await supabase.storage.from('property-images').remove(uploadedImages.map((entry) => entry.path))
           setMsg(`No fue posible subir la fotografía ${index + 1}. Revisa el tamaño y vuelve a intentar.`)
           setLoading(false)
@@ -252,6 +260,7 @@ export default function Publish() {
         uploadedImages.push({
           path: result.path,
         })
+        setUploadStates(current => current.map((state, i) => i === index ? 'completed' : state))
       }
     }
 
@@ -360,8 +369,9 @@ export default function Publish() {
     setOperation('Renta')
     setImages([])
     } catch {
+      setUploadStates(current => current.map(state => state === 'uploading' ? 'error' : state))
       setMsg('No se pudo completar el envío. Revisa Mis propiedades antes de reintentar para evitar duplicados.')
-    } finally { setLoading(false) }
+    } finally { setLoading(false); submitBusy.current = false }
   }
 
   if (accessError) {
@@ -621,7 +631,8 @@ export default function Publish() {
           <fieldset>
             <legend>Fotografías</legend>
 
-            <ImageUploader onChange={setImages} />
+            <ImageUploader onChange={setImages} locked={loading} onProcessingChange={setImagesProcessing} />
+            <ImageUploadProgress states={uploadStates} />
           </fieldset>
 
           <label className="inline-check">
@@ -659,7 +670,7 @@ export default function Publish() {
               type="submit"
               name="submission_action"
               value="draft"
-              disabled={loading || accountStatus === 'suspended'}
+              disabled={loading || imagesProcessing || accountStatus === 'suspended'}
               style={{
                 flex: '1 1 220px',
                 background: "var(--primary-hover)",
@@ -676,7 +687,7 @@ export default function Publish() {
               type="submit"
               name="submission_action"
               value="pending"
-              disabled={loading || accountStatus === 'suspended'}
+              disabled={loading || imagesProcessing || accountStatus === 'suspended'}
               style={{
                 flex: '1 1 220px',
                 opacity: accountStatus === 'suspended' ? 0.55 : 1,

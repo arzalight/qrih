@@ -1,5 +1,9 @@
 ## PROJECT STATUS — QRO INDUSTRIAL HUB / QRIH
 
+**Sprint1 STAGING autorizado —26oct2026:** usuario confirma despliegue y validación con fixtures sintéticos;se preparaunbuild enqrih-staging/develop,Free212.1créditos,sin recargas/sobrecostos.257tests/build localPASS;sinSQL/roles/RLS/producción. Resultado remoto pendiente:[registro](docs/SPRINT_1_STAGING_2026-10-26.md).
+
+**Sprint1 local — 26oct2026:** rama feature/sprint-1-stability en nueva copia qrih(basedevelop8f8871f,originalintacto). Duplicar→editorIDnuevo draft,tarjeta→detalle público/preview privado propio,regresoúnico,contadoravisostotal/marcadopropio,galeríamóvil/deslizamiento,estadoscargafoto,Adminperfil autorizado,contactoretraído todosanchos. covered_area no se renombra por falta de equivalencia con almacenamiento.257aplicación+110PostgreSQLaislado+32HTTP PASS;lint/tipos/build/preflight PASS;375/768/1280sintético. Sin SQL remoto,RLS,datos,push/deploy/producción. AceptaciónSTAGING/touchfísicopendiente. [Informe completo y límites](docs/SPRINT_1_STABILITY_2026-10-26.md).
+
 **Post-RC PUBLICADO — 21oct2026,19:32 CDMX:** qrih-staging READY con SHA124958b,deploy6ad967713b5200c92ab03f0b.244pruebas/build remotos,escaneo293archivos y31HTTP remotasPASS;filtros móviles,menú,contacto/Ubicación/similares comprobados en dominio remoto. Un build;automáticos detenidos de nuevo;Free sin recargas/sobrecostos. Main/producción/SQL intactos,tablero sólo propuesta. [Entrega y límites](docs/POST_RC_DEPLOY_2026-10-21.md).
 
 **Entrega post-RC autorizada — 21oct2026:** usuario solicita subir a Netlify;se prepara una única publicación del lote UX local en qrih-staging/develop,Free234.8créditos observados,sin recargas/sobrecostos. Tablero sólo propuesta,sin SQL/main/producción. Resultado remoto pendiente:[registro](docs/POST_RC_DEPLOY_2026-10-21.md).

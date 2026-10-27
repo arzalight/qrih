@@ -20,9 +20,9 @@ function contractAst(value) {
   return value
 }
 const formContracts = {
-  // Authorized change: initial editable description template, all other controls unchanged.
+  // Sprint 1 authorized editor handler: upload states + continuation to the new draft's editor.
   "app/publicar/PublicarForm.tsx": "6ee610ca1819905ea43be53edbc4e81925fcabd85a5c194629a684ba78ff6e1a",
-  "app/mis-propiedades/[id]/editar/EditarPropiedadForm.tsx": "ec8cc447078d9ac64a79f7a52bcfc631e92bfdff3f0b7c5f917c3d270d519582",
+  "app/mis-propiedades/[id]/editar/EditarPropiedadForm.tsx": "a6dd571eabe78d30d3cbbcfc04323fc2441f60f74a6bd0994bc2eccb98551e82",
   "app/busco-bodega/page.tsx": "d864701dbf57355dd9cd8e39c0bd872206d5b7adf99611a8a5bfa5b912b6fba1",
   "components/PropertyContactForm.tsx": "83051941b5ff19a86a319349c6ae504d2c2692b014ff834242d9660893cd5e29",
   "components/ImageUploader.tsx": "15df5a8f52492b39d169f338ecab18b2f31d1b7c5ef2ce1e132d83ddb7b02be0",
@@ -185,8 +185,17 @@ registerHooks({
     if (specifier === 'next/navigation') return { url: 'data:text/javascript,export const usePathname=()=>globalThis.__uiPath;export const useRouter=()=>({push(){throw Error("No navigation in SSR fixture")},refresh(){throw Error("No mutation in SSR fixture")}})', shortCircuit: true }
     if (specifier === 'next/link') return { url: 'data:text/javascript,import{createElement}from"react";export default function Link({href,children,...props}){return createElement("a",{...props,href},children)}', shortCircuit: true }
     if (specifier === '@/lib/supabase') return { url: 'data:text/javascript,export const createClient=()=>{throw Error("No network in UI fixture")}', shortCircuit: true }
+    if (specifier === '@/lib/supabase-server') return { url: 'data:text/javascript,export const createServerSupabaseClient=async()=>globalThis.__sprintProfileClient', shortCircuit: true }
+    if (['@/components/ProfileAvatarForm','@/components/ProfileSocialForm','@/components/ProfileInfoForm'].includes(specifier)) {
+      const name = specifier.split('/').at(-1)
+      return { url: `data:text/javascript,export function ${name}(){return null}`, shortCircuit: true }
+    }
     if (specifier === '@/lib/safe-navigation') return next(new URL('../lib/safe-navigation.ts', import.meta.url).href, context)
     if (specifier === '@/lib/property-price') return next(new URL('../lib/property-price.ts', import.meta.url).href, context)
+    if (specifier === '@/lib/gallery-swipe') return next(new URL('../lib/gallery-swipe.ts', import.meta.url).href, context)
+    if (specifier === '@/lib/notification-read') return next(new URL('../lib/notification-read.ts', import.meta.url).href, context)
+    if (specifier === '@/components/NotificationReadButton') return next(new URL('../components/NotificationReadButton.tsx', import.meta.url).href, context)
+    if (specifier === '@/components/Header') return next(new URL('../components/Header.tsx', import.meta.url).href, context)
     if (specifier === '@/lib/zonas') return next(new URL('../lib/zonas.ts', import.meta.url).href, context)
     if (specifier === '@/components/AdminPropertyThumbnail') return next(new URL('../components/AdminPropertyThumbnail.tsx', import.meta.url).href, context)
     if (specifier === '@/components/PropertyStatusBadge') return next(new URL('../components/PropertyStatusBadge.tsx', import.meta.url).href, context)
@@ -202,6 +211,28 @@ registerHooks({
   },
 })
 const { Header } = await import('../components/Header.tsx')
+test('Sprint1 perfil real:Admin únicamente roleadmin activo;publisher/suspendido y anónimo sin botón', async () => {
+  const { default: Profile } = await import('../app/perfil/page.tsx')
+  globalThis.__uiPath = '/perfil'
+  for (const [role, account_status, signedIn] of [['admin','active',true], ['publisher','active',true], ['admin','suspended',true], ['admin','active',false]]) {
+    globalThis.__sprintProfileClient = {
+      auth: { getUser: async () => ({ data: { user: signedIn ? { id: 'synthetic-owner' } : null } }) },
+      from(table) { assert.equal(table, 'profiles'); return { select() { return this }, eq(key, value) { assert.equal(key, 'id'); assert.equal(value, 'synthetic-owner'); return this },
+        single: async () => ({ data: { role, account_status }, error: null }) } },
+    }
+    const html = renderToStaticMarkup(await Profile())
+    assert.equal(html.includes('href="/admin"'), signedIn && role === 'admin' && account_status === 'active')
+  }
+  delete globalThis.__sprintProfileClient
+})
+test('Sprint1 progreso real:cuatro estados e indicador indeterminado sin porcentaje ficticio', async () => {
+  const { ImageUploadProgress } = await import('../components/ImageUploadProgress.tsx')
+  const html = renderToStaticMarkup(createElement(ImageUploadProgress, { states: ['pending','uploading','completed','error'] }))
+  for (const label of ['Pendiente','Subiendo…','Completada','Error.']) assert.ok(html.includes(label))
+  assert.match(html, /aria-busy="true"/)
+  assert.match(html, /<progress aria-label="Subiendo fotografías"><\/progress>/)
+  assert.doesNotMatch(html, /\d+%|<progress[^>]*value=/)
+})
 test('menú: Subir requerimiento conserva destino en navegación pública y de trabajo', () => {
   for (const path of ['/', '/mis-propiedades']) {
     globalThis.__uiPath = path
@@ -258,7 +289,7 @@ test('precio y condiciones: separación visible de56px a un tercio sin comprimir
   assert.match(css, /\.price-options > \.inline-check\s*\{ margin: 0; \}/)
   assert.match(css, /\.inline-check input\s*\{[^}]*width: 18px;[^}]*height: 18px;/)
 })
-test('Header: carga de identidad/notificaciones, lectura y signOut conservan sus handlers', () => {
+test('Header: snapshot de handlers tras contador total y marcado propio del Sprint 1', () => {
   const source = readFileSync(new URL('components/Header.tsx', root), 'utf8')
   const ast = astBabel.parseSync(source, { configFile: false, babelrc: false, parserOpts: { plugins: ['jsx', 'typescript'] } })
   const handlers = []
@@ -266,7 +297,7 @@ test('Header: carga de identidad/notificaciones, lectura y signOut conservan sus
     if (['loadUserAndNotifications', 'handleNotificationClick', 'handleSignOut'].includes(path.node.id?.name))
       handlers.push(contractAst(path.node))
   } })
-  assert.equal(createHash('sha256').update(JSON.stringify(handlers)).digest('hex'), 'f34466629f6c08ca714eacccab0d9241d532ae61e61270900c637ca2f03ce42b')
+  assert.equal(createHash('sha256').update(JSON.stringify(handlers)).digest('hex'), '819d3cf850b4893b0fbaeaf7387dceef33391bd479c1cc444bed08e5b9d56b9b')
 })
 test('Header: cuenta fuera de navegación, junto al control de menú, icono accesible y sin marcadores', () => {
   const source = readFileSync(new URL('components/Header.tsx', root), 'utf8')

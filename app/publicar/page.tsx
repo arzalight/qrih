@@ -37,7 +37,7 @@ export default async function PublicarPage({ searchParams }: {
   catch { return <main className="form"><p>No fue posible cargar las fotografías autorizadas. Recarga antes de continuar.</p></main> }
   return <><Header /><main className="form">
     <small>SUBIR TU BODEGA · NUEVA PROPIEDAD</small><h1>Duplicar propiedad</h1>
-    <p className="notice">Estás creando una nueva propiedad utilizando los datos de otra bodega. Revisa la información y guarda los cambios para continuar. Se guardará como borrador y no modificará la original.</p>
+    <p className="notice">Estás creando una propiedad independiente. Primero crea el borrador; se abrirá su editor para guardar cambios o enviarla a revisión. La original no se modifica.</p>
     <EditarPropiedadForm duplicate property={{ ...property, status: 'draft', rejection_reason: null }}
       initialImages={ordered.map((image, position) => ({ storagePath: image.storage_path,
         url: urls.get(image.storage_path)!, title: image.title || '', position }))} />

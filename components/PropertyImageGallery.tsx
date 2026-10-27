@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { gallerySwipeIndex } from '@/lib/gallery-swipe'
 
 export type GalleryImage = {
   url: string
@@ -17,6 +18,19 @@ export function PropertyImageGallery({
   variant?: 'public' | 'admin'
 }) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
+  const [mobileIndex, setMobileIndex] = useState(0)
+  const touch = useRef<{ x: number; y: number } | null>(null)
+  function startTouch(event: React.TouchEvent) {
+    touch.current = event.touches.length === 1 ? { x: event.touches[0].clientX, y: event.touches[0].clientY } : null
+  }
+  function endTouch(event: React.TouchEvent, lightbox = false) {
+    const start = touch.current
+    touch.current = null
+    const end = event.changedTouches[0]
+    if (!start || !end) return
+    if (lightbox) setActiveIndex(current => current === null ? null : gallerySwipeIndex(current, total, end.clientX - start.x, end.clientY - start.y))
+    else setMobileIndex(current => gallerySwipeIndex(current, total, end.clientX - start.x, end.clientY - start.y))
+  }
   const dialog = useRef<HTMLDialogElement>(null)
   const total = images.length
   const isOpen = activeIndex !== null
@@ -69,12 +83,14 @@ export function PropertyImageGallery({
 
   return (
     <>
-      <div className={`property-gallery property-gallery--${variant}`}>
+      <div className={`property-gallery property-gallery--${variant}`}
+        onTouchStart={startTouch} onTouchEnd={event => endTouch(event)} onTouchCancel={() => { touch.current = null }}>
         {images.map((image, index) => (
           <button
             type="button"
             className="property-gallery__image-button"
             key={image.url}
+            data-mobile-active={index === Math.min(mobileIndex, total - 1)}
             onClick={() => setActiveIndex(index)}
             aria-label={`Ampliar ${description(image, index)}`}
           >
@@ -86,6 +102,11 @@ export function PropertyImageGallery({
           </button>
         ))}
       </div>
+      {total > 1 && <div className="property-gallery__mobile-controls">
+        <button type="button" disabled={mobileIndex <= 0} onClick={() => setMobileIndex(index => Math.max(0, index - 1))} aria-label="Foto anterior en galería">‹</button>
+        <span aria-live="polite">{Math.min(mobileIndex + 1, total)} de {total}</span>
+        <button type="button" disabled={mobileIndex >= total - 1} onClick={() => setMobileIndex(index => Math.min(total - 1, index + 1))} aria-label="Foto siguiente en galería">›</button>
+      </div>}
 
       {activeImage && activeIndex !== null && (
         <dialog
@@ -118,7 +139,8 @@ export function PropertyImageGallery({
             </button>
           )}
 
-          <figure className="image-lightbox__content">
+          <figure className="image-lightbox__content" onTouchStart={startTouch}
+            onTouchEnd={event => endTouch(event, true)} onTouchCancel={() => { touch.current = null }}>
             <img src={activeImage.url} alt={description(activeImage, activeIndex)} />
             <figcaption aria-live="polite">
               <span>{activeImage.title || `Foto ${activeIndex + 1}`}</span>

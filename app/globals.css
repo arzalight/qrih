@@ -862,6 +862,24 @@ main {
 .property-contact h2 { margin: 0 0 20px; font-size: 21px; }
 .property-contact__trigger { display: none; }
 .property-contact__body { display: block; }
+/* Sprint 1: same mounted contact form, collapsed on every viewport. */
+.property-contact__heading { display: none; }
+.property-contact__trigger { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 100%; min-height: 44px; padding: 0; background: transparent; color: var(--ink); border: 0; border-radius: 0; font-size: 21px; font-weight: 700; text-align: left; }
+.property-contact__body[data-expanded="false"] { display: none; }
+.property-contact__body[data-expanded="true"] { margin-top: 20px; }
+.property-gallery__mobile-controls { display: none; }
+.image-upload-progress { margin: 12px 0; padding: 12px; background: var(--surface-subtle); border-radius: var(--radius-sm); }
+.image-upload-progress progress { width: 100%; }
+@media (max-width: 760px) {
+  .property-gallery--public > [data-mobile-active="false"] { display: none; }
+  .property-gallery--public { grid-template-columns: minmax(0, 1fr); }
+  .property-gallery--public + .property-gallery__mobile-controls { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
+  .property-gallery__mobile-controls button { min-width: 44px; min-height: 44px; }
+}
+.own-property-card--managed { position: relative; }
+.own-property-card__detail-link::after { content: ''; position: absolute; inset: 0; z-index: 1; border-radius: var(--radius-lg); }
+.own-property-card__detail-link:focus-visible::after { outline: 3px solid var(--focus); outline-offset: 3px; }
+.own-property-card--managed :is(.own-property-actions, .own-property-actions__secondary, .own-property-actions__primary) { position: relative; z-index: 2; }
 @media (max-width: 760px) {
   .property-contact__heading { display: none; }
   .property-contact__trigger { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 100%; min-height: 44px; padding: 0; background: transparent; color: var(--ink); border: 0; border-radius: 0; font-size: 21px; font-weight: 700; text-align: left; }

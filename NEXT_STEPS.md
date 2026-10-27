@@ -1,5 +1,7 @@
 # NEXT STEPS — QRO INDUSTRIAL HUB / QRIH
 
+**Paso vigente26oct:** revisar Sprint1 en feature/sprint-1-stability(nuevacopialocal),257+110+32PASS/build. Solicitar autorización para validar enSTAGING con fixtures/cuentas sintéticas;sin deploy/mutacionesremotas implícitas. Confirmar equivalencia covered_area/almacenamiento yrequisito1fotoeleditor. Touchfísico pendiente. [Informe](docs/SPRINT_1_STABILITY_2026-10-26.md). No iniciarotrosprints/producción.
+
 **Estado vigente21oct19:32CDMX:** lote post-RC publicado enSTAGING124958b,244tests/31HTTP remotasPASS;builds automáticos detenidos. Revisar [entrega](docs/POST_RC_DEPLOY_2026-10-21.md). Tablero permanece pendiente de autorización separada,no nuevo despliegue ni producción implícitos.
 
 **Ubicación21oct:** revisión local debajo de Solicitar información,móvil/escritorio;243tests/31HTTP/build PASS,privacidad intacta. Sin despliegue.

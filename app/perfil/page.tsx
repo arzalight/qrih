@@ -33,7 +33,7 @@ export default async function PerfilPage() {
 
   const { data: profile, error } = await supabase
     .from('profiles')
-    .select('public_id, full_name, phone, company_name, website, role, plan, avatar_url, whatsapp, instagram_url, facebook_url, linkedin_url, identity_change_locked_until')
+    .select('public_id, full_name, phone, company_name, website, role, account_status, plan, avatar_url, whatsapp, instagram_url, facebook_url, linkedin_url, identity_change_locked_until')
     .eq('id', user.id)
     .single()
 
@@ -76,6 +76,9 @@ export default async function PerfilPage() {
           >
             Mi perfil
           </h1>
+          {profile.role === 'admin' && profile.account_status === 'active' && (
+            <Link href="/admin" className="button">Administración</Link>
+          )}
 
           <p
             style={{

@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Header } from '@/components/Header'
+import { NotificationReadButton } from '@/components/NotificationReadButton'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 
 type Notification = {
@@ -170,6 +171,7 @@ export default async function NotificationsPage() {
           </p>
         </div>
 
+        {notifications.some(notification => !notification.read_at) && <NotificationReadButton />}
         {notifications.length === 0 ? (
           <section
             style={{ padding: 24, border: "1px solid var(--line)", borderRadius: 12 }}
@@ -215,6 +217,7 @@ export default async function NotificationsPage() {
                   </div>
 
                   <p style={{ lineHeight: 1.5 }}>{notification.message}</p>
+                  {!notification.read_at && <NotificationReadButton id={notification.id} />}
                   <small style={{ color: "var(--muted)" }}>
                     {new Date(notification.created_at).toLocaleString('es-MX')}
                   </small>

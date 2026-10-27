@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import { moderationNotificationPath } from '@/lib/safe-navigation'
+import { markNotificationsRead, NOTIFICATIONS_CHANGED } from '@/lib/notification-read'
+import { NotificationReadButton } from '@/components/NotificationReadButton'
 
 type Notification = {
   id: string
@@ -27,6 +29,7 @@ export function Header({ administration = false }: { administration?: boolean })
   const [userName, setUserName] = useState('')
   const [userEmail, setUserEmail] = useState('')
   const [notifications, setNotifications] = useState<Notification[]>([])
+  const [unreadCount, setUnreadCount] = useState(0)
   const profileMenuRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
@@ -37,13 +40,22 @@ export function Header({ administration = false }: { administration?: boolean })
     }
 
     const client = supabase
+    let disposed = false
+    let inFlight = false
+    let refreshQueued = false
 
     async function loadUserAndNotifications() {
+      if (disposed) return
+      if (inFlight) { refreshQueued = true; return }
+      inFlight = true
+      try {
       const {
         data: { user },
       } = await client.auth.getUser()
 
+      if (disposed) return
       if (!user) {
+        setUserName(''); setUserEmail(''); setNotifications([]); setUnreadCount(0)
         return
       }
 
@@ -55,29 +67,40 @@ export function Header({ administration = false }: { administration?: boolean })
 
       setUserEmail(user.email || '')
 
-      const { data: notificationData, error } = await client
+      const [{ data: notificationData, error }, countResult] = await Promise.all([client
         .from('notifications')
         .select(
           'id, type, title, message, read_at, demand_request_id, property_id, created_at'
         )
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
-        .limit(5)
+        .limit(5), client.from('notifications').select('id', { count: 'exact', head: true })
+          .eq('user_id', user.id).is('read_at', null)])
 
-      if (error) {
+      if (disposed) return
+      if (error || countResult.error) {
         console.warn('QRIH_COMPONENTS_HEADER_62_FAILED')
         return
       }
 
       setNotifications(notificationData || [])
+      setUnreadCount(countResult.count || 0)
+      } catch { /* Keep the previous confirmed snapshot during transient errors. */ }
+      finally {
+        inFlight = false
+        if (refreshQueued && !disposed) { refreshQueued = false; void loadUserAndNotifications() }
+      }
     }
 
     loadUserAndNotifications()
 
     const interval = setInterval(loadUserAndNotifications, 15000)
+    window.addEventListener(NOTIFICATIONS_CHANGED, loadUserAndNotifications)
 
     return () => {
       clearInterval(interval)
+      disposed = true
+      window.removeEventListener(NOTIFICATIONS_CHANGED, loadUserAndNotifications)
     }
   }, [])
 
@@ -113,14 +136,9 @@ export function Header({ administration = false }: { administration?: boolean })
     }
 
     if (!notification.read_at) {
-      const { error } = await supabase
-        .from('notifications')
-        .update({
-          read_at: new Date().toISOString(),
-        })
-        .eq('id', notification.id)
-
-      if (!error) {
+      try {
+        const changed = await markNotificationsRead(supabase, notification.id)
+        if (changed > 0) setUnreadCount(current => Math.max(0, current - changed))
         setNotifications((current) =>
           current.map((item) =>
             item.id === notification.id
@@ -131,7 +149,8 @@ export function Header({ administration = false }: { administration?: boolean })
               : item
           )
         )
-      }
+        window.dispatchEvent(new Event(NOTIFICATIONS_CHANGED))
+      } catch { /* Navigation remains available; the history can retry marking. */ }
     }
 
     const moderationPath = moderationNotificationPath(notification.type)
@@ -168,10 +187,6 @@ export function Header({ administration = false }: { administration?: boolean })
     await supabase.auth.signOut()
     window.location.href = '/login'
   }
-
-  const unreadCount = notifications.filter(
-    (notification) => !notification.read_at
-  ).length
 
   const workspace = administration || ['/mis-propiedades', '/perfil', '/notificaciones', '/publicar']
     .some(path => pathname === path || pathname.startsWith(path + '/'))
@@ -235,6 +250,7 @@ export function Header({ administration = false }: { administration?: boolean })
                       </button>
                     ))}
                   <Link href="/notificaciones" onClick={closeNavigation}>Ver todas las notificaciones →</Link>
+                  {unreadCount > 0 && <NotificationReadButton />}
                 </section>
                 <button type="button" className="profile-menu__signout" onClick={handleSignOut}>Cerrar sesión</button>
               </div>

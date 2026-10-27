@@ -9,6 +9,7 @@ import { createClient } from '@/lib/supabase'
 import { ZONAS_GENERALES, ZONAS_INDUSTRIALES_POR_ZONA } from '@/lib/zonas'
 import { useRouter } from 'next/navigation'
 import { PropertyImageEditor, PropertyImageEditorItem } from '@/components/PropertyImageEditor'
+import { ImageUploadProgress, type ImageUploadState } from '@/components/ImageUploadProgress'
 
 type Property = {
   id: string
@@ -63,6 +64,8 @@ const [zonaGeneral, setZonaGeneral] = useState(
   property.zone_general || ''
 )
 const [images, setImages] = useState<PropertyImageEditorItem[]>([])
+const [imagesProcessing, setImagesProcessing] = useState(false)
+const [uploadStates, setUploadStates] = useState<ImageUploadState[]>([])
 
   return (
     <>
@@ -71,7 +74,7 @@ const [images, setImages] = useState<PropertyImageEditorItem[]>([])
   encType="multipart/form-data"
   onSubmit={async (event) => {
     event.preventDefault()
-    if (busy.current) return
+    if (busy.current || imagesProcessing) return
     busy.current = true
 
     setLoading(true)
@@ -96,14 +99,16 @@ const [images, setImages] = useState<PropertyImageEditorItem[]>([])
 
     const uploadedPaths: string[] = []
     let saveAttempted = false
+    setUploadStates(images.map(image => image.kind === 'existing' ? 'completed' : 'pending'))
     try {
       const gallery = []
-      for (const image of images) {
+      for (const [index, image] of images.entries()) {
         if (image.kind === 'existing') {
           gallery.push({ kind: 'existing', storage_path: image.storagePath, title: image.title })
         } else {
           const previousUpload = duplicate ? uploadedForAttempt.current.get(image.id) : null
           if (previousUpload) {
+            setUploadStates(current => current.map((state, i) => i === index ? 'completed' : state))
             gallery.push({ kind: 'uploaded', storage_path: previousUpload, title: image.title })
             continue
           }
@@ -111,12 +116,14 @@ const [images, setImages] = useState<PropertyImageEditorItem[]>([])
           const uploadForm = new FormData()
           uploadForm.set('image', image.file)
           uploadForm.set('kind', 'property')
+          setUploadStates(current => current.map((state, i) => i === index ? 'uploading' : state))
           const response = await fetch('/api/imagenes', { method: 'POST', body: uploadForm })
           const result = await response.json().catch(() => null)
           if (!response.ok || !result?.path) throw new Error('No se pudo subir una fotografía. Revisa tu conexión y vuelve a intentar.')
           uploadedPaths.push(result.path)
           if (duplicate) uploadedForAttempt.current.set(image.id, result.path)
           gallery.push({ kind: 'uploaded', storage_path: result.path, title: image.title })
+          setUploadStates(current => current.map((state, i) => i === index ? 'completed' : state))
         }
       }
       formData.append('gallery', JSON.stringify(gallery))
@@ -134,9 +141,16 @@ const [images, setImages] = useState<PropertyImageEditorItem[]>([])
         )
       }
 
-      router.push('/mis-propiedades')
+      if (duplicate) {
+        const result = await response.json()
+        if (typeof result?.id !== 'string' || !/^[0-9a-f-]{36}$/i.test(result.id)) {
+          throw new Error('No pudimos confirmar el duplicado. Revisa Mis propiedades antes de reintentar.')
+        }
+        router.push(`/mis-propiedades/${result.id}/editar`)
+      } else router.push('/mis-propiedades')
       router.refresh()
     } catch (err) {
+      setUploadStates(current => current.map(state => state === 'uploading' ? 'error' : state))
       // Sólo nombres generados en este intento, nunca datos del formulario.
       // Tras un corte de red, el servidor podría haber confirmado la edición.
       // No borrar entonces imágenes potencialmente referenciadas.
@@ -382,7 +396,10 @@ const [images, setImages] = useState<PropertyImageEditorItem[]>([])
           <PropertyImageEditor
             initialImages={initialImages}
             onChange={setImages}
+            locked={loading}
+            onProcessingChange={setImagesProcessing}
           />
+          <ImageUploadProgress states={uploadStates} />
 
           <p
             style={{
@@ -424,9 +441,9 @@ const [images, setImages] = useState<PropertyImageEditorItem[]>([])
             type="submit"
             name="submission_action"
             value="draft"
-            disabled={loading}
+            disabled={loading || imagesProcessing}
           >
-            {loading ? 'GUARDANDO...' : 'GUARDAR COMO BORRADOR'}
+            {loading ? 'GUARDANDO...' : duplicate ? 'CREAR BORRADOR Y CONTINUAR EDICIÓN →' : 'GUARDAR COMO BORRADOR'}
           </button>
         )}
 
@@ -434,7 +451,7 @@ const [images, setImages] = useState<PropertyImageEditorItem[]>([])
           type="submit"
           name="submission_action"
           value="pending"
-          disabled={loading}
+          disabled={loading || imagesProcessing}
         >
           {loading
             ? 'ENVIANDO...'
