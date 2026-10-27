@@ -43,7 +43,7 @@ function LoginForm() {
         return setMessage('Tu sesión está iniciada, pero no se pudo preparar tu perfil. No puedes publicar todavía. Intenta iniciar sesión de nuevo o contacta a soporte.')
       }
       router.replace(
-        result.profile.role === 'admin' && result.profile.account_status === 'active'
+        !['/publicar', '/busco-bodega'].includes(next) && result.profile.role === 'admin' && result.profile.account_status === 'active'
           ? '/admin'
           : next
       )

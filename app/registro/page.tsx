@@ -77,7 +77,7 @@ export default function RegistroPage() {
     }
 
     try {
-      const emailRedirectTo = `${window.location.origin}/auth/callback`
+      const emailRedirectTo = `${window.location.origin}/auth/callback${['/publicar', '/busco-bodega'].includes(next) ? `?next=${encodeURIComponent(next)}` : ''}`
 
       const result = await Promise.race([
         supabase.auth.signUp({

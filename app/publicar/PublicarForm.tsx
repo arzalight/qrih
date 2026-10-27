@@ -2,8 +2,10 @@
 
 import { FormField } from '@/components/FormField'
 
+import { useFormDraft } from '@/components/useFormDraft'
+import { DeferredAuthNotice } from '@/components/DeferredAuthNotice'
+import { parsePropertySubmission } from '@/lib/property-submission'
 import { PriceCurrencySelect } from '@/components/PriceCurrencySelect'
-import { isPriceCurrency, parsePriceInput, propertyPriceForStorage as propertyPrice } from '@/lib/property-price'
 
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -49,25 +51,6 @@ Resistencia de piso
 Tipo de contrato
 Condiciones de contrato`
 
-function createSlug(title: string) {
-  return title
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '')
-}
-
-function optionalNumber(value: FormDataEntryValue | null) {
-  if (!value || String(value).trim() === '') {
-    return null
-  }
-
-  const number = Number(value)
-
-  return Number.isFinite(number) ? number : null
-}
-
 export default function Publish() {
   const [zonaGeneral, setZonaGeneral] = useState('')
   const [zonaIndustrial, setZonaIndustrial] = useState('')
@@ -75,8 +58,6 @@ export default function Publish() {
 
   const router = useRouter()
 
-  const [ready, setReady] = useState(false)
-  const [accessError, setAccessError] = useState('')
   const [msg, setMsg] = useState('')
   const [loading, setLoading] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
@@ -88,37 +69,12 @@ export default function Publish() {
   const submitBusy = useRef(false)
   const successNotice = useRef<HTMLElement>(null)
 
-  useEffect(() => {
-    const supabase = createClient()
-
-    if (!supabase) {
-      setAccessError('El servicio no está disponible. No puedes publicar todavía.')
-      return
-    }
-
-    supabase.auth.getUser().then(async ({ data, error }) => {
-      if (error || !data.user) {
-        router.replace('/login')
-      } else {
-        const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select('account_status')
-          .eq('id', data.user.id)
-          .single()
-
-        if (profileError || !profile || !['active', 'suspended'].includes(profile.account_status)) {
-          setAccessError('No fue posible cargar tu perfil. Inicia sesión de nuevo para recuperarlo; no puedes publicar todavía.')
-          return
-        }
-
-        if (profile?.account_status === 'suspended') {
-          setAccountStatus('suspended')
-        }
-
-        setReady(true)
-      }
-    }).catch(() => setAccessError('No fue posible verificar tu cuenta. Inicia sesión de nuevo.'))
-  }, [router])
+  const draft = useFormDraft('property', restored => {
+    setZonaGeneral(String(restored.fields.zone_general || ''))
+    setZonaIndustrial(String(restored.fields.zone || ''))
+    setOperation(String(restored.fields.operation || 'Renta'))
+    setImages(restored.images)
+  })
 
   useEffect(() => {
     if (!showSuccess) {
@@ -136,251 +92,67 @@ export default function Publish() {
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    if (submitBusy.current || loading || imagesProcessing) return
+    if (submitBusy.current || loading || imagesProcessing || !draft.ready || showSuccess) return
     submitBusy.current = true
-    const formElement = e.currentTarget
+    const form = new FormData(e.currentTarget)
+    const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null
+    const action = submitter?.value === 'draft' ? 'draft' : 'pending'
     setMsg('')
     setLoading(true)
-    setUploadStates(images.map(() => 'pending'))
-
-    const form = new FormData(formElement)
-    const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null
-    const submissionAction =
-      submitter?.name === 'submission_action' &&
-      (submitter.value === 'draft' || submitter.value === 'pending')
-        ? submitter.value
-        : 'pending'
     try {
-    const supabase = createClient()
-
-    if (!supabase) {
-      setMsg('Configura Supabase para publicar propiedades.')
-      setLoading(false)
-      return
-    }
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-
-    if (!user) {
-      router.push('/login')
-      return
-    }
-
-    if (accountStatus === 'suspended') {
-      setMsg('Tu cuenta está suspendida y no puedes realizar nuevas publicaciones.')
-      setLoading(false)
-      return
-    }
-
-    const title = String(form.get('title') || '').trim()
-    const currentOperation = String(form.get('operation') || '')
-    const priceValue = parsePriceInput(form.get('price'))
-    const currency = form.get('price_currency')
-
-    const zoneGeneral = String(
-      form.get('zone_general') || ''
-    ).trim()
-
-    const zone = String(form.get('zone') || '').trim()
-    const visibility = String(form.get('visibility') || 'zone')
-    const address = String(form.get('address') || '').trim()
-
-    const totalArea = Number(form.get('area') || 0)
-    const coveredArea = optionalNumber(form.get('covered'))
-    const exteriorArea = optionalNumber(form.get('exterior_area'))
-    const officesArea = optionalNumber(form.get('offices_area'))
-    const parking = optionalNumber(form.get('parking'))
-    const docks = optionalNumber(form.get('docks'))
-
-    const maxHeight = String(form.get('max_height') || '').trim()
-    const description = String(form.get('description') || '').trim()
-
-    const pricePlusVat = form.get('price_plus_vat') === 'on'
-    const pricePlusMaintenance =
-      form.get('price_plus_maintenance') === 'on'
-    const negotiable = form.get('negotiable') === 'on'
-    const shareCommission = form.get('commission') === 'on'
-
-    const publicationAuthorized =
-      form.get('publication_authorized') === 'on'
-
-    const termsAccepted =
-      form.get('terms_accepted') === 'on'
-
-    if (
-      !title ||
-      !currentOperation ||
-      !priceValue ||
-      !zoneGeneral ||
-      !zone ||
-      !totalArea ||
-      !publicationAuthorized ||
-      !termsAccepted
-    ) {
-      setMsg('Completa los campos obligatorios y acepta las condiciones.')
-      setLoading(false)
-      return
-    }
-
-    if (!priceValue || !isPriceCurrency(currency)) {
-      setMsg('Ingresa un precio válido.')
-      setLoading(false)
-      return
-    }
-
-    const priceUnit =
-      currentOperation === 'Renta'
-        ? 'm2'
-        : 'total'
-
-    const priceDisplay = propertyPrice({ price_value: priceValue, price_currency: currency, price_unit: priceUnit, operation: currentOperation })
-
-    const uploadedImages: { path: string }[] = []
-
-    if (images.length) {
-      setMsg('Subiendo fotografías…')
-
-      for (const [index, image] of images.entries()) {
-        const uploadForm = new FormData()
-        uploadForm.set('image', image.file)
-        uploadForm.set('kind', 'property')
-        setUploadStates(current => current.map((state, i) => i === index ? 'uploading' : state))
-        const response = await fetch('/api/imagenes', { method: 'POST', body: uploadForm })
-        const result = await response.json()
-        if (!response.ok || !result.path) {
-          setUploadStates(current => current.map((state, i) => i === index ? 'error' : state))
-          if (uploadedImages.length) await supabase.storage.from('property-images').remove(uploadedImages.map((entry) => entry.path))
-          setMsg(`No fue posible subir la fotografía ${index + 1}. Revisa el tamaño y vuelve a intentar.`)
-          setLoading(false)
-          return
-        }
-
-        uploadedImages.push({
-          path: result.path,
-        })
-        setUploadStates(current => current.map((state, i) => i === index ? 'completed' : state))
+      parsePropertySubmission(form)
+      if (draft.imageCount > images.length) throw new Error('Selecciona de nuevo las fotografías que no se pudieron recuperar.')
+      const supabase = createClient()
+      if (!supabase) throw new Error('El servicio no está disponible. Tu formulario sigue abierto.')
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user || user.is_anonymous) { await draft.requireAuth(action); return }
+      const { data: profile } = await supabase.from('profiles').select('account_status').eq('id', user.id).single()
+      if (profile?.account_status !== 'active') {
+        setAccountStatus(profile?.account_status === 'suspended' ? 'suspended' : 'active')
+        throw new Error('Necesitas un perfil activo para publicar.')
       }
-    }
-
-    const slugBase = createSlug(title)
-
-    const slug =
-      slugBase +
-      '-' +
-      user.id.slice(0, 8) +
-      '-' +
-      String(Date.now())
-
-    const { data: property, error } = await supabase
-      .from('properties')
-      .insert({
-        owner_id: user.id,
-        title,
-        slug,
-        operation: currentOperation,
-        // No enviar a moderación hasta que la galería esté registrada.
-        status: 'draft',
-
-        zone_general: zoneGeneral,
-        zone,
-        address: address || null,
-        location_visibility: visibility,
-
-        price_display: priceDisplay,
-        price_value: priceValue,
-        price_currency: currency,
-        price_unit: priceUnit,
-        price_plus_vat: pricePlusVat,
-        price_plus_maintenance: pricePlusMaintenance,
-        negotiable,
-
-        total_area: totalArea,
-        covered_area: coveredArea,
-        exterior_area: exteriorArea,
-        max_height: maxHeight || null,
-        offices_area: officesArea,
-        parking,
-        docks,
-
-        description,
-
-        share_commission: shareCommission,
-        main_image_path: uploadedImages[0]?.path || null,
-
-        publication_authorized_at:
-          submissionAction === 'draft'
-            ? null
-            : new Date().toISOString(),
-
-        terms_accepted_at:
-          submissionAction === 'draft'
-            ? null
-            : new Date().toISOString(),
-      })
-      .select('id')
-      .single()
-
-    if (error) {
-      if (uploadedImages.length) await supabase.storage.from('property-images').remove(uploadedImages.map((entry) => entry.path))
-      setMsg('No se pudo guardar la propiedad. Revisa los datos y vuelve a intentar.')
-      setLoading(false)
-      return
-    }
-
-    if (uploadedImages.length && property) {
-      const { error: galleryError } = await supabase.rpc(
-        'replace_property_images',
-        {
-          p_property_id: property.id,
-          p_images: uploadedImages.map((image) => ({
-            storage_path: image.path,
-            title: images[uploadedImages.indexOf(image)]?.title || '',
-          })),
-        }
-      )
-
-      if (galleryError) {
-        setMsg('Se guardó el borrador, pero no su galería. Revisa Mis propiedades antes de reintentar.')
-        setLoading(false)
+      if (!await draft.bindOwner(user.id)) return
+      form.set('request_id', draft.draftRef.current!.id)
+      form.set('submission_action', action)
+      form.set('image_count', String(images.length))
+      setUploadStates(images.map(() => 'pending'))
+      const response = await fetch('/api/publicar-propiedad', { method: 'POST', body: form })
+      if (response.status === 401) { await draft.requireAuth(action); return }
+      let result = await response.json()
+      if (!response.ok) throw new Error(result.error || 'No pudimos confirmar el envío. Conserva el borrador y reintenta.')
+      if (result.recover) {
+        setMsg('Existe un borrador de este envío. Continúa desde su editor; no creamos otra propiedad.')
+        router.push(`/mis-propiedades/${result.id}/editar`)
         return
       }
-    }
-
-    if (submissionAction !== 'draft' && property) {
-      const { error: submitError } = await supabase.from('properties')
-        .update({ status: 'pending' }).eq('id', property.id).eq('owner_id', user.id)
-      if (submitError) {
-        setMsg('Se guardó el borrador, pero no pudo enviarse a revisión. Puedes reintentarlo desde Mis propiedades.')
-        setLoading(false)
-        return
+      if (result.prepared) {
+        for (const [index, image] of images.entries()) {
+          setUploadStates(current => current.map((state, i) => i === index ? 'uploading' : state))
+          const photo = new FormData()
+          photo.set('image', image.file); photo.set('kind', 'property')
+          photo.set('draft_id', result.id); photo.set('position', String(index)); photo.set('title', image.title)
+          const uploaded = await fetch('/api/imagenes', { method: 'POST', body: photo })
+          if (!uploaded.ok) {
+            if (uploaded.status === 401) { await draft.requireAuth(action); return }
+            throw new Error('El borrador ya existe. Reintenta para abrir su editor y revisar las fotografías guardadas.')
+          }
+          setUploadStates(current => current.map((state, i) => i === index ? 'completed' : state))
+        }
+        form.set('finalize', 'on')
+        const finalized = await fetch('/api/publicar-propiedad', { method: 'POST', body: form })
+        if (finalized.status === 401) { await draft.requireAuth(action); return }
+        result = await finalized.json()
+        if (!finalized.ok) throw new Error(result.error || 'Reintenta para recuperar el borrador creado.')
+        if (result.recover) { router.push(`/mis-propiedades/${result.id}/editar`); return }
       }
-    }
-    setLoading(false)
-    setSuccessAction(
-      submissionAction === 'draft' ? 'draft' : 'pending'
-    )
-    setShowSuccess(true)
-
-    formElement.reset()
-    setZonaGeneral('')
-    setZonaIndustrial('')
-    setOperation('Renta')
-    setImages([])
-    } catch {
+      setUploadStates(images.map(() => 'completed'))
+      await draft.clear()
+      setSuccessAction(result.status === 'draft' ? 'draft' : 'pending')
+      setShowSuccess(true)
+    } catch (error) {
       setUploadStates(current => current.map(state => state === 'uploading' ? 'error' : state))
-      setMsg('No se pudo completar el envío. Revisa Mis propiedades antes de reintentar para evitar duplicados.')
+      setMsg(error instanceof Error ? error.message : 'No se pudo completar el envío. Conserva el borrador y reintenta.')
     } finally { setLoading(false); submitBusy.current = false }
-  }
-
-  if (accessError) {
-    return <><Header /><main className="form"><h1>No puedes publicar todavía</h1>
-      <p className="notice" role="alert">{accessError}</p>
-      <Link href="/login?error=profile">Iniciar sesión</Link></main></>
-  }
-  if (!ready) {
-    return <><Header /><main className="form"><p className="ui-loading" role="status">Verificando tu cuenta…</p></main></>
   }
 
   const zonasIndustriales =
@@ -397,11 +169,16 @@ export default function Publish() {
 
         {accountStatus === 'suspended' && <AccountSuspensionNotice />}
 
+        <DeferredAuthNotice open={draft.authOpen} onClose={() => draft.setAuthOpen(false)} path="/publicar" memoryOnly={draft.memoryOnly} />
+        {!showSuccess && <p className="notice" role="status">{draft.notice || 'Tu progreso se guarda en este navegador durante 7 días. En equipos compartidos, descarta el borrador al terminar.'}</p>}
+        {!showSuccess && <button type="button" disabled={loading || imagesProcessing || !draft.ready} onClick={() => void draft.discard()}>Descartar borrador local</button>}
         <form
+          ref={draft.formRef} onInput={draft.scheduleSave} onChange={draft.scheduleSave}
           hidden={showSuccess}
           onSubmit={submit}
           encType="multipart/form-data"
         >
+          <fieldset disabled={!draft.ready || loading}>
           <fieldset>
             <legend>Información general</legend>
 
@@ -631,7 +408,7 @@ export default function Publish() {
           <fieldset>
             <legend>Fotografías</legend>
 
-            <ImageUploader onChange={setImages} locked={loading} onProcessingChange={setImagesProcessing} />
+            {draft.ready && <ImageUploader initialImages={images} onChange={next => { setImages(next); draft.updateImages(next) }} locked={loading} onProcessingChange={setImagesProcessing} />}
             <ImageUploadProgress states={uploadStates} />
           </fieldset>
 
@@ -670,7 +447,7 @@ export default function Publish() {
               type="submit"
               name="submission_action"
               value="draft"
-              disabled={loading || imagesProcessing || accountStatus === 'suspended'}
+              disabled={!draft.ready || loading || imagesProcessing || accountStatus === 'suspended'}
               style={{
                 flex: '1 1 220px',
                 background: "var(--primary-hover)",
@@ -687,7 +464,7 @@ export default function Publish() {
               type="submit"
               name="submission_action"
               value="pending"
-              disabled={loading || imagesProcessing || accountStatus === 'suspended'}
+              disabled={!draft.ready || loading || imagesProcessing || accountStatus === 'suspended'}
               style={{
                 flex: '1 1 220px',
                 opacity: accountStatus === 'suspended' ? 0.55 : 1,
@@ -705,6 +482,7 @@ export default function Publish() {
               {msg}
             </p>
           )}
+          </fieldset>
         </form>
       {showSuccess && (
         <section ref={successNotice} tabIndex={-1} className="publish-success ui-panel" role="status" aria-live="polite">

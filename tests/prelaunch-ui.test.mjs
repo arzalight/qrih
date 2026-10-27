@@ -20,10 +20,11 @@ function contractAst(value) {
   return value
 }
 const formContracts = {
-  // Sprint 1 authorized editor handler: upload states + continuation to the new draft's editor.
-  "app/publicar/PublicarForm.tsx": "6ee610ca1819905ea43be53edbc4e81925fcabd85a5c194629a684ba78ff6e1a",
+  // Deferred authentication: draft capture/form refs and explicit return to the two public forms.
+  // Functional authorization/idempotency coverage lives in deferred-auth.test.mjs.
+  "app/publicar/PublicarForm.tsx": "b22374ccbff0a8f5218d630d4f0e7e1b1c296a47829c44c0d8023d7b9ac8e6ad",
   "app/mis-propiedades/[id]/editar/EditarPropiedadForm.tsx": "a6dd571eabe78d30d3cbbcfc04323fc2441f60f74a6bd0994bc2eccb98551e82",
-  "app/busco-bodega/page.tsx": "d864701dbf57355dd9cd8e39c0bd872206d5b7adf99611a8a5bfa5b912b6fba1",
+  "app/busco-bodega/page.tsx": "f810658191094be274e551beb20817a9adc7592902ad1f8fe177bd235cf2d854",
   "components/PropertyContactForm.tsx": "83051941b5ff19a86a319349c6ae504d2c2692b014ff834242d9660893cd5e29",
   "components/ImageUploader.tsx": "15df5a8f52492b39d169f338ecab18b2f31d1b7c5ef2ce1e132d83ddb7b02be0",
   "components/PropertyImageEditor.tsx": "5b185ed0c6e6d74cea83f2d8ba65050b6ae371a500aaeecfd711f02c801e9e76",
@@ -32,7 +33,7 @@ const formContracts = {
   "components/InventoryFilters.tsx": "59169f6576c1a314087006bed9a88c8258e25204f85f2b5c7eefb7467aaf0b08"
 }
 for (const [file, expected] of Object.entries(formContracts)) {
-  test(`formularios: contrato previo intacto en ${file}`, () => {
+  test(`formularios: contrato vigente en ${file}`, () => {
     const source = readFileSync(new URL(file, root), 'utf8')
     const ast = astBabel.parseSync(source, { configFile: false, babelrc: false, parserOpts: { plugins: ['jsx', 'typescript'] } })
     const controls = []
@@ -42,7 +43,7 @@ for (const [file, expected] of Object.entries(formContracts)) {
         !['style', 'className', 'id', 'hidden', 'role'].includes(attribute.name?.name) && !attribute.name?.name?.startsWith('aria-'))) })
     } })
     assert.equal(createHash('sha256').update(JSON.stringify(controls)).digest('hex'), expected,
-      'Mismos campos, validaciones, opciones, valores, disabled y handlers; sólo presentación autorizada')
+      'Campos, validaciones y handlers del contrato vigente')
   })
 }
 test('publicar: plantilla como valor inicial editable, no placeholder ni reinicio al enfocar', () => {
@@ -396,14 +397,14 @@ const authenticationHandlers = {
     "names": [
       "signIn"
     ],
-    "hash": "3e55ef13ba2f163b0f8d440c0b4bdc6566ad6d42b0d633a8378e51bab12f6089"
+    "hash": "bfe0d95eb95dd7908ddd4bf51649de22b73a5e33a9f4cc74c41d13efcba922d3"
   },
   "app/registro/page.tsx": {
     "names": [
       "handleContinue",
       "handleCreate"
     ],
-    "hash": "7d3c0e62038bdb1ce4275f051fd727e5686a6c6ddd6f22847ad831abfb517d68"
+    "hash": "320dd73ab99fa477028f7c085a1a09bca9024de908d00ef7a2d2c94be2035a6e"
   },
   "app/recuperar-contrasena/page.tsx": {
     "names": [
@@ -419,7 +420,7 @@ const authenticationHandlers = {
   }
 }
 for (const [file, { names, hash }] of Object.entries(authenticationHandlers)) {
-  test(`Auth visual: handlers previos intactos en ${file}`, () => {
+  test(`Auth: contrato vigente de handlers en ${file}`, () => {
     const ast = astBabel.parseSync(readFileSync(new URL(file, root), 'utf8'), {
       configFile: false, babelrc: false, parserOpts: { plugins: ['jsx', 'typescript'] },
     })

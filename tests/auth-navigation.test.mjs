@@ -115,3 +115,13 @@ test('login real: sin usuario/servicio, error Auth o perfil inválido no concede
     assert.ok(f.messages.at(-1))
   }
 })
+
+test('registro diferido: callback conserva sólo las rutas previstas; admin vuelve al formulario', async () => {
+  for (const next of ['/publicar', '/busco-bodega']) {
+    const signup = signupFixture({ next }); await signup.create()
+    assert.equal(signup.requests[0].options.emailRedirectTo, `https://qrih-staging.netlify.app/auth/callback?next=${encodeURIComponent(next)}`)
+    assert.deepEqual(signup.redirects, [pendingConfirmationLoginPath(next)])
+    const login = loginFixture({ role: 'admin', next }); await login.login()
+    assert.deepEqual(login.redirects, [next])
+  }
+})

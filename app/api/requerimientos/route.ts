@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 import { createPrivilegedServerSupabaseClient } from '@/lib/supabase-privileged-server'
-import { assertSameOrigin, readJson } from '@/lib/request-security'
+import { assertSameOrigin, readJson, validUuid } from '@/lib/request-security'
 
 export async function POST(request: Request) {
   try {
@@ -20,23 +20,32 @@ export async function POST(request: Request) {
     const actor = await createServerSupabaseClient()
     if (!actor) return NextResponse.json({ error: 'Servicio no disponible.' }, { status: 503 })
     const { data: { user } } = await actor.auth.getUser()
+    if (!user || user.is_anonymous) return NextResponse.json({ error: 'Necesitas iniciar sesión.' }, { status: 401 })
+    if (!validUuid(body.request_id)) return NextResponse.json({ error: 'Envío inválido.' }, { status: 400 })
     if (user) {
       const { data: profile } = await actor.from('profiles').select('account_status').eq('id',user.id).single()
       if (profile?.account_status !== 'active') return NextResponse.json({ error: 'Necesitas una cuenta activa.' }, { status: 403 })
     }
     const admin = createPrivilegedServerSupabaseClient()
-    // Anónimos comparten una cuota pequeña de beta; no confiar en IP enviada por cliente.
-    const { data: allowed } = await admin.rpc('qrih_take_server_limit', { p_subject: user?.id || 'anonymous', p_action: 'demand' })
+    const previous = await admin.from('demand_requests').select('id').eq('id', body.request_id).eq('user_id', user.id).maybeSingle()
+    if (previous.error) throw new Error('lookup')
+    if (previous.data) return NextResponse.json({ id: previous.data.id }, { headers: { 'Cache-Control': 'no-store' } })
+    // The authenticated actor owns both the quota and the idempotent record.
+    const { data: allowed } = await admin.rpc('qrih_take_server_limit', { p_subject: user.id, p_action: 'demand' })
     if (!allowed) return NextResponse.json({ error: 'Demasiados envíos. Intenta más tarde.' }, { status: 429 })
     const { data, error } = await admin.from('demand_requests').insert({
-      name, email, phone, company: String(body.company || '').trim() || null,
+      id: body.request_id, name, email, phone, company: String(body.company || '').trim() || null,
       giro: String(body.giro || '').trim() || null, operation: body.operation,
       zone_general: String(body.zone_general || '').trim() || null, zone: String(body.zone || '').trim() || null,
       area_min: numbers[0], area_max: numbers[1], budget_min: numbers[2], budget_max: numbers[3],
       area_requirement: `${numbers[0]} - ${numbers[1]} m²`, budget: `$${numbers[2]} - $${numbers[3]}`,
-      notes: String(body.notes || '').trim() || null, user_id: user?.id || null, status: 'new',
+      notes: String(body.notes || '').trim() || null, user_id: user.id, status: 'new',
     }).select('id').single()
-    if (error || !data) throw new Error('database')
+    if (error || !data) {
+      const retry = await admin.from('demand_requests').select('id').eq('id', body.request_id).eq('user_id', user.id).maybeSingle()
+      if (retry.data) return NextResponse.json({ id: retry.data.id }, { headers: { 'Cache-Control': 'no-store' } })
+      throw new Error('database')
+    }
     return NextResponse.json({ id: data.id }, { headers: { 'Cache-Control': 'no-store' } })
   } catch { return NextResponse.json({ error: 'No se pudo enviar. Revisa los datos y vuelve a intentar.' }, { status: 400 }) }
 }

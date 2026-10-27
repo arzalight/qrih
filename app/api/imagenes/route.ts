@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 import { uploadVerifiedImage } from '@/lib/verified-media-server'
-import { assertSameOrigin, readForm } from '@/lib/request-security'
+import { assertSameOrigin, readForm, validUuid } from '@/lib/request-security'
 import { createPrivilegedServerSupabaseClient } from '@/lib/supabase-privileged-server'
 
 export async function POST(request: Request) {
@@ -29,8 +29,33 @@ export async function POST(request: Request) {
       reportFailure()
       return NextResponse.json({ error: 'Solicitud inválida.' }, { status: 400 })
     }
+    const draftId = form.get('draft_id')
+    const position = Number(form.get('position'))
+    let previousImages: { storage_path: string; title: string }[] = []
+    if (draftId !== null) {
+      if (kind !== 'property' || !validUuid(draftId) || !Number.isInteger(position) || position < 0 || position >= 7
+        || String(form.get('title') || '').length > 120) return NextResponse.json({ error: 'Borrador inválido.' }, { status: 400 })
+      const own = await supabase.from('properties').select('id').eq('id', draftId).eq('owner_id', user.id).eq('status', 'draft').single()
+      if (own.error || !own.data) return NextResponse.json({ error: 'No puedes adjuntar fotografías a este borrador.' }, { status: 403 })
+      const gallery = await supabase.from('property_images').select('storage_path,title').eq('property_id', draftId).order('position')
+      if (gallery.error || gallery.data?.length !== position) return NextResponse.json({ error: 'Revisa las fotografías desde el editor del borrador.' }, { status: 409 })
+      previousImages = gallery.data
+    }
     const bucket = kind === 'avatar' ? 'profile-images' : 'property-images'
     const result = await uploadVerifiedImage(file, user.id, bucket, current => { stage = current })
+    if (draftId !== null) {
+      const attached = await supabase.rpc('replace_property_images', { p_property_id: draftId,
+        p_images: [...previousImages, { storage_path: result.path, title: String(form.get('title') || '') }] })
+      if (attached.error) {
+        // A lost RPC response may still commit. Only confirmed SQL rejections permit cleanup;
+        // preserve an uncertain object rather than delete a photograph that may be attached.
+        if (/^(?:22|23|42|P0)[0-9A-Z]{3}$/.test(attached.error.code || '')) {
+          const check = await supabase.from('property_images').select('storage_path').eq('property_id', draftId).eq('storage_path', result.path)
+          if (!check.error && !check.data?.length) await createPrivilegedServerSupabaseClient().storage.from(bucket).remove([result.path])
+        }
+        return NextResponse.json({ error: 'Revisa el borrador antes de continuar.' }, { status: 409 })
+      }
+    }
     if (bucket === 'profile-images') {
       stage = 'avatar_profile'
       const { error } = await supabase.from('profiles').update({ avatar_url: result.publicUrl }).eq('id', user.id)
