@@ -13,6 +13,7 @@
     "test:http": "node --test tests/http-smoke.test.mjs",
     "test:sprint3": "node --test tests/sprint3-commercial.test.mjs",
     "test:sprint3:rls": "node --test tests/sprint3-commercial-rls.test.mjs",
+    "test:consolidation": "node --test tests/local-consolidation.test.mjs",
     "preflight": "node scripts/deployment-preflight.mjs"
   },
   "dependencies": {

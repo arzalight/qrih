@@ -1,5 +1,7 @@
 # NEXT STEPS — QRO INDUSTRIAL HUB / QRIH
 
+**Raíz única de desarrollo — 27oct:** trabajar desde B (`qrih` en QRIH Inmobiliaria industrial), `npm run build` y `npm run start -- --port 3112`, sin cargar archivos de A. [Consolidación y comprobaciones](docs/LOCAL_DEVELOPMENT_CONSOLIDATION_2026-10-27.md). A queda intacta como referencia. Los nuevos commits son locales, sin push/fusión. Para respaldo sigue pendiente resolver autenticación PostgreSQL; no repetir contraseña en bucle ni resetearla. Migraciones y despliegue no autorizados. Los pasos inferiores conservan la secuencia histórica.
+
 **Paso vigente de respaldo — 27oct:** respaldo cifrado STAGING + Drive privado + ensayo nuevo autorizados, no migraciones/deploy. Ejecución detenida antes de captura: falta conexión PostgreSQL humana verificada y motor local de recuperación disponible, más cuota/permisos efectivos Drive y ventana coordinada. Revisar [controles y alcance](docs/STAGING_BACKUP_PREPARATION_2026-10-27.md). No reutilizar capturador/control de octubre20 ni volúmenes antiguos; no pedir secretos por chat. Ninguna extracción/restauración realizada.
 
 **Última entrega local — 27oct:** [selector y propietario pendiente](docs/SPRINT_3_OWNER_PICKER_2026-10-27.md), 457 pruebas/build PASS; no ejecutar SQL ni desplegar. El alcance preparado ahora contiene cuatro migraciones: se requiere nuevo preflight/corte tras acreditar respaldo y recuperación. No reutilizar aprobación de tres archivos ni iniciar Sprint 4. Las notas inferiores preservan el corte anterior.
