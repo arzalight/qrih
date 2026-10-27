@@ -1,5 +1,9 @@
 # QRIH — Auditoría técnica pre-Soft-Launch
 
+### Sprint1 — validación STAGING26oct2026
+
+41061a0 READY;32HTTP remotas PASS. Dos cuentas nuevas publisher(default),sin elevación de rol:propiedad ajena no legible/404,vista propia200,borrador sin detalle/PDF público,Admin denegado. Avisos propios8→7→0,ajeno1intacto y UPDATEajeno0filas. Duplicación/edición sólo del nuevoID,foto conpathindependiente;24propiedades previas y fuente sintética sin cambios porhuella. Sin SQL/RLS/roles/producción. No certifica touchfísico ni aceptación visual positivaAdmin;no cierraAUD043/AUD018ni implicaGOproducción. [Evidencia y límites](docs/SPRINT_1_STAGING_2026-10-26.md).
+
 ### Sprint1 — auditoría acotada26oct2026 / validación local,remota pendiente
 
 Confirmado:contador calculado sobre5avisos,duplicado draft sincontinuación,dobleregreso,tarjeta sinenlace,galería sintouch niestadosportransferencia,perfil sinaccesoAdmin,contacto sólopliegamóvil. Corregidos según [informe](docs/SPRINT_1_STABILITY_2026-10-26.md),sinRLS/permisos/SQLnuevos.257aplicación+110SQLaislado+32HTTP,lint/tipos/buildPASS. Cuentaajena nolee/marcaavisos porRLS. Etiqueta covered_area no equivalente demostrada aalmacenamiento,seconserva. Noafirmar pruebasremotas/touchfísico ni cierre deAUD043/AUD018;no nueva vulnerabilidadalta confirmada. Sinproducción/datos/deploy.

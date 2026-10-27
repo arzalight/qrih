@@ -1,5 +1,7 @@
 # Sprint 1 — estabilidad / 26 octubre 2026
 
+Actualización posterior:publicado y validado en STAGING41061a0. Duplicación,notificaciones aisladas,portadas/vista privada y32HTTP remotas PASS;24propiedades previas intactas. [Entrega y pendientes vigentes](SPRINT_1_STAGING_2026-10-26.md). Los apartados de auditoría/local inferiores describen el corte anterior al despliegue.
+
 ## Auditoría inicial (antes de implementación)
 
 Base: develop8f8871f,árbol limpio. La carpeta nueva estaba vacía;se creó copia Git local independiente en qrih,rama feature/sprint-1-stability. El repositorio anterior queda intacto. Sin fetch/push/deploy ni operaciones sobre producción. Revisados PROJECT_STATUS,QRIH_FUNCTIONAL_INDEX,QRIH_AUDIT,registro post-RC y código fuente. Dependencias instaladas existentes reutilizadas localmente,sin actualizarlas.

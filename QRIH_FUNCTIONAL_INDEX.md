@@ -1,5 +1,7 @@
 # QRIH FUNCTIONAL INDEX — Índice maestro tipo SIGMA
 
+**Sprint1 remoto26oct:**41061a0 publicado READY enqrih-staging;32HTTP y flujo sintético duplicar→editor→draft→pending PASS;fotos independientes,vista privada propietario/404ajeno,avisos A8→7→0/B1 y24propiedades previas intactas. Sin producción/main/SQL/RLS/roles;unbuild y automáticos detenidos. [Trazabilidad y pendientes](docs/SPRINT_1_STAGING_2026-10-26.md). Cortes inferiores locales históricos.
+
 **Sprint1 —26oct:**editor duplicado→IDnuevo/editar víaRPC051sin cambios;panel→enlaceextendido/previewpropio nuevo bajoAuth+owner+RLS;Header→COUNTexacto+notification-read→botoneshistorial;galería→gallery-swipe/controlesmóvil;alta/editor→ImageUploadProgress/bloqueos;perfilservidor→Adminroleactive;contactoCSS→retraídotodosanchos.257tests+110PGlite+32HTTP PASS;sinmigraciones/deploy. [Auditoría,archivos y límites](docs/SPRINT_1_STABILITY_2026-10-26.md).
 
 **Entrega post-RC21oct:** componentes UX locales publicados enSTAGING124958b;244tests/build/escaneo293archivos/31HTTP remotasPASS. Tablero sólo propuesta;sin SQL/main/producción. [Trazabilidad](docs/POST_RC_DEPLOY_2026-10-21.md).
