@@ -1,0 +1,140 @@
+{
+  "checked_at_utc": "2026-10-27T22:53:19.933830+00:00",
+  "origin": "https://qrih-staging.netlify.app",
+  "kind": "Existing remote deployment; changes are local only",
+  "pages": [
+    {
+      "path": "/",
+      "status": 200,
+      "x_robots_tag": null,
+      "cache_control": "private,no-cache,no-store,max-age=0,must-revalidate",
+      "final_url": "https://qrih-staging.netlify.app/",
+      "titles": [
+        "QRO INDUSTRIAL HUB | QRIH"
+      ],
+      "h1": [
+        "Conecta tu operación con el espacio correcto."
+      ],
+      "meta": [
+        {
+          "name": "description",
+          "content": "Bodegas, naves industriales y espacios industriales en Querétaro."
+        }
+      ],
+      "canonical": [],
+      "jsonld": 0,
+      "images": 6,
+      "images_without_alt": 0,
+      "analytics_markers": false
+    },
+    {
+      "path": "/inventario",
+      "status": 200,
+      "x_robots_tag": null,
+      "cache_control": "private,no-cache,no-store,max-age=0,must-revalidate",
+      "final_url": "https://qrih-staging.netlify.app/inventario",
+      "titles": [
+        "QRO INDUSTRIAL HUB | QRIH"
+      ],
+      "h1": [
+        "Encuentra el espacio correcto."
+      ],
+      "meta": [
+        {
+          "name": "description",
+          "content": "Bodegas, naves industriales y espacios industriales en Querétaro."
+        }
+      ],
+      "canonical": [],
+      "jsonld": 0,
+      "images": 22,
+      "images_without_alt": 0,
+      "analytics_markers": false
+    },
+    {
+      "path": "/inventario?operation=Renta",
+      "status": 200,
+      "x_robots_tag": null,
+      "cache_control": "private,no-cache,no-store,max-age=0,must-revalidate",
+      "final_url": "https://qrih-staging.netlify.app/inventario?operation=Renta",
+      "titles": [
+        "QRO INDUSTRIAL HUB | QRIH"
+      ],
+      "h1": [
+        "Encuentra el espacio correcto."
+      ],
+      "meta": [
+        {
+          "name": "description",
+          "content": "Bodegas, naves industriales y espacios industriales en Querétaro."
+        }
+      ],
+      "canonical": [],
+      "jsonld": 0,
+      "images": 22,
+      "images_without_alt": 0,
+      "analytics_markers": false
+    },
+    {
+      "path": "/robots.txt",
+      "status": 404,
+      "error": "HTTPError"
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 404,
+      "error": "HTTPError"
+    },
+    {
+      "path": "/bodegas/qrih-audit-missing-20261027",
+      "status": 404,
+      "error": "HTTPError"
+    },
+    {
+      "path": "/login",
+      "status": 200,
+      "x_robots_tag": null,
+      "cache_control": "public,max-age=0,must-revalidate",
+      "final_url": "https://qrih-staging.netlify.app/login",
+      "titles": [
+        "QRO INDUSTRIAL HUB | QRIH"
+      ],
+      "h1": [],
+      "meta": [
+        {
+          "name": "description",
+          "content": "Bodegas, naves industriales y espacios industriales en Querétaro."
+        }
+      ],
+      "canonical": [],
+      "jsonld": 0,
+      "images": 0,
+      "images_without_alt": 0,
+      "analytics_markers": false
+    },
+    {
+      "path": "/bodegas/nave-industrial-en-renta-en-colon-82be034b-1792178339204",
+      "status": 200,
+      "x_robots_tag": null,
+      "cache_control": "private,no-cache,no-store,max-age=0,must-revalidate",
+      "final_url": "https://qrih-staging.netlify.app/bodegas/nave-industrial-en-renta-en-colon-82be034b-1792178339204",
+      "titles": [
+        "QRO INDUSTRIAL HUB | QRIH"
+      ],
+      "h1": [
+        "NAVE INDUSTRIAL EN RENTA EN COLÓN"
+      ],
+      "meta": [
+        {
+          "name": "description",
+          "content": "Bodegas, naves industriales y espacios industriales en Querétaro."
+        }
+      ],
+      "canonical": [],
+      "jsonld": 0,
+      "images": 5,
+      "images_without_alt": 0,
+      "analytics_markers": false
+    }
+  ]
+}

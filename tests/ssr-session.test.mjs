@@ -16,6 +16,7 @@ registerHooks({ resolve(specifier, context, nextResolve) {
     'server-only': 'data:text/javascript,export {}',
   }
   if (aliases[specifier]) return { url: aliases[specifier], shortCircuit: true }
+  if (specifier === '@/lib/seo') return nextResolve(new URL('../lib/seo.ts', import.meta.url).href, context)
   if (specifier === 'next/server') return nextResolve(new URL('../node_modules/next/server.js', import.meta.url).href, context)
   return nextResolve(specifier, context)
 } })
@@ -205,14 +206,15 @@ test('AUD-036 proxy: configuración ausente/excepción sin secretos en logs ni s
   })
 })
 
-test('AUD-036 matcher: privadas SSR y ficha no-store; resto de públicos/APIs/assets excluidos', () => {
+test('AUD-036 matcher: SEO global, sesión sólo privada y assets excluidos', () => {
   // La API de testing de Next16.3 instalado conserva este nombre legacy.
   const matches = path => unstable_doesMiddlewareMatch({ config, nextConfig: {}, url: 'http://localhost:3107' + path })
   for (const path of ['/perfil', '/notificaciones', '/mis-propiedades', '/mis-propiedades/x/editar',
     '/mis-propiedades/x/solicitudes', '/admin', '/admin/x', '/admin/asesores/x', '/admin/configuracion', '/ficha/x']) assert.equal(matches(path), true, path)
   for (const path of ['/', '/inventario', '/bodegas/x', '/asesor/x', '/login', '/publicar', '/registro',
     '/auth/callback?code=synthetic', '/restablecer-contrasena', '/recuperar-contrasena', '/api/auth/restablecer',
-    '/api/imagenes', '/_next/static/test.js', '/favicon.ico', '/administer', '/mis-propiedades-publicas']) assert.equal(matches(path), false, path)
+    '/api/imagenes', '/administer', '/mis-propiedades-publicas']) assert.equal(matches(path), true, path)
+  for (const path of ['/_next/static/test.js', '/_next/image?url=x', '/favicon.ico']) assert.equal(matches(path), false, path)
   const source = readFileSync(new URL('../proxy.ts', import.meta.url), 'utf8')
   assert.ok(!source.includes('SUPABASE_SERVICE_ROLE_KEY'))
   assert.ok(!source.includes('.auth.getSession('))

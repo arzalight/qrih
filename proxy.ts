@@ -1,3 +1,4 @@
+import { indexingEnabled, indexablePath, publicOrigin } from '@/lib/seo'
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
@@ -6,7 +7,9 @@ export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request: { headers: request.headers } })
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  if (url && key && !request.nextUrl.pathname.startsWith('/ficha/')) {
+  const path = request.nextUrl.pathname
+  const sessionRoute = /^\/(perfil|mis-propiedades|notificaciones|admin)(\/|$)/.test(path)
+  if (url && key && sessionRoute) {
     try {
       const client = createServerClient(url, key, {
         cookies: {
@@ -35,9 +38,14 @@ export async function proxy(request: NextRequest) {
       // La página aún debe validar actor/rol; no se fabrica sesión ni redirect.
     }
   }
-  response.headers.set('Cache-Control', 'private, no-store, max-age=0')
-  response.headers.set('Expires', '0')
-  response.headers.set('Pragma', 'no-cache')
+  if (!indexingEnabled() || request.nextUrl.origin !== publicOrigin() || !indexablePath(path) || (path === '/inventario' && request.nextUrl.search)) {
+    response.headers.set('X-Robots-Tag', 'noindex, nofollow')
+  }
+  if (sessionRoute || path.startsWith('/ficha/')) {
+    response.headers.set('Cache-Control', 'private, no-store, max-age=0')
+    response.headers.set('Expires', '0')
+    response.headers.set('Pragma', 'no-cache')
+  }
   if (request.nextUrl.pathname.startsWith('/ficha/')) {
     response.headers.set('Referrer-Policy', 'no-referrer')
     response.headers.set('X-Robots-Tag', 'noindex, nofollow')
@@ -46,5 +54,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/perfil', '/mis-propiedades/:path*', '/notificaciones', '/admin/:path*', '/ficha/:path*'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 }

@@ -1,3 +1,5 @@
+import { publicMetadata } from '@/lib/seo'
+export const metadata = publicMetadata('/terminos', 'Términos y condiciones | QRIH', 'Consulta los términos y condiciones de uso de QRO Industrial Hub.')
 import { Header } from '@/components/Header'
 
 export default function TermsPage() {
