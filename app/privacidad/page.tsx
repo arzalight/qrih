@@ -1,3 +1,5 @@
+import { publicMetadata } from '@/lib/seo'
+export const metadata = publicMetadata('/privacidad', 'Aviso de privacidad | QRIH', 'Consulta el aviso de privacidad de QRO Industrial Hub.')
 import { Header } from '@/components/Header'
 
 export default function PrivacyPage() {

@@ -1,3 +1,6 @@
+import { cache } from 'react'
+import type { Metadata } from 'next'
+import { publicMetadata, propertySeo, publicOrigin, safeJsonLd } from '@/lib/seo'
 import { notFound } from 'next/navigation'
 import { propertyPrice } from '@/lib/property-price'
 import { Header } from '@/components/Header'
@@ -28,19 +31,9 @@ function showValue(value: string | number | boolean | null) {
   return String(value)
 }
 
-export default async function PropertyPage({ params }: PageProps) {
-  const { slug } = await params
+const loadPublicProperty = cache(async (slug: string) => {
   const supabase = createPublicServerSupabaseClient()
-
-  if (!supabase) {
-    return (
-      <main style={{ padding: 40 }}>
-        <h1>Error de configuración</h1>
-        <p>Supabase no está configurado correctamente.</p>
-      </main>
-    )
-  }
-
+  if (!supabase) throw new Error('Public catalog not configured')
   const { data: property, error } = await supabase
       .from('properties_public')
     .select(`
@@ -77,9 +70,36 @@ export default async function PropertyPage({ params }: PageProps) {
     .eq('status', 'published')
     .single()
 
-  if (error || !property) {
-    notFound()
+  if (error) {
+    if (error.code === 'PGRST116') notFound()
+    throw new Error('Public property unavailable')
   }
+  if (!property) notFound()
+  return property
+
+})
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params
+  const property = await loadPublicProperty(slug)
+  const seo = propertySeo(property)
+  return publicMetadata(`/bodegas/${encodeURIComponent(slug)}`, seo.title, seo.description)
+}
+
+export default async function PropertyPage({ params }: PageProps) {
+  const { slug } = await params
+  const supabase = createPublicServerSupabaseClient()
+
+  if (!supabase) {
+    return (
+      <main style={{ padding: 40 }}>
+        <h1>Error de configuración</h1>
+        <p>Supabase no está configurado correctamente.</p>
+      </main>
+    )
+  }
+
+  const property = await loadPublicProperty(slug)
 
   const { data: galleryImages } = await supabase
     .from('property_images')
@@ -151,6 +171,11 @@ export default async function PropertyPage({ params }: PageProps) {
   return (
     <>
       <Header />
+      {publicOrigin() && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd({
+        '@context': 'https://schema.org', '@type': 'WebPage', name: propertySeo(property).title,
+        description: propertySeo(property).description, url: `${publicOrigin()}/bodegas/${encodeURIComponent(slug)}`,
+        inLanguage: 'es-MX',
+      }) }} />}
       <main className="property-detail">
         <a className="property-back" href="/inventario">← Volver al inventario</a>
         <section className="property-main-grid">

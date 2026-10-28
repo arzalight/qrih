@@ -1750,3 +1750,8 @@ body:has(.property-workspace) .site-footer__eyebrow { display: none; }
 .owner-combobox__options button:focus-visible { background: #eef0fa; }
 .owner-pending-panel { margin-top: 12px; padding: 14px; border: 1px solid #d7dfee; border-radius: 10px; }
 .owner-pending-panel summary { cursor: pointer; min-height: 44px; padding: 10px 0; }
+
+.deferred-auth { width: min(92vw, 520px); max-height: 90dvh; overflow: auto; border: 1px solid var(--line); border-radius: 16px; padding: 24px; color: var(--ink); background: var(--surface); }
+.deferred-auth::backdrop { background: rgb(0 0 0 / .5); }
+.deferred-auth__actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.deferred-auth__actions > * { flex: 1 1 180px; text-align: center; }

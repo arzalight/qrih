@@ -101,7 +101,7 @@ test('precio centralizado en todas las presentaciones; escritura separada del fo
     assert.match(source, /import \{[^}]*\bpropertyPrice\b[^}]*\} from '@\/lib\/property-price'/, file)
     assert.match(source, /propertyPrice\(/, file)
   }
-  for (const file of ['app/publicar/PublicarForm.tsx', 'lib/property-save-server.ts']) {
+  for (const file of ['lib/property-submission.ts', 'lib/property-save-server.ts']) {
     assert.match(readFileSync(new URL(file, root), 'utf8'), /propertyPriceForStorage as propertyPrice/)
   }
   const admin = readFileSync(new URL('app/admin/[id]/page.tsx', root), 'utf8')

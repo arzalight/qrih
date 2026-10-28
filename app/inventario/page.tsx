@@ -1,3 +1,4 @@
+import { publicMetadata } from '@/lib/seo'
 import Link from 'next/link'
 import { inventoryPriceFilters } from '@/lib/property-price'
 import { Header } from '@/components/Header'
@@ -23,6 +24,13 @@ type SearchParams = {
   area?: string
 }
 import { InventoryFilters } from '@/components/InventoryFilters'
+
+export async function generateMetadata({ searchParams }: { searchParams: Promise<SearchParams> }) {
+  const q = await searchParams
+  const metadata = publicMetadata('/inventario', 'Inventario industrial en renta y venta | QRIH', 'Explora las propiedades industriales disponibles y filtra por operación, zona, superficie y precio.')
+  if (Object.keys(q).length) metadata.robots = { index: false, follow: true }
+  return metadata
+}
 
 export const dynamic = 'force-dynamic'
 
