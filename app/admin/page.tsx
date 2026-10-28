@@ -1,3 +1,5 @@
+import { loadAdminMetrics } from '@/lib/admin-metrics'
+import { AdminStatistics } from '@/components/AdminStatistics'
 import { Header } from '@/components/Header'
 import Link from 'next/link'
 import { propertyPrice } from '@/lib/property-price'
@@ -140,20 +142,7 @@ console.warn('QRIH_APP_ADMIN_PAGE_76_FAILED')
     ...property, coverUrl: coverUrls.get(property.main_image_path) || null,
   }))
 
-  const propertyStats = {
-    total: properties?.length ?? 0,
-    draft: properties?.filter((property) => property.status === 'draft').length ?? 0,
-    pending: properties?.filter((property) => property.status === 'pending').length ?? 0,
-    published:
-      properties?.filter((property) => property.status === 'published').length ?? 0,
-    paused: properties?.filter((property) => property.status === 'paused').length ?? 0,
-    rejected:
-      properties?.filter((property) => property.status === 'rejected').length ?? 0,
-    expired:
-      properties?.filter((property) => property.status === 'expired').length ?? 0,
-    pending_update:
-      properties?.filter((property) => property.status === 'pending_update').length ?? 0,
-  }
+  const metrics = await loadAdminMetrics(supabase)
 
   const pendingProperties = properties?.filter(
     (property) => property.status === 'pending'
@@ -277,81 +266,7 @@ return (
       </div>
     </header>
 
-    <section
-      aria-label="Resumen de propiedades"
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-        gap: '14px',
-        marginBottom: '40px',
-      }}
-    >
-      {[
-        {
-          label: 'Borradores',
-          value: propertyStats.draft,
-        },
-        {
-          label: 'Pendientes',
-          value: propertyStats.pending,
-        },
-        {
-          label: 'Publicadas',
-          value: propertyStats.published,
-        },
-        {
-          label: 'Pausadas',
-          value: propertyStats.paused,
-        },
-        {
-          label: 'Rechazadas',
-          value: propertyStats.rejected,
-        },
-        {
-          label: 'Expiradas',
-          value: propertyStats.expired,
-        },
-        {
-          label: 'Cambios pendientes',
-          value: propertyStats.pending_update,
-        },
-      ].map((stat) => (
-        <article
-          key={stat.label}
-          style={{
-            padding: '20px 20px 18px',
-            border: "1px solid var(--line)",
-            borderRadius: '16px',
-            background: "var(--surface)",
-            boxShadow: '0 4px 14px rgba(0,0,0,0.045)',
-          }}
-        >
-          <div
-            style={{
-              fontSize: '32px',
-              lineHeight: 1,
-              fontWeight: 750,
-              letterSpacing: '-0.035em',
-            }}
-          >
-            {stat.value}
-          </div>
-
-          <div
-            style={{
-              marginTop: '10px',
-              fontSize: '12px',
-              lineHeight: 1.35,
-              color: "var(--muted)",
-              fontWeight: 650,
-              letterSpacing: '0.01em',
-            }}
-          >
-            {stat.label}
-          </div>
-        </article>
-      ))}
-    </section>
+    <AdminStatistics metrics={metrics} />
 
     {success === 'published' && (
       <div

@@ -1,3 +1,4 @@
+import { publicMetadata } from '@/lib/seo'
 import Link from 'next/link'
 import { Header } from '@/components/Header'
 import { PropertyCard } from '@/components/PropertyCard'
@@ -8,6 +9,8 @@ import {
   PROPERTY_IMAGE_TTL_SECONDS,
 } from '@/lib/property-image-urls'
 import { ZONAS_GENERALES } from '@/lib/zonas'
+
+export const metadata = publicMetadata('/', 'Bodegas y naves industriales en Querétaro | QRIH', 'Consulta espacios industriales en renta y venta en el inventario público de QRO Industrial Hub.')
 
 export const dynamic = 'force-dynamic'
 

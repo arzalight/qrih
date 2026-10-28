@@ -9,6 +9,7 @@ import {
 } from '@/lib/image-optimizer'
 
 type ImageUploaderProps = {
+  initialImages?: SelectedImage[]
   onChange: (images: SelectedImage[]) => void
   maxImages?: number
   locked?: boolean
@@ -22,16 +23,26 @@ export type SelectedImage = {
 
 export function ImageUploader({
   onChange,
+  initialImages = [],
   maxImages = MAX_PROPERTY_IMAGES,
   locked = false,
   onProcessingChange,
 }: ImageUploaderProps) {
   const [images, setImages] = useState<OptimizedImage[]>([])
   const imagesRef = useRef<OptimizedImage[]>([])
+  const restoredRef = useRef(initialImages)
   const selectionInFlight = useRef(false)
   const mountedRef = useRef(true)
   const [status, setStatus] = useState('')
   const [processing, setProcessing] = useState(false)
+
+  useEffect(() => {
+    // Recreate previews after Strict Mode's effect cleanup as well as a real remount.
+    const restored = restoredRef.current.map(image => ({ ...image, previewUrl: URL.createObjectURL(image.file),
+      originalSize: image.file.size, optimizedSize: image.file.size }))
+    imagesRef.current = restored
+    setImages(restored)
+  }, [])
 
   useEffect(() => {
     mountedRef.current = true

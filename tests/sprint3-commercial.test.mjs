@@ -5,6 +5,7 @@ import babel from '@babel/core'
 import { after, test } from 'node:test'
 
 registerHooks({ resolve(specifier,context,next) {
+  if(specifier==='./property-price')return next(new URL('../lib/property-price.ts',import.meta.url).href,context)
   if(specifier==='server-only')return {url:'data:text/javascript,export{}',shortCircuit:true}
   if(specifier==='./supabase-server')return {url:'data:text/javascript,export async function createServerSupabaseClient(){return null}',shortCircuit:true}
   if(specifier==='@/lib/private-commercial-server') return {url:'data:text/javascript,export const PRIVATE_OWNER_COLUMNS="id,advisor_id,name,company,phone,email,notes,archived_at,created_at,updated_at";export async function privateCommercialActor(){return globalThis.__privateActor}',shortCircuit:true}
@@ -12,7 +13,7 @@ registerHooks({ resolve(specifier,context,next) {
   return next(specifier,context)
 } })
 const {ownerInput,privatePropertyInput,pendingOwnerInput,normalizeOwnerName,ownerSaveError,activeDemand,urgencyActive,prioritizeUrgencies}=await import('../lib/private-commercial.ts')
-const {parsePriceInput,isPriceCurrency,propertyPriceForStorage}=await import('../lib/property-price.ts')
+const {parsePropertySubmission}=await import('../lib/property-submission.ts')
 const directory=await import('../app/api/propietarios/route.ts')
 const urgency=await import('../app/api/requerimientos/urgencia/route.ts')
 const {loadPropertyPrivateDetails}=await import('../lib/private-commercial-server.ts')
@@ -41,9 +42,9 @@ test('Sprint3 private form: legacy preserves, pending/error blocks, optional val
   form.set('private_fields_present','ready');assert.deepEqual(privatePropertyInput(form),{internal_name:null,owner_contact_id:null})
   form.set('internal_name',' PRIVATE_CANARY ');form.set('owner_contact_id',B);assert.equal(privatePropertyInput(form).internal_name,'PRIVATE_CANARY')
   form.set('owner_contact_id','foreign-invalid');assert.throws(()=>privatePropertyInput(form))
-  const publish=read('app/publicar/PublicarForm.tsx')
-  assert.match(publish,/select\('id,status'\)\.eq\('id', savedId\)\.eq\('owner_id', user.id\)/)
-  assert.match(publish,/setSuccessAction\(confirmation.data.status === 'draft'/)
+  const endpoint=read('app/api/publicar-propiedad/route.ts')
+  assert.match(endpoint,/select\('id,status'\)\.eq\('id', id\)\.eq\('owner_id', user.id\)/)
+  assert.match(endpoint,/status: confirmation.data.status/)
 })
 test('owner picker payload: normalized accents/spaces, pending private data, explicit clear and unresolved text blocked',()=>{
   assert.equal(normalizeOwnerName('  JOSÉ   Muñoz  '),'jose munoz')
@@ -74,7 +75,7 @@ test('owner picker UI: no immediate contact POST, controlled hidden ID/pending, 
   const source=read('components/PrivateOwnerFields.tsx'),picker=source.slice(source.indexOf('export function PrivatePropertyFields'))
   assert.doesNotMatch(picker,/method: 'POST'|action: 'create'|localStorage|sessionStorage/)
   for(const expression of [/role="combobox"/,/role="listbox"/,/role="option"/,/aria-activedescendant/,/ArrowDown/,/ArrowUp/,/Escape/,/event.key === 'Enter'/,/controller.abort\(\)/,/clearTimeout\(timer\)/, /}, 300\)/,/slice\(0, 3\)/,/name="pending_owner"/,/name="owner_contact_id"/,/Propietario pendiente de registro/])assert.match(picker,expression)
-  assert.match(read('app/publicar/PublicarForm.tsx'),/rpc\('qrih_create_property_with_owner'/)
+  assert.match(read('app/api/publicar-propiedad/route.ts'),/rpc\('qrih_create_property_with_owner'/)
   assert.match(read('lib/property-save-server.ts'),/pending_owner' in privateDetails \? 'qrih_save_property_with_owner'/)
 })
 test('actual publish handler: draft/pending keep private payload separate; double click and failure retry preserve stable IDs/form',async()=>{
@@ -85,19 +86,27 @@ test('actual publish handler: draft/pending keep private payload separate; doubl
     const body=new FormData(),pending={request_id:B,name:'Synthetic pending',company:'Ficticia',phone:'0000000000',email:'pending@example.invalid'}
     for(const[k,v]of Object.entries({private_fields_present:'ready',pending_owner:JSON.stringify(pending),owner_contact_id:'',internal_name:'PRIVATE_NAME',title:'Synthetic property',operation:'Renta',price:'100',price_currency:'MXN',zone_general:'Querétaro Norte',zone:'Jurica',area:'500',publication_authorized:'on',terms_accepted:'on'}))body.set(k,v)
     class PrivateForm extends FormData{constructor(){super();for(const[k,v]of body)this.set(k,v)}}
-    const calls=[],messages=[],success=[],stable={current:null},busy={current:false};let failed=true,resets=0
-    const client={auth:{getUser:async()=>({data:{user:{id:A}}})},rpc:async(name,args)=>{calls.push({name,args});return failed?{error:{message:'OWNER_EQUIVALENT_EXISTS'}}:{data:args.p_id,error:null}},from:()=>{const q={select(){return q},eq(){return q},single:async()=>({data:{id:stable.current,status:action},error:null})};return q}}
-    const bindings={FormData:PrivateForm,submitBusy:busy,privateCreateId:stable,loading:false,imagesProcessing:false,images:[{file:new File(['synthetic'],'synthetic.webp'),title:'Synthetic'}],privatePropertyInput,ownerSaveError,createClient:()=>client,accountStatus:'active',router:{push(){throw Error('Unexpected navigation')}},parsePriceInput,isPriceCurrency,propertyPrice:propertyPriceForStorage,optionalNumber:v=>v?Number(v):null,createSlug:()=> 'synthetic',crypto,
-      setMsg:v=>messages.push(v),setLoading(){},setUploadStates(){},setSuccessAction:v=>success.push(v),setShowSuccess(){},setZonaGeneral(){},setZonaIndustrial(){},setOperation(){},setImages(){},fetch:async()=>({ok:true,json:async()=>({path:`${A}/synthetic.webp`})})}
+    const calls=[],messages=[],success=[],busy={current:false},draftRef={current:{id:crypto.randomUUID()}};let failed=true,clears=0,uploads=0
+    const client={auth:{getUser:async()=>({data:{user:{id:A}}})},from:()=>({select(){return this},eq(){return this},single:async()=>({data:{account_status:'active'}})})}
+    const draft={ready:true,imageCount:1,draftRef,bindOwner:async()=>true,clear:async()=>{clears++},requireAuth:async()=>{throw Error('Unexpected auth')}}
+    const bindings={FormData:PrivateForm,submitBusy:busy,draft,actorId:A,setActorId(){throw Error('Unexpected actor change')},uploadedForAttempt:{current:new Map()},loading:false,showSuccess:false,imagesProcessing:false,
+      images:[{file:new File(['synthetic'],'synthetic.webp'),title:'Synthetic'}],privatePropertyInput,parsePropertySubmission,createClient:()=>client,router:{push(){throw Error('Unexpected navigation')}},
+      setMsg:v=>messages.push(v),setLoading(){},setUploadStates(){},setSuccessAction:v=>success.push(v),setShowSuccess(){},setAccountStatus(){},
+      fetch:async(url,options)=>{
+        if(url==='/api/imagenes'){uploads++;return {ok:true,status:200,json:async()=>({path:`${A}/synthetic.webp`})}}
+        assert.equal(url,'/api/publicar-propiedad')
+        calls.push(Object.fromEntries(options.body.entries()))
+        if(options.body.get('finalize')!=='on')return {ok:true,status:200,json:async()=>({id:draftRef.current.id,prepared:true,atomic:true})}
+        return {ok:!failed,status:failed?409:200,json:async()=>failed?{error:ownerSaveError({message:'OWNER_EQUIVALENT_EXISTS'})}:{id:draftRef.current.id,status:action}}
+      }}
     const handler=new Function(...Object.keys(bindings),submit+';return submit')(...Object.values(bindings))
-    const event={preventDefault(){},currentTarget:{reset(){resets++}},nativeEvent:{submitter:{name:'submission_action',value:action}}}
+    const event={preventDefault(){},currentTarget:{},nativeEvent:{submitter:{name:'submission_action',value:action}}}
     await Promise.all([handler(event),handler(event)])
-    assert.equal(calls.length,1);assert.equal(resets,0);assert.match(messages.at(-1),/equivalente/);assert.equal(busy.current,false)
+    assert.equal(calls.length,2);assert.equal(clears,0);assert.match(messages.at(-1),/equivalente/);assert.equal(busy.current,false)
     failed=false;await handler(event)
-    assert.equal(calls.length,2);assert.equal(calls[0].args.p_id,calls[1].args.p_id)
-    assert.equal(calls[1].name,'qrih_create_property_with_owner');assert.deepEqual(calls[1].args.p_private.pending_owner,pending)
-    assert.equal(calls[1].args.p_private.internal_name,'PRIVATE_NAME');assert.doesNotMatch(JSON.stringify(calls[1].args.p_changes),/PRIVATE_NAME|pending_owner|pending@example/)
-    assert.equal(calls[1].args.p_status,action);assert.equal(resets,1);assert.deepEqual(success,[action])
+    assert.equal(calls.length,4);assert.equal(calls[0].request_id,calls[3].request_id);assert.equal(uploads,1)
+    assert.deepEqual(JSON.parse(calls[3].pending_owner),pending);assert.equal(calls[3].internal_name,'PRIVATE_NAME')
+    assert.equal(calls[3].submission_action,action);assert.equal(clears,1);assert.deepEqual(success,[action])
   }
 })
 test('private editor loader: reload recovers pending owner; errors block editing instead of silently clearing private draft',async()=>{
@@ -157,4 +166,44 @@ test('Sprint3 public boundaries: no private table/field imports in public loader
   const privateFields=read('components/PrivateOwnerFields.tsx')
   assert.match(privateFields,/private_fields_present/);assert.match(privateFields,/onAuthStateChange/);assert.match(read('components/DemandUrgency.tsx'),/clearInterval/)
   assert.doesNotMatch(privateFields,/localStorage|console\.(log|warn)/)
+})
+
+test('actual publish handler: uncertain response and double click retain UUID; moderated/unknown states never show pending success', async () => {
+  const source=read('app/publicar/PublicarForm.tsx'),ast=babel.parseSync(source,{configFile:false,babelrc:false,parserOpts:{plugins:['jsx','typescript']}})
+  let submit
+  babel.traverse(ast,{FunctionDeclaration(path){if(path.node.id?.name==='submit')submit=stripTypeScriptTypes(source.slice(path.node.start,path.node.end),{mode:'strip'})}})
+  for (const status of ['pending','draft','rejected','published','paused','expired','pending_update','different-id',undefined]) {
+    class InputForm extends FormData { constructor(){super();for(const [k,v]of Object.entries({title:'Nave',operation:'Renta',price:'100',price_currency:'MXN',zone_general:'Zona',zone:'Parque',area:'500',publication_authorized:'on',terms_accepted:'on'}))this.set(k,v)} }
+    const id=crypto.randomUUID(),requests=[],messages=[],success=[],navigation=[];let lost=true,clears=0
+    const draft={ready:true,imageCount:1,draftRef:{current:{id}},bindOwner:async()=>true,clear:async()=>{clears++},requireAuth:async()=>{throw Error('Unexpected auth')}}
+    const client={auth:{getUser:async()=>({data:{user:{id:A}}})},from:()=>({select(){return this},eq(){return this},single:async()=>({data:{account_status:'active'}})})}
+    const bindings={FormData:InputForm,submitBusy:{current:false},draft,actorId:A,setActorId(){},uploadedForAttempt:{current:new Map()},loading:false,showSuccess:false,imagesProcessing:false,
+      images:[{file:new File(['synthetic'],'synthetic.webp'),title:'Synthetic'}],privatePropertyInput,parsePropertySubmission,createClient:()=>client,router:{push:v=>navigation.push(v)},
+      setMsg:v=>messages.push(v),setLoading(){},setUploadStates(){},setSuccessAction:v=>success.push(v),setShowSuccess(){},setAccountStatus(){},
+      fetch:async(_url,options)=>{requests.push(options.body.get('request_id'));if(lost)throw Error('Respuesta incierta');return{ok:true,status:200,json:async()=>({id:status==='different-id'?B:id,status})}}}
+    const handler=new Function(...Object.keys(bindings),submit+';return submit')(...Object.values(bindings))
+    const event={preventDefault(){},currentTarget:{},nativeEvent:{submitter:{value:'pending'}}}
+    await Promise.all([handler(event),handler(event)]);assert.deepEqual(requests,[id]);assert.equal(clears,0);assert.deepEqual(success,[])
+    lost=false;await handler(event);assert.deepEqual(requests,[id,id]);assert.deepEqual(navigation,[])
+    if(status==='pending'||status==='draft'){assert.equal(clears,1);assert.deepEqual(success,[status])}
+    else {assert.equal(clears,0);assert.deepEqual(success,[]);assert.match(messages.at(-1),status? /ya está|Conservamos|No pudimos confirmar/ : /No pudimos confirmar/)}
+  }
+})
+
+test('actual publish handler: empty review gallery is rejected before auth, while empty draft may be saved', async () => {
+  const source=read('app/publicar/PublicarForm.tsx'),ast=babel.parseSync(source,{configFile:false,babelrc:false,parserOpts:{plugins:['jsx','typescript']}})
+  let submit
+  babel.traverse(ast,{FunctionDeclaration(path){if(path.node.id?.name==='submit')submit=stripTypeScriptTypes(source.slice(path.node.start,path.node.end),{mode:'strip'})}})
+  class InputForm extends FormData { constructor(){super();for(const [k,v]of Object.entries({title:'Nave',operation:'Renta',price:'100',price_currency:'MXN',zone_general:'Zona',zone:'Parque',area:'500',publication_authorized:'on',terms_accepted:'on'}))this.set(k,v)} }
+  for(const action of ['pending','draft']) {
+    let auth=0,requests=0;const messages=[],success=[],id=crypto.randomUUID()
+    const draft={ready:true,imageCount:0,draftRef:{current:{id}},bindOwner:async()=>true,clear:async()=>{},requireAuth:async()=>{auth++}}
+    const client={auth:{getUser:async()=>{auth++;return{data:{user:{id:A}}}}},from:()=>({select(){return this},eq(){return this},single:async()=>({data:{account_status:'active'}})})}
+    const bindings={FormData:InputForm,submitBusy:{current:false},draft,actorId:A,setActorId(){},uploadedForAttempt:{current:new Map()},loading:false,showSuccess:false,imagesProcessing:false,images:[],privatePropertyInput,parsePropertySubmission,createClient:()=>client,router:{push(){}},
+      setMsg:v=>messages.push(v),setLoading(){},setUploadStates(){},setSuccessAction:v=>success.push(v),setShowSuccess(){},setAccountStatus(){},fetch:async()=>{requests++;return{ok:true,status:200,json:async()=>({id,status:'draft'})}}}
+    const handler=new Function(...Object.keys(bindings),submit+';return submit')(...Object.values(bindings))
+    await handler({preventDefault(){},currentTarget:{},nativeEvent:{submitter:{value:action}}})
+    if(action==='pending'){assert.equal(auth,0);assert.equal(requests,0);assert.match(messages.at(-1),/al menos una fotografía/);assert.deepEqual(success,[])}
+    else {assert.equal(auth,1);assert.equal(requests,1);assert.deepEqual(success,['draft'])}
+  }
 })

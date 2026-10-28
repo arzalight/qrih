@@ -5,6 +5,7 @@ import { PortalFooter } from '@/components/PortalFooter'
 
 export const metadata: Metadata = {
   title: 'QRO INDUSTRIAL HUB | QRIH',
+  robots: { index: false, follow: false },
   description:
     'Bodegas, naves industriales y espacios industriales en Querétaro.',
 }

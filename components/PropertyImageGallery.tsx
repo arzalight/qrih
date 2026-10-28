@@ -94,7 +94,7 @@ export function PropertyImageGallery({
             onClick={() => setActiveIndex(index)}
             aria-label={`Ampliar ${description(image, index)}`}
           >
-            <img src={image.url} alt={description(image, index)} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" width={1200} height={800} />
+            <img src={image.url} alt={description(image, index)} fetchPriority={index === 0 ? 'high' : 'auto'} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" width={1200} height={800} />
             {index === 0 && <span className="property-gallery__main-label">Principal</span>}
             {variant === 'admin' && (
               <span className="property-gallery__caption">{image.title || `Foto ${index + 1}`}</span>
