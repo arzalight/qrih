@@ -2,7 +2,7 @@ import type { Metric } from '@/lib/admin-metrics'
 export function AdminStatistics({ metrics }: { metrics: Metric[] }) {
   return <section aria-label="Estadísticas administrativas">
     <h2>Estadísticas principales</h2>
-    <p>Ventanas móviles de 30 × 24 horas, con límites UTC compartidos. Conteos independientes de los filtros de la tabla.</p>
+    <p>Métricas generales actualizadas aproximadamente cada 5 minutos; pendientes de revisión en cada actualización del panel. Ventanas móviles de 30 × 24 horas, con límites UTC compartidos por muestra. Conteos independientes de los filtros de la tabla.</p>
     {[metrics.slice(0, 6), metrics.slice(6)].map((group, i) => <section key={i} aria-label={i ? 'Indicadores secundarios' : 'Indicadores principales'}>
       {i === 1 && <h2>Operación y seguimiento</h2>}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 14, marginBottom: 32 }}>

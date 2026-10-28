@@ -80,7 +80,7 @@ function propertyForm(overrides = {}) {
   const form = new FormData()
   const fields = { request_id: id, title: 'Nave sintética', operation: 'Renta', price: '7.50', price_currency: 'USD',
     area: '100', zone_general: 'Zona', zone: 'Parque', publication_authorized: 'on', terms_accepted: 'on',
-    submission_action: 'pending', image_count: '0', ...overrides }
+    submission_action: 'pending', image_count: '1', ...overrides }
   for (const [key, value] of Object.entries(fields)) form.set(key, value)
   return form
 }
@@ -123,7 +123,7 @@ test('integración Sprint3: privados/galería/estado usan un único RPC atómico
 })
 
 test('integración Sprint3: error privado no cae en INSERT/UPDATE heredado ni borra fotos; resultado ambiguo conserva UUID', async () => {
-  const form = () => propertyForm({ private_fields_present: 'ready', pending_owner: 'null', internal_name: 'Private', finalize: 'on' })
+  const form = () => propertyForm({ private_fields_present: 'ready', pending_owner: 'null', internal_name: 'Private', finalize: 'on', image_refs: JSON.stringify([{ storage_path: owner + '/verified.webp', title: '' }]) })
   for (const error of [{ message: 'OWNER_EQUIVALENT_EXISTS' }, { code: 'PGRST202', message: 'PRIVATE_DB_SECRET' }]) {
     const state = fixture({ privateError: error }), result = await property(post('/api/publicar-propiedad', form()))
     assert.equal(result.status, 409); assert.equal(state.writes.length, 0); assert.equal(state.removals.length, 0)
@@ -247,5 +247,45 @@ test('siete fotos se transportan por separado; repetir una posición no vuelve a
     assert.equal((await image(post('/api/imagenes', photo))).status, 409)
     assert.equal(state.removals.length, galleryCode ? 1 : 0)
     assert.equal(state.rows.get(id).status, 'draft')
+  }
+})
+
+
+test('imágenes: sesión ausente o anónima con perfil activo se rechaza antes de ingerir o adjuntar', async () => {
+  for (const options of [{ noUser: true }, { anonymous: true }]) {
+    const state = fixture(options)
+    const photo = new FormData(); photo.set('kind', 'property')
+    photo.set('image', new File(['synthetic'], 'photo.webp', { type: 'image/webp' }))
+    assert.equal((await image(post('/api/imagenes', photo))).status, 401)
+    assert.equal(globalThis.__deferredUploads, 0); assert.equal(state.filters.length, 0)
+    assert.equal(state.writes.length, 0); assert.equal(state.removals.length, 0)
+  }
+})
+
+test('fotografías: draft admite cero; pending exige al menos una en ambos caminos sin mutar', async () => {
+  for (const privateFields of [{}, { private_fields_present: 'ready', pending_owner: 'null' }]) {
+    let state = fixture()
+    for (const finalize of ['', 'on']) {
+      const response = await property(post('/api/publicar-propiedad', propertyForm({ ...privateFields, image_count: '0', finalize })))
+      assert.equal(response.status, 400); assert.match((await response.json()).error, /al menos una fotografía/)
+    }
+    assert.equal(state.writes.length, 0); assert.equal(state.privateCalls.length, 0)
+    state = fixture()
+    const form = { ...privateFields, image_count: '0', submission_action: 'draft' }
+    assert.equal((await property(post('/api/publicar-propiedad', propertyForm(form)))).status, 200)
+    const result = await property(post('/api/publicar-propiedad', propertyForm({ ...form, finalize: 'on' })))
+    assert.equal((await result.json()).status, 'draft'); assert.equal(state.writes.length, 1)
+  }
+})
+
+test('reintento tras moderación conserva UUID y estado existente sin modificar ni repetir RPC', async () => {
+  for (const status of ['draft', 'pending', 'rejected', 'published', 'paused', 'expired', 'pending_update']) {
+    const state = fixture({ existing: { id, owner_id: owner, status } })
+    const form = () => propertyForm({ private_fields_present: 'ready', finalize: 'on' })
+    for (let retry = 0; retry < 2; retry++) {
+      const result = await (await property(post('/api/publicar-propiedad', form()))).json()
+      assert.equal(result.id, id); assert.equal(result.status, status); assert.equal(result.recover, status === 'draft')
+    }
+    assert.equal(state.rows.get(id).status, status); assert.equal(state.writes.length, 0); assert.equal(state.privateCalls.length, 0)
   }
 })

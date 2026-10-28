@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     const supabase = await createServerSupabaseClient()
     if (!supabase) return NextResponse.json({ error: 'Servicio no disponible.' }, { status: 503 })
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return NextResponse.json({ error: 'Necesitas iniciar sesión.' }, { status: 401 })
+    if (!user || user.is_anonymous) return NextResponse.json({ error: 'Necesitas iniciar sesión.' }, { status: 401 })
     stage = 'profile'
     const { data: profile } = await supabase.from('profiles').select('account_status,avatar_url').eq('id', user.id).single()
     if (profile?.account_status !== 'active') return NextResponse.json({ error: 'Necesitas una cuenta activa.' }, { status: 403 })

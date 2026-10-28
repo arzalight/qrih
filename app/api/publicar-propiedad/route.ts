@@ -26,6 +26,7 @@ export async function POST(request: Request) {
     const imageCount = Number(form.get('image_count'))
     if (!Number.isInteger(imageCount) || imageCount < 0 || imageCount > 7) return json({ error: 'Cantidad de fotografías inválida.' }, 400)
     const pending = form.get('submission_action') === 'pending'
+    if (pending && imageCount === 0) return json({ error: 'Agrega al menos una fotografía válida antes de enviar a revisión.' }, 400)
     const finalize = form.get('finalize') === 'on'
     // PK is the durable idempotency key. Never upsert or modify an existing record.
     const previous = await supabase.from('properties').select('id,status').eq('id', id).eq('owner_id', user.id).maybeSingle()

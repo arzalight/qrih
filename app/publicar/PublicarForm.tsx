@@ -114,6 +114,7 @@ export default function Publish() {
     setLoading(true)
     try {
       parsePropertySubmission(form)
+      if (action === 'pending' && images.length === 0) throw new Error('Agrega al menos una fotografía válida antes de enviar a revisión.')
       if (draft.imageCount > images.length) throw new Error('Selecciona de nuevo las fotografías que no se pudieron recuperar.')
       const supabase = createClient()
       if (!supabase) throw new Error('El servicio no está disponible. Tu formulario sigue abierto.')
@@ -139,7 +140,8 @@ export default function Publish() {
       if (response.status === 401) { await draft.requireAuth(action); return }
       let result = await response.json()
       if (!response.ok) throw new Error(result.error || 'No pudimos confirmar el envío. Conserva el borrador y reintenta.')
-      if (result.recover) {
+      if (result.id !== draft.draftRef.current!.id) throw new Error('No pudimos confirmar el envío. Conserva el formulario y revisa Mis propiedades antes de reintentar.')
+      if (result.recover && result.status === 'draft') {
         setMsg('Existe un borrador de este envío. Continúa desde su editor; no creamos otra propiedad.')
         router.push(`/mis-propiedades/${result.id}/editar`)
         return
@@ -173,12 +175,22 @@ export default function Publish() {
         if (finalized.status === 401) { await draft.requireAuth(action); return }
         result = await finalized.json()
         if (!finalized.ok) throw new Error(result.error || 'Reintenta para recuperar el borrador creado.')
-        if (result.recover) { router.push(`/mis-propiedades/${result.id}/editar`); return }
+        if (result.id !== draft.draftRef.current!.id) throw new Error('No pudimos confirmar el envío. Conserva el formulario y revisa Mis propiedades antes de reintentar.')
+        if (result.recover && result.status === 'draft') { router.push(`/mis-propiedades/${result.id}/editar`); return }
+      }
+      if (result.status !== 'draft' && result.status !== 'pending') {
+        const existingStates: Record<string, string> = {
+          rejected: 'rechazada', published: 'publicada', paused: 'pausada', expired: 'expirada', pending_update: 'con cambios pendientes',
+        }
+        const state = existingStates[String(result.status)]
+        setMsg(state ? `Esta propiedad ya está ${state}. No realizamos un nuevo envío ni modificamos su estado. Conservamos el formulario; revisa el registro en Mis propiedades.`
+          : 'No pudimos confirmar el estado del envío. Conservamos el formulario. Revisa Mis propiedades antes de reintentar.')
+        return
       }
       setUploadStates(images.map(() => 'completed'))
       await draft.clear()
       uploadedForAttempt.current.clear()
-      setSuccessAction(result.status === 'draft' ? 'draft' : 'pending')
+      setSuccessAction(result.status)
       setShowSuccess(true)
     } catch (error) {
       setUploadStates(current => current.map(state => state === 'uploading' ? 'error' : state))

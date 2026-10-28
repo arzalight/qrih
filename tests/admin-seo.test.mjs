@@ -12,7 +12,8 @@ registerHooks({ resolve(specifier, context, nextResolve) {
   return nextResolve(specifier, context)
 } })
 const { publicOrigin, indexingEnabled, propertySeo, safeJsonLd, publicMetadata } = await import('../lib/seo.ts')
-const { loadAdminMetrics, metricWindows } = await import('../lib/admin-metrics.ts')
+const { createAdminMetricsLoader, ADMIN_METRICS_TTL_MS, metricWindows } = await import('../lib/admin-metrics.ts')
+let loadAdminMetrics = createAdminMetricsLoader()
 const { default: sitemap } = await import('../app/sitemap.ts')
 const { default: robots } = await import('../app/robots.ts')
 const { proxy } = await import('../proxy.ts')
@@ -75,15 +76,16 @@ test('sitemap: unavailable source throws instead of silently publishing incomple
   globalThis.__catalogClient=null;await assert.rejects(sitemap(),/not configured/)
 })
 function actor(options={}) {
-  return {auth:{async getUser(){return {data:{user:options.noUser?null:{id:'actor',is_anonymous:options.anonymous}},error:options.error}}},
-    from(table){assert.equal(table,'profiles');return {select(){return this},eq(field,id){assert.equal(id,'actor');return this},async single(){return {data:options.noProfile?null:{role:options.role||'admin',account_status:options.status||'active'},error:options.profileError}}}}}
+  return {auth:{async getUser(){return {data:{user:options.noUser?null:{id:options.id||'actor',is_anonymous:options.anonymous}},error:options.error}}},
+    from(table){assert.equal(table,'profiles');return {select(){return this},eq(field,id){assert.equal(id,options.id||'actor');return this},async single(){return {data:options.noProfile?null:{role:options.role||'admin',account_status:options.status||'active'},error:options.profileError}}}}}
 }
 function metricFixture(options={}) {
+  loadAdminMetrics = createAdminMetricsLoader()
   globalThis.__missingMetrics=options.missing;globalThis.__privilegedCalls=0;const calls=[]
   globalThis.__metricClient={from(table){const call={table,filters:[]};calls.push(call);const q={
     select(fields,args){assert.equal(fields,'id');assert.deepEqual(args,{count:'exact',head:true});return q},
     eq(k,v){call.filters.push(['eq',k,v]);return q},gte(k,v){call.filters.push(['gte',k,v]);return q},lt(k,v){call.filters.push(['lt',k,v]);return q},
-    then(ok,no){return (options.throws?Promise.reject(Error('sensitive')):Promise.resolve(options.error?{error:{message:'sensitive'}}:{count:options.zero?0:2501})).then(ok,no)},
+    then(ok,no){return (options.throws?Promise.reject(Error('sensitive')):Promise.resolve(options.error?{error:{message:'sensitive'}}:{count:options.zero?0:(options.count??2501)})).then(ok,no)},
   };return q}}
   return calls
 }
@@ -107,4 +109,39 @@ test('metrics: errors/missing config never become zero; real empty count stays z
     metricFixture(option);const metrics=await loadAdminMetrics(actor());assert.ok(metrics.every(x=>x.value===null))
   }
   metricFixture({zero:true});const metrics=await loadAdminMetrics(actor());assert.equal(metrics[0].value,0);assert.equal(metrics.find(m=>m.key==='links').previous,0)
+})
+
+
+test('metrics: five-minute private snapshot reuses fourteen counts while pending remains live every refresh', async () => {
+  const options = { count: 10 }, calls = metricFixture(options), now = new Date('2026-10-27T21:00:00Z')
+  const initial = await loadAdminMetrics(actor(), now)
+  assert.equal(calls.length, 15); assert.equal(ADMIN_METRICS_TTL_MS, 300000)
+  options.count = 12
+  initial[0].value = 999 // A caller cannot corrupt a later render.
+  const next = await loadAdminMetrics(actor(), new Date(+now + 30000))
+  assert.equal(calls.length, 16); assert.deepEqual(calls.at(-1).filters, [['eq','status','pending']])
+  assert.equal(next.find(m => m.key === 'published').value, 10)
+  assert.equal(next.find(m => m.key === 'pending').value, 12)
+  await loadAdminMetrics(actor(), new Date(+now + 299999)); assert.equal(calls.length, 17)
+  const expired = await loadAdminMetrics(actor(), new Date(+now + 300000))
+  assert.equal(calls.length, 32); assert.equal(expired[0].value, 12)
+})
+
+test('metrics: cached data still requires fresh admin authorization and never crosses account IDs', async () => {
+  const calls = metricFixture(), now = new Date('2026-10-27T21:00:00Z')
+  await loadAdminMetrics(actor({id:'A'}), now); assert.equal(calls.length, 15)
+  for (const option of [{id:'A',status:'suspended'}, {id:'A',role:'publisher'}, {id:'A',anonymous:true}, {noUser:true}]) {
+    await assert.rejects(loadAdminMetrics(actor(option), new Date(+now + 30000)), /Restricted/)
+    assert.equal(calls.length, 15)
+  }
+  await loadAdminMetrics(actor({id:'B'}), new Date(+now + 30000)); assert.equal(calls.length, 30)
+  await loadAdminMetrics(actor({id:'A'}), new Date(+now + 60000)); assert.equal(calls.length, 31)
+})
+
+test('metrics: unavailable general query is retried instead of cached as a successful zero', async () => {
+  const options = { error: true }, calls = metricFixture(options), now = new Date('2026-10-27T21:00:00Z')
+  const missing = await loadAdminMetrics(actor(), now); assert.equal(missing[0].value, null)
+  options.error = false
+  const restored = await loadAdminMetrics(actor(), new Date(+now + 30000))
+  assert.equal(calls.length, 30); assert.equal(restored[0].value, 2501)
 })

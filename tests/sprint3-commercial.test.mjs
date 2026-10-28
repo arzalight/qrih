@@ -167,3 +167,43 @@ test('Sprint3 public boundaries: no private table/field imports in public loader
   assert.match(privateFields,/private_fields_present/);assert.match(privateFields,/onAuthStateChange/);assert.match(read('components/DemandUrgency.tsx'),/clearInterval/)
   assert.doesNotMatch(privateFields,/localStorage|console\.(log|warn)/)
 })
+
+test('actual publish handler: uncertain response and double click retain UUID; moderated/unknown states never show pending success', async () => {
+  const source=read('app/publicar/PublicarForm.tsx'),ast=babel.parseSync(source,{configFile:false,babelrc:false,parserOpts:{plugins:['jsx','typescript']}})
+  let submit
+  babel.traverse(ast,{FunctionDeclaration(path){if(path.node.id?.name==='submit')submit=stripTypeScriptTypes(source.slice(path.node.start,path.node.end),{mode:'strip'})}})
+  for (const status of ['pending','draft','rejected','published','paused','expired','pending_update','different-id',undefined]) {
+    class InputForm extends FormData { constructor(){super();for(const [k,v]of Object.entries({title:'Nave',operation:'Renta',price:'100',price_currency:'MXN',zone_general:'Zona',zone:'Parque',area:'500',publication_authorized:'on',terms_accepted:'on'}))this.set(k,v)} }
+    const id=crypto.randomUUID(),requests=[],messages=[],success=[],navigation=[];let lost=true,clears=0
+    const draft={ready:true,imageCount:1,draftRef:{current:{id}},bindOwner:async()=>true,clear:async()=>{clears++},requireAuth:async()=>{throw Error('Unexpected auth')}}
+    const client={auth:{getUser:async()=>({data:{user:{id:A}}})},from:()=>({select(){return this},eq(){return this},single:async()=>({data:{account_status:'active'}})})}
+    const bindings={FormData:InputForm,submitBusy:{current:false},draft,actorId:A,setActorId(){},uploadedForAttempt:{current:new Map()},loading:false,showSuccess:false,imagesProcessing:false,
+      images:[{file:new File(['synthetic'],'synthetic.webp'),title:'Synthetic'}],privatePropertyInput,parsePropertySubmission,createClient:()=>client,router:{push:v=>navigation.push(v)},
+      setMsg:v=>messages.push(v),setLoading(){},setUploadStates(){},setSuccessAction:v=>success.push(v),setShowSuccess(){},setAccountStatus(){},
+      fetch:async(_url,options)=>{requests.push(options.body.get('request_id'));if(lost)throw Error('Respuesta incierta');return{ok:true,status:200,json:async()=>({id:status==='different-id'?B:id,status})}}}
+    const handler=new Function(...Object.keys(bindings),submit+';return submit')(...Object.values(bindings))
+    const event={preventDefault(){},currentTarget:{},nativeEvent:{submitter:{value:'pending'}}}
+    await Promise.all([handler(event),handler(event)]);assert.deepEqual(requests,[id]);assert.equal(clears,0);assert.deepEqual(success,[])
+    lost=false;await handler(event);assert.deepEqual(requests,[id,id]);assert.deepEqual(navigation,[])
+    if(status==='pending'||status==='draft'){assert.equal(clears,1);assert.deepEqual(success,[status])}
+    else {assert.equal(clears,0);assert.deepEqual(success,[]);assert.match(messages.at(-1),status? /ya está|Conservamos|No pudimos confirmar/ : /No pudimos confirmar/)}
+  }
+})
+
+test('actual publish handler: empty review gallery is rejected before auth, while empty draft may be saved', async () => {
+  const source=read('app/publicar/PublicarForm.tsx'),ast=babel.parseSync(source,{configFile:false,babelrc:false,parserOpts:{plugins:['jsx','typescript']}})
+  let submit
+  babel.traverse(ast,{FunctionDeclaration(path){if(path.node.id?.name==='submit')submit=stripTypeScriptTypes(source.slice(path.node.start,path.node.end),{mode:'strip'})}})
+  class InputForm extends FormData { constructor(){super();for(const [k,v]of Object.entries({title:'Nave',operation:'Renta',price:'100',price_currency:'MXN',zone_general:'Zona',zone:'Parque',area:'500',publication_authorized:'on',terms_accepted:'on'}))this.set(k,v)} }
+  for(const action of ['pending','draft']) {
+    let auth=0,requests=0;const messages=[],success=[],id=crypto.randomUUID()
+    const draft={ready:true,imageCount:0,draftRef:{current:{id}},bindOwner:async()=>true,clear:async()=>{},requireAuth:async()=>{auth++}}
+    const client={auth:{getUser:async()=>{auth++;return{data:{user:{id:A}}}}},from:()=>({select(){return this},eq(){return this},single:async()=>({data:{account_status:'active'}})})}
+    const bindings={FormData:InputForm,submitBusy:{current:false},draft,actorId:A,setActorId(){},uploadedForAttempt:{current:new Map()},loading:false,showSuccess:false,imagesProcessing:false,images:[],privatePropertyInput,parsePropertySubmission,createClient:()=>client,router:{push(){}},
+      setMsg:v=>messages.push(v),setLoading(){},setUploadStates(){},setSuccessAction:v=>success.push(v),setShowSuccess(){},setAccountStatus(){},fetch:async()=>{requests++;return{ok:true,status:200,json:async()=>({id,status:'draft'})}}}
+    const handler=new Function(...Object.keys(bindings),submit+';return submit')(...Object.values(bindings))
+    await handler({preventDefault(){},currentTarget:{},nativeEvent:{submitter:{value:action}}})
+    if(action==='pending'){assert.equal(auth,0);assert.equal(requests,0);assert.match(messages.at(-1),/al menos una fotografía/);assert.deepEqual(success,[])}
+    else {assert.equal(auth,1);assert.equal(requests,1);assert.deepEqual(success,['draft'])}
+  }
+})
