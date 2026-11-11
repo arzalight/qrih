@@ -1755,3 +1755,16 @@ body:has(.property-workspace) .site-footer__eyebrow { display: none; }
 .deferred-auth::backdrop { background: rgb(0 0 0 / .5); }
 .deferred-auth__actions { display: flex; flex-wrap: wrap; gap: 12px; }
 .deferred-auth__actions > * { flex: 1 1 180px; text-align: center; }
+
+/* Inventario: ordenamiento, filtros aplicados y estado vacío */
+.inventory-sort { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.inventory-sort label { font-size: 13px; color: var(--muted); }
+.inventory-sort select { min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface); color: var(--ink); }
+.inventory-sort .button { min-height: 44px; }
+.inventory-chips { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin: 0 0 var(--space-4); }
+.inventory-chip { display: inline-flex; align-items: center; min-height: 44px; padding: 6px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--primary-soft); color: var(--primary-hover); font-size: 13px; }
+.inventory-chip:hover { border-color: var(--primary); }
+.inventory-chips__clear { display: inline-flex; align-items: center; min-height: 44px; padding: 6px 8px; font-size: 13px; color: var(--muted); text-decoration: underline; }
+.inventory-empty { display: grid; gap: var(--space-3); justify-items: start; }
+.inventory-empty p { margin: 0; }
+.inventory-empty__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }

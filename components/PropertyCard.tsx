@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import { propertyPrice } from '@/lib/property-price'
+import { formatPropertyTitle, propertySpecs } from '@/lib/property-display'
+import { ZONAS_GENERALES, ZONAS_INDUSTRIALES_POR_ZONA } from '@/lib/zonas'
 
 type Property = {
   id: string
@@ -7,6 +9,7 @@ type Property = {
   title: string
   operation: string
   zone: string
+  zone_general?: string | null
   price_display: string
   price_value?: number | string | null
   price_currency?: string | null
@@ -18,33 +21,36 @@ type Property = {
   main_image: string | null
 }
 
+const PLACE_NAMES = [...ZONAS_GENERALES, ...Object.values(ZONAS_INDUSTRIALES_POR_ZONA).flat()]
+
 export function PropertyCard({ property: p }: { property: Property }) {
+  const title = formatPropertyTitle(p.title, PLACE_NAMES)
+  const specs = propertySpecs(p)
+
   return (
     <Link href={`/bodegas/${p.slug}`} className="card">
       <div className="photo">
-        {p.main_image ? <img src={p.main_image} alt={p.title} loading="lazy" decoding="async" width={640} height={400} />
+        {p.main_image ? <img src={p.main_image} alt={title} loading="lazy" decoding="async" width={640} height={400} />
           : <div className="photo__empty">Fotografía no disponible</div>}
         <span>
           {p.operation} · {p.zone}
         </span>
 
         {p.share_commission && (
-          <em>🤝 COLABORABLE</em>
+          <em title="Esta propiedad comparte comisión con asesores colaboradores">
+            <span aria-hidden="true">🤝</span> COLABORABLE
+          </em>
         )}
       </div>
 
       <div className="cardBody">
-        <small>{p.zone.toUpperCase()}, QUERÉTARO</small>
+        {p.zone_general && <small>{p.zone_general.toUpperCase()}</small>}
 
-        <h3>{p.title}</h3>
+        <h3>{title}</h3>
 
         <b>{propertyPrice(p)}</b>
 
-        <p>
-          {(p.total_area || 0).toLocaleString('es-MX')} m² ·{' '}
-          {(p.covered_area || 0).toLocaleString('es-MX')} m² techados · Altura{' '}
-          {p.max_height || 'N/D'}
-        </p>
+        <p>{specs.length > 0 ? specs.join(' · ') : 'Características por confirmar'}</p>
       </div>
     </Link>
   )
