@@ -6,6 +6,7 @@ import { privatePropertyInput } from '@/lib/private-commercial'
 
 import { useFormDraft } from '@/components/useFormDraft'
 import { DeferredAuthNotice } from '@/components/DeferredAuthNotice'
+import { FormDraftStatus } from '@/components/FormDraftStatus'
 import { parsePropertySubmission } from '@/lib/property-submission'
 import { PriceCurrencySelect } from '@/components/PriceCurrencySelect'
 
@@ -205,26 +206,23 @@ export default function Publish() {
     <>
       <Header />
 
-      <main className="form">
-        <small>PUBLICA EN QRIH</small>
+      <main className="form publish-page">
 
         <h1>Sube tu propiedad industrial.</h1>
 
         {accountStatus === 'suspended' && <AccountSuspensionNotice />}
 
         <DeferredAuthNotice open={draft.authOpen} onClose={() => draft.setAuthOpen(false)} path="/publicar" memoryOnly={draft.memoryOnly} preserveMemory />
-        {!showSuccess && <p className="notice" role="status">{draft.notice || 'Tu progreso se guarda en este navegador durante 7 días. En equipos compartidos, descarta el borrador al terminar.'}</p>}
-        {!showSuccess && <button type="button" disabled={loading || imagesProcessing || !draft.ready} onClick={() => void draft.discard()}>Descartar borrador local</button>}
         <form
           ref={draft.formRef} onInput={draft.scheduleSave} onChange={draft.scheduleSave}
           hidden={showSuccess}
           onSubmit={submit}
           encType="multipart/form-data"
         >
-          <fieldset disabled={!draft.ready || loading}>
+          <fieldset className="publish-form-state" disabled={!draft.ready || loading || draft.discarding}>
           {actorId ? <PrivatePropertyFields key={actorId} disabled={loading || imagesProcessing} />
             : <p className="ui-help">Los datos privados del propietario se completan después de iniciar sesión. No se guardan en el borrador de este navegador.</p>}
-          <p className="ui-help">La dirección y los datos privados permanecen sólo en esta pestaña hasta guardar. Si recargas o sigues el correo en otra pestaña, tendrás que capturarlos de nuevo o volver aquí.</p>
+            <p className="ui-help">Mantén esta pestaña abierta: la dirección y los datos privados no se guardan en el borrador local.</p>
           <fieldset>
             <legend>Información general</legend>
 
@@ -244,7 +242,7 @@ export default function Publish() {
                 <option value="Venta">Venta</option>
               </select></FormField>
 
-              <FormField id="field-0-price" label="Precio" required><div className="price-input">
+            <FormField id="field-0-price" label={operation === 'Renta' ? 'Precio por m²/mes' : 'Precio total'} required><div className="price-input">
                 <span>$</span>
 
                 <input id="field-0-price"
@@ -253,6 +251,7 @@ export default function Publish() {
                   type="number"
                   min="0.01"
                   step="any"
+                  aria-describedby="property-price-help"
                   placeholder={
                     operation === 'Renta'
                       ? 'Precio por m²'
@@ -262,7 +261,7 @@ export default function Publish() {
               </div></FormField>
             </div>
 
-            <p
+            <p id="property-price-help"
               style={{
                 marginTop: '0',
                 marginBottom: '18px',
@@ -342,9 +341,11 @@ export default function Publish() {
             </div>
 
             <FormField id="field-0-address" label="Dirección"><input id="field-0-address"
+              aria-describedby="property-address-help"
               name="address"
               placeholder="Dirección"
             /></FormField>
+            <p id="property-address-help" className="ui-help">No se guarda en el borrador local. Si recargas esta pestaña, tendrás que capturarla de nuevo.</p>
           </fieldset>
 
           <fieldset>
@@ -453,6 +454,7 @@ export default function Publish() {
 
           <fieldset>
             <legend>Fotografías</legend>
+            <p className="ui-help">Para enviar a revisión necesitas al menos una fotografía válida. Puedes guardar un borrador sin fotografías.</p>
 
             {draft.ready && <ImageUploader initialImages={images} onChange={next => { setImages(next); draft.updateImages(next) }} locked={loading} onProcessingChange={setImagesProcessing} />}
             <ImageUploadProgress states={uploadStates} />
@@ -482,21 +484,15 @@ export default function Publish() {
             </span>
           </label>
 
-          <div
-            style={{
-              display: 'flex',
-              gap: '12px',
-              flexWrap: 'wrap',
-            }}
-          >
+          <div className="form-submit-actions">
             <button
+              className="button--secondary"
               type="submit"
               name="submission_action"
               value="draft"
               disabled={!draft.ready || loading || imagesProcessing || accountStatus === 'suspended'}
               style={{
                 flex: '1 1 220px',
-                background: "var(--primary-hover)",
                 opacity: accountStatus === 'suspended' ? 0.55 : 1,
                 cursor: accountStatus === 'suspended' ? 'not-allowed' : 'pointer',
               }}
@@ -530,6 +526,7 @@ export default function Publish() {
           )}
           </fieldset>
         </form>
+        {!showSuccess && <FormDraftStatus kind="property" notice={draft.notice} disabled={loading || imagesProcessing || !draft.ready || draft.discarding} onDiscard={draft.discard} />}
       {showSuccess && (
         <section ref={successNotice} tabIndex={-1} className="publish-success ui-panel" role="status" aria-live="polite">
           <span className="publish-success__icon" aria-hidden="true">✓</span>
