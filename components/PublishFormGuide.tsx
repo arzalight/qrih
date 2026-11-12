@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react'
 import {
-  PUBLISH_SECTIONS,
   readFormSnapshot,
   readiness,
   sectionStates,
@@ -44,53 +43,6 @@ function useFormSnapshot(anchor: { current: HTMLElement | null }) {
     }
   }, [anchor])
   return snapshot
-}
-
-function useActiveSection() {
-  const [active, setActive] = useState<string>(PUBLISH_SECTIONS[0].id)
-  useEffect(() => {
-    if (typeof IntersectionObserver === 'undefined') return
-    const observer = new IntersectionObserver((entries) => {
-      const visible = entries.filter((entry) => entry.isIntersecting)
-      if (visible.length) setActive(visible[0].target.id)
-    }, { rootMargin: '-15% 0px -65% 0px' })
-    for (const section of PUBLISH_SECTIONS) {
-      const element = document.getElementById(section.id)
-      if (element) observer.observe(element)
-    }
-    return () => observer.disconnect()
-  }, [])
-  return active
-}
-
-const STATE_TEXT = { complete: 'completa', pending: 'pendiente', optional: 'opcional' } as const
-
-export function PublishProgress({ imageCount }: { imageCount: number }) {
-  const anchor = useRef<HTMLElement>(null)
-  const snapshot = useFormSnapshot(anchor)
-  const active = useActiveSection()
-  const states = sectionStates(snapshot, imageCount)
-  const counted = states.filter((state) => state.state !== 'optional')
-  const done = counted.filter((state) => state.state === 'complete').length
-
-  return (
-    <nav ref={anchor} className="publish-progress" aria-label="Avance del formulario">
-      <div className="publish-progress__top">
-        <span>{done} de {counted.length} secciones listas</span>
-        <progress max={counted.length} value={done} aria-label="Secciones listas del formulario" />
-      </div>
-      <ol className="publish-progress__list">
-        {states.map((state, index) => (
-          <li key={state.id}>
-            <a href={`#${state.id}`} data-state={state.state} aria-current={active === state.id ? 'step' : undefined}>
-              <span className="publish-progress__dot" aria-hidden="true">{state.state === 'complete' ? '✓' : index + 1}</span>
-              <span>{state.label}<span className="sr-only"> ({STATE_TEXT[state.state]})</span></span>
-            </a>
-          </li>
-        ))}
-      </ol>
-    </nav>
-  )
 }
 
 export function PublishSummary({ imageCount }: { imageCount: number }) {

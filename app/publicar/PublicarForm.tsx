@@ -18,7 +18,7 @@ import { ImageUploadProgress, type ImageUploadState } from '@/components/ImageUp
 import { createClient } from '@/lib/supabase'
 import { AccountSuspensionNotice } from '@/components/AccountSuspensionNotice'
 import Link from 'next/link'
-import { PublishProgress, PublishSummary } from '@/components/PublishFormGuide'
+import { PublishSummary } from '@/components/PublishFormGuide'
 import './publicar.css'
 
 import {
@@ -211,7 +211,6 @@ export default function Publish() {
       <main className="form publish-page">
 
         <h1>Sube tu propiedad industrial.</h1>
-        <p className="publish-intro">Completa las secciones en orden. Los campos obligatorios se piden también para guardar un borrador; las fotografías solo son obligatorias al enviar a revisión.</p>
 
         {accountStatus === 'suspended' && <AccountSuspensionNotice />}
 
@@ -223,10 +222,7 @@ export default function Publish() {
           encType="multipart/form-data"
         >
           <fieldset className="publish-form-state" disabled={!draft.ready || loading || draft.discarding}>
-          <PublishProgress imageCount={images.length} />
-          {actorId ? <PrivatePropertyFields key={actorId} disabled={loading || imagesProcessing} />
-            : <p className="ui-help">Los datos privados del propietario se completan después de iniciar sesión. No se guardan en el borrador de este navegador.</p>}
-            <p className="ui-help">Mantén esta pestaña abierta: la dirección y los datos privados no se guardan en el borrador local.</p>
+          {actorId && <PrivatePropertyFields key={actorId} disabled={loading || imagesProcessing} />}
           <fieldset className="publish-section" id="seccion-general">
             <legend>Propiedad y precio</legend>
             <p className="ui-help publish-section__intro">Cómo se presentará tu anuncio y a qué precio.</p>
