@@ -18,6 +18,8 @@ import { ImageUploadProgress, type ImageUploadState } from '@/components/ImageUp
 import { createClient } from '@/lib/supabase'
 import { AccountSuspensionNotice } from '@/components/AccountSuspensionNotice'
 import Link from 'next/link'
+import { PublishProgress, PublishSummary } from '@/components/PublishFormGuide'
+import './publicar.css'
 
 import {
   ZONAS_GENERALES,
@@ -209,6 +211,7 @@ export default function Publish() {
       <main className="form publish-page">
 
         <h1>Sube tu propiedad industrial.</h1>
+        <p className="publish-intro">Completa las secciones en orden. Los campos obligatorios se piden también para guardar un borrador; las fotografías solo son obligatorias al enviar a revisión.</p>
 
         {accountStatus === 'suspended' && <AccountSuspensionNotice />}
 
@@ -220,11 +223,13 @@ export default function Publish() {
           encType="multipart/form-data"
         >
           <fieldset className="publish-form-state" disabled={!draft.ready || loading || draft.discarding}>
+          <PublishProgress imageCount={images.length} />
           {actorId ? <PrivatePropertyFields key={actorId} disabled={loading || imagesProcessing} />
             : <p className="ui-help">Los datos privados del propietario se completan después de iniciar sesión. No se guardan en el borrador de este navegador.</p>}
             <p className="ui-help">Mantén esta pestaña abierta: la dirección y los datos privados no se guardan en el borrador local.</p>
-          <fieldset>
-            <legend>Información general</legend>
+          <fieldset className="publish-section" id="seccion-general">
+            <legend>Propiedad y precio</legend>
+            <p className="ui-help publish-section__intro">Cómo se presentará tu anuncio y a qué precio.</p>
 
             <FormField id="field-0-title" label="Título de la propiedad" required><input id="field-0-title"
               required
@@ -261,14 +266,7 @@ export default function Publish() {
               </div></FormField>
             </div>
 
-            <p id="property-price-help"
-              style={{
-                marginTop: '0',
-                marginBottom: '18px',
-                fontSize: '13px',
-                color: "var(--muted)",
-              }}
-            >
+            <p id="property-price-help" className="publish-price-help">
               {operation === 'Renta'
                 ? 'El precio se registrará como precio por m².'
                 : 'El precio se registrará como precio total de venta.'}
@@ -283,6 +281,11 @@ export default function Publish() {
 
               <span>Comparto comisión</span>
             </label>
+          </fieldset>
+
+          <fieldset className="publish-section" id="seccion-ubicacion">
+            <legend>Ubicación</legend>
+            <p className="ui-help publish-section__intro">Elige el municipio y la zona industrial, y si se muestra solo la zona o la dirección completa.</p>
 
             <div className="form-location-grid">
               <div className="two">
@@ -348,8 +351,9 @@ export default function Publish() {
             <p id="property-address-help" className="ui-help">No se guarda en el borrador local. Si recargas esta pestaña, tendrás que capturarla de nuevo.</p>
           </fieldset>
 
-          <fieldset>
-            <legend>Precio y condiciones</legend>
+          <fieldset className="publish-section" id="seccion-condiciones">
+            <legend>Condiciones del precio</legend>
+            <p className="ui-help publish-section__intro">Opcional. Marca lo que aplique a tu precio.</p>
 
             <div className="price-options">
               <label className="inline-check">
@@ -381,8 +385,9 @@ export default function Publish() {
             </div>
           </fieldset>
 
-          <fieldset>
+          <fieldset className="publish-section" id="seccion-superficies">
             <legend>Superficies y especificaciones</legend>
+            <p className="ui-help publish-section__intro">La superficie total es obligatoria; el resto es opcional.</p>
 
             <div className="two">
               <FormField id="field-0-area" label="Superficie total (m²)" required><input id="field-0-area"
@@ -452,13 +457,17 @@ export default function Publish() {
             /></FormField>
           </fieldset>
 
-          <fieldset>
+          <fieldset className="publish-section" id="seccion-fotos">
             <legend>Fotografías</legend>
             <p className="ui-help">Para enviar a revisión necesitas al menos una fotografía válida. Puedes guardar un borrador sin fotografías.</p>
 
             {draft.ready && <ImageUploader initialImages={images} onChange={next => { setImages(next); draft.updateImages(next) }} locked={loading} onProcessingChange={setImagesProcessing} />}
             <ImageUploadProgress states={uploadStates} />
           </fieldset>
+
+          <fieldset className="publish-section" id="seccion-envio">
+          <legend>Autorización y envío</legend>
+          <PublishSummary imageCount={images.length} />
 
           <label className="inline-check">
             <input
@@ -484,6 +493,14 @@ export default function Publish() {
             </span>
           </label>
 
+          </fieldset>
+
+          <div className="publish-actionbar">
+          {msg && (
+            <p className="notice" role="status" aria-live="polite">
+              {msg}
+            </p>
+          )}
           <div className="form-submit-actions">
             <button
               className="button--secondary"
@@ -518,12 +535,7 @@ export default function Publish() {
                 : 'ENVIAR A REVISIÓN →'}
             </button>
           </div>
-
-          {msg && (
-            <p className="notice" role="status" aria-live="polite">
-              {msg}
-            </p>
-          )}
+          </div>
           </fieldset>
         </form>
         {!showSuccess && <FormDraftStatus kind="property" notice={draft.notice} disabled={loading || imagesProcessing || !draft.ready || draft.discarding} onDiscard={draft.discard} />}
