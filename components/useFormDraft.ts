@@ -12,6 +12,8 @@ export function useFormDraft(kind: DraftKind, restore: (draft: FormDraft) => voi
   const imagesRef = useRef<SelectedImage[]>([])
   const queue = useRef(Promise.resolve())
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const discardBusy = useRef(false)
+  const [discarding, setDiscarding] = useState(false)
   const [ready, setReady] = useState(false)
   const [notice, setNotice] = useState('')
   const [authOpen, setAuthOpen] = useState(false)
@@ -99,9 +101,20 @@ export function useFormDraft(kind: DraftKind, restore: (draft: FormDraft) => voi
     draftRef.current = null
   }
   async function discard() {
-    await clear()
-    window.location.reload()
+    if (discardBusy.current) return
+    const subject = kind === 'property' ? 'esta propiedad' : 'este requerimiento'
+    if (!window.confirm(`¿Descartar el borrador de ${subject}? Perderás los datos y fotografías sin enviar. La página se recargará y también perderás los datos privados que permanecen sólo en esta pestaña. Esta acción no se puede deshacer.`)) return
+    discardBusy.current = true
+    setDiscarding(true)
+    try {
+      await clear()
+      window.location.reload()
+    } catch {
+      setNotice('No pudimos confirmar el descarte. Conserva esta pestaña abierta y revisa tu borrador antes de continuar.')
+      discardBusy.current = false
+      setDiscarding(false)
+    }
   }
   return { formRef, draftRef, ready, notice, imageCount, scheduleSave, updateImages, persist,
-    requireAuth, bindOwner, clear, discard, authOpen, setAuthOpen, memoryOnly }
+    requireAuth, bindOwner, clear, discard, discarding, authOpen, setAuthOpen, memoryOnly }
 }
