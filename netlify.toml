@@ -1,13 +1,12 @@
 [build]
-  command = "npm run lint && npm run typecheck && npm test && npm run preflight && node scripts/netlify-next-build.mjs && npm run preflight"
-  publish = ".next"
+command = "npm run lint && npm run typecheck && npm test && npm run preflight && node scripts/netlify-next-build.mjs && npm run preflight"
+publish = ".next"
 
 [build.environment]
-  NODE_VERSION = "24"
+NODE_VERSION = "24"
+QRIH_NETLIFY_BUILD = "true"
 
-# Adaptador OpenNext oficial actual, sin fijar versión ni exportar estático.
-# Explícito porque el build por ZIP no lo añadió automáticamente.
 [[plugins]]
-  package = "@netlify/plugin-nextjs"
+package = "@netlify/plugin-nextjs"
 
 # Variables y secretos se definen en Netlify por entorno, nunca en este archivo.
