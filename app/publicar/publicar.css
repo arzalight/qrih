@@ -1,0 +1,146 @@
+/* Rediseño de los formularios "Subir propiedad" y "Editar propiedad". Solo presentación: ningún campo, nombre ni handler cambia.
+   Los estilos viven aquí (archivo nuevo) para no tocar app/globals.css. */
+
+html:has(.publish-page) { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html:has(.publish-page) { scroll-behavior: auto; }
+}
+
+/* El formulario deja de ser una tarjeta contenedora: cada sección es su propia tarjeta. */
+.form.publish-page > form {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+/* El contenedor interno tampoco se ve como tarjeta. */
+.publish-page .publish-form-state {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+/* Formulario de edición (/mis-propiedades/[id]/editar): mismo patrón, el <form> lleva la clase publish-page. */
+.form > form.edit-form {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  counter-reset: publish-step;
+}
+.edit-form .publish-note { margin: 0 0 16px; }
+
+/* ---------- Secciones ---------- */
+.publish-page .publish-form-state { counter-reset: publish-step; }
+.publish-page .publish-section {
+  margin: 0 0 16px;
+  padding: 20px;
+  border: 1px solid var(--line, #dce1eb);
+  border-radius: var(--radius-md, 12px);
+  background: var(--surface, #fff);
+  scroll-margin-top: 16px;
+}
+/* La leyenda se comporta como un encabezado normal (no corta el borde). */
+.publish-page .publish-section > legend {
+  float: left;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 0;
+  margin: 0 0 4px;
+  color: var(--ink, #253247);
+  font-size: 18px;
+  font-weight: 700;
+}
+.publish-page .publish-section > legend::before {
+  counter-increment: publish-step;
+  content: counter(publish-step);
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--primary-soft, #eef0fa);
+  color: var(--primary-hover, #42538f);
+  font-size: 14px;
+}
+.publish-page .publish-section > legend + * { clear: both; }
+.publish-section__intro { margin: 0 0 16px; }
+.publish-price-help { margin: 0 0 16px; color: var(--muted, #59677d); font-size: 13px; }
+
+/* Campos con altura táctil cómoda y 16 px para que iOS no haga zoom al enfocar. */
+.publish-page .publish-section :is(input:not([type="checkbox"]):not([type="file"]), select) { min-height: 44px; }
+.publish-page .publish-section :is(input, select, textarea) { font-size: 16px; }
+.publish-page .publish-section .inline-check { min-height: 44px; align-items: center; }
+
+/* Fotografías: el cargador deja de duplicar el marco de la sección. */
+.publish-page .publish-section .image-uploader {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+.publish-page .image-uploader__preview button { min-height: 44px; min-width: 44px; }
+
+/* ---------- Resumen previo al envío ---------- */
+.publish-summary {
+  margin: 12px 0 16px;
+  padding: 16px;
+  border: 1px solid var(--line, #dce1eb);
+  border-radius: var(--radius-md, 12px);
+  background: var(--surface-subtle, #f8f9fc);
+}
+.publish-summary h3 { margin: 0 0 6px; font-size: 16px; }
+.publish-summary__status { margin: 0 0 12px; font-weight: 600; }
+.publish-summary[data-ready="ready"] .publish-summary__status { color: var(--success, #216348); }
+.publish-summary[data-ready="draft-only"] .publish-summary__status { color: var(--warning, #765309); }
+.publish-summary[data-ready="incomplete"] .publish-summary__status { color: var(--danger, #a32940); }
+.publish-summary__rows { display: grid; gap: 8px; margin: 0 0 12px; }
+.publish-summary__rows > div {
+  display: grid;
+  grid-template-columns: minmax(96px, 140px) minmax(0, 1fr);
+  gap: 12px;
+}
+.publish-summary__rows dt { color: var(--muted, #59677d); font-size: 13px; }
+.publish-summary__rows dd { margin: 0; overflow-wrap: anywhere; }
+.publish-summary__rows > div[data-missing] dd { color: var(--muted, #59677d); font-style: italic; }
+.publish-summary__missing { margin: 0 0 12px; font-size: 14px; }
+.publish-summary__missing ul { margin: 6px 0 0; padding-left: 20px; }
+.publish-summary__missing a { color: var(--primary-hover, #42538f); }
+
+/* ---------- Barra de acciones: siempre alcanzable, con el mensaje de estado a la vista ---------- */
+.publish-actionbar {
+  position: sticky;
+  bottom: 0;
+  z-index: 15;
+  margin: 0;
+  padding: 10px 0 calc(10px + env(safe-area-inset-bottom, 0px));
+  background: var(--paper, #f5f7fa);
+  border-top: 1px solid var(--line, #dce1eb);
+  box-shadow: 0 -6px 18px rgb(37 50 71 / 8%);
+}
+.publish-actionbar .notice {
+  margin: 0 0 10px;
+  max-height: 30dvh;
+  overflow-y: auto;
+}
+.publish-actionbar .form-submit-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.publish-actionbar .form-submit-actions button {
+  min-height: 48px;
+  /* Los botones traen style="flex: 1 1 220px"; se reduce la base para que quepan lado a lado. */
+  flex: 1 1 150px !important;
+  line-height: 1.2;
+}
+
+@media (max-width: 760px) {
+  .publish-page .publish-section { padding: 16px 14px; scroll-margin-top: 16px; }
+  .publish-page .publish-section > legend { font-size: 17px; }
+  .publish-summary__rows > div { grid-template-columns: 1fr; gap: 2px; }
+  .publish-actionbar .form-submit-actions { gap: 8px; }
+  .publish-actionbar .form-submit-actions button { font-size: 13px; letter-spacing: 0; padding-inline: 10px; }
+}

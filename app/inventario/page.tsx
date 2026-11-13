@@ -22,8 +22,11 @@ type SearchParams = {
   zone_general?: string
   zone?: string
   area?: string
+  sort?: string
 }
 import { InventoryFilters } from '@/components/InventoryFilters'
+import { InventorySort } from '@/components/InventorySort'
+import { inventoryFilterChips, parseInventorySort } from '@/lib/property-display'
 
 export async function generateMetadata({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const q = await searchParams
@@ -42,6 +45,10 @@ export default async function Inventory({
   const q = await searchParams
   const supabase = createPublicServerSupabaseClient()
   const priceFilter = inventoryPriceFilters(q)
+  // Closed list: an unknown ?sort= value falls back to the default order.
+  const sort = parseInventorySort(q.sort)
+  const chips = inventoryFilterChips(q)
+  const hasFilters = Object.entries(q).some(([key, value]) => key !== 'sort' && Boolean(value))
 
   let properties: any[] = []
 
@@ -50,8 +57,6 @@ export default async function Inventory({
       .from('properties_public')
       .select('*,price_value_text:price_value::text')
       .eq('status', 'published')
-      .order('featured', { ascending: false })
-      .order('created_at', { ascending: false })
 
     if (q.operation) {
       query = query.eq('operation', q.operation)
@@ -91,6 +96,10 @@ export default async function Inventory({
     if (priceFilter.unit) query = query.eq('price_unit', priceFilter.unit)
     if (priceFilter.min) query = query.gte('price_value', priceFilter.min)
     if (priceFilter.max) query = query.lte('price_value', priceFilter.max)
+    // Listings without a surface go last in either direction; created_at breaks ties.
+    for (const [column, ascending] of sort.orders) {
+      query = query.order(column, column === 'total_area' ? { ascending, nullsFirst: false } : { ascending })
+    }
     const result = await query
 
     if (!result.error) {
@@ -136,9 +145,24 @@ export default async function Inventory({
         <section>
           {priceFilter.invalid && <p className="notice" role="alert">Para filtrar precios selecciona moneda, operación y unidad, y un rango válido. No se comparan monedas ni unidades distintas.</p>}
           <div className="head">
-            <h2>{properties.length} propiedades</h2>
-            <small>Destacadas primero</small>
+            <h2 aria-live="polite">
+              {properties.length} {properties.length === 1 ? 'propiedad' : 'propiedades'}
+            </h2>
+            <InventorySort value={sort.value} query={q} />
           </div>
+
+          {chips.length > 0 && (
+            <nav className="inventory-chips" aria-label="Filtros aplicados">
+              {chips.map((chip) => (
+                <Link key={chip.key} href={chip.href} className="inventory-chip">
+                  {chip.label}
+                  <span className="sr-only"> (quitar filtro)</span>
+                  <span aria-hidden="true"> ×</span>
+                </Link>
+              ))}
+              <Link href="/inventario" className="inventory-chips__clear">Limpiar todo</Link>
+            </nav>
+          )}
 
           <div className="cards">
             {properties.map((p) => (
@@ -155,9 +179,18 @@ export default async function Inventory({
           </div>
 
           {properties.length === 0 && (
-            <p className="ui-empty">
-              No hay propiedades publicadas que coincidan con los filtros.
-            </p>
+            <div className="ui-empty inventory-empty">
+              <p>
+                {hasFilters
+                  ? 'No hay propiedades publicadas que coincidan con los filtros.'
+                  : 'Por ahora no hay propiedades publicadas.'}
+              </p>
+              <p>¿No encuentras lo que buscas? Sube tu requerimiento y describe el espacio que necesitas.</p>
+              <div className="inventory-empty__actions">
+                <Link href="/busco-bodega" className="button">Subir requerimiento</Link>
+                {hasFilters && <Link href="/inventario" className="button button--secondary">Limpiar filtros</Link>}
+              </div>
+            </div>
           )}
         </section>
       </main>

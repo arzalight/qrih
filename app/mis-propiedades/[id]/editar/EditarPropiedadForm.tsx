@@ -12,6 +12,9 @@ import { ZONAS_GENERALES, ZONAS_INDUSTRIALES_POR_ZONA } from '@/lib/zonas'
 import { useRouter } from 'next/navigation'
 import { PropertyImageEditor, PropertyImageEditorItem } from '@/components/PropertyImageEditor'
 import { ImageUploadProgress, type ImageUploadState } from '@/components/ImageUploadProgress'
+import { PublishSummary } from '@/components/PublishFormGuide'
+import { EDIT_SECTIONS } from '@/lib/publish-form-guide'
+import '../../../publicar/publicar.css'
 
 type Property = {
   id: string
@@ -74,6 +77,7 @@ const [uploadStates, setUploadStates] = useState<ImageUploadState[]>([])
   return (
     <>
       <form
+  className="publish-page edit-form"
   method="post"
   encType="multipart/form-data"
   onSubmit={async (event) => {
@@ -180,8 +184,9 @@ const [uploadStates, setUploadStates] = useState<ImageUploadState[]>([])
           value={property.id}
         />
 
-        <fieldset>
-          <legend>Información general</legend>
+        <fieldset className="publish-section" id="seccion-general">
+          <legend>Propiedad y precio</legend>
+          <p className="ui-help publish-section__intro">Cómo se presenta tu anuncio y a qué precio.</p>
 
           <FormField id="field-1-title" label="Título de la propiedad" required><input id="field-1-title"
             required
@@ -227,6 +232,12 @@ const [uploadStates, setUploadStates] = useState<ImageUploadState[]>([])
             />
             <span>Comparto comisión</span>
           </label>
+
+        </fieldset>
+
+        <fieldset className="publish-section" id="seccion-ubicacion">
+          <legend>Ubicación</legend>
+          <p className="ui-help publish-section__intro">Elige el municipio y la zona industrial, y si se muestra solo la zona o la dirección completa.</p>
 
           <div className="two">
            <FormField id="field-1-zone_general" label="Municipio" required><select id="field-1-zone_general"
@@ -283,8 +294,9 @@ const [uploadStates, setUploadStates] = useState<ImageUploadState[]>([])
           /></FormField>
         </fieldset>
 
-        <fieldset>
-          <legend>Precio y condiciones</legend>
+        <fieldset className="publish-section" id="seccion-condiciones">
+          <legend>Condiciones del precio</legend>
+          <p className="ui-help publish-section__intro">Opcional. Marca lo que aplique a tu precio.</p>
 
           <div className="price-options">
             <label className="inline-check">
@@ -318,8 +330,9 @@ const [uploadStates, setUploadStates] = useState<ImageUploadState[]>([])
           </div>
         </fieldset>
 
-        <fieldset>
+        <fieldset className="publish-section" id="seccion-superficies">
           <legend>Superficies y especificaciones</legend>
+          <p className="ui-help publish-section__intro">La superficie total es obligatoria; el resto es opcional.</p>
 
           <div className="two">
             <FormField id="field-1-area" label="Superficie total (m²)" required><input id="field-1-area"
@@ -396,7 +409,7 @@ const [uploadStates, setUploadStates] = useState<ImageUploadState[]>([])
           /></FormField>
         </fieldset>
 
-        <fieldset>
+        <fieldset className="publish-section" id="seccion-fotos">
           <legend>Fotografías</legend>
 
           <PropertyImageEditor
@@ -406,29 +419,15 @@ const [uploadStates, setUploadStates] = useState<ImageUploadState[]>([])
             onProcessingChange={setImagesProcessing}
           />
           <ImageUploadProgress states={uploadStates} />
-
-          <p
-            style={{
-              fontSize: 13,
-              color: "var(--muted)",
-              marginTop: 8,
-            }}
-          >
-            Puedes conservar, quitar, reordenar y agregar fotografías. La
-            primera será la fotografía principal.
-          </p>
         </fieldset>
 
-        <div
-          style={{
-            marginTop: 24,
-            padding: 18,
-            borderRadius: 10,
-            background: "var(--surface-subtle)",
-            fontSize: 14,
-            lineHeight: 1.6,
-          }}
-        >
+        <PublishSummary
+          imageCount={images.length}
+          sections={EDIT_SECTIONS}
+          actions={duplicate ? 'draft' : property.status === 'draft' ? 'both' : 'send'}
+        />
+
+        <p className="ui-help publish-note">
           {property.status === 'draft' ? (
             <>
               Puedes guardar los cambios como borrador o enviar la propiedad a{' '}
@@ -440,42 +439,42 @@ const [uploadStates, setUploadStates] = useState<ImageUploadState[]>([])
               <strong>pendiente de revisión</strong>.
             </>
           )}
+        </p>
+
+        <div className="publish-actionbar">
+          {error && (
+            <p className="notice" role="alert">
+              {error}
+            </p>
+          )}
+
+          <div className="form-submit-actions">
+            {property.status === 'draft' && (
+              <button
+                className="button--secondary"
+                type="submit"
+                name="submission_action"
+                value="draft"
+                disabled={loading || imagesProcessing}
+              >
+                {loading ? 'GUARDANDO...' : duplicate ? 'CREAR BORRADOR Y CONTINUAR EDICIÓN →' : 'GUARDAR COMO BORRADOR'}
+              </button>
+            )}
+
+            {!duplicate && <button
+              type="submit"
+              name="submission_action"
+              value="pending"
+              disabled={loading || imagesProcessing}
+            >
+              {loading
+                ? 'ENVIANDO...'
+                : property.status === 'draft'
+                  ? 'GUARDAR CAMBIOS Y ENVIAR A REVISIÓN →'
+                  : 'GUARDAR CAMBIOS Y REENVIAR →'}
+            </button>}
+          </div>
         </div>
-
-        {property.status === 'draft' && (
-          <button
-            type="submit"
-            name="submission_action"
-            value="draft"
-            disabled={loading || imagesProcessing}
-          >
-            {loading ? 'GUARDANDO...' : duplicate ? 'CREAR BORRADOR Y CONTINUAR EDICIÓN →' : 'GUARDAR COMO BORRADOR'}
-          </button>
-        )}
-
-        {!duplicate && <button
-          type="submit"
-          name="submission_action"
-          value="pending"
-          disabled={loading || imagesProcessing}
-        >
-          {loading
-            ? 'ENVIANDO...'
-            : property.status === 'draft'
-              ? 'GUARDAR CAMBIOS Y ENVIAR A REVISIÓN →'
-              : 'GUARDAR CAMBIOS Y REENVIAR →'}
-        </button>}
-
-        {error && (
-          <p
-            style={{
-              marginTop: 16,
-              color: '#a33',
-            }}
-          >
-            {error}
-          </p>
-        )}
       </form>
 
       <div style={{ marginTop: 24 }}>

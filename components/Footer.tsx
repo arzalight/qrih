@@ -18,15 +18,15 @@ export function Footer() {
           <strong style={{ fontSize: 13 }}>Explorar</strong>
           <div className="site-footer__links">
             <Link href="/inventario">Inventario</Link>
-            <Link href="/busco-bodega">Busco una bodega</Link>
-            <Link href="/publicar">Publicar propiedad</Link>
+            <Link href="/busco-bodega">Subir requerimiento</Link>
+            <Link href="/publicar">Subir propiedad</Link>
           </div>
         </div>
 
         <div>
           <strong style={{ fontSize: 13 }}>QRIH</strong>
           <div className="site-footer__links">
-            <Link href="/mis-propiedades">Panel</Link>
+            <Link href="/mis-propiedades">Mi panel</Link>
             <Link href="/privacidad">Aviso de privacidad</Link>
             <Link href="/terminos">Términos y condiciones</Link>
           </div>
