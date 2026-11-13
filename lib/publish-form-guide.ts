@@ -46,6 +46,9 @@ export const PUBLISH_SECTIONS: readonly PublishSection[] = [
   { id: 'seccion-envio', label: 'Autorización', required: ['publication_authorized', 'terms_accepted'] },
 ]
 
+/** Secciones del formulario de edición: sin autorización (ya se aceptó al crear la propiedad). */
+export const EDIT_SECTIONS: readonly PublishSection[] = PUBLISH_SECTIONS.filter((section) => section.id !== 'seccion-envio')
+
 type ControlLike = {
   type?: string
   value?: string
@@ -81,8 +84,12 @@ export type SectionState = {
   missing: string[]
 }
 
-export function sectionStates(snapshot: FormSnapshot, photoCount: number): SectionState[] {
-  return PUBLISH_SECTIONS.map((section) => {
+export function sectionStates(
+  snapshot: FormSnapshot,
+  photoCount: number,
+  sections: readonly PublishSection[] = PUBLISH_SECTIONS,
+): SectionState[] {
+  return sections.map((section) => {
     if (section.optional) return { id: section.id, label: section.label, state: 'optional', missing: [] }
     const missing = section.required.filter((name) => !filled(snapshot, name)).map((name) => FIELD_LABELS[name] ?? name)
     if (section.photos && photoCount < 1) missing.push('Al menos una fotografía')

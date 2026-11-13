@@ -2,11 +2,13 @@
 
 import { useEffect, useRef, useState } from 'react'
 import {
+  PUBLISH_SECTIONS,
   readFormSnapshot,
   readiness,
   sectionStates,
   summaryRows,
   type FormSnapshot,
+  type PublishSection,
 } from '@/lib/publish-form-guide'
 
 const EMPTY: FormSnapshot = { values: {}, invalid: [] }
@@ -45,22 +47,41 @@ function useFormSnapshot(anchor: { current: HTMLElement | null }) {
   return snapshot
 }
 
-export function PublishSummary({ imageCount }: { imageCount: number }) {
+/** both: guardar borrador y enviar; draft: solo borrador; send: solo enviar a revisión. */
+type SummaryActions = 'both' | 'draft' | 'send'
+
+function statusText(status: ReturnType<typeof readiness>, actions: SummaryActions) {
+  if (status === 'incomplete') return 'Faltan datos obligatorios. Complétalos para guardar o enviar.'
+  if (status === 'ready') {
+    if (actions === 'draft') return 'Todo listo: puedes guardar el borrador.'
+    if (actions === 'send') return 'Todo listo: puedes reenviar a revisión.'
+    return 'Todo listo: puedes enviar a revisión o guardar un borrador.'
+  }
+  if (actions === 'draft') return 'Puedes guardar el borrador sin fotografías.'
+  if (actions === 'send') return 'Para reenviar a revisión agrega al menos una fotografía.'
+  return 'Puedes guardar un borrador. Para enviar a revisión agrega al menos una fotografía.'
+}
+
+export function PublishSummary({
+  imageCount,
+  sections = PUBLISH_SECTIONS,
+  actions = 'both',
+}: {
+  imageCount: number
+  sections?: readonly PublishSection[]
+  actions?: SummaryActions
+}) {
   const anchor = useRef<HTMLElement>(null)
   const snapshot = useFormSnapshot(anchor)
-  const states = sectionStates(snapshot, imageCount)
+  const states = sectionStates(snapshot, imageCount, sections)
   const rows = summaryRows(snapshot, imageCount)
   const status = readiness(states)
   const pending = states.filter((state) => state.state === 'pending')
 
   return (
     <section ref={anchor} className="publish-summary" aria-labelledby="publish-summary-title" data-ready={status}>
-      <h3 id="publish-summary-title">Revisa antes de enviar</h3>
-      <p className="publish-summary__status">
-        {status === 'ready' && 'Todo listo: puedes enviar a revisión o guardar un borrador.'}
-        {status === 'draft-only' && 'Puedes guardar un borrador. Para enviar a revisión agrega al menos una fotografía.'}
-        {status === 'incomplete' && 'Faltan datos obligatorios. Complétalos para guardar o enviar.'}
-      </p>
+      <h3 id="publish-summary-title">{actions === 'draft' ? 'Revisa antes de guardar' : 'Revisa antes de enviar'}</h3>
+      <p className="publish-summary__status">{statusText(status, actions)}</p>
       <dl className="publish-summary__rows">
         {rows.map((row) => (
           <div key={row.label} data-missing={row.missing || undefined}>

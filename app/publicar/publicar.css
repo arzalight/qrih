@@ -1,4 +1,4 @@
-/* Rediseño del formulario "Subir propiedad". Solo presentación: ningún campo, nombre ni handler cambia.
+/* Rediseño de los formularios "Subir propiedad" y "Editar propiedad". Solo presentación: ningún campo, nombre ni handler cambia.
    Los estilos viven aquí (archivo nuevo) para no tocar app/globals.css. */
 
 html:has(.publish-page) { scroll-behavior: smooth; }
@@ -21,6 +21,17 @@ html:has(.publish-page) { scroll-behavior: smooth; }
   border: 0;
   background: none;
 }
+
+/* Formulario de edición (/mis-propiedades/[id]/editar): mismo patrón, el <form> lleva la clase publish-page. */
+.form > form.edit-form {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  counter-reset: publish-step;
+}
+.edit-form .publish-note { margin: 0 0 16px; }
 
 /* ---------- Secciones ---------- */
 .publish-page .publish-form-state { counter-reset: publish-step; }

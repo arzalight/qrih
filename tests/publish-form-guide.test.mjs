@@ -109,3 +109,13 @@ test('resumen: campos faltantes o inválidos se marcan sin inventar valores', ()
   assert.equal(rows['Superficie'].value, '')
   assert.equal(rows['Fotografías'].value, 'Sin fotografías')
 })
+
+test('edición: sin sección de autorización; solo las secciones del formulario de edición', async () => {
+  const { EDIT_SECTIONS } = await import('../lib/publish-form-guide.ts')
+  assert.ok(EDIT_SECTIONS.length === PUBLISH_SECTIONS.length - 1)
+  assert.ok(!EDIT_SECTIONS.some((section) => section.id === 'seccion-envio'))
+  const edit = { values: { ...complete.values, publication_authorized: undefined, terms_accepted: undefined }, invalid: [] }
+  assert.equal(readiness(sectionStates(edit, 1, EDIT_SECTIONS)), 'ready')
+  assert.equal(readiness(sectionStates(edit, 0, EDIT_SECTIONS)), 'draft-only')
+  assert.equal(readiness(sectionStates({ values: {}, invalid: [] }, 1, EDIT_SECTIONS)), 'incomplete')
+})
