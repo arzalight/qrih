@@ -1,11 +1,13 @@
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { Header } from '@/components/Header'
+import { PrivatePropertySummary } from '@/components/PrivatePropertySummary'
 import { PropertyImageGallery } from '@/components/PropertyImageGallery'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 import { createSignedPropertyImageUrlMap, PROPERTY_IMAGE_TTL_SECONDS } from '@/lib/property-image-urls'
 import { propertyPrice } from '@/lib/property-price'
 import { validUuid } from '@/lib/request-security'
+import { loginPath } from '@/lib/safe-navigation'
 
 // Private owner preview. No publication, contact request or shared/PDF route is enabled here.
 export default async function OwnPropertyPage({ params }: { params: Promise<{ id: string }> }) {
@@ -14,7 +16,7 @@ export default async function OwnPropertyPage({ params }: { params: Promise<{ id
   const client = await createServerSupabaseClient()
   if (!client) return <main><p>Servicio no disponible.</p></main>
   const { data: { user } } = await client.auth.getUser()
-  if (!user) redirect('/login')
+  if (!user) redirect(loginPath(`/mis-propiedades/${id}`))
   const { data: profile } = await client.from('profiles').select('account_status').eq('id', user.id).single()
   if (profile?.account_status !== 'active') return <main><p>Necesitas una cuenta activa para abrir esta vista.</p></main>
   const { data: property, error } = await client.from('properties')
@@ -32,6 +34,7 @@ export default async function OwnPropertyPage({ params }: { params: Promise<{ id
     <Link href="/mis-propiedades">← Volver a mis propiedades</Link>
     <p className="notice">Vista privada del propietario. Esta vista no publica ni comparte el inmueble.</p>
     <h1>{property.title}</h1>
+    <PrivatePropertySummary propertyId={property.id} />
     <p>{propertyPrice(property)}</p><p>{property.operation} · {property.zone}</p>
     <PropertyImageGallery propertyTitle={property.title} images={(images || [])
       .filter(image => urls.has(image.storage_path)).map(image => ({ url: urls.get(image.storage_path)!, title: image.title }))} />

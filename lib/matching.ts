@@ -155,26 +155,53 @@ export function rankPropertiesForDemand<T extends MatchingProperty>(
     .sort((a, b) => b.result.total - a.result.total)
 }
 
-// Approved detail-page similarity: same operation/municipality and ±25% area.
-// No currency conversion or fabricated demand budget; existing scoring orders candidates.
+// Detail discovery only. Demand matching's declared area bounds remain mandatory.
 export function similarPropertyRange(property: MatchingProperty) {
   const area = property.surface_m2
   if (area == null || !Number.isFinite(area) || area <= 0
     || !normalize(property.operation) || !normalize(property.zone_general)) return null
-  return { area_min: area * 0.75, area_max: area * 1.25 }
+  return { area_min: area * 0.5, area_max: area * 2 }
 }
 
-export function rankSimilarProperties<T extends MatchingProperty & { id: string }>(
+type SimilarCandidate = MatchingProperty & {
+  id: string
+  status?: string | null
+  covered_area?: number | null
+  max_height?: string | null
+  docks?: number | null
+}
+
+export function rankSimilarProperties<T extends SimilarCandidate>(
   property: MatchingProperty & { id: string }, candidates: T[],
 ): RankedProperty<T>[] {
   const range = similarPropertyRange(property)
   if (!range) return []
-  return rankPropertiesForDemand({
-    ...range, operation: property.operation, zone_general: property.zone_general, zone: property.zone,
-  }, candidates.filter(candidate => candidate.id !== property.id
-    && normalize(candidate.operation) === normalize(property.operation)
-    && normalize(candidate.zone_general) === normalize(property.zone_general)))
-    .slice(0, 3)
+  const source = property as SimilarCandidate
+  const seen = new Set<string>([property.id])
+  const ranked = candidates.filter(candidate => {
+    if (seen.has(candidate.id) || (candidate.status != null && candidate.status !== 'published')) return false
+    if (normalize(candidate.operation) !== normalize(property.operation)
+      || normalize(candidate.zone_general) !== normalize(property.zone_general)
+      || !isSurfaceInDemandRange(candidate, range)) return false
+    seen.add(candidate.id)
+    return true
+  }).map(candidate => {
+    const ratio = candidate.surface_m2! / property.surface_m2!
+    const strict = ratio >= 0.75 && ratio <= 1.25
+    const medium = ratio >= 0.5 && ratio <= 1.5
+    const sameZone = normalize(property.zone) !== '' && normalize(candidate.zone) === normalize(property.zone)
+    const tier = strict ? (sameZone ? 0 : 1) : medium ? (sameZone ? 2 : 3) : (sameZone ? 4 : 5)
+    // Optional industrial features only break ties; unknown values never earn points.
+    const features = (['covered_area', 'docks', 'max_height'] as const).reduce((score, field) => {
+      const a = Number(source[field]), b = Number(candidate[field])
+      return score + (a > 0 && b > 0 && Number.isFinite(a) && Number.isFinite(b) ? Math.min(a, b) / Math.max(a, b) : 0)
+    }, 0)
+    const result = calculateMatch(candidate, { ...range, operation: property.operation, zone_general: property.zone_general, zone: property.zone })
+    return { property: candidate, result, tier, distance: Math.abs(Math.log(ratio)), features }
+  })
+  return ranked.sort((a, b) => a.tier - b.tier || a.distance - b.distance || b.features - a.features
+    || b.result.total - a.result.total || a.property.id.localeCompare(b.property.id))
+    .slice(0, 6).map(({ property: candidate, result }) => ({ property: candidate, result }))
 }
 
 // A declared surface range is an eligibility constraint, not a scoring bonus.

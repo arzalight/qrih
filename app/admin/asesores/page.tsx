@@ -1,6 +1,8 @@
 import { Header } from '@/components/Header'
+import { AdminAutoRefresh } from '@/components/AdminAutoRefresh'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
+import { loginPath } from '@/lib/safe-navigation'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 
 type AdminAdvisorsPageProps = {
@@ -25,7 +27,7 @@ export default async function AdminAdvisorsPage({
   } = await supabase.auth.getUser()
 
   if (!user) {
-    redirect('/login')
+    redirect(loginPath(`/admin/asesores${busqueda ? '?busqueda=' + encodeURIComponent(busqueda) : ''}`))
   }
 
   const { data: adminProfile, error: adminError } = await supabase
@@ -118,6 +120,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
         margin: '0 auto',
       }}
     >
+      <AdminAutoRefresh scopeKey={searchFilter || ''} />
       <header
         style={{
           marginBottom: '32px',

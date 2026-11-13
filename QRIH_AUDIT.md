@@ -1,5 +1,21 @@
 # QRIH — Auditoría técnica pre-Soft-Launch
 
+### Complemento Sprint 3 — selector y pendiente privado 27oct2026
+
+Picker INVOKER/filtro propio incluso para admin, mínimo2/top3 sin teléfonos/correos; pendiente JSONB bajo RLS existente, no contacto inmediato ni datos comerciales/audit. Envío atómico con lock/ID estable, fallo de asociación revierte contacto; constraints diferidos impiden transición incompleta. A/B/IDs manipulados y PDF/HTML sintéticos sin canarios probados; 457 tests locales PASS. Cuarta migración sólo preparada, sin alterar las tres previas ni datos remotos. NO-GO de respaldo/recuperación y validación hospedada persiste; corte del preflight anterior supersedido. [Informe](docs/SPRINT_3_OWNER_PICKER_2026-10-27.md).
+
+### Preflight Sprint 3 — gate de recuperación 27oct2026
+
+NO-GO para migraciones/validación completa STAGING: se verificó identidad de aplicación y huella del ciphertext 20oct, no recuperación del estado actual ni acceso administrativo SQL. No hubo migraciones, deploy ni cambios de estadísticas. Evento f22efbc1-98cc-4c26-8dbe-a4bc857056a6 conservado; afecta vistas/conversión de 28 días, no vinculaciones públicas. Exclusión sólo propuesta auditable. 443 pruebas locales PASS repetidas, 26 huellas conservadas; multisesión real y PDF integrado pendientes. [Informe y autorización requerida](docs/SPRINT_3_STAGING_PREFLIGHT_2026-10-27.md).
+
+### Sprint 3 — revisión local 27oct2026
+
+Datos privados fuera del registro comercial: directorio y detalle separado con RLS por asesor activo; admin activo de lectura, sin confiar en metadata. IDs ajenos/asociaciones cruzadas y DELETE denegados en PostgreSQL aislado. Archivo reversible conserva historial y asociación al duplicar dentro de la misma cuenta. Guardado privado/comercial/galería atómico, probado rollback e idempotencia; sin canarios en fila publicada/vista/auditoría/ficha HTML. APIs sin nombres en URL ni logs de cuerpos, actor/origen validados y no-store; bundle sin clave privada examinada. Urgencia con lock por usuario + PK, reloj BD posterior al lock, 168 horas, sin cerrar requerimiento; contención real multisesión aún no ejecutada. 280 aplicación/API + 124 PGlite + 39 HTTP locales, tipos/lint/build/preflight PASS. 26 huellas comerciales STAGING conservadas; excepción de validación: una visita automática al abrir la ficha real desde localhost, sin editar/borrar ese evento. No se afirma cero escrituras analíticas. Migraciones sólo preparadas/locales, sin push/deploy/main/producción. GO condicionado para revisión STAGING, NO-GO producción; exportación PDF integrada y pendientes heredados no se dan por cerrados. [Evidencia, políticas y reversión](docs/SPRINT_3_COMMERCIAL_TOOLS_2026-10-27.md).
+
+### Sprint2 — revisión local26oct2026
+
+Histórico de vinculaciones no demostrable:responded_at tambiénautoaprobación;no contarlo. Propuestav1privada conPKporautorización,transiciónpending→authorized porJWTdueñoactivo,sinbackfill/auto/rechazo;agregadonuméricoservidor,sinPII. PGliteconfirmaACL/aislamiento/idempotencia;**noSQLremoto ni nuevaRLSaplicada**. Authretornoseguro centralizado,sinsegundaAuth/metadataautorizante.267+111+33PASS,lint/tipos/build/preflightPASS;26propiedadesintactasporhuella. Sinmain/producción/push/deploy. GOcondicionadoUX,noGOcontadorcompleto/producción;touch/AdminremotoyAUD043/AUD018pendientes. [Detalle](docs/SPRINT_2_EXPERIENCE_2026-10-26.md).
+
 ### Sprint1 — validación STAGING26oct2026
 
 41061a0 READY;32HTTP remotas PASS. Dos cuentas nuevas publisher(default),sin elevación de rol:propiedad ajena no legible/404,vista propia200,borrador sin detalle/PDF público,Admin denegado. Avisos propios8→7→0,ajeno1intacto y UPDATEajeno0filas. Duplicación/edición sólo del nuevoID,foto conpathindependiente;24propiedades previas y fuente sintética sin cambios porhuella. Sin SQL/RLS/roles/producción. No certifica touchfísico ni aceptación visual positivaAdmin;no cierraAUD043/AUD018ni implicaGOproducción. [Evidencia y límites](docs/SPRINT_1_STAGING_2026-10-26.md).

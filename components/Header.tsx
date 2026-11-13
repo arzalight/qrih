@@ -26,11 +26,26 @@ export function Header({ administration = false }: { administration?: boolean })
   const profileToggleRef = useRef<HTMLButtonElement | null>(null)
   const [open, setOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [railCollapsed, setRailCollapsed] = useState(false)
   const [userName, setUserName] = useState('')
   const [userEmail, setUserEmail] = useState('')
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
   const profileMenuRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    if (administration) {
+      try { setRailCollapsed(sessionStorage.getItem('qrih-admin-rail') === 'collapsed') } catch { /* session storage is optional */ }
+    }
+  }, [administration])
+
+  function toggleRail() {
+    setRailCollapsed(current => {
+      const next = !current
+      try { sessionStorage.setItem('qrih-admin-rail', next ? 'collapsed' : 'expanded') } catch { /* retain in memory */ }
+      return next
+    })
+  }
 
   useEffect(() => {
     const supabase = createClient()
@@ -208,16 +223,21 @@ export function Header({ administration = false }: { administration?: boolean })
   function closeNavigation() { setMenuOpen(false); setOpen(false) }
 
   return (
-    <header className={`header ${workspace ? 'header--workspace' : ''} ${menuOpen ? 'header--menu-open' : ''}`}
+    <header className={`header ${workspace ? 'header--workspace' : ''} ${menuOpen ? 'header--menu-open' : ''} ${administration ? 'header--administration' : ''} ${administration && railCollapsed ? 'header--compact' : ''}`}
       onKeyDown={event => {
         if (event.key !== 'Escape') return
         if (open) { setOpen(false); profileToggleRef.current?.focus() }
         else if (menuOpen) { setMenuOpen(false); menuToggleRef.current?.focus() }
       }}>
       <Link className="brand" href="/" aria-label="QRO Industrial Hub · Inicio">
-        QRO INDUSTRIAL HUB <small>Q R I H</small>
+        <span className="brand__title">QRO INDUSTRIAL HUB</span> <small>Q R I H</small>
       </Link>
       <div className="header-controls">
+        {administration && <button type="button" className="admin-rail-toggle" onClick={toggleRail}
+          aria-expanded={!railCollapsed} aria-controls="site-navigation"
+          aria-label={railCollapsed ? 'Expandir navegación' : 'Contraer navegación'} title={railCollapsed ? 'Expandir navegación' : 'Contraer navegación'}>
+          <span aria-hidden="true">{railCollapsed ? '→' : '←'}</span>
+        </button>}
         <button ref={menuToggleRef} type="button" className="mobile-menu-toggle"
           aria-expanded={menuOpen} aria-controls="site-navigation" aria-label={menuOpen ? 'Cerrar menú' : 'Menú'}
           title={menuOpen ? 'Cerrar menú' : 'Menú'}
@@ -262,9 +282,16 @@ export function Header({ administration = false }: { administration?: boolean })
         {workspace && <span className="site-nav__label">{administration ? 'Administración' : 'Tu espacio de trabajo'}</span>}
         {links.map(([href, label]) => (
           <Link key={href} href={href} onClick={closeNavigation}
+            aria-label={administration ? label : undefined} title={administration ? label : undefined}
             aria-current={isActive(href) ? 'page' : undefined}
             className={!workspace && href === '/busco-bodega' ? 'demand' : undefined}>
-            {label}
+            {administration ? <><svg className="admin-nav-icon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
+              <path d={href === '/admin/asesores' ? 'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8M16 3a4 4 0 0 1 0 8M22 21v-2a4 4 0 0 0-3-4'
+                : href === '/admin/historial' ? 'M12 8v5l3 2M21 12a9 9 0 1 1-9-9 9 9 0 0 1 9 9'
+                  : href === '/admin/configuracion' ? 'M4 7h16M4 17h16M8 4v6M16 14v6'
+                    : href === '/inventario' ? 'M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z'
+                      : 'M3 10l9-7 9 7v11H3zM9 21v-8h6v8'} />
+            </svg><span className="admin-nav-label">{label}</span></> : label}
           </Link>
         ))}
         {!userEmail && !workspace && <Link className="header-signin" href="/login" onClick={closeNavigation}>Iniciar sesión</Link>}

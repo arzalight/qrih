@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { propertyPrice } from '@/lib/property-price'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
+import { loginPath } from '@/lib/safe-navigation'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 import { AuthorizationActions } from '@/components/AuthorizationActions'
 import { Header } from '@/components/Header'
@@ -31,13 +32,7 @@ export default async function SolicitudesPage({
   } = await supabase.auth.getUser()
 
   if (!user) {
-    return (
-      <main style={{ padding: 40 }}>
-        <h1>Solicitudes de información</h1>
-        <p>Necesitas iniciar sesión para ver esta información.</p>
-        <Link href="/login">Iniciar sesión</Link>
-      </main>
-    )
+    redirect(loginPath(`/mis-propiedades/${encodeURIComponent(id)}/solicitudes`))
   }
 
   const { data: property, error: propertyError } =

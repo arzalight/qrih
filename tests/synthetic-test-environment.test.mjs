@@ -19,7 +19,8 @@ test('CI: fixtures de escritura aíslan SITE_ID/URL heredados sin desactivar el 
   })
   assert.equal(result.error, undefined, 'El proceso sintético debe terminar dentro del límite')
   assert.equal(result.status, 0, 'Las suites deben pasar también con SITE_ID y URL de un proveedor heredados')
-  assert.match(result.stdout, /# tests 48\b/)
+  // Includes five Sprint3 private-save/pending-owner cases under hostile inherited env.
+  assert.match(result.stdout, /# tests 53\b/)
   assert.match(result.stdout, /# fail 0\b/)
   assert.match(result.stdout, /# skipped 0\b/)
 })

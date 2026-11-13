@@ -1,4 +1,5 @@
 import { Header } from '@/components/Header'
+import { loginPath } from '@/lib/safe-navigation'
 import Link from 'next/link'
 import { propertyPrice } from '@/lib/property-price'
 import { notFound, redirect } from 'next/navigation'
@@ -179,7 +180,7 @@ export default async function AdminAdvisorDetailPage({ params }: Props) {
   } = await supabase.auth.getUser()
 
   if (!user) {
-    redirect('/login')
+    redirect(loginPath(`/admin/asesores/${encodeURIComponent(id)}`))
   }
 
   const { data: adminProfile, error: adminError } = await supabase
@@ -329,6 +330,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_ID_PAGE_219_FAILED')
               {advisor.company_name || 'Sin empresa'}
             </p>
 
+            <Link href={`/perfil/propietarios?advisor=${advisor.id}`}>Consultar propietarios privados de este asesor</Link>
             <form
               action={toggleAdvisorVerification}
               style={{

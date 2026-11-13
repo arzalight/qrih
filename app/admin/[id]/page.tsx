@@ -1,4 +1,5 @@
 import { Header } from '@/components/Header'
+import { loginPath } from '@/lib/safe-navigation'
 import { PriceCurrencySelect } from '@/components/PriceCurrencySelect'
 import { isPriceCurrency, parsePriceInput, propertyPrice, propertyPriceForStorage, type PricedProperty } from '@/lib/property-price'
 import Link from 'next/link'
@@ -6,6 +7,7 @@ import { notFound, redirect } from 'next/navigation'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 import { ZoneSelectors } from '@/components/ZoneSelectors'
 import { PropertyImageGallery } from '@/components/PropertyImageGallery'
+import { PrivatePropertySummary } from '@/components/PrivatePropertySummary'
 import { createSignedPropertyImageUrlMap, PROPERTY_IMAGE_TTL_SECONDS } from '@/lib/property-image-urls'
 
 type AdminPropertyPageProps = {
@@ -126,7 +128,7 @@ export default async function AdminPropertyPage({
   } = await supabase.auth.getUser()
 
   if (!user) {
-    redirect('/login')
+    redirect(loginPath(`/admin/${encodeURIComponent(id)}`))
   }
 
   const { data: profile, error: profileError } = await supabase
@@ -527,6 +529,7 @@ console.warn('QRIH_APP_ADMIN_ID_PAGE_364_FAILED')
   </section>
 )}
 
+      <PrivatePropertySummary propertyId={property.id} />
       {mainImageUrl && (
         <img
           src={mainImageUrl}

@@ -76,7 +76,7 @@ export default async function AdminHistoryPage({
   } = await supabase.auth.getUser()
 
   if (!user) {
-    redirect('/login')
+    redirect('/login?next=%2Fadmin%2Fhistorial')
   }
 
   const { data: adminProfile, error: adminError } = await supabase

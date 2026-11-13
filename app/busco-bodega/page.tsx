@@ -11,7 +11,9 @@ import {
   ZONAS_INDUSTRIALES_POR_ZONA,
 } from '@/lib/zonas'
 import { rankPropertiesForDemand } from '@/lib/matching'
-import { useState } from 'react'
+import { DeferredAuthNotice } from '@/components/DeferredAuthNotice'
+import { useFormDraft } from '@/components/useFormDraft'
+import { useRef, useState } from 'react'
 
 export default function Demand() {
   const [message, setMessage] = useState('')
@@ -23,9 +25,15 @@ export default function Demand() {
   const [submittedDemandId, setSubmittedDemandId] = useState('')
   const [interestedProperties, setInterestedProperties] = useState<string[]>([])
 
+  const submitBusy = useRef(false)
+  const draft = useFormDraft('demand', restored => {
+    setZonaGeneral(String(restored.fields.zone_general || ''))
+    setZonaIndustrial(String(restored.fields.zone || ''))
+  })
+
   async function send(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    if (sending) return
+    if (sending || submitBusy.current || !draft.ready || submitted) return
     const formElement = e.currentTarget
 
     const data = Object.fromEntries(new FormData(formElement))
@@ -56,12 +64,17 @@ export default function Demand() {
       return
     }
 
+    submitBusy.current = true
     setSending(true)
     try {
+    const { data: { user } } = await s.auth.getUser()
+    if (!user || user.is_anonymous) { await draft.requireAuth('pending'); return }
+    if (!await draft.bindOwner(user.id)) return
     const response = await fetch('/api/requerimientos', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...data, area_min: areaMin, area_max: areaMax, budget_min: budgetMin, budget_max: budgetMax }),
+      body: JSON.stringify({ ...data, request_id: draft.draftRef.current!.id, area_min: areaMin, area_max: areaMax, budget_min: budgetMin, budget_max: budgetMax }),
     })
+    if (response.status === 401) { await draft.requireAuth('pending'); return }
     const result = await response.json()
     const insertedDemand = response.ok ? result : null
     const error = response.ok ? null : { message: result.error || 'No se pudo enviar el requerimiento.' }
@@ -69,14 +82,16 @@ export default function Demand() {
     setMessage(
       error
         ? error.message
-        : 'Tu requerimiento fue registrado. Te contactaremos pronto.'
+        : 'Tu requerimiento fue recibido para revisión. Te contactaremos pronto.'
     )
 
     if (!error && insertedDemand) {
+      await draft.clear()
       setSubmitted(true)
       setSubmittedDemandId(insertedDemand.id)
       setInterestedProperties([])
 
+      try {
       const { data: publishedProperties, error: propertiesError } = await s
         .from('properties_public')
         .select('*,price_value_text:price_value::text')
@@ -102,12 +117,14 @@ export default function Demand() {
         setMatchedProperties(matches.slice(0, 3))
       }
 
+      } catch { /* Matching is optional after the confirmed submission. */ }
+
       formElement.reset()
       setZonaGeneral('')
       setZonaIndustrial('')
     }
     } catch { setMessage('No se pudo completar el envío. Revisa tu conexión antes de reintentar.') }
-    finally { setSending(false) }
+    finally { setSending(false); submitBusy.current = false }
   }
 
   const zonasIndustriales =
@@ -126,7 +143,11 @@ export default function Demand() {
           Comparte tu requerimiento y activaremos nuestra búsqueda.
         </p>
 
-        <form onSubmit={send}>
+        <DeferredAuthNotice open={draft.authOpen} onClose={() => draft.setAuthOpen(false)} path="/busco-bodega" memoryOnly={draft.memoryOnly} preserveMemory />
+        {!submitted && <p className="notice" role="status">{draft.notice || 'Tu progreso se guarda en este navegador durante 7 días. En equipos compartidos, descarta el borrador al terminar.'}</p>}
+        {!submitted && <button type="button" disabled={sending || !draft.ready} onClick={() => void draft.discard()}>Descartar borrador local</button>}
+        <form ref={draft.formRef} onInput={draft.scheduleSave} onChange={draft.scheduleSave} onSubmit={send} hidden={submitted}>
+          <fieldset disabled={!draft.ready || sending}>
           <div
             style={{
               marginBottom: 24,
@@ -326,7 +347,7 @@ export default function Demand() {
           </div>
 
           <button type="submit" disabled={sending}>
-            ENVIAR MI REQUERIMIENTO →
+            ENVIAR A REVISIÓN →
           </button>
 
           {message && (
@@ -335,7 +356,10 @@ export default function Demand() {
             </p>
           )}
 
+          </fieldset>
           </form>
+
+          {submitted && <section role="status" className="notice"><h2>¡Requerimiento recibido para revisión!</h2><p>{message}</p><a href="/mis-propiedades?view=requirements">Ver mis requerimientos</a></section>}
 
           {submitted && (
             <section

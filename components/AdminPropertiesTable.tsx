@@ -41,8 +41,8 @@ export function AdminPropertiesTable({
   const totalPages = Math.max(1, Math.ceil(properties.length / pageSize))
 
   useEffect(() => {
-    setCurrentPage(1)
-  }, [properties, pageSize])
+    setCurrentPage(page => Math.min(page, totalPages))
+  }, [totalPages])
 
   const visibleProperties = useMemo(() => {
     const start = (currentPage - 1) * pageSize
@@ -305,9 +305,10 @@ export function AdminPropertiesTable({
 
             <select
               value={pageSize}
-              onChange={(event) =>
+              onChange={(event) => {
                 setPageSize(Number(event.target.value))
-              }
+                setCurrentPage(1)
+              }}
               style={{
                 padding: '7px 10px',
                 border: '1px solid #d5d5d5',

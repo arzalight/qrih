@@ -13,6 +13,10 @@ export function pendingConfirmationLoginPath(next: string | null | undefined) {
   return `/login?registro=pendiente&next=${encodeURIComponent(safeInternalPath(next))}`
 }
 
+export function loginPath(next: string) {
+  return `/login?next=${encodeURIComponent(safeInternalPath(next))}`
+}
+
 // La ficha pública no sirve para avisos de rechazo ni para propiedades retiradas.
 export function moderationNotificationPath(type: string) {
   return type === 'property_published' || type === 'property_rejected'

@@ -3,6 +3,7 @@ import { registerHooks } from 'node:module'
 import { after, test } from 'node:test'
 
 registerHooks({ resolve(specifier, context, nextResolve) {
+  if (specifier === './private-commercial') return nextResolve(new URL('../lib/private-commercial.ts', import.meta.url).href, context)
   const aliases = {
     '@/lib/supabase-server': 'data:text/javascript,export async function createServerSupabaseClient(){return globalThis.__qrihWriteClient}',
     '@/lib/verified-media-server': 'data:text/javascript,export async function uploadVerifiedImage(file,owner,bucket){return globalThis.__qrihWriteUpload(file,owner,bucket)}',
@@ -57,6 +58,7 @@ function fixture(options = {}) {
       state.rpcs.push([name, args])
       if (options.lostResponse) state.committed = true
       if (options.throwRpc) throw new Error('Synthetic private transport error')
+      if (options.equivalentOwner) return {data:null,error:{message:'OWNER_EQUIVALENT_EXISTS'}}
       if (options.lostResponse || options.rejectRpc) return { data: null, error: { code: '', message: 'Synthetic private transport error' } }
       state.committed = true
       return { data: name === 'qrih_delete_own_property' ? [oldPath] : property, error: null }
@@ -91,6 +93,35 @@ test('edición: USD/unidad/importe decimal llegan juntos al RPC atómico', async
   const changes = state.rpcs[0][1].p_changes
   assert.equal(changes.price_currency, 'USD'); assert.equal(changes.price_value, '7.5')
   assert.equal(changes.price_unit, 'total'); assert.equal(changes.price_display, 'US$7.50 USD/mes')
+})
+test('Sprint3 edición: datos privados viajan separados en un único RPC atómico', async () => {
+  const state=fixture(),body=await editRequest().formData()
+  body.set('private_fields_present','ready');body.set('internal_name','PRIVATE_CANARY');body.set('owner_contact_id',owner)
+  const response=await edit(new Request(origin+'/api/editar-propiedad',{method:'POST',headers:{Origin:origin},body}))
+  assert.equal(response.status,200);assert.equal(state.rpcs[0][0],'qrih_save_property_with_private')
+  assert.deepEqual(state.rpcs[0][1].p_private,{internal_name:'PRIVATE_CANARY',owner_contact_id:owner})
+  assert.equal(state.rpcs[0][1].p_mode,'update');assert.doesNotMatch(JSON.stringify(state.rpcs[0][1].p_changes),/PRIVATE_CANARY|owner_contact_id|internal_name/)
+})
+test('Sprint3 edición: directorio pendiente/error no inicia uploads ni escrituras; legacy no borra datos privados',async()=>{
+  for(const marker of ['pending','error']){
+    const state=fixture(),body=await editRequest().formData();body.set('private_fields_present',marker)
+    const response=await edit(new Request(origin+'/api/editar-propiedad',{method:'POST',headers:{Origin:origin},body}))
+    assert.equal(response.status,400);assert.equal(state.uploadAttempts,0);assert.deepEqual(state.rpcs,[])
+  }
+  const state=fixture();await edit(editRequest());assert.ok(!('p_private'in state.rpcs[0][1]))
+})
+test('owner picker edit API: pending payload goes only to v2 private argument; equivalent failure is recoverable without cleanup',async()=>{
+  for(const equivalentOwner of [false,true]){
+    const state=fixture({equivalentOwner}),body=await editRequest({gallery:[{kind:'existing',title:'Original',storage_path:oldPath}],files:0}).formData()
+    const pending={request_id:owner,name:'PRIVATE_PENDING',company:'PRIVATE_COMPANY',phone:null,email:'private@example.invalid'}
+    body.set('private_fields_present','ready');body.set('pending_owner',JSON.stringify(pending));body.set('submission_action','pending')
+    const response=await edit(new Request(origin+'/api/editar-propiedad',{method:'POST',headers:{Origin:origin},body}))
+    assert.equal(response.status,equivalentOwner?400:200)
+    assert.equal(state.rpcs[0][0],'qrih_save_property_with_owner')
+    assert.deepEqual(state.rpcs[0][1].p_private.pending_owner,pending)
+    assert.doesNotMatch(JSON.stringify(state.rpcs[0][1].p_changes),/PRIVATE_PENDING|PRIVATE_COMPANY|private@example|pending_owner/)
+    if(equivalentOwner){assert.match((await response.json()).error,/equivalente/);assert.deepEqual(state.removals,[])}
+  }
 })
 
 test('AUD-038 edición: respuesta RPC perdida no asegura rollback ni intenta borrar fotos potencialmente guardadas', async () => {

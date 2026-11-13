@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { readFileSync, existsSync } from 'node:fs'
+import { readFileSync, existsSync, writeFileSync } from 'node:fs'
 import { registerHooks } from 'node:module'
 import { test } from 'node:test'
 import babel from 'next/dist/compiled/babel/core.js'
@@ -12,6 +12,8 @@ const root = new URL('../', import.meta.url)
 registerHooks({
   resolve(specifier, context, next) {
     if (specifier === 'server-only') return { url: 'data:text/javascript,export{}', shortCircuit: true }
+    if (specifier === 'next/server') return next(new URL('../node_modules/next/server.js', import.meta.url).href, context)
+    if (specifier === '@/lib/pdf-images-server') return {url:'data:text/javascript,export async function preparePdfImages(){return []}',shortCircuit:true}
     if (specifier === './supabase-public-server') return { url: 'data:text/javascript,export function createPublicServerSupabaseClient(){return globalThis.__commercialClient}', shortCircuit: true }
     if (specifier === './property-image-urls') return { url: 'data:text/javascript,export const PROPERTY_IMAGE_TTL_SECONDS={gallery:900,pdf:300};export function propertyImagePaths(main,images){return [...new Set([main,...images.map(i=>i.storage_path)].filter(Boolean))]};export async function createSignedPropertyImageUrlMap(c,paths,ttl){return globalThis.__commercialSign(c,paths,ttl)}', shortCircuit: true }
     if (specifier.startsWith('@/')) {
@@ -99,7 +101,7 @@ test('precio centralizado en todas las presentaciones; escritura separada del fo
     assert.match(source, /import \{[^}]*\bpropertyPrice\b[^}]*\} from '@\/lib\/property-price'/, file)
     assert.match(source, /propertyPrice\(/, file)
   }
-  for (const file of ['app/publicar/PublicarForm.tsx', 'lib/property-save-server.ts']) {
+  for (const file of ['lib/property-submission.ts', 'lib/property-save-server.ts']) {
     assert.match(readFileSync(new URL(file, root), 'utf8'), /propertyPriceForStorage as propertyPrice/)
   }
   const admin = readFileSync(new URL('app/admin/[id]/page.tsx', root), 'utf8')
@@ -131,14 +133,14 @@ test('enlace estable local y WhatsApp codificado, sin Storage ni tokens', () => 
   assert.equal(new URL(links.whatsapp).searchParams.get('text'), `Título & prueba\n${links.url}`)
   assert.doesNotMatch(links.url, /storage|token|supabase/)
 })
-function setup({ available = true, denied = false, error = false } = {}) {
+function setup({ available = true, denied = false, error = false, extra = {} } = {}) {
   const state = { reads: [], signed: [] }
   globalThis.__commercialSign = async (_client, paths, ttl) => {
     if (denied) throw new Error('No tienes acceso a las imágenes solicitadas.')
     state.signed.push({ paths, ttl }); return new Map(paths.map(path => [path, 'https://synthetic.invalid/image']))
   }
   globalThis.__commercialClient = { from(table) {
-    const result = { data: table === 'properties_public' ? (available ? { ...base, id: 'synthetic-id', status: 'published', main_image_path: 'owner/image.webp' } : null)
+    const result = { data: table === 'properties_public' ? (available ? { ...base, ...extra, id: 'synthetic-id', status: 'published', main_image_path: 'owner/image.webp' } : null)
       : [{ storage_path: 'owner/image.webp', title: 'Portada', position: 0 }], error: error ? {} : null }
     const q = { select(columns) { state.reads.push([table, 'select', columns]); return q },
       eq(key, value) { state.reads.push([table, key, value]); return q }, order() { return q },
@@ -153,7 +155,7 @@ test('cargador real: proyección pública explícita, estado published, direcci�
     assert.equal(data.property.address, null)
     assert.deepEqual(state.signed[0], { paths: ['owner/image.webp'], ttl })
     assert.ok(state.reads.some(([table, key, value]) => table === 'properties_public' && key === 'status' && value === 'published'))
-    assert.doesNotMatch(COMMERCIAL_PROPERTY_COLUMNS, /owner_id|previous_data|rejection_reason|phone|email/)
+    assert.doesNotMatch(COMMERCIAL_PROPERTY_COLUMNS, /owner_id|previous_data|rejection_reason|phone|email|internal_name|owner_contact_id|advisor_owners/)
   }
 })
 test('no publicada/suspendida por frontera BD: ninguna firma; errores sin fallback privilegiado', async () => {
@@ -164,15 +166,26 @@ test('no publicada/suspendida por frontera BD: ninguna firma; errores sin fallba
   setup({ error: true }); await assert.rejects(loadCommercialProperty(base.slug, 'gallery'))
 })
 test('HTML real: precio compartido, dirección sólo autorizada y sin contacto/captación/admin', () => {
-  const html = renderToStaticMarkup(createElement(CommercialPropertySheet, { property: base, images: [] }))
+  const html = renderToStaticMarkup(createElement(CommercialPropertySheet, { property: { ...base, internal_name:'PRIVATE_CANARY_INTERNAL', owner_contact_id:'PRIVATE_CANARY_ID', owner:{name:'PRIVATE_CANARY_OWNER',phone:'PRIVATE_CANARY_PHONE'}, pending_owner:{name:'PRIVATE_CANARY_PENDING',company:'PRIVATE_CANARY_COMPANY',email:'PRIVATE_CANARY_EMAIL'} }, images: [] }))
   assert.match(html, /\$7\.5 USD m²\/mes/)
   assert.match(html, /\$37,500 USD\/mes/)
-  assert.doesNotMatch(html, /PRIVATE ADDRESS|<footer|<nav|<form|mailto:|tel:|\/admin|solicitar contacto/i)
+  assert.doesNotMatch(html, /PRIVATE_CANARY|PRIVATE ADDRESS|<footer|<nav|<form|mailto:|tel:|\/admin|solicitar contacto/i)
   const visible = renderToStaticMarkup(createElement(CommercialPropertySheet, { property: { ...base, location_visibility: 'address', title: '<script>bad</script>' }, images: [] }))
   assert.match(visible, /PRIVATE ADDRESS/); assert.doesNotMatch(visible, /<script>bad/)
   const pdf = readFileSync(new URL('../app/api/bodegas/[slug]/pdf/route.tsx', import.meta.url), 'utf8')
   assert.match(pdf, /loadCommercialProperty\(slug, 'pdf'\)/)
   assert.match(pdf, /propertyPrice\(property, true\)/)
+})
+test('PDF binary real route: extra private/pending canaries ignored; no auth, no private table queries',async()=>{
+  const state=setup({extra:{internal_name:'PRIVATE_CANARY_INTERNAL',owner_contact_id:'PRIVATE_CANARY_ID',pending_owner:{name:'PRIVATE_CANARY_PENDING',phone:'PRIVATE_CANARY_PHONE',email:'PRIVATE_CANARY_EMAIL',company:'PRIVATE_CANARY_COMPANY'}}})
+  const {GET}=await import('../app/api/bodegas/[slug]/pdf/route.tsx')
+  const response=await GET(new Request('https://qrih-synthetic.invalid/api/bodegas/synthetic-property/pdf'),{params:Promise.resolve({slug:base.slug})})
+  assert.equal(response.status,200);assert.equal(response.headers.get('content-type'),'application/pdf');assert.equal(response.headers.get('cache-control'),'no-store')
+  const bytes=Buffer.from(await response.arrayBuffer());assert.equal(bytes.subarray(0,5).toString(),'%PDF-');assert.ok(bytes.length>2000)
+  assert.ok(state.reads.every(([table])=>['properties_public','property_images'].includes(table)))
+  assert.doesNotMatch(state.reads.find(r=>r[0]==='properties_public'&&r[1]==='select')[2],/pending_owner|internal_name|advisor_owners|owner_contact_id/)
+  // Optional local evidence output, generated from the real route with synthetic data only.
+  if(process.env.QRIH_PDF_TEST_OUTPUT)writeFileSync(process.env.QRIH_PDF_TEST_OUTPUT,bytes,{mode:0o600})
 })
 test('matching: presupuesto sin moneda o de otra moneda no compara importes', () => {
   const p = { ...base, surface_m2: 5000 }

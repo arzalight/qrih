@@ -17,7 +17,9 @@ export async function GET(request: Request) {
     }
     const fail = (error: 'confirmation' | 'config' | 'profile') => {
       console.warn('QRIH_AUTH_CALLBACK_FAILURE', JSON.stringify({ stage }))
-      return redirect(`/login?error=${error}`)
+      const intendedPath = new URL(request.url).searchParams.get('next')
+      const suffix = intendedPath === '/publicar' || intendedPath === '/busco-bodega' ? `&next=${encodeURIComponent(intendedPath)}` : ''
+      return redirect(`/login?error=${error}${suffix}`)
     }
     stage = 'code'
     const params = new URL(request.url).searchParams
@@ -63,7 +65,8 @@ export async function GET(request: Request) {
       stage = `profile_${result.stage}`
       return fail('profile')
     }
-    return redirect('/mis-propiedades')
+    const next = params.get('next')
+    return redirect(next === '/publicar' || next === '/busco-bodega' ? next : '/mis-propiedades')
   } catch {
     // Sólo etapa constante; nunca código, cookies, JWT, email ni errores arbitrarios.
     console.warn('QRIH_AUTH_CALLBACK_FAILURE', JSON.stringify({ stage }))

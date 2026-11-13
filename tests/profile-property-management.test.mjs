@@ -7,6 +7,7 @@ import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 
 registerHooks({ resolve(specifier, context, nextResolve) {
+  if (specifier === './private-commercial') return nextResolve(new URL('../lib/private-commercial.ts', import.meta.url).href, context)
   if (specifier === '@/lib/supabase-server') return { url: 'data:text/javascript,export async function createServerSupabaseClient(){return globalThis.__managementClient}', shortCircuit: true }
   if (specifier === '@/lib/verified-media-server') return { url: 'data:text/javascript,export async function uploadVerifiedImage(file,owner,bucket){return globalThis.__managementUpload(file,owner,bucket)}', shortCircuit: true }
   if (specifier === '@/lib/property-image-urls') return { url: 'data:text/javascript,export const PROPERTY_IMAGE_TTL_SECONDS={gallery:900};export async function createSignedPropertyImageUrlMap(client,paths,ttl){return globalThis.__managementSign(client,paths,ttl)}', shortCircuit: true }
@@ -67,7 +68,7 @@ function setup(options = {}) {
       if (options.missingRpc) return { error: { message: 'Synthetic internal detail' } }
       if (name === 'qrih_duplicate_property' && params.p_changes === null) return { data: options.alreadySaved ? newId : null, error: null }
       if (options.ambiguous) throw new Error('Synthetic internal detail')
-      return { data: name === 'qrih_duplicate_property' ? newId : id, error: null }
+      return { data: ['qrih_duplicate_property','qrih_save_property_with_private','qrih_save_property_with_owner'].includes(name) ? newId : id, error: null }
     },
     storage: { from: () => ({
       download: async name => { state.downloads.push(name); return { data: new Blob(['synthetic'], { type: 'image/webp' }), error: null } },
@@ -97,6 +98,26 @@ test('duplicar: USD y unidad total se conservan sin conversión ni número flota
   const changes = state.rpc[1].params.p_changes
   assert.equal(changes.price_currency, 'USD'); assert.equal(changes.price_value, '7.5')
   assert.equal(changes.price_unit, 'total'); assert.equal(changes.price_display, 'US$7.50 USD/mes')
+})
+test('Sprint3 duplicación: datos editables privados van al nuevo borrador, nunca al cambio comercial del original',async()=>{
+  const state=setup(),body=await duplicateRequest().formData()
+  body.set('private_fields_present','ready');body.set('internal_name','PRIVATE_COPY');body.set('owner_contact_id',owner)
+  const response=await duplicate(new Request(origin+'/api/duplicar-propiedad',{method:'POST',headers:{Origin:origin},body}))
+  assert.equal(response.status,200);assert.equal((await response.json()).id,newId)
+  const save=state.rpc[1];assert.equal(save.name,'qrih_save_property_with_private');assert.equal(save.params.p_mode,'duplicate')
+  assert.equal(save.params.p_property_id,id);assert.equal(save.params.p_changes.status,'draft')
+  assert.deepEqual(save.params.p_private,{internal_name:'PRIVATE_COPY',owner_contact_id:owner})
+  assert.doesNotMatch(JSON.stringify(save.params.p_changes),/PRIVATE_COPY|internal_name|owner_contact_id/)
+})
+test('owner picker duplicate API: pending data stays private/editable and final state is always draft',async()=>{
+  const state=setup(),body=await duplicateRequest().formData()
+  const pending={request_id:attempt,name:'PRIVATE_PENDING_COPY',company:null,phone:null,email:null}
+  body.set('private_fields_present','ready');body.set('pending_owner',JSON.stringify(pending))
+  const response=await duplicate(new Request(origin+'/api/duplicar-propiedad',{method:'POST',headers:{Origin:origin},body}))
+  assert.equal(response.status,200);assert.equal((await response.json()).id,newId)
+  const save=state.rpc[1];assert.equal(save.name,'qrih_save_property_with_owner');assert.equal(save.params.p_mode,'duplicate')
+  assert.equal(save.params.p_changes.status,'draft');assert.deepEqual(save.params.p_private.pending_owner,pending)
+  assert.equal(save.params.p_property_id,id);assert.doesNotMatch(JSON.stringify(save.params.p_changes),/PRIVATE_PENDING_COPY|pending_owner/)
 })
 test('duplicar: moneda ausente/ajena o precio impreciso falla antes de RPC/fotos', async () => {
   for (const [currency, price] of [['', '7.50'], ['EUR', '7.50'], ['USD', '7.5000000000001']]) {

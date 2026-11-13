@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { privatePropertyInput, ownerSaveError } from './private-commercial'
 import { isPriceCurrency, parsePriceInput, propertyPriceForStorage as propertyPrice } from './property-price'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 import { uploadVerifiedImage } from '@/lib/verified-media-server'
@@ -55,6 +56,9 @@ async function performSave(request: Request, duplicate: boolean) {
   let form: FormData
   try { assertSameOrigin(request); form = await readForm(request, 4 * 1024 * 1024) }
   catch { return NextResponse.json({ error: 'Solicitud inválida o demasiado grande.' }, { status: 400 }) }
+  let privateDetails
+  try { privateDetails = privatePropertyInput(form) }
+  catch { return NextResponse.json({ error: 'No se pudieron validar los datos privados. Recarga antes de guardar.' }, { status: 400 }) }
 
   const id = String(form.get('id') || '')
   const requestId = String(form.get('request_id') || '')
@@ -397,8 +401,9 @@ async function performSave(request: Request, duplicate: boolean) {
 
   let updateError: unknown
   try {
-    const result = await supabase.rpc(duplicate ? 'qrih_duplicate_property' : 'qrih_update_property_with_images', {
-      ...(duplicate ? { p_source_id: property.id, p_request_id: requestId } : {
+    const result = await supabase.rpc(privateDetails ? ('pending_owner' in privateDetails ? 'qrih_save_property_with_owner' : 'qrih_save_property_with_private') : duplicate ? 'qrih_duplicate_property' : 'qrih_update_property_with_images', {
+      ...(privateDetails ? { p_mode: duplicate ? 'duplicate' : 'update', p_property_id: property.id,
+        p_request_id: duplicate ? requestId : null, p_expected_updated_at: property.updated_at, p_private: privateDetails } : duplicate ? { p_source_id: property.id, p_request_id: requestId } : {
         p_property_id: property.id, p_expected_updated_at: property.updated_at,
       }),
       p_images: finalImages,
@@ -443,7 +448,7 @@ async function performSave(request: Request, duplicate: boolean) {
 
     return NextResponse.json(
       {
-        error: 'No pudimos confirmar el guardado. Recarga la propiedad antes de reintentar.',
+        error: ownerSaveError(updateError),
       },
       { status: 400 }
     )

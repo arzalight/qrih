@@ -1,3 +1,6 @@
+import { cache } from 'react'
+import type { Metadata } from 'next'
+import { publicMetadata, propertySeo, publicOrigin, safeJsonLd } from '@/lib/seo'
 import { notFound } from 'next/navigation'
 import { propertyPrice } from '@/lib/property-price'
 import { Header } from '@/components/Header'
@@ -28,19 +31,9 @@ function showValue(value: string | number | boolean | null) {
   return String(value)
 }
 
-export default async function PropertyPage({ params }: PageProps) {
-  const { slug } = await params
+const loadPublicProperty = cache(async (slug: string) => {
   const supabase = createPublicServerSupabaseClient()
-
-  if (!supabase) {
-    return (
-      <main style={{ padding: 40 }}>
-        <h1>Error de configuración</h1>
-        <p>Supabase no está configurado correctamente.</p>
-      </main>
-    )
-  }
-
+  if (!supabase) throw new Error('Public catalog not configured')
   const { data: property, error } = await supabase
       .from('properties_public')
     .select(`
@@ -77,9 +70,36 @@ export default async function PropertyPage({ params }: PageProps) {
     .eq('status', 'published')
     .single()
 
-  if (error || !property) {
-    notFound()
+  if (error) {
+    if (error.code === 'PGRST116') notFound()
+    throw new Error('Public property unavailable')
   }
+  if (!property) notFound()
+  return property
+
+})
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params
+  const property = await loadPublicProperty(slug)
+  const seo = propertySeo(property)
+  return publicMetadata(`/bodegas/${encodeURIComponent(slug)}`, seo.title, seo.description)
+}
+
+export default async function PropertyPage({ params }: PageProps) {
+  const { slug } = await params
+  const supabase = createPublicServerSupabaseClient()
+
+  if (!supabase) {
+    return (
+      <main style={{ padding: 40 }}>
+        <h1>Error de configuración</h1>
+        <p>Supabase no está configurado correctamente.</p>
+      </main>
+    )
+  }
+
+  const property = await loadPublicProperty(slug)
 
   const { data: galleryImages } = await supabase
     .from('property_images')
@@ -120,14 +140,15 @@ export default async function PropertyPage({ params }: PageProps) {
     try {
       const { data: candidates, error: similarError } = await supabase
         .from('properties_public')
-        .select('id,slug,title,operation,zone_general,zone,price_display,price_value,price_value_text:price_value::text,price_currency,price_unit,total_area,covered_area,max_height,share_commission,main_image_path')
+        .select('id,slug,title,operation,status,zone_general,zone,price_display,price_value,price_value_text:price_value::text,price_currency,price_unit,total_area,covered_area,max_height,docks,share_commission,main_image_path')
         .eq('status', 'published')
         .neq('id', property.id)
         .eq('operation', property.operation)
         .eq('zone_general', property.zone_general)
         .gte('total_area', similarRange.area_min)
         .lte('total_area', similarRange.area_max)
-        .order('created_at', { ascending: false })
+        .order('total_area', { ascending: true })
+        .order('id', { ascending: true })
         .limit(1000)
       if (similarError) throw new Error('Similar properties unavailable')
       const ranked = rankSimilarProperties(similaritySource,
@@ -150,6 +171,11 @@ export default async function PropertyPage({ params }: PageProps) {
   return (
     <>
       <Header />
+      {publicOrigin() && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd({
+        '@context': 'https://schema.org', '@type': 'WebPage', name: propertySeo(property).title,
+        description: propertySeo(property).description, url: `${publicOrigin()}/bodegas/${encodeURIComponent(slug)}`,
+        inLanguage: 'es-MX',
+      }) }} />}
       <main className="property-detail">
         <a className="property-back" href="/inventario">← Volver al inventario</a>
         <section className="property-main-grid">
@@ -200,6 +226,7 @@ export default async function PropertyPage({ params }: PageProps) {
         </section>
         <section className="property-detail-section property-similar" aria-labelledby="property-similar-heading">
           <h2 id="property-similar-heading">Propiedades similares</h2>
+          <p className="ui-help">Misma operación y municipio. Priorizamos tu zona y ampliamos gradualmente el rango de superficie.</p>
           {similarProperties.length > 0
             ? <div className="cards">{similarProperties.map(candidate => <PropertyCard key={candidate.id} property={candidate} />)}</div>
             : <p>{similarUnavailable ? 'No fue posible cargar las propiedades similares.' : 'No hay propiedades similares disponibles con estos criterios.'}</p>}

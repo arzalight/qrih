@@ -168,6 +168,11 @@ test('callback ejecuta la ruta real: origen canónico, cache privada y fallos se
       assert.ok(!response.headers.get('set-cookie')?.includes('qrih-recovery'))
       if (!code || options.exchangeError) assert.equal(f.writes.length, 0)
     }
+    for (const next of ['/publicar', '/busco-bodega']) {
+      globalThis.__qrihAuthTestClient = fixture().client
+      const resumed = await GET(new Request(`https://internal.test/auth/callback?code=test&next=${encodeURIComponent(next)}`))
+      assert.equal(resumed.headers.get('location'), `https://qrih-staging.netlify.app${next}`)
+    }
     globalThis.__qrihAuthTestClient = null
     assert.match((await GET(new Request('https://internal.test/auth/callback?code=test'))).headers.get('location'), /error=config$/)
     process.env.URL = 'http://evil.test'
