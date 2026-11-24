@@ -1,0 +1,13 @@
+# QRIH — Registro de Riesgos (STAGING / B1)
+
+**Fecha:** 2026-11-24
+
+| ID | Severidad | Riesgo | Estado actual | Mitigación / Acción requerida |
+|---|---|---|---|---|
+| **R-01** | **Alto** | `SUPABASE_SERVICE_ROLE_KEY` expuesta al scope `Builds` y a 5 contextos en Netlify Free (`Upgrade to unlock`). | Mitigado temporalmente (`Build status: Stopped` + `forbidPrivate: true`) | Completar B1 (Etapas 3–11) y retirar la variable de Netlify antes de reactivar builds. |
+| **R-02** | **Bajo (Resuelto en STAGING)** | Validación WebP WASM (`@jsquash/webp@1.5.0`) en Deno / Supabase Edge Runtime real. | **Cerrado en Etapa 5 (GO)**: 12/12 casos + 8/8 soak `2560×2560` PASS en `supabase-edge-runtime-1.79.1` (`3.2 ms` init, `86 ms` warm decode, meseta `108 MiB` external); función PoC neutralizada (`410 Gone`, `verify_jwt: true`). | Mantener techo estricto `maxDim = 2560` / `maxPixels = 6_553_600` en Etapa 6 (rechazando `4096×4096` que consume `144 MiB`) y eliminar stub `b1-webp-wasm-poc` en Dashboard. |
+| **R-03** | **Bajo (Verificado en STAGING)** | Diferencias de entorno entre PGlite local y Postgres/PostgREST/Auth alojado en Supabase STAGING. | **Cerrado en STAGING** (`20261124150507`, `b1_privileged_rpcs` aplicada; catálogo `pg_proc`, `EXECUTE`, `get_advisors` y smoke PostgREST verificados). | Ninguna acción bloqueante; listo para consumo desde Etapa 8. |
+| **R-04** | **Bajo-Medio (Medido en STAGING)** | Latencia SSR y cold starts de `sign-property-images` en `/`, `/inventario` y `/bodegas/[slug]`. | **Desplegada y medida en STAGING (`v1`)**: lote de 5 imágenes (15/15 PASS), `p50 = 599.33 ms`, `p95 = 1173.15 ms` desde cliente remoto (incluye RTT MX→US-East). | En Etapa 8, mantener 1 sola llamada por lote por vista SSR y validar latencia real desde Netlify Functions (misma región US-East). |
+| **R-05** | **Medio** | Clave JWT `service_role` legada todavía presente en `.secrets/staging.env` local. | Aislada (`0700`/`0600`, fuera de Git y `.env*`) | Migrar por separado a `sb_secret_*` dedicada y revocar solo tras verificar 0 consumidores (Etapas 11–12). |
+| **R-06** | **Bajo (Resuelto local)** | Auditoría de artefactos no descomprimía `.zip`, `.tar.gz`, `.eszip`, `.gz`, `.br`. | **Cerrado en Etapa 9** (`scripts/artifact-secrets-audit.mjs` + `tests/b1-compressed-artifact-audit.test.mjs` PASS + `preflight` 1,690 archivos PASS) | Mantener prohibición de `netlify deploy` local. |
+| **R-07** | **Bajo (Resuelto local)** | `tests/staging-flows.test.mjs:149` omitía `request_id` en `POST /api/requerimientos`. | **Corregido en Etapa 7** | Verificar en corrida live opt-in cuando se autorice validación remota. |

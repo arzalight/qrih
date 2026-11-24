@@ -1,0 +1,14 @@
+# Configuración local de Supabase Edge Functions para B1.
+
+[functions.sign-property-images]
+# Obligatorio: 5 superficies públicas (/, /inventario, /bodegas/[slug], /ficha/[slug],
+# /asesor/[public_id], PDF) firman imágenes de propiedades publicadas sin sesión de usuario,
+# usando clave pública (sb_publishable_* o anon). La función valida estrictamente apikey y
+# auth.getUser(token) para cualquier Bearer JWT, rechazando tokens inválidos con 401.
+verify_jwt = false
+
+[functions.ingest-verified-media]
+# Validación estricta en código (core.ts): exige apikey pública válida, rechaza
+# SUPABASE_SERVICE_ROLE_KEY y claves públicas como Bearer, exige Bearer JWT de usuario
+# real no anónimo verificado vía auth.getUser(token) y account_status = 'active'.
+verify_jwt = false

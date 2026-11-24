@@ -146,13 +146,14 @@ try {
   check(Boolean((await b.client.from('notifications').update({message:'forged'}).eq('id',notice)).error),'Notification content cannot be forged')
   const readNotice=await data(b.client.from('notifications').update({read_at:new Date().toISOString()}).eq('id',notice).select('read_at'),'Mark notice read')
   check(readNotice.length===1 && Boolean(readNotice[0].read_at),'Owner may mark own notice read')
-  const demandBody={name:'Synthetic demand',email:'synthetic@example.invalid',phone:'0000000000',operation:'Renta',zone:'Synthetic',area_min:50,area_max:150,budget_min:50,budget_max:200,notes:'Fixture, no real demand'}
+  const demandBase={name:'Synthetic demand',email:'synthetic@example.invalid',phone:'0000000000',operation:'Renta',zone:'Synthetic',area_min:50,area_max:150,budget_min:50,budget_max:200,notes:'Fixture, no real demand'}
   const ownedDemand={}
   for(const actor of [a,b]) {
     step='HTTP authenticated demand'
-    const resp=await json('/api/requerimientos',actor,demandBody)
+    const requestId=randomUUID()
+    const resp=await json('/api/requerimientos',actor,{...demandBase,request_id:requestId})
     assert.equal(resp.status,200)
-    const result=await resp.json();assert.ok(result.id)
+    const result=await resp.json();assert.equal(result.id,requestId)
     demands.push(result.id);ownedDemand[actor.id]=result.id
   }
   check((await data(b.client.from('demand_requests').select('id').eq('id',ownedDemand[a.id]),'Cross-user demand')).length===0,'HTTP demand identity derives from session; cross-user SELECT denied')
@@ -204,7 +205,7 @@ try {
   check((await fetch(signature.signedUrl,{cache:'no-store'})).status===200,'PDF TTL 300s signature initially downloads')
   await data(svc.from('profiles').update({account_status:'suspended'}).eq('id',b.id),'Suspend requester fixture')
   check((await data(b.client.rpc('get_property_publisher_contact',{p_property_id:property.id}),'Suspended contact')).length===0,'Suspension removes previously authorized contact despite old JWT')
-  check((await json('/api/requerimientos',b,demandBody)).status===403,'Suspended account cannot submit demand with old JWT')
+  check((await json('/api/requerimientos',b,{...demandBase,request_id:randomUUID()})).status===403,'Suspended account cannot submit demand with old JWT')
   const pdf=await request(`/api/bodegas/${property.slug}/pdf`)
   check(pdf.status===200 && Buffer.from(await pdf.arrayBuffer()).subarray(0,4).toString()==='%PDF','Published PDF remains functional during extended flows')
   // Four parallel reads are a bounded concurrency smoke, not a capacity benchmark.
