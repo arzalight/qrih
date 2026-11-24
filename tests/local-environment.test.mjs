@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync } from 'node:fs'
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, chmodSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { spawnSync } from 'node:child_process'
@@ -46,20 +46,33 @@ test('AUD-034: build sin clave privada; runtime no; CLI original y contexto Netl
 
 test('AUD-034: cargador Next respeta .env.local y env heredado; no valores en error', () => {
   const dir=mkdtempSync(join(tmpdir(),'qrih-env-test-'))
-  writeFileSync(join(dir,'.env'),'NEXT_PUBLIC_SUPABASE_URL=https://dmtvnwsuhehxfftddsap.supabase.co\n')
-  writeFileSync(join(dir,'.env.local'),Object.entries(env()).map(([k,v])=>`${k}=${v}`).join('\n'))
-  const module=fileURLToPath(new URL('../scripts/local-environment.mjs',import.meta.url))
-  const run=extra=>spawnSync(process.execPath,['--input-type=module','-e',
-    `import {loadLocalStaging} from ${JSON.stringify(new URL('../scripts/local-environment.mjs',import.meta.url).href)};
-    try {loadLocalStaging(${JSON.stringify(dir)});console.log('VALID')} catch {console.log('REJECTED');process.exitCode=1}`],
-  {encoding:'utf8',env:{PATH:process.env.PATH,NODE_ENV:'development',...extra}})
-  assert.ok(module.endsWith('.mjs'))
-  assert.equal(run({}).stdout.trim(),'VALID')
-  assert.equal(run({NEXT_PUBLIC_SUPABASE_URL:'https://dmtvnwsuhehxfftddsap.supabase.co'}).stdout.trim(),'REJECTED')
-  mkdirSync(join(dir,'supabase/.temp'),{recursive:true})
-  writeFileSync(join(dir,'supabase/.temp/project-ref'),'dmtvnwsuhehxfftddsap')
-  assert.equal(run({}).stdout.trim(),'REJECTED')
-  // Fixture temporal sintético, no datos del proyecto ni limpieza automática de configs.
+  try {
+    writeFileSync(join(dir,'.env'),'NEXT_PUBLIC_SUPABASE_URL=https://dmtvnwsuhehxfftddsap.supabase.co\n')
+    const publicEnv = {
+      NEXT_PUBLIC_SUPABASE_URL: STAGING_ORIGIN,
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: 'sb_publishable_synthetic'
+    }
+    writeFileSync(join(dir,'.env.local'),Object.entries(publicEnv).map(([k,v])=>`${k}=${v}`).join('\n'))
+    const secrets = join(dir,'.secrets')
+    mkdirSync(secrets,{mode:0o700})
+    chmodSync(secrets,0o700)
+    const secretFile = join(secrets,'staging.env')
+    writeFileSync(secretFile,'SUPABASE_SERVICE_ROLE_KEY=sb_secret_synthetic\n',{mode:0o600})
+    chmodSync(secretFile,0o600)
+    const module=fileURLToPath(new URL('../scripts/local-environment.mjs',import.meta.url))
+    const run=extra=>spawnSync(process.execPath,['--input-type=module','-e',
+      `import {loadLocalStaging} from ${JSON.stringify(new URL('../scripts/local-environment.mjs',import.meta.url).href)};
+      try {loadLocalStaging(${JSON.stringify(dir)});console.log('VALID')} catch {console.log('REJECTED');process.exitCode=1}`],
+    {encoding:'utf8',env:{PATH:process.env.PATH,NODE_ENV:'development',...extra}})
+    assert.ok(module.endsWith('.mjs'))
+    assert.equal(run({}).stdout.trim(),'VALID')
+    assert.equal(run({NEXT_PUBLIC_SUPABASE_URL:'https://dmtvnwsuhehxfftddsap.supabase.co'}).stdout.trim(),'REJECTED')
+    mkdirSync(join(dir,'supabase/.temp'),{recursive:true})
+    writeFileSync(join(dir,'supabase/.temp/project-ref'),'dmtvnwsuhehxfftddsap')
+    assert.equal(run({}).stdout.trim(),'REJECTED')
+  } finally {
+    rmSync(dir,{recursive:true,force:true})
+  }
 })
 
 test('AUD-034: claves opacas verificadas sólo host staging, sin respuesta/logs/datos', async () => {
@@ -94,14 +107,18 @@ test('AUD-034: launcher bloquea opciones de red/trace/directorio y scripts npm u
 
 test('AUD-034: start requiere build certificado del env público correcto, sin clave en marca', () => {
   const root=mkdtempSync(join(tmpdir(),'qrih-build-tag-test-'))
-  mkdirSync(join(root,'.next'))
-  const file=join(root,'.next/qrih-local-stage-build.json')
-  assert.throws(()=>assertLocalBuild(root,env()),/Primero ejecuta/)
-  writeFileSync(file,JSON.stringify(localBuildTag(env())))
-  assert.doesNotThrow(()=>assertLocalBuild(root,env()))
-  assert.ok(!readFileSync(file,'utf8').includes('sb_secret_'))
-  assert.ok(!readFileSync(file,'utf8').includes('sb_publishable_'))
-  assert.throws(()=>assertLocalBuild(root,{...env(),NEXT_PUBLIC_SUPABASE_ANON_KEY:'sb_publishable_changed'}),/Primero ejecuta/)
-  writeFileSync(file,'invalid')
-  assert.throws(()=>assertLocalBuild(root,env()),/Primero ejecuta/)
+  try {
+    mkdirSync(join(root,'.next'))
+    const file=join(root,'.next/qrih-local-stage-build.json')
+    assert.throws(()=>assertLocalBuild(root,env()),/Primero ejecuta/)
+    writeFileSync(file,JSON.stringify(localBuildTag(env())))
+    assert.doesNotThrow(()=>assertLocalBuild(root,env()))
+    assert.ok(!readFileSync(file,'utf8').includes('sb_secret_'))
+    assert.ok(!readFileSync(file,'utf8').includes('sb_publishable_'))
+    assert.throws(()=>assertLocalBuild(root,{...env(),NEXT_PUBLIC_SUPABASE_ANON_KEY:'sb_publishable_changed'}),/Primero ejecuta/)
+    writeFileSync(file,'invalid')
+    assert.throws(()=>assertLocalBuild(root,env()),/Primero ejecuta/)
+  } finally {
+    rmSync(root,{recursive:true,force:true})
+  }
 })

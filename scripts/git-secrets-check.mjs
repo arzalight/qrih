@@ -2,7 +2,7 @@
 import { execFileSync } from 'node:child_process'
 
 const files = execFileSync('git', ['ls-files', '-z'], { encoding: 'utf8' }).split('\0').filter(Boolean)
-const forbidden = /(^|\/)(?:node_modules|\.next|\.netlify|work|outputs|\.temp|\.branches|migration-backup)(\/|$)|(^|\/)\.env(?:\..*)?$|(?:\.bak(?:-.*)?|\.backup|\.tsbuildinfo|\.log|\.tmp|\.zip|\.dump|\.pem|\.key)$/
+const forbidden = /(^|\/)(?:node_modules|\.next|\.netlify|\.secrets|work|outputs|\.temp|\.branches|migration-backup)(\/|$)|(^|\/)\.env(?:\..*)?$|(?:\.bak(?:-.*)?|\.backup|\.tsbuildinfo|\.log|\.tmp|\.zip|\.dump|\.pem|\.key)$/
 const rules = [
   ['supabase-private-key', /sb_secret_[A-Za-z0-9_-]{20,}/g],
   ['github-token', /(?:gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{30,})/g],

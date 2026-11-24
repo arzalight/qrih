@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url'
 import { mkdirSync, chmodSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { loadLocalStaging, verifyStagingCredentials, localBuildTag, assertLocalBuild } from './local-environment.mjs'
+import { auditBuildArtifacts } from './artifact-secrets-audit.mjs'
 
 const root = fileURLToPath(new URL('../', import.meta.url))
 const [command, ...args] = process.argv.slice(2)
@@ -39,6 +40,13 @@ try {
     process.exitCode = code ?? 1
     if (command === 'build' && code === 0) {
       try {
+        const audit = auditBuildArtifacts(root, { privateKey: '', scanNetlify: false })
+        if (!audit.ok) {
+          console.error(`Build local rechazado: ${audit.findings.length} hallazgo(s) de secretos en artefactos.`)
+          for (const finding of audit.findings) console.error(`- [${finding.area}] ${finding.file}: ${finding.rule}`)
+          process.exitCode = 1
+          return
+        }
         // Metadatos generados, sin claves: impedir servir un build de otro env.
         writeFileSync(join(root, '.next/qrih-local-stage-build.json'),
           JSON.stringify(localBuildTag(env)), { mode: 0o600 })

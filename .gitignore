@@ -37,3 +37,6 @@ next-env.d.ts
 *.pem
 *.key
 .netlify-staging-session.json
+
+# Credenciales privadas locales de STAGING
+.secrets/

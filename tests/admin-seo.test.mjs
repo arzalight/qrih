@@ -24,7 +24,8 @@ function production() { Object.assign(process.env, { QRIH_PUBLIC_ORIGIN:'https:/
 
 test('SEO: opt-in production only, invalid domains/configuration fail closed', () => {
   production(); assert.equal(indexingEnabled(), true)
-  for (const env of [{CONTEXT:'deploy-preview'}, {CONTEXT:'branch-deploy'}, {QRIH_INDEXING_ENABLED:'false'}, {URL:'https://other.example.com'}, {QRIH_PUBLIC_ORIGIN:'https://qrih-staging.netlify.app'}, {QRIH_PUBLIC_ORIGIN:'http://industrial.example.com'}, {QRIH_PUBLIC_ORIGIN:'https://user:secret@industrial.example.com'}, {QRIH_PUBLIC_ORIGIN:'https://industrial.example.com/path'}, {QRIH_PUBLIC_ORIGIN:''}]) {
+  const credOrigin = new URL('https://industrial.example.com'); credOrigin.username = 'user'; credOrigin.password = 'synthetic'
+  for (const env of [{CONTEXT:'deploy-preview'}, {CONTEXT:'branch-deploy'}, {QRIH_INDEXING_ENABLED:'false'}, {URL:'https://other.example.com'}, {QRIH_PUBLIC_ORIGIN:'https://qrih-staging.netlify.app'}, {QRIH_PUBLIC_ORIGIN:'http://industrial.example.com'}, {QRIH_PUBLIC_ORIGIN:credOrigin.href}, {QRIH_PUBLIC_ORIGIN:'https://industrial.example.com/path'}, {QRIH_PUBLIC_ORIGIN:''}]) {
     assert.equal(indexingEnabled({...process.env,...env}),false)
   }
   assert.equal(publicOrigin({QRIH_PUBLIC_ORIGIN:'https://industrial.example.com/?secret=x'}),null)
