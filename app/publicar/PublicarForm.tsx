@@ -208,9 +208,14 @@ export default function Publish() {
     <>
       <Header />
 
-      <main className="form publish-page">
+      <section className="title publish-banner">
+        <div className="publish-banner__inner">
+          <h1>Sube tu propiedad industrial.</h1>
+          <p>Completa los datos comerciales, ubicación y fotografías para enviar tu espacio a revisión o guardarlo como borrador.</p>
+        </div>
+      </section>
 
-        <h1>Sube tu propiedad industrial.</h1>
+      <main className="form publish-page">
 
         {accountStatus === 'suspended' && <AccountSuspensionNotice />}
 

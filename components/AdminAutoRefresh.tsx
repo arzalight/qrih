@@ -40,5 +40,5 @@ export function AdminAutoRefresh({ scopeKey }: { scopeKey: string }) {
       document.removeEventListener('submit', submit, true)
     }
   }, [router, scopeKey])
-  return <small className="admin-refresh-status" role="status">{pending ? 'Actualizando información…' : 'Actualización cada 30 s · en pausa mientras editas'}</small>
+  return null
 }

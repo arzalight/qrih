@@ -73,40 +73,10 @@ export function PlatformSettingsForm({
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={{
-        marginTop: 24,
-        padding: 24,
-        border: "1px solid var(--line)",
-        borderRadius: 14,
-        background: "var(--surface)",
-      }}
-    >
-      <div style={{ marginBottom: 18 }}>
-        <label
-          htmlFor="support-email"
-          style={{
-            display: 'block',
-            marginBottom: 8,
-            fontSize: 15,
-            fontWeight: 700,
-          }}
-        >
-          Correo de contacto
-        </label>
-
-        <p
-          style={{
-            margin: '0 0 12px',
-            color: "var(--muted)",
-            fontSize: 14,
-            lineHeight: 1.5,
-          }}
-        >
-          Este correo aparecerá en los avisos de cuentas suspendidas.
-        </p>
-
+    <form onSubmit={handleSubmit} className="admin-config-form">
+      <div className="admin-config-form__field">
+        <label htmlFor="support-email">Correo de contacto</label>
+        <p>Este correo aparecerá en los avisos de cuentas suspendidas.</p>
         <input
           id="support-email"
           name="support_email"
@@ -116,44 +86,15 @@ export function PlatformSettingsForm({
           placeholder="contacto@tudominio.com"
           autoComplete="email"
           disabled={saving}
-          style={{
-            width: '100%',
-            maxWidth: 520,
-            padding: '12px 14px',
-            border: '1px solid #d1d5db',
-            borderRadius: 10,
-            fontSize: 15,
-            boxSizing: 'border-box',
-          }}
         />
       </div>
 
-      <button
-        type="submit"
-        disabled={saving}
-        style={{
-          padding: '11px 16px',
-          border: 'none',
-          borderRadius: 10,
-          background: "var(--ink)",
-          color: "var(--surface)",
-          fontWeight: 700,
-          cursor: saving ? 'wait' : 'pointer',
-          opacity: saving ? 0.7 : 1,
-        }}
-      >
-        {saving ? 'Guardando...' : 'Guardar configuración'}
+      <button type="submit" disabled={saving}>
+        {saving ? 'Guardando…' : 'Guardar configuración'}
       </button>
 
       {message && (
-        <p
-          role="status"
-          style={{
-            margin: '14px 0 0',
-            fontSize: 13,
-            color: "var(--muted)",
-          }}
-        >
+        <p role="status" className="notice">
           {message}
         </p>
       )}

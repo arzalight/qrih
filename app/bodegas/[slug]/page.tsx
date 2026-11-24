@@ -18,7 +18,7 @@ type PageProps = {
   params: Promise<{ slug: string }>
 }
 
-function showValue(value: string | number | boolean | null) {
+function showSpecValue(value: string | number | boolean | null, unit = '') {
   if (value === null || value === undefined || value === '') {
     return 'N/D'
   }
@@ -27,7 +27,12 @@ function showValue(value: string | number | boolean | null) {
     return value ? 'Sí' : 'No'
   }
 
-  return String(value)
+  const text = String(value).trim()
+  if (!text) return 'N/D'
+  if (unit === 'm' && !/^\d+(?:[.,]\d+)?$/.test(text)) {
+    return text
+  }
+  return unit ? `${text} ${unit}` : text
 }
 
 const loadPublicProperty = cache(async (slug: string) => {
@@ -192,7 +197,14 @@ export default async function PropertyPage({ params }: PageProps) {
                 {property.negotiable && <span>Precio negociable</span>}
               </div>
             </section>
-            <a className="button property-pdf" href={`/api/bodegas/${slug}/pdf`} download>Descargar PDF</a>
+            <a className="button button--secondary property-pdf" href={`/api/bodegas/${slug}/pdf`} download>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Descargar ficha PDF
+            </a>
             <ResponsiveContactPanel>
               <PropertyContactForm key={property.id} propertyId={property.id} />
             </ResponsiveContactPanel>
@@ -208,16 +220,16 @@ export default async function PropertyPage({ params }: PageProps) {
           <h2>Características</h2>
           <dl className="property-specs">
             {[['Superficie total', property.total_area, 'm²'], ['Superficie techada', property.covered_area, 'm²'],
-              ['Superficie exterior', property.exterior_area, 'm²'], ['Altura máxima', property.max_height, ''],
+              ['Superficie exterior', property.exterior_area, 'm²'], ['Altura máxima', property.max_height, 'm'],
               ['Área de oficinas', property.offices_area, 'm²'], ['Estacionamientos', property.parking, ''],
               ['Andenes', property.docks, ''], ['Comparte comisión', property.share_commission, '']].map(([label, value, unit]) => (
-              <div key={String(label)}><dt>{label}</dt><dd>{showValue(value)} {unit}</dd></div>
+              <div key={String(label)}><dt>{label}</dt><dd>{showSpecValue(value, String(unit))}</dd></div>
             ))}
           </dl>
         </section>
         <section className="ui-panel property-detail-section">
           <h2>Descripción</h2>
-          <p className="property-description">{showValue(property.description)}</p>
+          <p className="property-description">{showSpecValue(property.description)}</p>
         </section>
         <section className="property-detail-section property-similar" aria-labelledby="property-similar-heading">
           <h2 id="property-similar-heading">Propiedades similares</h2>

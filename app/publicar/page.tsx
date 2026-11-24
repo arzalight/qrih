@@ -37,8 +37,7 @@ export default async function PublicarPage({ searchParams }: {
   let urls: Map<string, string>
   try { urls = await createSignedPropertyImageUrlMap(supabase, ordered.map(image => image.storage_path), PROPERTY_IMAGE_TTL_SECONDS.gallery) }
   catch { return <main className="form"><p>No fue posible cargar las fotografías autorizadas. Recarga antes de continuar.</p></main> }
-  return <><Header /><main className="form">
-    <small>SUBIR TU BODEGA · NUEVA PROPIEDAD</small><h1>Duplicar propiedad</h1>
+  return <><Header /><section className="title publish-banner"><div className="publish-banner__inner"><h1>Duplicar propiedad</h1><p>Crea un borrador independiente sin modificar la publicación original.</p></div></section><main className="form publish-page">
     <p className="notice">Estás creando una propiedad independiente. Primero crea el borrador; se abrirá su editor para guardar cambios o enviarla a revisión. La original no se modifica.</p>
     <EditarPropiedadForm duplicate initialPrivate={await loadPropertyPrivateDetails(supabase, property.id)} property={{ ...property, status: 'draft', rejection_reason: null }}
       initialImages={ordered.map((image, position) => ({ storagePath: image.storage_path,

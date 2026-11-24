@@ -35,7 +35,7 @@ export function PublicIndicators() {
   return <section className="public-indicators" aria-label="QRIH en cifras" aria-live="polite" aria-busy={!counts}>
     <div><strong>{number(counts?.properties)}</strong><span>Propiedades disponibles</span>
       <small>{!counts ? 'Consultando inventario…' : counts.properties === null ? 'No disponible en este momento' : 'Publicadas en el inventario'}</small></div>
-    <div><strong>{number(counts?.connections)}</strong><span>Vinculaciones confirmadas</span>
+    <div className={counts?.connectionsStatus === 'not_enabled' ? 'public-indicators__item--pending' : undefined}><strong>{number(counts?.connections)}</strong><span>Vinculaciones confirmadas</span>
       <small>{!counts ? 'Consultando vinculaciones…' : counts.connectionsStatus === 'not_enabled' ? 'Registro por habilitar'
         : counts.connections === null ? 'No disponible en este momento' : 'Solicitudes aceptadas por el responsable'}</small></div>
   </section>

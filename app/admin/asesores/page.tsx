@@ -113,196 +113,43 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
   }
 
   return (
-    <><Header administration /><main className="admin-page"
-      style={{
-        padding: '48px 32px',
-        maxWidth: '1200px',
-        margin: '0 auto',
-      }}
-    >
+    <><Header administration /><main className="admin-page admin-shell">
       <AdminAutoRefresh scopeKey={searchFilter || ''} />
-      <header
-        style={{
-          marginBottom: '32px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'flex-end',
-          gap: '24px',
-          flexWrap: 'wrap',
-        }}
-      >
+      <header className="admin-header">
         <div>
-          <Link
-            href="/admin"
-            style={{
-              display: 'inline-block',
-              marginBottom: '14px',
-              color: "var(--muted)",
-              textDecoration: 'none',
-              fontSize: '14px',
-            }}
-          >
-            ← Volver al panel
-          </Link>
-
-          <p
-            style={{
-              margin: '0 0 8px',
-              fontSize: '13px',
-              fontWeight: 700,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              color: "var(--muted)",
-            }}
-          >
-            Administración
-          </p>
-
-          <h1
-            style={{
-              margin: 0,
-              fontSize: '36px',
-              lineHeight: 1.1,
-              letterSpacing: '-0.03em',
-            }}
-          >
-            Asesores
-          </h1>
-
-          <p
-            style={{
-              margin: '10px 0 0',
-              color: "var(--muted)",
-              fontSize: '16px',
-            }}
-          >
-            Gestiona las cuentas y el estado de los asesores del portal.
-          </p>
+          <h1>Asesores</h1>
+          <p>Gestiona las cuentas y el estado de los asesores del portal.</p>
         </div>
 
-        <div
-          style={{
-            minWidth: '150px',
-            padding: '16px 20px',
-            border: "1px solid var(--line)",
-            borderRadius: '12px',
-            background: "var(--surface-subtle)",
-          }}
-        >
-          <div
-            style={{
-              fontSize: '28px',
-              fontWeight: 700,
-              lineHeight: 1,
-            }}
-          >
-            {filteredAdvisors.length}
-          </div>
-
-          <div
-            style={{
-              marginTop: '6px',
-              fontSize: '13px',
-              color: "var(--muted)",
-            }}
-          >
-            Perfiles registrados
-          </div>
+        <div className="admin-count-card">
+          <strong>{filteredAdvisors.length}</strong>
+          <span>Perfiles registrados</span>
         </div>
       </header>
 
-      <form
-        method="get"
-        style={{
-          marginBottom: '24px',
-          padding: '16px 18px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px',
-          flexWrap: 'wrap',
-          border: "1px solid var(--line)",
-          borderRadius: '12px',
-          background: "var(--surface-subtle)",
-        }}
-      >
-        <label
-          htmlFor="busqueda"
-          style={{
-            fontSize: '13px',
-            fontWeight: 700,
-            color: "var(--muted)",
-          }}
-        >
-          Buscar:
-        </label>
-
+      <form method="get" className="admin-filter-bar">
+        <label htmlFor="busqueda">Buscar:</label>
         <input
           id="busqueda"
           type="search"
           name="busqueda"
           defaultValue={busqueda ?? ''}
           placeholder="Nombre, empresa o ID público"
-          style={{
-            width: '300px',
-            maxWidth: '100%',
-            padding: '10px 12px',
-            border: '1px solid #d5d5d5',
-            borderRadius: '9px',
-            background: "var(--surface)",
-            fontSize: '13px',
-          }}
         />
-
-        <button
-          type="submit"
-          style={{
-            padding: '10px 16px',
-            border: '1px solid #222',
-            borderRadius: '9px',
-            background: "var(--ink)",
-            color: "var(--surface)",
-            fontSize: '13px',
-            fontWeight: 700,
-            cursor: 'pointer',
-          }}
-        >
-          Filtrar
-        </button>
-
+        <button type="submit">Filtrar</button>
         {searchFilter && (
-          <Link
-            href="/admin/asesores"
-            style={{
-              color: "var(--muted)",
-              textDecoration: 'none',
-              fontSize: '13px',
-              fontWeight: 600,
-            }}
-          >
+          <Link href="/admin/asesores" className="admin-filter-bar__clear">
             Limpiar
           </Link>
         )}
       </form>
 
-      <section
-        style={{
-          border: "1px solid var(--line)",
-          borderRadius: '14px',
-          overflow: 'hidden',
-          background: "var(--surface)",
-        }}
-      >
-        <div className="ui-table-scroll" role="region" aria-label="Tabla de asesores; desplázate horizontalmente para ver todas las columnas" tabIndex={0} style={{ overflowX: 'auto' }}>
-          <table
-            style={{
-              width: '100%',
-              borderCollapse: 'collapse',
-              minWidth: '900px',
-            }}
-          >
+      <section className="admin-table-card">
+        <div className="ui-table-scroll" role="region" aria-label="Tabla de asesores; desplázate horizontalmente para ver todas las columnas" tabIndex={0}>
+          <table className="admin-advisors-table">
             <caption className="sr-only">Asesores y estado de sus cuentas</caption>
             <thead>
-              <tr style={{ background: "var(--surface-subtle)" }}>
+              <tr>
                 {[
                   'Asesor',
                   'ID público',
@@ -314,19 +161,7 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
                   'Registro',
                   'Acciones',
                 ].map((label) => (
-                  <th scope="col"
-                    key={label}
-                    style={{
-                      padding: '14px 16px',
-                      borderBottom: "1px solid var(--line)",
-                      textAlign: 'left',
-                      fontSize: '12px',
-                      fontWeight: 700,
-                      color: "var(--muted)",
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.05em',
-                    }}
-                  >
+                  <th scope="col" key={label}>
                     {label}
                   </th>
                 ))}
@@ -341,199 +176,86 @@ console.warn('QRIH_APP_ADMIN_ASESORES_PAGE_53_FAILED')
                   pending: 0,
                 }
 
+                const roleLabel =
+                  advisor.role === 'admin'
+                    ? 'Administrador'
+                    : advisor.role === 'publisher'
+                      ? 'Asesor'
+                      : advisor.role
+
                 return (
                   <tr key={advisor.id}>
-                    <td
-                      style={{
-                        padding: '16px',
-                        borderBottom: "1px solid var(--line)",
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '12px',
-                        }}
-                      >
-                        <div
-                          style={{
-                            width: '42px',
-                            height: '42px',
-                            borderRadius: '50%',
-                            overflow: 'hidden',
-                            border: "1px solid var(--line)",
-                            background: '#f5f5f5',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            flexShrink: 0,
-                            fontWeight: 700,
-                            color: "var(--muted)",
-                          }}
-                        >
+                    <td>
+                      <div className="admin-advisor-identity">
+                        <div className="admin-advisor-avatar">
                           {advisor.avatar_url ? (
-                            <img
-                              src={advisor.avatar_url}
-                              alt=""
-                              style={{
-                                width: '100%',
-                                height: '100%',
-                                objectFit: 'cover',
-                              }}
-                            />
+                            <img src={advisor.avatar_url} alt="" />
                           ) : (
                             advisor.full_name.charAt(0).toUpperCase()
                           )}
                         </div>
 
                         <div>
-                          <div style={{ fontWeight: 700 }}>
+                          <div className="admin-advisor-name">
                             {advisor.full_name}
                             {advisor.is_verified && (
                               <span
                                 title="Asesor verificado"
                                 aria-label="Asesor verificado"
-                                style={{
-                                  marginLeft: '6px',
-                                  fontSize: '15px',
-                                }}
+                                className="admin-advisor-verified-mark"
                               >
                                 ✓
                               </span>
                             )}
                           </div>
-
-                          <div
-                            style={{
-                              marginTop: '3px',
-                              fontSize: '13px',
-                              color: "var(--muted)",
-                            }}
-                          >
+                          <div className="admin-advisor-company">
                             {advisor.company_name || 'Sin empresa'}
                           </div>
                         </div>
                       </div>
                     </td>
 
-                    <td
-                      style={{
-                        padding: '16px',
-                        borderBottom: "1px solid var(--line)",
-                        fontWeight: 600,
-                      }}
-                    >
-                      {advisor.public_id}
+                    <td className="admin-cell-nowrap">
+                      <strong>{advisor.public_id}</strong>
                     </td>
 
-                    <td
-                      style={{
-                        padding: '16px',
-                        borderBottom: "1px solid var(--line)",
-                      }}
-                    >
-                      {advisor.role}
-                    </td>
+                    <td className="admin-cell-nowrap">{roleLabel}</td>
 
-                    <td
-                      style={{
-                        padding: '16px',
-                        borderBottom: "1px solid var(--line)",
-                        textTransform: 'capitalize',
-                      }}
-                    >
+                    <td className="admin-cell-nowrap admin-cell-capitalize">
                       {advisor.plan}
                     </td>
 
-                    <td
-                      style={{
-                        padding: '16px',
-                        borderBottom: "1px solid var(--line)",
-                      }}
-                    >
+                    <td className="admin-cell-nowrap">
                       <strong>{counts.total}</strong>
-                      <div
-                        style={{
-                          marginTop: '3px',
-                          fontSize: '12px',
-                          color: "var(--muted)",
-                        }}
-                      >
-                        {counts.published} publicadas · {counts.pending} pendientes
+                      <div className="admin-advisor-sub">
+                        {counts.published} pub. · {counts.pending} pend.
                       </div>
                     </td>
 
-                    <td
-                      style={{
-                        padding: '16px',
-                        borderBottom: "1px solid var(--line)",
-                      }}
-                    >
+                    <td className="admin-cell-nowrap">
                       {advisor.is_verified ? (
-                        <span style={{ fontWeight: 700 }}>✓ Verificado</span>
+                        <span className="status published">Verificado</span>
                       ) : (
-                        <span style={{ color: "var(--muted)" }}>No verificado</span>
+                        <span className="status draft">No verificado</span>
                       )}
                     </td>
 
-                    <td
-                      style={{
-                        padding: '16px',
-                        borderBottom: "1px solid var(--line)",
-                      }}
-                    >
+                    <td className="admin-cell-nowrap">
                       {advisor.account_status === 'suspended' ? (
-                        <span
-                          style={{
-                            fontWeight: 700,
-                            color: '#b42318',
-                          }}
-                        >
-                          🔴 Suspendido
-                        </span>
+                        <span className="status rejected">Suspendido</span>
                       ) : (
-                        <span
-                          style={{
-                            fontWeight: 700,
-                            color: '#027a48',
-                          }}
-                        >
-                          🟢 Activo
-                        </span>
+                        <span className="status published">Activo</span>
                       )}
                     </td>
 
-                    <td
-                      style={{
-                        padding: '16px',
-                        borderBottom: "1px solid var(--line)",
-                        color: "var(--muted)",
-                        fontSize: '13px',
-                      }}
-                    >
+                    <td className="admin-cell-nowrap admin-cell-muted">
                       {new Date(advisor.created_at).toLocaleDateString('es-MX')}
                     </td>
 
-                    <td
-                      style={{
-                        padding: '16px',
-                        borderBottom: "1px solid var(--line)",
-                        textAlign: 'right',
-                      }}
-                    >
+                    <td className="admin-cell-nowrap admin-cell-right">
                       <Link
                         href={`/admin/asesores/${advisor.id}`}
-                        style={{
-                          display: 'inline-block',
-                          padding: '8px 12px',
-                          border: "1px solid var(--line)",
-                          borderRadius: '8px',
-                          color: "var(--ink)",
-                          textDecoration: 'none',
-                          fontSize: '13px',
-                          fontWeight: 600,
-                        }}
+                        className="button button--secondary admin-row-action"
                       >
                         Ver asesor
                       </Link>

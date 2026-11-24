@@ -60,7 +60,7 @@ export function createAdminMetricsLoader() {
         { key: 'users', label: 'Usuarios registrados · con perfil', value: pick('users'), note: 'Perfiles únicos de QRIH; no incluye altas Auth sin perfil.' },
         { key: 'pending', label: 'Pendientes de revisión', value: null, note: 'Estado pending; cambios pendientes por separado.' },
         { key: 'links', label: 'Vinculaciones · 30 días', value: pick('links'), previous: pick('previous_links'), note: 'Postulaciones creadas; par requerimiento–propiedad único. Incluye canceladas; no representa cierres.' },
-        { key: 'visits', label: 'Visitas al sitio · 30 días', value: null, note: 'No configurado: falta fuente de sesiones. Las vistas de fichas no son visitas al sitio.' },
+        { key: 'visits', label: 'Visitas al sitio · 30 días', value: pick('visits'), previous: pick('previous_visits'), note: 'Sesiones públicas únicas por día UTC (sin cookies ni bots).' },
         { key: 'contacts', label: 'Solicitudes de contacto · 30 días', value: pick('contacts'), previous: pick('previous_contacts'), note: 'Filas únicas de property_contacts; reenvíos pueden ser la misma persona. No equivale a prospectos únicos.' },
         { key: 'soon', label: 'Próximas a expirar · 7 días', value: pick('soon'), note: 'Publicadas con verification_due_at en los próximos 7 días; no incluye vencidas sin procesar.' },
         { key: 'draft', label: 'Borradores', value: pick('draft'), note: 'Estado draft.' },

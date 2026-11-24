@@ -13,6 +13,11 @@ export function indexingEnabled(env: NodeJS.ProcessEnv = process.env) {
   return env.QRIH_INDEXING_ENABLED === 'true' && env.CONTEXT === 'production' && !!publicOrigin(env)
     && env.URL === publicOrigin(env)
 }
+export function googleSiteVerification(env: NodeJS.ProcessEnv = process.env): string | null {
+  if (!indexingEnabled(env)) return null
+  const token = (env.QRIH_GOOGLE_SITE_VERIFICATION || '').trim()
+  return /^[A-Za-z0-9._-]{16,128}$/.test(token) ? token : null
+}
 export function indexablePath(path: string) {
   return ['/', '/inventario', '/privacidad', '/terminos'].includes(path)
     || /^\/bodegas\/[^/]+$/.test(path)
@@ -20,10 +25,40 @@ export function indexablePath(path: string) {
 export function publicMetadata(path: string, title: string, description: string): Metadata {
   const origin = publicOrigin()
   const url = origin ? origin + path : undefined
+  const ogImage = origin ? `${origin}/og-qrih.png` : undefined
   return { title, description, alternates: url ? { canonical: url } : undefined,
     robots: { index: indexingEnabled(), follow: true },
-    openGraph: { type: 'website', locale: 'es_MX', siteName: 'QRO Industrial Hub', title, description, url },
-    twitter: { card: 'summary', title, description } }
+    openGraph: {
+      type: 'website', locale: 'es_MX', siteName: 'QRO Industrial Hub', title, description, url,
+      ...(ogImage ? { images: [{ url: ogImage, width: 1200, height: 630, alt: 'QRO Industrial Hub (QRIH)' }] } : {}),
+    },
+    twitter: {
+      card: ogImage ? 'summary_large_image' : 'summary',
+      title, description,
+      ...(ogImage ? { images: [ogImage] } : {}),
+    } }
+}
+export function homeJsonLd(origin: string | null) {
+  if (!origin) return null
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Organization',
+        name: 'QRO Industrial Hub',
+        alternateName: 'QRIH',
+        url: origin,
+        logo: `${origin}/icons/icon-512.png`,
+      },
+      {
+        '@type': 'WebSite',
+        name: 'QRO Industrial Hub',
+        alternateName: 'QRIH',
+        url: origin,
+        inLanguage: 'es-MX',
+      },
+    ],
+  }
 }
 export type PublicPropertySeo = { slug: string; title: string; operation: string; zone: string | null;
   total_area: number | string | null; covered_area?: number | string | null; max_height?: string | null; docks?: number | null }

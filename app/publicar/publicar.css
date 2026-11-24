@@ -33,14 +33,45 @@ html:has(.publish-page) { scroll-behavior: smooth; }
 }
 .edit-form .publish-note { margin: 0 0 16px; }
 
+/* Banner superior unificado para /publicar */
+.publish-banner {
+  border-radius: 0;
+  padding: 24px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background:
+    radial-gradient(50% 90% at 88% 15%, rgba(116, 134, 224, 0.24), transparent 65%),
+    linear-gradient(112deg, #111a2b 0%, #19263d 58%, #202e48 100%);
+}
+.publish-banner__inner {
+  max-width: 780px;
+  margin: 0 auto;
+  padding-inline: 5vw;
+}
+.publish-banner h1 {
+  margin: 0;
+  font-size: clamp(24px, 2.8vw, 32px);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+}
+.publish-banner p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: #cbd5e6;
+}
+.form.publish-page {
+  padding-top: 28px;
+}
+
 /* ---------- Secciones ---------- */
 .publish-page .publish-form-state { counter-reset: publish-step; }
 .publish-page .publish-section {
-  margin: 0 0 16px;
-  padding: 20px;
+  margin: 0 0 18px;
+  padding: 22px 24px;
   border: 1px solid var(--line, #dce1eb);
-  border-radius: var(--radius-md, 12px);
+  border-radius: var(--radius-lg, 16px);
   background: var(--surface, #fff);
+  box-shadow: var(--shadow);
   scroll-margin-top: 16px;
 }
 /* La leyenda se comporta como un encabezado normal (no corta el borde). */
@@ -62,12 +93,13 @@ html:has(.publish-page) { scroll-behavior: smooth; }
   display: inline-grid;
   place-items: center;
   flex: 0 0 auto;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
   background: var(--primary-soft, #eef0fa);
   color: var(--primary-hover, #42538f);
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 800;
 }
 .publish-page .publish-section > legend + * { clear: both; }
 .publish-section__intro { margin: 0 0 16px; }

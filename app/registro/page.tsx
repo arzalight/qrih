@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { Header } from '@/components/Header'
 import { createClient } from '@/lib/supabase'
 import { pendingConfirmationLoginPath, safeInternalPath } from '@/lib/safe-navigation'
 import { ensureOwnProfile } from '@/lib/auth-profile'
@@ -23,10 +24,18 @@ export default function RegistroPage() {
   })
 
   const [confirming, setConfirming] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [msg, setMsg] = useState('')
   const heading = useRef<HTMLHeadingElement>(null)
-  useEffect(() => { heading.current?.focus() }, [confirming])
+  const didMount = useRef(false)
+  useEffect(() => {
+    if (!didMount.current) {
+      didMount.current = true
+      return
+    }
+    heading.current?.focus()
+  }, [confirming])
 
   function update(
     field: keyof typeof form,
@@ -142,246 +151,306 @@ export default function RegistroPage() {
     setLoading(false)
   }
 
+  const brandPanel = (
+    <aside className="auth-split__brand" aria-label="Ventajas de crear tu cuenta en QRIH">
+      <div className="auth-split__brand-top">
+        <span className="auth-split__monogram" aria-hidden="true">Q</span>
+        <span className="auth-split__brand-name">QRO INDUSTRIAL HUB</span>
+      </div>
+
+      <div className="auth-split__brand-copy">
+        <h2>Únete a la red industrial de Querétaro.</h2>
+        <p>
+          Crea tu cuenta en menos de un minuto para publicar naves, responder solicitudes y colaborar con asesores.
+        </p>
+      </div>
+
+      <ul className="auth-split__points">
+        <li>
+          <span className="auth-split__point-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+          </span>
+          <span>Publicación verificada en el inventario industrial</span>
+        </li>
+        <li>
+          <span className="auth-split__point-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="5" width="18" height="14" rx="2" />
+              <path d="m3 7 9 6 9-6" />
+            </svg>
+          </span>
+          <span>Seguimiento centralizado de solicitudes y prospectos</span>
+        </li>
+        <li>
+          <span className="auth-split__point-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          </span>
+          <span>Cuenta diseñada para asesores y propietarios</span>
+        </li>
+      </ul>
+    </aside>
+  )
+
   if (confirming) {
     return (
-      <main className="registration-page">
-        <div className="registration-shell">
-          <div>
-            <Link
-              href={`/login?next=${encodeURIComponent(next)}`}
-              className="registration-back"
-            >
-              QRO INDUSTRIAL HUB
-            </Link>
+      <>
+        <Header />
+
+        <main className="form auth-access auth-access--split auth-access--register">
+          <div className="auth-split">
+            {brandPanel}
+
+            <section className="auth-access__card auth-split__panel" aria-label="Confirmación de registro">
+              <div className="auth-split__header">
+                <span className="auth-step-pill">Paso 2 de 2</span>
+                <h1 ref={heading} tabIndex={-1}>
+                  ¿Tus datos son correctos?
+                </h1>
+                <p>Revisa tu información antes de crear tu cuenta.</p>
+              </div>
+
+              <dl className="auth-summary">
+                <div>
+                  <dt>Nombre</dt>
+                  <dd>{form.name}</dd>
+                </div>
+
+                <div>
+                  <dt>Teléfono</dt>
+                  <dd>{form.phone}</dd>
+                </div>
+
+                <div>
+                  <dt>Empresa</dt>
+                  <dd>{form.company || 'No indicada'}</dd>
+                </div>
+
+                <div>
+                  <dt>Tipo de usuario</dt>
+                  <dd>
+                    {form.userType === 'advisor'
+                      ? 'Asesor inmobiliario'
+                      : 'Propietario de inmuebles'}
+                  </dd>
+                </div>
+
+                <div className="auth-summary__full">
+                  <dt>Correo electrónico</dt>
+                  <dd>{form.email}</dd>
+                </div>
+              </dl>
+
+              {msg && (
+                <p className="auth-message" role="alert">
+                  {msg}
+                </p>
+              )}
+
+              <div className="auth-split__actions">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setConfirming(false)
+                    setMsg('')
+                  }}
+                  disabled={loading}
+                  className="button--secondary"
+                >
+                  Editar datos
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleCreate}
+                  disabled={loading}
+                >
+                  {loading ? 'Creando cuenta…' : 'Crear cuenta →'}
+                </button>
+              </div>
+            </section>
           </div>
-
-          <div className="registration-card">
-            <h1 ref={heading} tabIndex={-1}>
-              ¿Tus datos son correctos?
-            </h1>
-
-            <p>
-              Revisa la información antes de crear tu cuenta.
-            </p>
-
-            <dl className="registration-summary">
-              <div>
-                <dt>
-                  Nombre
-                </dt>
-                <dd>
-                  {form.name}
-                </dd>
-              </div>
-
-              <div>
-                <dt>
-                  Teléfono
-                </dt>
-                <dd>
-                  {form.phone}
-                </dd>
-              </div>
-
-              <div>
-                <dt>
-                  Empresa
-                </dt>
-                <dd>
-                  {form.company || 'No indicada'}
-                </dd>
-              </div>
-
-              <div>
-                <dt>
-                  Tipo de usuario
-                </dt>
-                <dd>
-                  {form.userType === 'advisor'
-                    ? 'Asesor inmobiliario'
-                    : 'Propietario de inmuebles'}
-                </dd>
-              </div>
-
-              <div>
-                <dt>
-                  Correo
-                </dt>
-                <dd>
-                  {form.email}
-                </dd>
-              </div>
-            </dl>
-
-            {msg && (
-              <p className="auth-message" role="alert">
-                {msg}
-              </p>
-            )}
-
-            <div className="registration-actions">
-              <button
-                type="button"
-                onClick={() => {
-                  setConfirming(false)
-                  setMsg('')
-                }}
-                disabled={loading}
-                className="registration-secondary"
-              >
-                Editar datos
-              </button>
-
-              <button
-                type="button"
-                onClick={handleCreate}
-                disabled={loading}
-                className="registration-primary"
-              >
-                {loading ? 'Creando cuenta...' : 'Crear cuenta'}
-              </button>
-            </div>
-          </div>
-        </div>
-      </main>
+        </main>
+      </>
     )
   }
 
   return (
-    <main className="registration-page">
-      <div className="registration-shell">
-        <div>
-          <Link
-            href={`/login?next=${encodeURIComponent(next)}`}
-            className="registration-back"
-          >
-            QRO INDUSTRIAL HUB
-          </Link>
-        </div>
+    <>
+      <Header />
 
-        <div className="registration-card">
-          <h1 ref={heading} tabIndex={-1}>
-            Crear cuenta
-          </h1>
+      <main className="form auth-access auth-access--split auth-access--register">
+        <div className="auth-split">
+          {brandPanel}
 
-          <p>
-            Crea tu cuenta para publicar y contactar propiedades.
-          </p>
-
-          <form
-            onSubmit={handleContinue}
-            className="registration-form"
-          >
-            <div className="registration-field">
-              <label htmlFor="registration-name">
-                Nombre completo *
-              </label>
-              <input id="registration-name" autoComplete="name"
-                value={form.name}
-                onChange={(e) =>
-                  update('name', e.target.value)
-                }
-              />
+          <section className="auth-access__card auth-split__panel" aria-label="Registro de cuenta">
+            <div className="auth-split__header">
+              <span className="auth-step-pill">Paso 1 de 2</span>
+              <h1 ref={heading} tabIndex={-1}>
+                Crear cuenta
+              </h1>
+              <p>Crea tu cuenta para publicar y contactar propiedades.</p>
             </div>
 
-            <div className="registration-field">
-              <label htmlFor="registration-phone">
-                Teléfono *
-              </label>
-              <input id="registration-phone" autoComplete="tel"
-                value={form.phone}
-                onChange={(e) =>
-                  update(
-                    'phone',
-                    e.target.value.replace(/\D/g, '').slice(0, 10)
-                  )
-                }
-                inputMode="numeric"
-              />
-            </div>
+            <form
+              onSubmit={handleContinue}
+              className="auth-split__form"
+            >
+              <div className="auth-field">
+                <label htmlFor="registration-name">
+                  Nombre completo *
+                </label>
+                <input
+                  id="registration-name"
+                  autoComplete="name"
+                  placeholder="Nombre y apellido"
+                  value={form.name}
+                  onChange={(e) =>
+                    update('name', e.target.value)
+                  }
+                />
+              </div>
 
-            <div className="registration-field">
-              <label htmlFor="registration-company">
-                Empresa
-              </label>
-              <input id="registration-company" autoComplete="organization"
-                value={form.company}
-                onChange={(e) =>
-                  update('company', e.target.value)
-                }
-              />
-            </div>
+              <div className="auth-field-grid">
+                <div className="auth-field">
+                  <label htmlFor="registration-phone">
+                    Teléfono *
+                  </label>
+                  <input
+                    id="registration-phone"
+                    autoComplete="tel"
+                    placeholder="10 dígitos"
+                    value={form.phone}
+                    onChange={(e) =>
+                      update(
+                        'phone',
+                        e.target.value.replace(/\D/g, '').slice(0, 10)
+                      )
+                    }
+                    inputMode="numeric"
+                  />
+                </div>
 
-            <div className="registration-field">
-              <label htmlFor="registration-userType">
-                Soy *
-              </label>
-              <select id="registration-userType"
-                value={form.userType}
-                onChange={(e) =>
-                  update('userType', e.target.value)
-                }
+                <div className="auth-field">
+                  <label htmlFor="registration-userType">
+                    Soy *
+                  </label>
+                  <select
+                    id="registration-userType"
+                    value={form.userType}
+                    onChange={(e) =>
+                      update('userType', e.target.value)
+                    }
+                  >
+                    <option value="advisor">
+                      Asesor inmobiliario
+                    </option>
+                    <option value="owner">
+                      Propietario de inmuebles
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="auth-field">
+                <label htmlFor="registration-company">
+                  Empresa
+                </label>
+                <input
+                  id="registration-company"
+                  autoComplete="organization"
+                  placeholder="Inmobiliaria o empresa (opcional)"
+                  value={form.company}
+                  onChange={(e) =>
+                    update('company', e.target.value)
+                  }
+                />
+              </div>
+
+              <div className="auth-field">
+                <label htmlFor="registration-email">
+                  Correo electrónico *
+                </label>
+                <input
+                  id="registration-email"
+                  autoComplete="email"
+                  type="email"
+                  placeholder="nombre@empresa.com"
+                  value={form.email}
+                  onChange={(e) =>
+                    update('email', e.target.value)
+                  }
+                />
+              </div>
+
+              <div className="auth-field">
+                <label htmlFor="registration-password">
+                  Contraseña *
+                </label>
+                <div className="auth-password">
+                  <input
+                    id="registration-password"
+                    autoComplete="new-password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Mínimo 6 caracteres"
+                    value={form.password}
+                    onChange={(e) =>
+                      update('password', e.target.value)
+                    }
+                  />
+                  <button
+                    type="button"
+                    className="auth-password__toggle"
+                    aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                    aria-pressed={showPassword}
+                    title={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                    onClick={() => setShowPassword((value) => !value)}
+                  >
+                    {showPassword ? (
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-10-8-10-8a18.45 18.45 0 0 1 5.06-5.94" />
+                        <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 10 8 10 8a18.5 18.5 0 0 1-2.16 3.19" />
+                        <path d="m1 1 22 22" />
+                      </svg>
+                    ) : (
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M2 12s3-8 10-8 10 8 10 8-3 8-10 8-10-8-10-8Z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {msg && (
+                <p className="auth-message" role="alert">
+                  {msg}
+                </p>
+              )}
+
+              <button
+                type="submit"
+                className="auth-split__submit"
               >
-                <option value="advisor">
-                  Asesor inmobiliario
-                </option>
-                <option value="owner">
-                  Propietario de inmuebles
-                </option>
-              </select>
-            </div>
+                CONTINUAR →
+              </button>
+            </form>
 
-            <div className="registration-field">
-              <label htmlFor="registration-email">
-                Correo electrónico *
-              </label>
-              <input id="registration-email" autoComplete="email"
-                type="email"
-                value={form.email}
-                onChange={(e) =>
-                  update('email', e.target.value)
-                }
-              />
-            </div>
-
-            <div className="registration-field">
-              <label htmlFor="registration-password">
-                Contraseña *
-              </label>
-              <input id="registration-password" autoComplete="new-password"
-                type="password"
-                value={form.password}
-                onChange={(e) =>
-                  update('password', e.target.value)
-                }
-              />
-            </div>
-
-            {msg && (
-              <p className="auth-message" role="alert">
-                {msg}
-              </p>
-            )}
-
-            <button
-              type="submit"
-              className="registration-primary"
-            >
-              Continuar
-            </button>
-          </form>
-
-          <p style={{ margin: '24px 0 0', textAlign: 'center', color: 'var(--muted)' }}>
-            ¿Ya tienes cuenta?{' '}
-            <Link
-              href={`/login?next=${encodeURIComponent(next)}`}
-              style={{ fontWeight: 700, textDecoration: 'underline' }}
-            >
-              Inicia sesión
-            </Link>
-          </p>
+            <p className="auth-split__footer">
+              ¿Ya tienes cuenta?{' '}
+              <Link href={`/login?next=${encodeURIComponent(next)}`}>
+                Inicia sesión →
+              </Link>
+            </p>
+          </section>
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   )
 }

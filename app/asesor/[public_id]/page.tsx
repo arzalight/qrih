@@ -88,12 +88,10 @@ export default async function AdvisorCatalogPage({ params }: PageProps) {
     <>
       <Header />
 
-      <main>
-        <div style={{ marginBottom: 24 }}>
-          <a href="/inventario">← Volver al inventario</a>
-        </div>
+      <section className="title advisor-banner">
+        <div className="advisor-banner__inner">
+          <a href="/inventario" className="advisor-banner__back">← Volver al inventario</a>
 
-        <section className="title">
           <div className="advisor-profile-header">
             <div className="advisor-profile-avatar">
               {catalog.avatar_url ? (
@@ -114,16 +112,7 @@ export default async function AdvisorCatalogPage({ params }: PageProps) {
             </div>
 
             <div className="advisor-profile-info">
-              <small>ASESOR INMOBILIARIO</small>
-
-              <h1
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  flexWrap: "wrap",
-                }}
-              >
+              <h1 className="advisor-profile-name">
                 <span>{catalog.name}</span>
                 {catalog.is_verified && <VerifiedBadge />}
               </h1>
@@ -140,7 +129,10 @@ export default async function AdvisorCatalogPage({ params }: PageProps) {
                 rel="noopener noreferrer"
                 className="advisor-contact-primary"
               >
-                💬 WhatsApp
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5Z" />
+                </svg>
+                <span>WhatsApp</span>
               </a>
             )}
 
@@ -149,7 +141,10 @@ export default async function AdvisorCatalogPage({ params }: PageProps) {
                 href={`tel:${catalog.phone}`}
                 className="advisor-contact-secondary"
               >
-                📞 Llamar
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92Z" />
+                </svg>
+                <span>Llamar</span>
               </a>
             )}
 
@@ -159,7 +154,12 @@ export default async function AdvisorCatalogPage({ params }: PageProps) {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                🌐 Sitio web
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M2 12h20" />
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z" />
+                </svg>
+                <span>Sitio web</span>
               </a>
             )}
 
@@ -196,14 +196,15 @@ export default async function AdvisorCatalogPage({ params }: PageProps) {
               </a>
             )}
           </div>
-        </section>
+        </div>
+      </section>
 
-        <div className="head">
-          <div>
-            <h2>Propiedades disponibles</h2>
-          </div>
-
-          <span>{catalog.properties.length} propiedades</span>
+      <main className="advisor-page">
+        <div className="head advisor-page__head">
+          <h2>Propiedades disponibles</h2>
+          <span className="advisor-page__count">
+            {catalog.properties.length} {catalog.properties.length === 1 ? 'propiedad' : 'propiedades'}
+          </span>
         </div>
 
         {catalog.properties.length > 0 ? (
@@ -213,7 +214,7 @@ export default async function AdvisorCatalogPage({ params }: PageProps) {
             ))}
           </div>
         ) : (
-          <p>Este asesor no tiene propiedades publicadas actualmente.</p>
+          <p className="ui-empty">Este asesor no tiene propiedades publicadas actualmente.</p>
         )}
       </main>
     </>

@@ -88,11 +88,11 @@ test('Sprint2 Admin:refresh sólo tras guards,listados,sin refresh en formulario
   assert.match(table,/setCurrentPage\(page => Math.min\(page, totalPages\)\)/)
   assert.doesNotMatch(table,/\[properties, pageSize\]/)
 })
-test('Sprint2 Admin:contracción accesible,estado de sesión,no nueva autorización', () => {
+test('Sprint2 Admin:navegación administrativa superior unificada, sin nueva autorización', () => {
   const header=read('components/Header.tsx')
   for (const value of ['aria-expanded={!railCollapsed}','Expandir navegación','Contraer navegación','qrih-admin-rail','admin-nav-icon','admin-nav-label']) assert.ok(header.includes(value))
   assert.match(header,/aria-label=\{administration \? label : undefined\}/)
-  assert.match(read('app/globals.css'),/body:has\(\.header--administration.header--compact\) \{ padding-left: 88px;/)
+  assert.doesNotMatch(read('app/globals.css'),/body:has\(\.header--administration\) \{ padding-left: 224px;/)
 })
 test('Sprint2 retorno protegido:perfil a login con next,redirecciones externas y codificadas rechazadas', () => {
   assert.match(read('app/perfil/page.tsx'),/redirect\('\/login\?next=%2Fperfil'\)/)

@@ -24,6 +24,7 @@ function actionLabel(action: string, metadata: Record<string, unknown> | null) {
 
   const labels: Record<string, string> = {
     property_created: 'Propiedad creada',
+    property_duplicated: 'Propiedad duplicada',
     property_updated: 'Propiedad modificada',
     property_published: 'Propiedad publicada',
     property_rejected: 'Propiedad rechazada',
@@ -99,6 +100,7 @@ export default async function AdminHistoryPage({
 
   const actionFilter = [
     'property_created',
+    'property_duplicated',
     'property_updated',
     'property_published',
     'property_rejected',
@@ -225,116 +227,30 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
     : logs
 
   return (
-    <><Header administration /><main className="admin-page"
-      style={{
-        padding: '48px 32px',
-        maxWidth: '1100px',
-        margin: '0 auto',
-      }}
-    >
-      <header style={{ marginBottom: '32px' }}>
-        <Link
-          href="/admin"
-          style={{
-            display: 'inline-block',
-            marginBottom: '14px',
-            color: "var(--muted)",
-            textDecoration: 'none',
-            fontSize: '14px',
-          }}
-        >
-          ← Volver al panel
-        </Link>
-
-        <p
-          style={{
-            margin: '0 0 8px',
-            fontSize: '13px',
-            fontWeight: 700,
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            color: "var(--muted)",
-          }}
-        >
-          Administración
-        </p>
-
-        <h1
-          style={{
-            margin: 0,
-            fontSize: '36px',
-            lineHeight: 1.1,
-            letterSpacing: '-0.03em',
-          }}
-        >
-          Historial
-        </h1>
-
-        <p
-          style={{
-            margin: '10px 0 0',
-            color: "var(--muted)",
-            fontSize: '16px',
-          }}
-        >
-          Registro de cambios y acciones administrativas del portal.
-        </p>
+    <><Header administration /><main className="admin-page admin-shell">
+      <header className="admin-header">
+        <div>
+          <h1>Historial</h1>
+          <p>Registro de cambios y acciones administrativas del portal.</p>
+        </div>
       </header>
 
-      <form
-        method="get"
-        style={{
-          marginBottom: '24px',
-          padding: '16px 18px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          flexWrap: "wrap",
-          border: "1px solid var(--line)",
-          borderRadius: '12px',
-          background: "var(--surface-subtle)",
-        }}
-      >
-        <label
-          htmlFor="entidad"
-          style={{
-            fontSize: '13px',
-            fontWeight: 600,
-            color: "var(--muted)",
-          }}
-        >
-          Mostrar:
-        </label>
-
-        <select
+      <form method="get" className="admin-history-filters">
+        <label className="ui-field">Mostrar<select
           id="entidad"
           name="entidad"
           defaultValue={entityFilter ?? ''}
-          style={{
-            padding: '9px 12px',
-            border: '1px solid #d5d5d5',
-            borderRadius: '9px',
-            background: "var(--surface)",
-            fontSize: '13px',
-          }}
         >
           <option value="">Todas</option>
           <option value="property">Propiedades</option>
           <option value="profile">Asesores</option>
-        </select>
+        </select></label>
 
         <label className="ui-field">Desde<input
           type="date"
           name="desde"
           defaultValue={desde ?? ''}
           aria-label="Desde"
-          style={{
-            padding: '9px 12px',
-            border: '1px solid #d5d5d5',
-            borderRadius: '9px',
-            background: "var(--surface)",
-            fontSize: '13px',
-          }}
         /></label>
 
         <label className="ui-field">Hasta<input
@@ -342,13 +258,6 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
           name="hasta"
           defaultValue={hasta ?? ''}
           aria-label="Hasta"
-          style={{
-            padding: '9px 12px',
-            border: '1px solid #d5d5d5',
-            borderRadius: '9px',
-            background: "var(--surface)",
-            fontSize: '13px',
-          }}
         /></label>
 
         <label className="ui-field">Buscar propiedad o asesor<input
@@ -356,30 +265,16 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
           name="busqueda"
           defaultValue={busqueda ?? ''}
           placeholder="Buscar propiedad o asesor"
-          style={{
-            width: '210px',
-            padding: '9px 12px',
-            border: '1px solid #d5d5d5',
-            borderRadius: '9px',
-            background: "var(--surface)",
-            fontSize: '13px',
-          }}
         /></label>
 
         <label className="ui-field">Acción<select
           id="accion"
           name="accion"
           defaultValue={actionFilter ?? ''}
-          style={{
-            padding: '9px 12px',
-            border: '1px solid #d5d5d5',
-            borderRadius: '9px',
-            background: "var(--surface)",
-            fontSize: '13px',
-          }}
         >
           <option value="">Todas las acciones</option>
           <option value="property_created">Propiedad creada</option>
+          <option value="property_duplicated">Propiedad duplicada</option>
           <option value="property_updated">Propiedad modificada</option>
           <option value="property_published">Propiedad publicada</option>
           <option value="property_rejected">Propiedad rechazada</option>
@@ -390,31 +285,10 @@ console.warn('QRIH_APP_ADMIN_HISTORIAL_PAGE_138_FAILED')
           <option value="profile_reactivated">Asesor reactivado</option>
         </select></label>
 
-        <button
-          type="submit"
-          style={{
-            padding: '9px 14px',
-            border: '1px solid #222',
-            borderRadius: '9px',
-            background: "var(--ink)",
-            color: "var(--surface)",
-            fontSize: '13px',
-            fontWeight: 600,
-            cursor: 'pointer',
-          }}
-        >
-          Filtrar
-        </button>
+        <button type="submit">Filtrar</button>
       </form>
 
-      <section
-        style={{
-          border: "1px solid var(--line)",
-          borderRadius: '14px',
-          overflow: 'hidden',
-          background: "var(--surface)",
-        }}
-      >
+      <section className="admin-table-card">
         {filteredLogs.length === 0 ? (
           <div
             style={{

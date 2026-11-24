@@ -11,6 +11,7 @@ import { ensureOwnProfile } from '@/lib/auth-profile'
 function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const busy = useRef(false)
@@ -65,83 +66,150 @@ function LoginForm() {
     <>
       <Header />
 
-      <main className="form auth-access">
-        <div className="auth-access__intro">
-          <span className="auth-access__mark" aria-hidden="true">Q</span>
-          <small>TU ESPACIO INDUSTRIAL</small>
-          <h1>Bienvenido a QRIH</h1>
-          <p>Accede a tu espacio para administrar propiedades, conectar con asesores y descubrir nuevas oportunidades industriales.</p>
-        </div>
-        <section className="auth-access__card" aria-label="Inicio de sesión">
-
-        {pendingConfirmation && (
-          <section className="email-confirmation-notice" role="status" aria-labelledby="email-confirmation-title">
-            <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
-              <rect x="3" y="5" width="18" height="14" rx="2" />
-              <path d="m3 6 9 7 9-7" />
-            </svg>
-            <div>
-              <h2 id="email-confirmation-title">Cuenta creada: confirma tu correo</h2>
-              <p>Revisa tu correo para confirmar tu cuenta antes de iniciar sesión.</p>
-              <p>Si no aparece en tu bandeja de entrada, revisa Spam o Correo no deseado. Abre el enlace más reciente en el mismo navegador donde te registraste.</p>
+      <main className="form auth-access auth-access--split">
+        <div className="auth-split">
+          <aside className="auth-split__brand" aria-label="Ventajas de tu cuenta QRIH">
+            <div className="auth-split__brand-top">
+              <span className="auth-split__monogram" aria-hidden="true">Q</span>
+              <span className="auth-split__brand-name">QRO INDUSTRIAL HUB</span>
             </div>
-          </section>
-        )}
 
-        <form onSubmit={signIn} aria-busy={loading}>
-          <label htmlFor="login-email">Correo electrónico</label>
-          <input id="login-email" autoComplete="email"
-            type="email"
-            required
-            disabled={loading}
-            placeholder="Correo electrónico"
-            onChange={(e) =>
-              setEmail(e.target.value)
-            }
-          />
+            <div className="auth-split__brand-copy">
+              <h2>Accede a tu espacio industrial.</h2>
+              <p>
+                Gestiona tu cartera, recibe solicitudes calificadas y colabora con asesores en Querétaro.
+              </p>
+            </div>
 
-          <label htmlFor="login-password">Contraseña</label>
-          <input id="login-password" autoComplete="current-password"
-            type="password"
-            required
-            disabled={loading}
-            placeholder="Contraseña"
-            onChange={(e) =>
-              setPassword(e.target.value)
-            }
-          />
+            <ul className="auth-split__points">
+              <li>
+                <span className="auth-split__point-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 21h18" />
+                    <path d="M5 21V9l7-4 7 4v12" />
+                    <path d="M9 21v-5h6v5" />
+                  </svg>
+                </span>
+                <span>Publica y actualiza tus propiedades con control total</span>
+              </li>
+              <li>
+                <span className="auth-split__point-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="5" width="18" height="14" rx="2" />
+                    <path d="m3 7 9 6 9-6" />
+                  </svg>
+                </span>
+                <span>Recibe y da seguimiento a solicitudes directas</span>
+              </li>
+              <li>
+                <span className="auth-split__point-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                  </svg>
+                </span>
+                <span>Conecta con asesores en red colaborable</span>
+              </li>
+            </ul>
+          </aside>
 
-          <button disabled={loading}>
-            {loading ? 'INICIANDO SESIÓN…' : 'INICIAR SESIÓN →'}
-          </button>
+          <section className="auth-access__card auth-split__panel" aria-label="Inicio de sesión">
+            <div className="auth-split__header">
+              <h1>Iniciar sesión</h1>
+              <p>Ingresa con tu correo y contraseña para abrir tu panel.</p>
+            </div>
 
-          {(message || callbackMessage) && (
-            <p className="notice" role="status" aria-live="polite">
-              {message || callbackMessage}
+            {pendingConfirmation && (
+              <section className="email-confirmation-notice" role="status" aria-labelledby="email-confirmation-title">
+                <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
+                  <rect x="3" y="5" width="18" height="14" rx="2" />
+                  <path d="m3 6 9 7 9-7" />
+                </svg>
+                <div>
+                  <h2 id="email-confirmation-title">Cuenta creada: confirma tu correo</h2>
+                  <p>Revisa tu correo para confirmar tu cuenta antes de iniciar sesión.</p>
+                  <p>Si no aparece en tu bandeja de entrada, revisa Spam o Correo no deseado. Abre el enlace más reciente en el mismo navegador donde te registraste.</p>
+                </div>
+              </section>
+            )}
+
+            <form onSubmit={signIn} aria-busy={loading} className="auth-split__form">
+              <div className="auth-field">
+                <label htmlFor="login-email">Correo electrónico</label>
+                <input
+                  id="login-email"
+                  autoComplete="email"
+                  type="email"
+                  required
+                  disabled={loading}
+                  placeholder="nombre@empresa.com"
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+
+              <div className="auth-field">
+                <div className="auth-field__row">
+                  <label htmlFor="login-password">Contraseña</label>
+                  <Link className="auth-access__recovery" href="/recuperar-contrasena" prefetch={false}>
+                    ¿Olvidaste tu contraseña?
+                  </Link>
+                </div>
+                <div className="auth-password">
+                  <input
+                    id="login-password"
+                    autoComplete="current-password"
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    disabled={loading}
+                    placeholder="••••••••"
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="auth-password__toggle"
+                    disabled={loading}
+                    aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                    aria-pressed={showPassword}
+                    title={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                    onClick={() => setShowPassword((value) => !value)}
+                  >
+                    {showPassword ? (
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-10-8-10-8a18.45 18.45 0 0 1 5.06-5.94" />
+                        <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 10 8 10 8a18.5 18.5 0 0 1-2.16 3.19" />
+                        <path d="m1 1 22 22" />
+                      </svg>
+                    ) : (
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M2 12s3-8 10-8 10 8 10 8-3 8-10 8-10-8-10-8Z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <button disabled={loading} className="auth-split__submit">
+                {loading ? 'INICIANDO SESIÓN…' : 'INICIAR SESIÓN →'}
+              </button>
+
+              {(message || callbackMessage) && (
+                <p className="notice" role="status" aria-live="polite">
+                  {message || callbackMessage}
+                </p>
+              )}
+            </form>
+
+            <p className="auth-split__footer">
+              ¿No tienes cuenta?{' '}
+              <Link href={`/registro?next=${encodeURIComponent(next)}`}>
+                Regístrate →
+              </Link>
             </p>
-          )}
-        </form>
-
-        <p className="auth-access__recovery"><Link href="/recuperar-contrasena" prefetch={false}>Olvidé mi contraseña</Link></p>
-
-        <p
-          style={{
-            marginTop: 24,
-            textAlign: 'center',
-          }}
-        >
-          ¿No tienes cuenta?{' '}
-          <Link
-            href={`/registro?next=${encodeURIComponent(next)}`}
-            style={{
-              textDecoration: 'underline',
-              fontWeight: 600,
-            }}
-          >
-            Regístrate
-          </Link>
-        </p>
-        </section>
+          </section>
+        </div>
       </main>
     </>
   )

@@ -26,7 +26,7 @@ type SearchParams = {
 }
 import { InventoryFilters } from '@/components/InventoryFilters'
 import { InventorySort } from '@/components/InventorySort'
-import { inventoryFilterChips, parseInventorySort } from '@/lib/property-display'
+import { carriedParams, inventoryFilterChips, parseInventorySort } from '@/lib/property-display'
 
 export async function generateMetadata({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const q = await searchParams
@@ -121,13 +121,47 @@ export default async function Inventory({
     }
   }
 
+  const operationHref = (op?: string) => {
+    const params = new URLSearchParams(carriedParams(q, ['operation']))
+    if (op) params.set('operation', op)
+    const qs = params.toString()
+    return qs ? `/inventario?${qs}` : '/inventario'
+  }
+
   return (
     <>
       <Header />
 
-      <section className="title">
-        <small>INVENTARIO INDUSTRIAL</small>
-        <h1>Encuentra el espacio correcto.</h1>
+      <section className="title inventory-banner">
+        <div className="inventory-banner__inner">
+          <div>
+            <h1>Inventario industrial</h1>
+            <p>Filtra por operación, corredor, superficie y rango de precio.</p>
+          </div>
+          <nav className="inventory-banner__ops" aria-label="Filtrar por operación">
+            <Link
+              href={operationHref()}
+              className={`inventory-banner__op${!q.operation ? ' inventory-banner__op--active' : ''}`}
+              aria-current={!q.operation ? 'true' : undefined}
+            >
+              Todas
+            </Link>
+            <Link
+              href={operationHref('Renta')}
+              className={`inventory-banner__op${q.operation === 'Renta' ? ' inventory-banner__op--active' : ''}`}
+              aria-current={q.operation === 'Renta' ? 'true' : undefined}
+            >
+              Renta
+            </Link>
+            <Link
+              href={operationHref('Venta')}
+              className={`inventory-banner__op${q.operation === 'Venta' ? ' inventory-banner__op--active' : ''}`}
+              aria-current={q.operation === 'Venta' ? 'true' : undefined}
+            >
+              Venta
+            </Link>
+          </nav>
+        </div>
       </section>
 
       <main className="inventory">
@@ -144,7 +178,7 @@ export default async function Inventory({
 
         <section>
           {priceFilter.invalid && <p className="notice" role="alert">Para filtrar precios selecciona moneda, operación y unidad, y un rango válido. No se comparan monedas ni unidades distintas.</p>}
-          <div className="head">
+          <div className="head inventory-toolbar">
             <h2 aria-live="polite">
               {properties.length} {properties.length === 1 ? 'propiedad' : 'propiedades'}
             </h2>

@@ -12,3 +12,13 @@ verify_jwt = false
 # SUPABASE_SERVICE_ROLE_KEY y claves públicas como Bearer, exige Bearer JWT de usuario
 # real no anónimo verificado vía auth.getUser(token) y account_status = 'active'.
 verify_jwt = false
+
+[functions.notify-admin-events]
+# Invocada internamente por triggers Postgres (pg_net) autenticados mediante
+# x-qrih-webhook-secret comparado en tiempo constante contra ADMIN_WEBHOOK_SECRET.
+verify_jwt = false
+
+[functions.notify-user-email]
+# Invocada internamente por el trigger AFTER INSERT de public.notifications (pg_net)
+# autenticado mediante x-qrih-webhook-secret contra USER_EMAIL_WEBHOOK_SECRET.
+verify_jwt = false

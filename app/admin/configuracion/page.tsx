@@ -1,5 +1,4 @@
 import { Header } from '@/components/Header'
-import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 import { PlatformSettingsForm } from '@/components/PlatformSettingsForm'
@@ -52,89 +51,18 @@ console.warn('QRIH_APP_ADMIN_CONFIGURACION_PAGE_43_FAILED')
   }
 
   return (
-    <><Header administration /><main className="admin-page"
-      style={{
-        padding: '48px 32px',
-        maxWidth: '900px',
-        margin: '0 auto',
-      }}
-    >
-      <header style={{ marginBottom: '32px' }}>
-        <Link
-          href="/admin"
-          style={{
-            display: 'inline-block',
-            marginBottom: '14px',
-            color: "var(--muted)",
-            textDecoration: 'none',
-            fontSize: '14px',
-          }}
-        >
-          ← Volver al panel
-        </Link>
-
-        <p
-          style={{
-            margin: '0 0 8px',
-            fontSize: '13px',
-            fontWeight: 700,
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            color: "var(--muted)",
-          }}
-        >
-          Administración
-        </p>
-
-        <h1
-          style={{
-            margin: 0,
-            fontSize: '36px',
-            lineHeight: 1.1,
-            letterSpacing: '-0.03em',
-          }}
-        >
-          Configuración
-        </h1>
-
-        <p
-          style={{
-            margin: '10px 0 0',
-            color: "var(--muted)",
-            fontSize: '16px',
-          }}
-        >
-          Configura los datos generales que utiliza el portal en sus avisos.
-        </p>
+    <><Header administration /><main className="admin-page admin-shell">
+      <header className="admin-header">
+        <div>
+          <h1>Configuración</h1>
+          <p>Configura los datos generales que utiliza el portal en sus avisos.</p>
+        </div>
       </header>
 
-      <section
-        style={{
-          padding: 24,
-          border: "1px solid var(--line)",
-          borderRadius: 14,
-          background: "var(--surface-subtle)",
-        }}
-      >
-        <h2
-          style={{
-            margin: 0,
-            fontSize: 20,
-          }}
-        >
-          Soporte y contacto
-        </h2>
-
-        <p
-          style={{
-            margin: '8px 0 0',
-            color: "var(--muted)",
-            fontSize: 14,
-            lineHeight: 1.5,
-          }}
-        >
-          Administra el correo que podrán utilizar los usuarios cuando su
-          cuenta esté suspendida.
+      <section className="ui-panel admin-config-card">
+        <h2>Soporte y contacto</h2>
+        <p className="admin-config-card__lead">
+          Administra el correo que podrán utilizar los usuarios cuando su cuenta esté suspendida.
         </p>
 
         <PlatformSettingsForm
@@ -142,13 +70,7 @@ console.warn('QRIH_APP_ADMIN_CONFIGURACION_PAGE_43_FAILED')
         />
 
         {settings?.updated_at && (
-          <p
-            style={{
-              margin: '14px 0 0',
-              color: '#9ca3af',
-              fontSize: 12,
-            }}
-          >
+          <p className="admin-config-card__meta">
             Última actualización:{' '}
             {new Date(settings.updated_at).toLocaleString('es-MX')}
           </p>

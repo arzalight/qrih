@@ -294,7 +294,7 @@ export function Header({ administration = false }: { administration?: boolean })
             </svg><span className="admin-nav-label">{label}</span></> : label}
           </Link>
         ))}
-        {!userEmail && !workspace && <Link className="header-signin" href="/login" onClick={closeNavigation}>Iniciar sesión</Link>}
+        {!userEmail && !administration && <Link className="header-signin" href="/login" onClick={closeNavigation}>Iniciar sesión</Link>}
 
       </nav>
     </header>

@@ -42,12 +42,29 @@ export function InventoryFilters({
           triggerRef.current?.focus()
         }
       }}>
-      <b className="inventory-filter-panel__heading">Filtros</b>
+      <div className="inventory-filter-panel__heading">
+        <span className="inventory-filter-panel__title">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M4 6h16" />
+            <path d="M7 12h10" />
+            <path d="M10 18h4" />
+          </svg>
+          <b>Filtros</b>
+        </span>
+        {appliedCount > 0 && <span className="inventory-filter-panel__badge">{appliedCount}</span>}
+      </div>
       <button ref={triggerRef} type="button" className="inventory-filter-panel__toggle"
         aria-expanded={expanded} aria-controls={contentId}
         onClick={() => setExpanded((value) => !value)}>
-        <span>Filtros{appliedCount > 0 ? ` · ${appliedCount} activos` : ''}</span>
-        <span aria-hidden="true">{expanded ? '−' : '+'}</span>
+        <span className="inventory-filter-panel__toggle-label">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M4 6h16" />
+            <path d="M7 12h10" />
+            <path d="M10 18h4" />
+          </svg>
+          <span>Filtros{appliedCount > 0 ? ` · ${appliedCount} activos` : ''}</span>
+        </span>
+        <span className="inventory-filter-panel__toggle-icon" aria-hidden="true">{expanded ? '−' : '+'}</span>
       </button>
       <div id={contentId} className="inventory-filter-panel__content">
     <form method="get" className="inventory-filters">
@@ -153,30 +170,38 @@ export function InventoryFilters({
         </select>
       </div>
 
-      <label>Moneda<select name="currency" defaultValue={currency}>
-        <option value="">Todas las monedas</option><option value="MXN">MXN</option><option value="USD">USD</option>
-      </select></label>
-      <label>Unidad del rango<select name="price_unit" defaultValue={price_unit}>
-        <option value="">Selecciona unidad</option><option value="m2">Por m²</option><option value="total">Total</option>
-      </select></label>
-      <label>Precio mínimo<input name="price_min" type="number" min="0.01" step="0.01" defaultValue={price_min} /></label>
-      <label>Precio máximo<input name="price_max" type="number" min="0.01" step="0.01" defaultValue={price_max} /></label>
-      <small>El rango requiere moneda, operación y unidad. Sin conversión de divisas.</small>
-      {/* BOTÓN */}
-      <button
-        type="submit"
+      <div className="inventory-filters__group">
+        <div className="inventory-filters__pair">
+          <label>Moneda<select name="currency" defaultValue={currency}>
+            <option value="">Todas las monedas</option><option value="MXN">MXN</option><option value="USD">USD</option>
+          </select></label>
+          <label>Unidad del rango<select name="price_unit" defaultValue={price_unit}>
+            <option value="">Selecciona unidad</option><option value="m2">Por m²</option><option value="total">Total</option>
+          </select></label>
+        </div>
+        <div className="inventory-filters__pair">
+          <label>Precio mínimo<input name="price_min" type="number" min="0.01" step="0.01" defaultValue={price_min} /></label>
+          <label>Precio máximo<input name="price_max" type="number" min="0.01" step="0.01" defaultValue={price_max} /></label>
+        </div>
+        <small className="inventory-filters__hint">El rango requiere moneda, operación y unidad. Sin conversión de divisas.</small>
+      </div>
+      <div className="inventory-filters__actions">
+        {/* BOTÓN */}
+        <button
+          type="submit"
 
-      >
-        Aplicar filtros
-      </button>
+        >
+          Aplicar filtros
+        </button>
 
-      {/* LIMPIAR */}
-      <a
-        href="/inventario"
+        {/* LIMPIAR */}
+        <a
+          href="/inventario"
 
-      >
-        Limpiar filtros
-      </a>
+        >
+          Limpiar filtros
+        </a>
+      </div>
 
     </form>
       </div>

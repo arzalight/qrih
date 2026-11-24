@@ -1,20 +1,64 @@
 import type { Metric } from '@/lib/admin-metrics'
-export function AdminStatistics({ metrics }: { metrics: Metric[] }) {
-  return <section aria-label="Estadísticas administrativas">
-    <h2>Estadísticas principales</h2>
-    <p>Métricas generales actualizadas aproximadamente cada 5 minutos; pendientes de revisión en cada actualización del panel. Ventanas móviles de 30 × 24 horas, con límites UTC compartidos por muestra. Conteos independientes de los filtros de la tabla.</p>
-    {[metrics.slice(0, 6), metrics.slice(6)].map((group, i) => <section key={i} aria-label={i ? 'Indicadores secundarios' : 'Indicadores principales'}>
-      {i === 1 && <h2>Operación y seguimiento</h2>}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 14, marginBottom: 32 }}>
-        {group.map(metric => <article key={metric.key} style={{ padding: 20, border: '1px solid var(--line)', borderRadius: 16, background: 'var(--surface)', boxShadow: '0 4px 14px rgba(0,0,0,0.045)' }}>
-          <div style={{ fontSize: metric.value == null ? 20 : 32, fontWeight: 750 }}>{metric.value == null ? (metric.key === 'visits' ? 'No configurado' : 'Sin datos') : metric.value.toLocaleString('es-MX')}</div>
-          <h3 style={{ fontSize: 13 }}>{metric.label}</h3>
-          {metric.previous !== undefined && <p style={{ fontSize: 12 }}>30 días anteriores: {metric.previous == null ? 'Sin datos' : metric.previous.toLocaleString('es-MX')}
-            {metric.value != null && metric.previous != null && ` · Diferencia: ${metric.value - metric.previous > 0 ? '+' : ''}${metric.value - metric.previous}`}</p>}
-          <p style={{ fontSize: 12, color: 'var(--muted)' }}>{metric.note}</p>
-        </article>)}
+
+function StatCard({ metric }: { metric: Metric }) {
+  const unavailable = metric.value == null
+  const highlightPending = metric.key === 'pending' && typeof metric.value === 'number' && metric.value > 0
+  return (
+    <article
+      className={`admin-stat-card${unavailable ? ' admin-stat-card--muted' : ''}${highlightPending ? ' admin-stat-card--warning' : ''}`}
+    >
+      <div className="admin-stat-card__value">
+        {unavailable
+          ? (metric.key === 'visits' ? 'No configurado' : 'Sin datos')
+          : metric.value!.toLocaleString('es-MX')}
       </div>
-    </section>)}
-    <p>Sin datos verificables: requerimientos activos, vinculaciones efectivas, usuarios activos, tiempo de aprobación y conversión comercial. Clics de Google: Search Console no configurado en esta aplicación.</p>
-  </section>
+      <h3>{metric.label}</h3>
+      {metric.previous !== undefined && !(unavailable && metric.previous == null) && (
+        <p className="admin-stat-card__delta">
+          30 días anteriores: {metric.previous == null ? 'Sin datos' : metric.previous.toLocaleString('es-MX')}
+          {metric.value != null && metric.previous != null && ` · Diferencia: ${metric.value - metric.previous > 0 ? '+' : ''}${metric.value - metric.previous}`}
+        </p>
+      )}
+    </article>
+  )
+}
+
+export function AdminStatistics({ metrics }: { metrics: Metric[] }) {
+  const primary = metrics.slice(0, 6)
+  const secondary = metrics.slice(6)
+
+  return (
+    <section className="admin-stats" aria-label="Estadísticas administrativas">
+      <div className="admin-stats__head">
+        <h2>Estadísticas principales</h2>
+      </div>
+
+      <section aria-label="Indicadores principales">
+        <div className="admin-stats__grid">
+          {primary.map((metric) => (
+            <StatCard key={metric.key} metric={metric} />
+          ))}
+        </div>
+      </section>
+
+      {secondary.length > 0 && (
+        <details className="admin-stats__secondary">
+          <summary>
+            <span>Operación y seguimiento</span>
+            <small>{secondary.length} indicadores adicionales</small>
+          </summary>
+          <section aria-label="Indicadores secundarios">
+            <div className="admin-stats__grid admin-stats__grid--secondary">
+              {secondary.map((metric) => (
+                <StatCard key={metric.key} metric={metric} />
+              ))}
+            </div>
+            <p className="admin-stats__footnote">
+              Sin datos verificables: requerimientos activos, vinculaciones efectivas, usuarios activos, tiempo de aprobación y conversión comercial. Clics de Google: Search Console no configurado en esta aplicación.
+            </p>
+          </section>
+        </details>
+      )}
+    </section>
+  )
 }

@@ -18,6 +18,12 @@ type Property = {
   main_image: string | null
 }
 
+function formatMaxHeight(value: string | null) {
+  const trimmed = (value || '').trim()
+  if (!trimmed) return 'N/D'
+  return /^\d+(?:[.,]\d+)?$/.test(trimmed) ? `${trimmed} m` : trimmed
+}
+
 export function PropertyCard({ property: p }: { property: Property }) {
   return (
     <Link href={`/bodegas/${p.slug}`} className="card">
@@ -29,7 +35,13 @@ export function PropertyCard({ property: p }: { property: Property }) {
         </span>
 
         {p.share_commission && (
-          <em>🤝 COLABORABLE</em>
+          <em>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M11 17a4 4 0 0 1-5.6 0l-1.7-1.7a4 4 0 0 1 0-5.6l3-3a4 4 0 0 1 5.6 0" />
+              <path d="M13 7a4 4 0 0 1 5.6 0l1.7 1.7a4 4 0 0 1 0 5.6l-3 3a4 4 0 0 1-5.6 0" />
+            </svg>
+            COLABORABLE
+          </em>
         )}
       </div>
 
@@ -43,7 +55,7 @@ export function PropertyCard({ property: p }: { property: Property }) {
         <p>
           {(p.total_area || 0).toLocaleString('es-MX')} m² ·{' '}
           {(p.covered_area || 0).toLocaleString('es-MX')} m² techados · Altura{' '}
-          {p.max_height || 'N/D'}
+          {formatMaxHeight(p.max_height)}
         </p>
       </div>
     </Link>

@@ -103,41 +103,40 @@ export function AdminPropertiesTable({
           className="admin-properties-table"
           style={{
             width: '100%',
-            minWidth: '1000px',
             borderCollapse: 'collapse',
-            fontSize: '14px',
+            fontSize: '13px',
           }}
         >
           <caption className="sr-only">Propiedades y acciones administrativas</caption>
           <thead>
             <tr
               style={{
-                borderBottom: '1px solid #dcdcdc',
+                borderBottom: '1px solid var(--line)',
                 background: "var(--surface-subtle)",
               }}
             >
-              <th scope="col" style={{ padding: '12px 14px', textAlign: 'left' }}>
+              <th scope="col" style={{ padding: '11px 10px', textAlign: 'left' }}>
                 Propiedad
               </th>
-              <th scope="col" style={{ padding: '12px 14px', textAlign: 'left' }}>
+              <th scope="col" style={{ padding: '11px 10px', textAlign: 'left' }}>
                 Asesor
               </th>
-              <th scope="col" style={{ padding: '12px 14px', textAlign: 'left' }}>
+              <th scope="col" style={{ padding: '11px 10px', textAlign: 'left' }}>
                 Zona
               </th>
-              <th scope="col" style={{ padding: '12px 14px', textAlign: 'left' }}>
+              <th scope="col" style={{ padding: '11px 10px', textAlign: 'left' }}>
                 Operación
               </th>
-              <th scope="col" style={{ padding: '12px 14px', textAlign: 'left' }}>
+              <th scope="col" style={{ padding: '11px 10px', textAlign: 'left' }}>
                 Estado
               </th>
-              <th scope="col" style={{ padding: '12px 14px', textAlign: 'left' }}>
+              <th scope="col" style={{ padding: '11px 10px', textAlign: 'left' }}>
                 Precio
               </th>
-              <th scope="col" style={{ padding: '12px 14px', textAlign: 'left' }}>
+              <th scope="col" style={{ padding: '11px 10px', textAlign: 'left' }}>
                 Superficie
               </th>
-              <th scope="col" style={{ padding: '12px 14px', textAlign: 'right' }}>
+              <th scope="col" style={{ padding: '11px 10px', textAlign: 'right' }}>
                 Acciones
               </th>
             </tr>
@@ -151,29 +150,29 @@ export function AdminPropertiesTable({
                   borderBottom: "1px solid var(--line)",
                 }}
               >
-                <td style={{ padding: '14px' }}>
+                <td style={{ padding: '10px' }}>
                   <div className="admin-property-identity">
                     <AdminPropertyThumbnail key={property.coverUrl || 'empty'} url={property.coverUrl} />
                     <strong>{property.title}</strong>
                   </div>
                 </td>
 
-                <td style={{ padding: '14px', color: "var(--muted)" }}>
+                <td style={{ padding: '10px', color: "var(--muted)" }}>
                   {property.profiles?.full_name ||
                     property.profiles?.company_name ||
                     'Sin asesor'}
                 </td>
 
-                <td style={{ padding: '14px', color: "var(--muted)" }}>
+                <td style={{ padding: '10px', color: "var(--muted)" }}>
                   {property.zone_general || 'Zona no especificada'}
                   {property.zone ? ` · ${property.zone}` : ''}
                 </td>
 
-                <td className="admin-properties-table__tag" style={{ padding: '14px' }}>
+                <td className="admin-properties-table__tag" style={{ padding: '10px' }}>
                   <span
                     style={{
                       display: 'inline-block',
-                      padding: '5px 9px',
+                      padding: '4px 8px',
                       borderRadius: '999px',
                       background:
                         property.operation === 'Renta'
@@ -191,13 +190,13 @@ export function AdminPropertiesTable({
                   </span>
                 </td>
 
-                <td className="admin-properties-table__tag" style={{ padding: '14px' }}>
+                <td className="admin-properties-table__tag" style={{ padding: '10px' }}>
                   <PropertyStatusBadge status={property.status} />
                 </td>
 
                 <td
                   style={{
-                    padding: '14px',
+                    padding: '10px',
                     fontWeight: 600,
                     whiteSpace: 'nowrap',
                   }}
@@ -207,7 +206,7 @@ export function AdminPropertiesTable({
 
                 <td
                   style={{
-                    padding: '14px',
+                    padding: '10px',
                     color: "var(--muted)",
                     whiteSpace: 'nowrap',
                   }}
@@ -217,30 +216,15 @@ export function AdminPropertiesTable({
 
                 <td
                   style={{
-                    padding: '14px',
+                    padding: '10px',
                     textAlign: 'right',
                     whiteSpace: 'nowrap',
                   }}
                 >
-                  <div
-                    style={{
-                      display: 'flex',
-                      gap: '8px',
-                      justifyContent: 'flex-end',
-                    }}
-                  >
+                  <div className="admin-table-actions">
                     <Link
                       href={`/admin/${property.id}`}
-                      style={{
-                        display: 'inline-block',
-                        padding: '8px 12px',
-                        borderRadius: '7px',
-                        background: "var(--primary)",
-                        color: "var(--surface)",
-                        textDecoration: 'none',
-                        fontSize: '12px',
-                        fontWeight: 600,
-                      }}
+                      className="button admin-table-action"
                     >
                       Ver información
                     </Link>
@@ -248,17 +232,7 @@ export function AdminPropertiesTable({
                     {property.status === 'published' && (
                       <a
                         href={`/bodegas/${property.slug?.trim()}`}
-                        style={{
-                          display: 'inline-block',
-                          padding: '8px 12px',
-                          borderRadius: '7px',
-                          border: '1px solid #111',
-                          background: "var(--surface)",
-                          color: "var(--primary)",
-                          textDecoration: 'none',
-                          fontSize: '12px',
-                          fontWeight: 600,
-                        }}
+                        className="button button--secondary admin-table-action"
                       >
                         Ver publicada
                       </a>

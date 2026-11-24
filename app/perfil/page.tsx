@@ -43,80 +43,29 @@ export default async function PerfilPage() {
     <>
       <Header />
 
-      <main
-        className="workspace-page profile-page"
-        style={{
-          maxWidth: 1000,
-          margin: '0 auto',
-          padding: '40px 20px 80px',
-        }}
-      >
-        <div style={{ marginBottom: 32 }}>
-          <small
-            style={{
-              color: "var(--muted)",
-              fontWeight: 600,
-              letterSpacing: 1,
-            }}
-          >
-            MI CUENTA
-          </small>
-
-          <h1
-            style={{
-              margin: '8px 0 8px',
-              fontSize: 32,
-              color: "var(--ink)",
-            }}
-          >
-            Mi perfil
-          </h1>
+      <main className="workspace-page profile-page">
+        <div className="profile-header">
+          <div>
+            <h1>Mi perfil</h1>
+            <p>
+              Administra tu información y la forma en que aparecerá ante tus
+              clientes.
+            </p>
+          </div>
           {profile.role === 'admin' && profile.account_status === 'active' && (
             <Link href="/admin" className="button">Administración</Link>
           )}
-
-          <p
-            style={{
-              margin: 0,
-              color: "var(--muted)",
-            }}
-          >
-            Administra tu información y la forma en que aparecerá ante tus
-            clientes.
-          </p>
         </div>
 
-        <section className="ui-panel" style={{ marginBottom: 24 }}>
-          <h2>Mis propietarios</h2><p>Administra tu directorio privado y las propiedades asociadas. Estos datos nunca se muestran en fichas comerciales.</p>
+        <section className="ui-panel profile-card">
+          <h2>Mis propietarios</h2>
+          <p>Administra tu directorio privado y las propiedades asociadas. Estos datos nunca se muestran en fichas comerciales.</p>
           <Link className="button button--secondary" href="/perfil/propietarios">Abrir Mis propietarios</Link>
         </section>
-        <section
-          style={{
-            marginBottom: 20,
-            padding: 24,
-            border: "1px solid var(--line)",
-            borderRadius: 14,
-            background: "var(--surface)",
-          }}
-        >
-          <h2
-            style={{
-              margin: '0 0 8px',
-              fontSize: 20,
-              color: "var(--ink)",
-            }}
-          >
-            Foto de perfil
-          </h2>
 
-          <p
-            style={{
-              margin: '0 0 20px',
-              color: "var(--muted)",
-            }}
-          >
-            Esta foto aparecerá en tu catálogo público.
-          </p>
+        <section className="ui-panel profile-card">
+          <h2>Foto de perfil</h2>
+          <p>Esta foto aparecerá en tu catálogo público.</p>
 
           <ProfileAvatarForm
             profileId={user.id}
@@ -124,97 +73,35 @@ export default async function PerfilPage() {
           />
         </section>
 
-        <section
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)',
-            gap: 20,
-          }}
-        >
-          <section
-            style={{
-              gridColumn: '1 / -1',
-              padding: 24,
-              border: "1px solid var(--line)",
-              borderRadius: 14,
-              background: "var(--surface)",
-            }}
-          >
-            <h2
-              style={{
-                margin: '0 0 8px',
-                fontSize: 20,
-                color: "var(--ink)",
-              }}
-            >
-              Información personal y profesional
-            </h2>
+        <section className="ui-panel profile-card">
+          <h2>Información personal y profesional</h2>
+          <p>Estos datos aparecerán en tu perfil y catálogo público.</p>
 
-            <p
-              style={{
-                margin: '0 0 20px',
-                color: "var(--muted)",
-              }}
-            >
-              Estos datos aparecerán en tu perfil y catálogo público.
-            </p>
+          <ProfileInfoForm
+            profileId={user.id}
+            email={user.email ?? ''}
+            fullName={profile?.full_name ?? ''}
+            phone={profile?.phone ?? null}
+            companyName={profile?.company_name ?? null}
+            website={profile?.website ?? null}
+            identityChangeLockedUntil={
+              profile?.identity_change_locked_until ?? null
+            }
+          />
 
-            <ProfileInfoForm
-              profileId={user.id}
-              email={user.email ?? ''}
-              fullName={profile?.full_name ?? ''}
-              phone={profile?.phone ?? null}
-              companyName={profile?.company_name ?? null}
-              website={profile?.website ?? null}
-              identityChangeLockedUntil={
-                profile?.identity_change_locked_until ?? null
-              }
-            />
-
-            <div
-              style={{
-                marginTop: 20,
-                paddingTop: 16,
-                borderTop: "1px solid var(--line)",
-                color: "var(--muted)",
-                fontSize: 13,
-              }}
-            >
-              Tipo de cuenta:{' '}
-              <strong style={{ color: "var(--ink)" }}>
-                {profile?.role === 'publisher'
-                  ? 'Asesor / publicador'
-                  : profile?.role || 'Sin definir'}
-              </strong>
-            </div>
-          </section>
+          <div className="profile-card__meta">
+            Tipo de cuenta:{' '}
+            <strong>
+              {profile?.role === 'publisher'
+                ? 'Asesor / publicador'
+                : profile?.role || 'Sin definir'}
+            </strong>
+          </div>
         </section>
 
-        <section
-          style={{
-            marginTop: 20,
-            padding: 24,
-            border: "1px solid var(--line)",
-            borderRadius: 14,
-            background: "var(--surface)",
-          }}
-        >
-          <h2
-            style={{
-              margin: '0 0 8px',
-              fontSize: 20,
-              color: "var(--ink)",
-            }}
-          >
-            Redes y contacto
-          </h2>
-
-          <p
-            style={{
-              margin: '0 0 20px',
-              color: "var(--muted)",
-            }}
-          >
+        <section className="ui-panel profile-card">
+          <h2>Redes y contacto</h2>
+          <p>
             Estos datos podrán aparecer en tu catálogo público para que tus
             clientes puedan contactarte.
           </p>
@@ -228,78 +115,24 @@ export default async function PerfilPage() {
           />
         </section>
 
-        <section
-          style={{
-            marginTop: 20,
-            padding: 24,
-            border: "1px solid var(--line)",
-            borderRadius: 14,
-            background: "var(--surface)",
-          }}
-        >
-          <h2
-            style={{
-              margin: '0 0 8px',
-              fontSize: 20,
-              color: "var(--ink)",
-            }}
-          >
-            Mi catálogo
-          </h2>
-
-          <p
-            style={{
-              margin: '0 0 18px',
-              color: "var(--muted)",
-            }}
-          >
+        <section className="ui-panel profile-card">
+          <h2>Mi catálogo</h2>
+          <p>
             Aquí podrás administrar la información que utilizaremos para crear
             tu catálogo profesional y compartirlo con tus clientes.
           </p>
 
           <Link
-            href={profile?.public_id ? `/asesor/${profile.public_id}` : "/mis-propiedades"}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              padding: '10px 16px',
-              borderRadius: 9,
-              background: "var(--ink)",
-              color: "var(--surface)",
-              textDecoration: 'none',
-              fontWeight: 600,
-              fontSize: 14,
-            }}
+            href={profile?.public_id ? `/asesor/${profile.public_id}` : '/mis-propiedades'}
+            className="button"
           >
-            Ver mi catálogo
+            Ver mi catálogo →
           </Link>
         </section>
 
-        <section
-          style={{
-            marginTop: 20,
-            padding: 24,
-            border: "1px solid var(--line)",
-            borderRadius: 14,
-            background: "var(--surface)",
-          }}
-        >
-          <h2
-            style={{
-              margin: '0 0 8px',
-              fontSize: 20,
-              color: "var(--ink)",
-            }}
-          >
-            Seguridad
-          </h2>
-
-          <p
-            style={{
-              margin: 0,
-              color: "var(--muted)",
-            }}
-          >
+        <section className="ui-panel profile-card">
+          <h2>Seguridad</h2>
+          <p>
             La administración de contraseña y otras opciones de seguridad se
             agregarán aquí.
           </p>
