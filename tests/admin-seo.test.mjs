@@ -5,7 +5,6 @@ import { AsyncLocalStorage } from 'node:async_hooks'
 globalThis.AsyncLocalStorage ??= AsyncLocalStorage
 registerHooks({ resolve(specifier, context, nextResolve) {
   if (specifier === 'server-only') return { url: 'data:text/javascript,export {}', shortCircuit: true }
-  if (specifier === './supabase-privileged-server') return { url: 'data:text/javascript,export function createPrivilegedServerSupabaseClient(){globalThis.__privilegedCalls++;if(globalThis.__missingMetrics)throw Error("unavailable");return globalThis.__metricClient}', shortCircuit: true }
   if (specifier === '@/lib/supabase-public-server') return { url: 'data:text/javascript,export function createPublicServerSupabaseClient(){return globalThis.__catalogClient}', shortCircuit: true }
   if (specifier === '@/lib/seo') return nextResolve(new URL('../lib/seo.ts', import.meta.url).href, context)
   if (specifier === 'next/server') return nextResolve(new URL('../node_modules/next/server.js', import.meta.url).href, context)
@@ -77,32 +76,47 @@ test('sitemap: unavailable source throws instead of silently publishing incomple
   globalThis.__catalogClient=null;await assert.rejects(sitemap(),/not configured/)
 })
 function actor(options={}) {
-  return {auth:{async getUser(){return {data:{user:options.noUser?null:{id:options.id||'actor',is_anonymous:options.anonymous}},error:options.error}}},
-    from(table){assert.equal(table,'profiles');return {select(){return this},eq(field,id){assert.equal(id,options.id||'actor');return this},async single(){return {data:options.noProfile?null:{role:options.role||'admin',account_status:options.status||'active'},error:options.profileError}}}}}
+  return {
+    auth:{async getUser(){return {data:{user:options.noUser?null:{id:options.id||'actor',is_anonymous:options.anonymous}},error:options.error}}},
+    from(table){assert.equal(table,'profiles');return {select(){return this},eq(field,id){assert.equal(id,options.id||'actor');return this},async single(){return {data:options.noProfile?null:{role:options.role||'admin',account_status:options.status||'active'},error:options.profileError}}}},
+    async rpc(name, args){
+      assert.equal(name,'qrih_admin_metrics_snapshot')
+      return globalThis.__metricRpc(args)
+    },
+  }
 }
 function metricFixture(options={}) {
   loadAdminMetrics = createAdminMetricsLoader()
-  globalThis.__missingMetrics=options.missing;globalThis.__privilegedCalls=0;const calls=[]
-  globalThis.__metricClient={from(table){const call={table,filters:[]};calls.push(call);const q={
-    select(fields,args){assert.equal(fields,'id');assert.deepEqual(args,{count:'exact',head:true});return q},
-    eq(k,v){call.filters.push(['eq',k,v]);return q},gte(k,v){call.filters.push(['gte',k,v]);return q},lt(k,v){call.filters.push(['lt',k,v]);return q},
-    then(ok,no){return (options.throws?Promise.reject(Error('sensitive')):Promise.resolve(options.error?{error:{message:'sensitive'}}:{count:options.zero?0:(options.count??2501)})).then(ok,no)},
-  };return q}}
+  const calls=[]
+  globalThis.__metricRpc = async (args) => {
+    calls.push(args)
+    if (options.missing || options.throws) throw Error('sensitive')
+    if (options.error) return { data: null, error: { message: 'sensitive' } }
+    const val = options.zero ? 0 : (options.count ?? 2501)
+    if (args?.p_only_pending) return { data: { as_of: '2026-10-27T21:00:00Z', pending: val }, error: null }
+    return {
+      data: {
+        as_of: '2026-10-27T21:00:00Z',
+        published: val, expired: val, users: val, pending: val,
+        links: val, previous_links: val, contacts: val, previous_contacts: val,
+        soon: val, draft: val, paused: val, rejected: val, updates: val,
+        new_users: val, previous_users: val,
+      },
+      error: null,
+    }
+  }
   return calls
 }
 test('metrics: only real active admin, never client metadata, role editor unchanged, no privileged query for denied actors',async()=>{
   for(const option of [{noUser:true},{anonymous:true},{error:{}},{noProfile:true},{role:'publisher'},{role:'editor'},{status:'suspended'},{profileError:{}}]) {
-    metricFixture();await assert.rejects(loadAdminMetrics(actor(option)),/Restricted/);assert.equal(globalThis.__privilegedCalls,0)
+    const calls=metricFixture();await assert.rejects(loadAdminMetrics(actor(option)),/Restricted/);assert.equal(calls.length,0)
   }
 })
-test('metrics: exact HEAD count beyond row cap, one UTC boundary per request, previous windows half-open, no site visits fabricated',async()=>{
+test('metrics: exact RPC snapshot beyond row cap, UTC windows helper intact, no site visits fabricated',async()=>{
   const calls=metricFixture(),now=new Date('2026-10-27T21:00:00Z')
   const metrics=await loadAdminMetrics(actor(),now)
   assert.equal(metrics.find(m=>m.key==='users').value,2501);assert.equal(metrics.find(m=>m.key==='visits').value,null)
-  assert.equal(calls.length,15);assert.ok(!calls.some(c=>c.table==='property_views'))
-  const links=calls.filter(c=>c.table==='opportunity_property_registrations')
-  assert.deepEqual(links[0].filters,[['gte','created_at','2026-09-27T21:00:00.000Z'],['lt','created_at','2026-10-27T21:00:00.000Z']])
-  assert.deepEqual(links[1].filters,[['gte','created_at','2026-08-28T21:00:00.000Z'],['lt','created_at','2026-09-27T21:00:00.000Z']])
+  assert.deepEqual(calls,[{p_only_pending:false}])
   assert.equal(metricWindows(now).soon,'2026-11-03T21:00:00.000Z')
 })
 test('metrics: errors/missing config never become zero; real empty count stays zero',async()=>{
@@ -116,27 +130,27 @@ test('metrics: errors/missing config never become zero; real empty count stays z
 test('metrics: five-minute private snapshot reuses fourteen counts while pending remains live every refresh', async () => {
   const options = { count: 10 }, calls = metricFixture(options), now = new Date('2026-10-27T21:00:00Z')
   const initial = await loadAdminMetrics(actor(), now)
-  assert.equal(calls.length, 15); assert.equal(ADMIN_METRICS_TTL_MS, 300000)
+  assert.deepEqual(calls, [{ p_only_pending: false }]); assert.equal(ADMIN_METRICS_TTL_MS, 300000)
   options.count = 12
   initial[0].value = 999 // A caller cannot corrupt a later render.
   const next = await loadAdminMetrics(actor(), new Date(+now + 30000))
-  assert.equal(calls.length, 16); assert.deepEqual(calls.at(-1).filters, [['eq','status','pending']])
+  assert.equal(calls.length, 2); assert.deepEqual(calls.at(-1), { p_only_pending: true })
   assert.equal(next.find(m => m.key === 'published').value, 10)
   assert.equal(next.find(m => m.key === 'pending').value, 12)
-  await loadAdminMetrics(actor(), new Date(+now + 299999)); assert.equal(calls.length, 17)
+  await loadAdminMetrics(actor(), new Date(+now + 299999)); assert.equal(calls.length, 3); assert.deepEqual(calls.at(-1), { p_only_pending: true })
   const expired = await loadAdminMetrics(actor(), new Date(+now + 300000))
-  assert.equal(calls.length, 32); assert.equal(expired[0].value, 12)
+  assert.equal(calls.length, 4); assert.deepEqual(calls.at(-1), { p_only_pending: false }); assert.equal(expired[0].value, 12)
 })
 
 test('metrics: cached data still requires fresh admin authorization and never crosses account IDs', async () => {
   const calls = metricFixture(), now = new Date('2026-10-27T21:00:00Z')
-  await loadAdminMetrics(actor({id:'A'}), now); assert.equal(calls.length, 15)
+  await loadAdminMetrics(actor({id:'A'}), now); assert.equal(calls.length, 1)
   for (const option of [{id:'A',status:'suspended'}, {id:'A',role:'publisher'}, {id:'A',anonymous:true}, {noUser:true}]) {
     await assert.rejects(loadAdminMetrics(actor(option), new Date(+now + 30000)), /Restricted/)
-    assert.equal(calls.length, 15)
+    assert.equal(calls.length, 1)
   }
-  await loadAdminMetrics(actor({id:'B'}), new Date(+now + 30000)); assert.equal(calls.length, 30)
-  await loadAdminMetrics(actor({id:'A'}), new Date(+now + 60000)); assert.equal(calls.length, 31)
+  await loadAdminMetrics(actor({id:'B'}), new Date(+now + 30000)); assert.equal(calls.length, 2); assert.deepEqual(calls.at(-1), { p_only_pending: false })
+  await loadAdminMetrics(actor({id:'A'}), new Date(+now + 60000)); assert.equal(calls.length, 3); assert.deepEqual(calls.at(-1), { p_only_pending: true })
 })
 
 test('metrics: unavailable general query is retried instead of cached as a successful zero', async () => {
@@ -144,5 +158,5 @@ test('metrics: unavailable general query is retried instead of cached as a succe
   const missing = await loadAdminMetrics(actor(), now); assert.equal(missing[0].value, null)
   options.error = false
   const restored = await loadAdminMetrics(actor(), new Date(+now + 30000))
-  assert.equal(calls.length, 30); assert.equal(restored[0].value, 2501)
+  assert.equal(calls.length, 2); assert.deepEqual(calls.at(-1), { p_only_pending: false }); assert.equal(restored[0].value, 2501)
 })

@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
-import { createPrivilegedServerSupabaseClient } from '@/lib/supabase-privileged-server'
 import { assertSameOrigin, readJson, validUuid } from '@/lib/request-security'
 
 export async function POST(request: Request) {
@@ -22,30 +21,45 @@ export async function POST(request: Request) {
     const { data: { user } } = await actor.auth.getUser()
     if (!user || user.is_anonymous) return NextResponse.json({ error: 'Necesitas iniciar sesión.' }, { status: 401 })
     if (!validUuid(body.request_id)) return NextResponse.json({ error: 'Envío inválido.' }, { status: 400 })
-    if (user) {
-      const { data: profile } = await actor.from('profiles').select('account_status').eq('id',user.id).single()
-      if (profile?.account_status !== 'active') return NextResponse.json({ error: 'Necesitas una cuenta activa.' }, { status: 403 })
-    }
-    const admin = createPrivilegedServerSupabaseClient()
-    const previous = await admin.from('demand_requests').select('id').eq('id', body.request_id).eq('user_id', user.id).maybeSingle()
-    if (previous.error) throw new Error('lookup')
-    if (previous.data) return NextResponse.json({ id: previous.data.id }, { headers: { 'Cache-Control': 'no-store' } })
-    // The authenticated actor owns both the quota and the idempotent record.
-    const { data: allowed } = await admin.rpc('qrih_take_server_limit', { p_subject: user.id, p_action: 'demand' })
-    if (!allowed) return NextResponse.json({ error: 'Demasiados envíos. Intenta más tarde.' }, { status: 429 })
-    const { data, error } = await admin.from('demand_requests').insert({
-      id: body.request_id, name, email, phone, company: String(body.company || '').trim() || null,
-      giro: String(body.giro || '').trim() || null, operation: body.operation,
-      zone_general: String(body.zone_general || '').trim() || null, zone: String(body.zone || '').trim() || null,
-      area_min: numbers[0], area_max: numbers[1], budget_min: numbers[2], budget_max: numbers[3],
-      area_requirement: `${numbers[0]} - ${numbers[1]} m²`, budget: `$${numbers[2]} - $${numbers[3]}`,
-      notes: String(body.notes || '').trim() || null, user_id: user.id, status: 'new',
-    }).select('id').single()
-    if (error || !data) {
-      const retry = await admin.from('demand_requests').select('id').eq('id', body.request_id).eq('user_id', user.id).maybeSingle()
-      if (retry.data) return NextResponse.json({ id: retry.data.id }, { headers: { 'Cache-Control': 'no-store' } })
+    const { data: profile } = await actor.from('profiles').select('account_status').eq('id', user.id).single()
+    if (profile?.account_status !== 'active') return NextResponse.json({ error: 'Necesitas una cuenta activa.' }, { status: 403 })
+
+    // La RPC transaccional deriva la identidad de auth.uid(), garantiza idempotencia por
+    // p_request_id y aplica la cuota interna sin credenciales privilegiadas en Next.js.
+    const { data, error } = await actor.rpc('qrih_submit_demand_request', {
+      p_request_id: body.request_id,
+      p_name: name,
+      p_email: email,
+      p_phone: phone,
+      p_operation: body.operation,
+      p_area_min: numbers[0],
+      p_area_max: numbers[1],
+      p_budget_min: numbers[2],
+      p_budget_max: numbers[3],
+      p_company: String(body.company || '').trim() || null,
+      p_giro: String(body.giro || '').trim() || null,
+      p_zone_general: String(body.zone_general || '').trim() || null,
+      p_zone: String(body.zone || '').trim() || null,
+      p_notes: String(body.notes || '').trim() || null,
+    })
+    if (error) {
+      const code = typeof error.code === 'string' ? error.code : ''
+      const message = typeof error.message === 'string' ? error.message : ''
+      if (code === 'P0001' || message.includes('RATE_LIMIT_EXCEEDED')) {
+        return NextResponse.json({ error: 'Demasiados envíos. Intenta más tarde.' }, { status: 429 })
+      }
+      if (code === '42501' && message.includes('ACCOUNT_INACTIVE')) {
+        return NextResponse.json({ error: 'Necesitas una cuenta activa.' }, { status: 403 })
+      }
+      if (code === '42501' && message.includes('AUTH_REQUIRED')) {
+        return NextResponse.json({ error: 'Necesitas iniciar sesión.' }, { status: 401 })
+      }
+      if (code === '42501' && message.includes('REQUEST_ID_CONFLICT')) {
+        return NextResponse.json({ error: 'Envío inválido.' }, { status: 403 })
+      }
       throw new Error('database')
     }
-    return NextResponse.json({ id: data.id }, { headers: { 'Cache-Control': 'no-store' } })
+    if (typeof data !== 'string' || !validUuid(data)) throw new Error('database')
+    return NextResponse.json({ id: data }, { headers: { 'Cache-Control': 'no-store' } })
   } catch { return NextResponse.json({ error: 'No se pudo enviar. Revisa los datos y vuelve a intentar.' }, { status: 400 }) }
 }

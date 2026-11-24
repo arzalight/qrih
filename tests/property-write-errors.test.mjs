@@ -6,7 +6,7 @@ registerHooks({ resolve(specifier, context, nextResolve) {
   if (specifier === './private-commercial') return nextResolve(new URL('../lib/private-commercial.ts', import.meta.url).href, context)
   const aliases = {
     '@/lib/supabase-server': 'data:text/javascript,export async function createServerSupabaseClient(){return globalThis.__qrihWriteClient}',
-    '@/lib/verified-media-server': 'data:text/javascript,export async function uploadVerifiedImage(file,owner,bucket){return globalThis.__qrihWriteUpload(file,owner,bucket)}',
+    '@/lib/verified-media-server': 'data:text/javascript,export async function uploadVerifiedImage(file,owner,bucket){return globalThis.__qrihWriteUpload(file,owner,bucket)};export async function rollbackVerifiedImages(){}',
   }
   if (aliases[specifier]) return { url: aliases[specifier], shortCircuit: true }
   if (specifier === '@/lib/property-save-server') return nextResolve(new URL('../lib/property-save-server.ts', import.meta.url).href, context)

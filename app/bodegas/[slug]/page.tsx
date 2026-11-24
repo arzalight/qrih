@@ -10,7 +10,6 @@ import { PropertyCard } from '@/components/PropertyCard'
 import { rankSimilarProperties, similarPropertyRange } from '@/lib/matching'
 import { PropertyImageGallery } from '@/components/PropertyImageGallery'
 import { createPublicServerSupabaseClient } from '@/lib/supabase-public-server'
-import { createPrivilegedServerSupabaseClient } from '@/lib/supabase-privileged-server'
 import { createSignedPropertyImageUrlMap, propertyImagePaths, PROPERTY_IMAGE_TTL_SECONDS } from '@/lib/property-image-urls'
 
 export const dynamic = 'force-dynamic'
@@ -115,11 +114,7 @@ export default async function PropertyPage({ params }: PageProps) {
   }))
 
   try {
-    const admin = createPrivilegedServerSupabaseClient()
-    const { data: allowed } = await admin.rpc('qrih_take_server_limit', {
-      p_subject: `public:${property.id}`, p_action: 'view',
-    })
-    if (allowed) await admin.from('property_views').insert({ property_id: property.id })
+    await supabase.rpc('qrih_record_public_property_view', { p_property_id: property.id })
   } catch {
     console.warn('No se pudo registrar una visualización; ficha disponible.')
   }

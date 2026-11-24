@@ -1,4 +1,4 @@
-// Edge Function: ingest-verified-media (LOCAL — Etapa 6; NO desplegada sin autorización expresa).
+// Edge Function: ingest-verified-media
 // @ts-nocheck — Entorno Deno Edge Runtime de Supabase.
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import decodeWebp, { init as initWebpDecoder } from 'npm:@jsquash/webp@1.5.0/decode.js'

@@ -12,7 +12,6 @@ const stub=code=>({url:'data:text/javascript,'+encodeURIComponent(code),shortCir
 registerHooks({resolve(specifier,context,nextResolve){
   if(specifier==='server-only')return stub('export {}')
   if(specifier==='@/lib/supabase-public-server')return stub('export function createPublicServerSupabaseClient(){return globalThis.__renderCatalog}')
-  if(specifier==='@/lib/supabase-privileged-server')return stub('export function createPrivilegedServerSupabaseClient(){return {rpc:async()=>({data:false})}}')
   if(specifier==='next/navigation')return stub('export function notFound(){throw Error("NOT_FOUND")}')
   if(specifier==='@/lib/property-image-urls')return stub('export async function createSignedPropertyImageUrlMap(){return new Map()};export function propertyImagePaths(){return []};export const PROPERTY_IMAGE_TTL_SECONDS={gallery:600,public:600}')
   if(specifier.startsWith('@/components/'))return stub(`export function ${specifier.split('/').at(-1)}(){return null}`)
@@ -38,7 +37,7 @@ function fixture({error=null,property={}}={}) {
   const calls=[]
   const record={id:'p',slug:'nave-publica',title:'Nave industrial',operation:'Renta',zone:'Zona norte',total_area:500,status:'published',
     address:'SECRET_ADDRESS',location_visibility:'zone',price_currency:'MXN',price_value:100,price_unit:'m2',...property}
-  globalThis.__renderCatalog={from(table){const call={table,filters:[]};calls.push(call);const q={
+  globalThis.__renderCatalog={async rpc(){return {data:true,error:null}},from(table){const call={table,filters:[]};calls.push(call);const q={
     select(fields){call.fields=fields;return q},eq(k,v){call.filters.push([k,v]);return q},order(){return q},
     async single(){return {data:error?null:record,error}},then(ok,no){return Promise.resolve({data:[]}).then(ok,no)},
   };return q}}

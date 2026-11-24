@@ -7,7 +7,6 @@ import { readFileSync } from 'node:fs'
 // ese módulo marcador; la utilidad TypeScript se ejecuta sin alterar su código.
 registerHooks({ resolve(specifier, context, nextResolve) {
   if (specifier === 'server-only') return { url: 'data:text/javascript,export{}', shortCircuit: true }
-  if (specifier === './supabase-privileged-server') return nextResolve(new URL('./supabase-privileged-server.ts', context.parentURL).href, context)
   return nextResolve(specifier, context)
 }})
 const { createSignedPropertyImageUrlMap: realSign, propertyImagePaths, PROPERTY_IMAGE_TTL_SECONDS: ttl } =

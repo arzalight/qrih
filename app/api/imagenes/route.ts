@@ -1,8 +1,8 @@
+import { randomUUID } from 'node:crypto'
 import { NextResponse } from 'next/server'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
-import { uploadVerifiedImage } from '@/lib/verified-media-server'
+import { uploadVerifiedImage, rollbackVerifiedImages } from '@/lib/verified-media-server'
 import { assertSameOrigin, readForm, validUuid } from '@/lib/request-security'
-import { createPrivilegedServerSupabaseClient } from '@/lib/supabase-privileged-server'
 
 export async function POST(request: Request) {
   // Sólo etapas constantes en logs privados: nunca objetos de error, rutas o datos del usuario.
@@ -42,7 +42,20 @@ export async function POST(request: Request) {
       previousImages = gallery.data
     }
     const bucket = kind === 'avatar' ? 'profile-images' : 'property-images'
-    const result = await uploadVerifiedImage(file, user.id, bucket, current => { stage = current })
+    const operationId = randomUUID()
+    const result = await uploadVerifiedImage(file, user.id, bucket, current => { stage = current }, { supabase, operationId })
+    const cleanupUploaded = async () => {
+      if (result.rollbackToken && typeof rollbackVerifiedImages === 'function') {
+        await rollbackVerifiedImages({
+          bucket,
+          operationId: result.operationId || operationId,
+          items: [{ path: result.path, rollbackToken: result.rollbackToken }],
+          supabase,
+        })
+      } else {
+        await supabase.storage.from(bucket).remove([result.path])
+      }
+    }
     if (draftId !== null) {
       const attached = await supabase.rpc('replace_property_images', { p_property_id: draftId,
         p_images: [...previousImages, { storage_path: result.path, title: String(form.get('title') || '') }] })
@@ -51,7 +64,7 @@ export async function POST(request: Request) {
         // preserve an uncertain object rather than delete a photograph that may be attached.
         if (/^(?:22|23|42|P0)[0-9A-Z]{3}$/.test(attached.error.code || '')) {
           const check = await supabase.from('property_images').select('storage_path').eq('property_id', draftId).eq('storage_path', result.path)
-          if (!check.error && !check.data?.length) await createPrivilegedServerSupabaseClient().storage.from(bucket).remove([result.path])
+          if (!check.error && !check.data?.length) await cleanupUploaded()
         }
         return NextResponse.json({ error: 'Revisa el borrador antes de continuar.' }, { status: 409 })
       }
@@ -61,7 +74,7 @@ export async function POST(request: Request) {
       const { error } = await supabase.from('profiles').update({ avatar_url: result.publicUrl }).eq('id', user.id)
       if (error) {
         reportFailure()
-        await createPrivilegedServerSupabaseClient().storage.from(bucket).remove([result.path])
+        await cleanupUploaded()
         return NextResponse.json({ error: 'No se pudo guardar el avatar.' }, { status: 400 })
       }
       // Nunca usar un nombre/ruta del formulario para borrar. Sólo el avatar anterior propio.
@@ -73,7 +86,7 @@ export async function POST(request: Request) {
         }
       }
     }
-    return NextResponse.json(result, { headers: { 'Cache-Control': 'no-store' } })
+    return NextResponse.json({ path: result.path, publicUrl: result.publicUrl }, { headers: { 'Cache-Control': 'no-store' } })
   } catch {
     reportFailure()
     return NextResponse.json({ error: 'No se pudo subir la imagen. Revisa formato, tamaño y límite de fotografías.' }, { status: 400 })

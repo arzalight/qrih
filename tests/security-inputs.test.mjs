@@ -8,7 +8,6 @@ import {captureAuthBaseline,verifyAuthBaseline} from './staging-fixture-guard.mj
 
 registerHooks({ resolve(specifier, context, nextResolve) {
   if (specifier==='server-only') return {url:'data:text/javascript,export{}',shortCircuit:true}
-  if (specifier==='./supabase-privileged-server') return nextResolve(new URL('./supabase-privileged-server.ts',context.parentURL).href,context)
   if (specifier==='./request-security') return nextResolve(new URL('./request-security.ts',context.parentURL).href,context)
   return nextResolve(specifier,context)
 }})

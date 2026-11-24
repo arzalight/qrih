@@ -4,8 +4,7 @@ import { after, test } from 'node:test'
 
 registerHooks({ resolve(specifier, context, next) {
   if (specifier === '@/lib/supabase-server') return { shortCircuit: true, url: 'data:text/javascript,export async function createServerSupabaseClient(){return globalThis.__deferredClient}' }
-  if (specifier === '@/lib/supabase-privileged-server') return { shortCircuit: true, url: 'data:text/javascript,export function createPrivilegedServerSupabaseClient(){return globalThis.__deferredClient}' }
-  if (specifier === '@/lib/verified-media-server') return { shortCircuit: true, url: 'data:text/javascript,export async function uploadVerifiedImage(){globalThis.__deferredUploads++;return {path:globalThis.__deferredOwner+"/verified.webp"}}' }
+  if (specifier === '@/lib/verified-media-server') return { shortCircuit: true, url: 'data:text/javascript,export async function uploadVerifiedImage(){globalThis.__deferredUploads++;return {path:globalThis.__deferredOwner+"/verified.webp",publicUrl:null,operationId:"00000000-0000-4000-8000-000000000001"}};export async function rollbackVerifiedImages(){}' }
   if (specifier.startsWith('@/lib/')) return next(new URL(`../lib/${specifier.slice(6)}.ts`, import.meta.url).href, context)
   if (specifier === './property-price') return next(new URL('../lib/property-price.ts', import.meta.url).href, context)
   if (specifier === 'next/server') return next(new URL('../node_modules/next/server.js', import.meta.url).href, context)
@@ -58,6 +57,17 @@ function fixture(options = {}) {
     },
     async rpc(name, args) {
       if (name === 'qrih_take_server_limit') return { data: true, error: null }
+      if (name === 'qrih_submit_demand_request') {
+        const existing = rows.get(args.p_request_id)
+        if (existing) {
+          if (existing.user_id === owner) return { data: args.p_request_id, error: null }
+          return { data: null, error: { code: '42501', message: 'REQUEST_ID_CONFLICT' } }
+        }
+        const record = { id: args.p_request_id, user_id: owner, status: 'new', name: args.p_name }
+        rows.set(args.p_request_id, record)
+        writes.push(record)
+        return { data: args.p_request_id, error: null }
+      }
       if (name === 'qrih_create_property_with_owner') {
         privateCalls.push({ name, args })
         if (options.privateError) return { error: options.privateError }

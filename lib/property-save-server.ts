@@ -1,8 +1,9 @@
+import { randomUUID } from 'node:crypto'
 import { NextResponse } from 'next/server'
 import { privatePropertyInput, ownerSaveError } from './private-commercial'
 import { isPriceCurrency, parsePriceInput, propertyPriceForStorage as propertyPrice } from './property-price'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
-import { uploadVerifiedImage } from '@/lib/verified-media-server'
+import { uploadVerifiedImage, rollbackVerifiedImages } from '@/lib/verified-media-server'
 import { assertSameOrigin, readForm, validUuid } from '@/lib/request-security'
 
 function optionalNumber(value: FormDataEntryValue | null) {
@@ -332,21 +333,39 @@ async function performSave(request: Request, duplicate: boolean) {
     )
   }
 
+  const mediaOperationId = randomUUID()
+  const actorSupabase = supabase
   const uploadedImages: {
     path: string
+    rollbackToken?: string
   }[] = []
 
-  const storage = supabase.storage
+  const storage = actorSupabase.storage
   const copiedPaths = new Map<string, string>()
 
   async function removeUploadedImages() {
     if (!uploadedImages.length) {
       return
     }
-
-    await storage
-      .from('property-images')
-      .remove(uploadedImages.map((image) => image.path))
+    const tokenItems = uploadedImages
+      .filter((image): image is { path: string; rollbackToken: string } => Boolean(image.rollbackToken))
+      .map((image) => ({ path: image.path, rollbackToken: image.rollbackToken }))
+    const fallbackPaths = uploadedImages.filter((image) => !image.rollbackToken).map((image) => image.path)
+    if (tokenItems.length && typeof rollbackVerifiedImages === 'function') {
+      try {
+        await rollbackVerifiedImages({
+          bucket: 'property-images',
+          operationId: mediaOperationId,
+          items: tokenItems,
+          supabase: actorSupabase,
+        })
+      } catch {
+        await storage.from('property-images').remove(tokenItems.map((item) => item.path))
+      }
+    }
+    if (fallbackPaths.length) {
+      await storage.from('property-images').remove(fallbackPaths)
+    }
   }
 
   if (duplicate) {
@@ -356,7 +375,13 @@ async function performSave(request: Request, duplicate: boolean) {
       for (const path of existingPaths) {
         const { data: bytes, error } = await storage.from('property-images').download(path)
         if (error || !bytes || bytes.size > 20 * 1024 * 1024) throw new Error('Image unavailable')
-        const copy = await uploadVerifiedImage(new File([bytes], 'copy.webp', { type: 'image/webp' }), user.id, 'property-images')
+        const copy = await uploadVerifiedImage(
+          new File([bytes], 'copy.webp', { type: 'image/webp' }),
+          user.id,
+          'property-images',
+          undefined,
+          { supabase, operationId: mediaOperationId },
+        )
         uploadedImages.push(copy)
         copiedPaths.set(path, copy.path)
       }
@@ -369,8 +394,14 @@ async function performSave(request: Request, duplicate: boolean) {
   const newImageOffset = uploadedImages.length
   for (const [index, image] of images.entries()) {
     try {
-      const { path } = await uploadVerifiedImage(image, user.id, 'property-images')
-      uploadedImages.push({ path })
+      const uploaded = await uploadVerifiedImage(
+        image,
+        user.id,
+        'property-images',
+        undefined,
+        { supabase, operationId: mediaOperationId },
+      )
+      uploadedImages.push(uploaded)
     } catch {
       await removeUploadedImages()
 

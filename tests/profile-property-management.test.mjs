@@ -9,7 +9,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 registerHooks({ resolve(specifier, context, nextResolve) {
   if (specifier === './private-commercial') return nextResolve(new URL('../lib/private-commercial.ts', import.meta.url).href, context)
   if (specifier === '@/lib/supabase-server') return { url: 'data:text/javascript,export async function createServerSupabaseClient(){return globalThis.__managementClient}', shortCircuit: true }
-  if (specifier === '@/lib/verified-media-server') return { url: 'data:text/javascript,export async function uploadVerifiedImage(file,owner,bucket){return globalThis.__managementUpload(file,owner,bucket)}', shortCircuit: true }
+  if (specifier === '@/lib/verified-media-server') return { url: 'data:text/javascript,export async function uploadVerifiedImage(file,owner,bucket){return globalThis.__managementUpload(file,owner,bucket)};export async function rollbackVerifiedImages(){}', shortCircuit: true }
   if (specifier === '@/lib/property-image-urls') return { url: 'data:text/javascript,export const PROPERTY_IMAGE_TTL_SECONDS={gallery:900};export async function createSignedPropertyImageUrlMap(client,paths,ttl){return globalThis.__managementSign(client,paths,ttl)}', shortCircuit: true }
   if (specifier === '@/lib/property-save-server') return nextResolve(new URL('../lib/property-save-server.ts', import.meta.url).href, context)
   if (specifier === './property-price') return nextResolve(new URL('../lib/property-price.ts', import.meta.url).href, context)
